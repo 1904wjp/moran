@@ -1,0 +1,62 @@
+<head class="paneBar" th:replace="/common/public/commonHeader::header(~{::title})">
+    <title>菜单信息</title>
+</head>
+<link   rel="stylesheet"   th:href="@{/static/css/menu/menuSetting.css}">
+<div class="container">
+    <div class="row row-centered">
+        <div class="well col-md-6 col-centered">
+            <form class="form-horizontal center-block" role="form"  method="get">
+                <legend>菜单信息</legend>
+             <!--   <input id="id" name="id"  type="hidden"  th:value="${pageMenu.id}">-->
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="parentId">父级菜单</label>
+                    <select id="parentId" name="parentId" th:feild="${parentId}">
+                        <option class="pull-right"
+                                th:each="menu:${parentMenus}"
+                                th:value="${menu.id}"
+                                th:text="${menu.menuName}"
+                                th:selected="${menu.id  eq  parentId}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="menuName" >菜单名称</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="menuName" type="text" name="menuName" placeholder="请输入菜单名称" />
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="menuUrl" >菜单路径</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control"  id="menuUrl" type="text" name="menuUrl" placeholder="请输入菜单名称" />
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="menuOrder" >排序</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="menuOrder" type="number" name="menuOrder" placeholder="请输入菜单排序" />
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="fileUrl" >文件路径</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="fileUrl" type="text" name="fileUrl" placeholder="请输入文件路径" />
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="select"> </label>
+                    <div class="col-sm-4">
+                        <input class="btn btn-default pull-left" id="regist" type="button" onclick="saveMenuFuc()" value="保存"/>
+                        <a class="btn btn-default pull-right" th:href="@{'/example/user/userList'}">返回</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<head class="panelBar" th:replace="/common/public/commonFooter::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/menu/menuSetting.js}"></script>
+</html>
