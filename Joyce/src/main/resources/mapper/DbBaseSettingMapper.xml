@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moon.joyce.example.mapper.DbBaseSettingMapper">
+
+
+    <select id="getDbBaseSettings" resultType="com.moon.joyce.example.entity.DbBaseSetting">
+        SELECT
+            a.id,
+            a.create_by,
+            a.create_time,
+            a.delete_flag,
+            a.update_by,
+            a.update_time,
+            a.url,
+            a.username,
+            a.password,
+            a.project_address,
+            a.package_path_id,
+            a.temp_code,
+            a.database_type,
+            a.user_id,
+            a.data_source_name,
+            a.driver_name,
+            a.apply_status
+        FROM springboot.db_base_setting a
+        LEFT JOIN springboot.user b
+        ON a.user_id = b.id
+        WHERE a.delete_flag = '0'
+        <if test="username!=null and username!=''">
+           AND a.username LIKE CONCAT('%',#{username},'%')
+        </if>
+        <if test="userId!=null ">
+            AND a.user_id = #{userId}
+        </if>
+        <if test="applyStatus!=null ">
+            AND a.apply_status = #{applyStatus}
+        </if>
+        <if test="databaseType!=null and databaseType!=''">
+            AND a.database_type = #{databaseType}
+        </if>
+        <if test="url!=null and url!=''">
+            AND a.url LIKE CONCAT('%',#{url},'%')
+        </if>
+        <if test="offset!=null  and  pageNumber!=null  and offset!=0 and pageNumber!=0 ">
+             LIMIT #{offset}, #{pageNumber}
+        </if>
+    </select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM springboot.db_base_setting a
+        LEFT JOIN springboot.user b
+        ON a.user_id = b.id
+        WHERE a.delete_flag = '0'
+        <if test="username!=null and username!=''">
+            AND a.username LIKE CONCAT('%',#{username},'%')
+        </if>
+        <if test="userId!=null ">
+            AND a.user_id = #{userId}
+        </if>
+        <if test="applyStatus!=null ">
+            AND a.apply_status = #{applyStatus}
+        </if>
+        <if test="databaseType!=null and databaseType!='' ">
+            AND a.database_type = #{databaseType}
+        </if>
+        <if test="url!=null  and url!=''">
+            AND a.url LIKE CONCAT('%',#{url},'%')
+        </if>
+    </select>
+
+</mapper>
