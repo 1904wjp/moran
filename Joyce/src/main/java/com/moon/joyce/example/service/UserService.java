@@ -1,0 +1,58 @@
+package com.moon.joyce.example.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.moon.joyce.example.entity.User;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * <p>
+ *  服务类
+ * </p>
+ *
+ * @author Joyce
+ * @since 2021-09-01
+ */
+public interface UserService extends IService<User> {
+    /**
+     * 根据条件查询user
+     * @param user
+     * @return
+     */
+    int getUserCount(User user,String type);
+    /**
+     * 根据条件查询user
+     * @param user
+     * @return
+     */
+    User getUser(User user,String type);
+
+    /**
+     * 先分页查询后对结果排序
+     * @param user
+     * @return
+     */
+    List<User> getUserList(User user);
+
+
+
+    /**
+     * 统计所有数据数量
+     * @param
+     * @return
+     */
+    int getUsersCount(User user);
+
+
+
+    /**
+     * 根据条件修改user
+     * @param user
+     * @return
+     */
+    @Transactional
+    int updateUser(User dbUser,User user,String type);
+
+}

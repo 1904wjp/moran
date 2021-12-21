@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moon.joyce.example.mapper.PackageInfoMapper">
+    <select id="getList" resultType="com.moon.joyce.example.entity.PackageInfo">
+        SELECT
+               a.id,
+               a.create_by,
+               a.create_time,
+               a.delete_flag,
+               a.update_by,
+               a.update_time,
+               a.package_name,
+               a.package_value,
+               a.user_id,
+               a.apply_status,
+               b.username AS username,
+               a.web_entity_id
+        FROM springboot.package_info a
+        LEFT JOIN springboot.user b
+        ON  a.user_id = b.id
+        WHERE a.delete_flag = '0'
+        <if test="packageName!=null and packageName!=''">
+           AND a.package_name Like CONCAT('%',#{packageName},'%')
+        </if>
+        <if test="packageValue!=null and packageValue!=''">
+           AND a.package_value Like CONCAT('%',#{packageValue},'%')
+        </if>
+        <if test="userId!=null ">
+           AND a.user_id  =#{userId}
+        </if>
+        <if test="username!=null and username!=''">
+            AND b.username Like CONCAT('%',#{username},'%')
+        </if>
+        <if test="offset!=null  and  pageNumber!=null  and offset!=0 and pageNumber!=0 ">
+             LIMIT #{offset}, #{pageNumber}
+        </if>
+    </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+        SELECT count(*) FROM springboot.package_info a
+        LEFT JOIN springboot.user b
+        ON  a.user_id = b.id
+        WHERE a.delete_flag = '0'
+        <if test="packageName!=null and packageName!=''">
+            AND a.package_name Like CONCAT('%',#{packageName},'%')
+        </if>
+        <if test="packageValue!=null and packageValue!=''">
+            AND a.package_value Like CONCAT('%',#{packageValue},'%')
+        </if>
+        <if test="userId!=null ">
+            AND a.user_id =#{userId}
+        </if>
+        <if test="username!=null and username!=''">
+            AND b.username Like CONCAT('%',#{username},'%')
+        </if>
+    </select>
+</mapper>

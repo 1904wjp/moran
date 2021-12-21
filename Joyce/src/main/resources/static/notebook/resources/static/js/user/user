@@ -1,0 +1,213 @@
+
+//将返回的json数据调整为表格所需的数据格式, bootstrap table渲染数据格式{total:xx,rows:[]}
+// res为服务器返回的数据
+/*function responseHandler(res){
+    var datas=[];
+    datas.push({total:res.data.total,rows:res.data.list});
+    return datas[0];
+}
+//动态生成操作区域的的按钮
+// row.id为每行数据的主键
+//操作
+function opFormatter(value,row,index){
+    var actions=[];
+    actions.push('<a class="btn btn-primary btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#editModal" onclick="edit(\''+row.userId+'\')"><i class="fa fa-edit"></i> 编辑</a> ');
+    actions.push('<a class="btn btn-danger btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal"  onclick="deleteId(\''+row.userId+'\')"><i class="fa fa-remove"></i> 删除</a> ');
+    actions.push('<a class="btn btn-success btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#addAuthorityModal"  onclick="addAuthority(\''+row.userId+'\')"><i class="fa fa-adn"></i> 添加权限</a> ');
+    actions.push('<a class="btn btn-warning btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#deleteAuthorityModal"  onclick="deleteAuthority(\''+row.userId+'\')"><i class="fa fa-remove"></i> 删除权限</a> ')
+    return actions.join('');
+}
+//定义表格列与json数据字段的对应关系
+var columns= [
+    {
+        checkbox:true
+    },{
+        title:'序号',
+        formatter:function (value,row,index){
+            return index+1;
+        }
+    },{
+        field:'username',
+        title: '用户名',
+        sortables:true
+    },{
+        field: 'email',
+        title: '邮箱',
+        sortables: true
+    },{
+        field: 'status',
+        title: '账号状态',
+        sortables: true,
+        formatter: function (value, row, index){
+            if (row.status==1){
+                return "<button class='btn-success'disabled='disabled'style='padding:3px; border:none;'>已激活</button>";
+            }else{
+                return"<button class='btn-secondary'disabled='disabled'style='padding:3px; border:none;'>未激活</button>";
+            }
+        }
+    }, {
+        field: 'createTime',
+        title: '创建时间',
+        sortables: true
+    },{
+        field: 'createBy',
+        title: '创建者',
+        sortables: true
+    },{
+        title: '操作',
+        align: 'center',
+        formatter:opFormatter//格式化输出
+     {
+            field:"password",
+            title:"密码",
+            sortables:true,
+            formatter: function (value, row, index) { //格式化输出
+                return (row.password).substring(0,8)+"...";
+             }
+        }, {
+            field:"authorityList",
+            title:"权限",
+            sortables:true,
+            formatter: function (value, row, index) { //格式化输出
+                var html="";
+                for(var i=0;i<row.authorityList.length;i++){
+                    html+="<button class='btn-info'disabled='disabled'style='padding: 1px; margin-right: 2px;margin-top:1px;border:none;'> "+row.authorityList[i].authority+" </button>";
+                }
+                return html;
+            }
+        }*!/
+];*/
+
+// //和后台交互的查询参数对象
+// function queryParams(params) {
+//     var params = {
+//         pageSize: params.limit,                         //页面大小
+//         pageNum: (params.offset / params.limit) + 1,   //页码
+//         orderColumn: params.sort,        //排序列名
+//         sortOrder: params.order,    //排序命令（desc，asc）
+//         username:$("#queryuserName").val(),
+//         email:$("#queryEmail").val(),
+//         authorityId:$("#queryAuthority option:selected").val()
+//     };
+//     params['keyword'] = "test";  // 传入查询分页中的关键词或者查询对象
+//     console.log(params);
+//     return params;
+// }
+//
+// //获取table对象
+// var table = $('#user_table');
+// function onloadTable(){
+//     var prefix = "";
+//     //定义表格的相关属性
+//     var options = {
+//         //  locale: $('#locale').val(),
+//         height: 500,    //表格高度
+//         pagination: true,  // 启动分页
+//         sortable: true,   //启动排序
+//         pageList: "[5,10, 20, 50, All]",  //每页显示的数量
+//         pageSize: 10,    //默认每页的记录数
+//         striped: true,   //间隔显示颜色
+//         url: "/example/user/userListData",
+//         responseHandler: responseHandler,  //处理服务器返回的数据格式
+//         sidePagination: 'server',  //服务器分页则修改为server
+//         clickToSelect: true,     //单击行进行选择
+//         // multipleSelectRow: true,   //允许多选
+//         pageNumber: 1,            //默认页面为第一页
+//         queryParams: queryParams,  //与服务器交互的查询参数
+//         theadClasses: 'thead-light', //设置表头样式，thead-light,thead-dark,''
+//         columns: columns           //设置每列的字段内容
+//     }
+//     table.bootstrapTable('destroy').bootstrapTable(options);
+//     //$('#table').init(options);//初始化表格
+// }
+//
+// $(function () {
+//     onloadTable();
+// });
+//
+// //刷新
+// function Refresh(){
+//     onloadTable();
+// }
+//
+// //编辑按钮
+// function edit(id) {
+//     $(location).attr("href","/example/user/regist"+id);
+//    /* $.ajax({
+//         type:'get',
+//         url:'/backstage/user/viewUserById/'+id,
+//         contentType:'application/json',
+//         processData:false,
+//         success:function (res) {
+//             console.log(res.data);
+//             var user=res.data;
+//             $("#editId").val(user.userId);
+//             $("#edituserName").val(user.username);
+//             $("#editPassword").val(user.password);
+//             $("#editEmail").val(user.email);
+//             $("#editIntroduction").val(user.introduction);
+//             if(user.status==1){
+//                 $("input[value='1']").attr('checked','true');
+//             }else{
+//                 $("input[value='0']").attr('checked','true');
+//             }
+//         }
+//     });*/
+// }
+
+$('#roleTable').bootstrapTable({
+    method: 'get', // 服务器数据的请求方式 get or post
+    url:"/userList", // 服务器数据的加载地址
+    striped: true, //是否显示行间隔色
+    cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+    pagination: true, //是否显示分页（*）
+    sortable: false, //是否启用排序
+    sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+    pageNumber: 1, //初始化加载第一页，默认第一页
+    pageSize: 5, //每页的记录行数（*）
+    pageList: [5, 25, 50, 100], //可供选择的每页的行数（*）
+    strictSearch: true,
+    minimumCountColumns: 2, //最少允许的列数
+    clickToSelect: true, //是否启用点击选中行
+    uniqueId: "ID", //每一行的唯一标识，一般为主键列
+    cardView: false,
+    detailView: false, //是否显示详细视图
+    smartDisplay: false,
+    queryParams: function(params) {
+        return {
+            pageSize: params.limit,
+            pageNum: params.offset / params.limit + 1,
+            roleName: $(".form").find("input[name='roleName']").val().trim(),
+        };
+    },
+    columns: [{
+        checkbox: true
+    },{
+
+        formatter:function (value,row,index){
+            return index+1;
+            title:'序号';
+        }
+    },{
+        field: 'userNmae',
+        title: '角色'
+    }, {
+        field: 'remark',
+        title: '描述'
+    }, {
+        field: 'createTime',
+        title: '创建时间'
+    }, {
+        field: 'modifyTime',
+        title: '修改时间'
+    }]
+});
+// 搜索方法
+function search() {
+    $('#roleTable').bootstrapTable('refresh');
+}
+// 重置方法
+function refresh() {
+    $(".form")[0].reset();
+    search();
+}

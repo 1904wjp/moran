@@ -1,0 +1,321 @@
+package com.moon.joyce.example.controller;
+
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.moon.joyce.commons.base.cotroller.BaseController;
+import com.moon.joyce.commons.contracts.Contract;
+import com.moon.joyce.commons.utils.FileUtils;
+import com.moon.joyce.commons.utils.MD5Utils;
+import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.UUIDUtils;
+import com.moon.joyce.commons.utils.entity.Result;
+import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.service.MailService;
+import com.moon.joyce.example.service.UserService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.ParameterResolutionDelegate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+
+import java.security.PrivateKey;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+/**
+ * <p>
+ *  用户前端控制器
+ * </p>
+ *
+ * @author Joyce
+ * @since 2021-09-01
+ */
+@Controller
+@RequestMapping("/example/user")
+public class UserController extends BaseController {
+
+    @Autowired
+    private UserService userService;
+    /**
+     * 注入邮件接口
+     */
+    @Autowired
+    private MailService mailService;
+    /**
+     * 页面路径前缀
+     */
+    private String pagePrefix = "user/";
+
+    /**
+     * url的路径前缀
+     */
+    private String urlPrefix = "/example/user/";
+
+    @Value("${file.upload.path}")
+    private  String filePah;
+
+    /**
+     * user列表页面
+     * @param user
+     * @param map
+     * @return
+     */
+    @GetMapping("/userList")
+    public String getUsersPage(User user, ModelMap map){
+        List<User> users = userService.getListUser(user);
+        map.addAttribute("users",users);
+        return pagePrefix+"userListPage";
+    }
+
+    @RequestMapping("/userListData")
+    public PageInfo getUsers(User user){
+        List<User> users = userService.getListUser(user);
+        PageHelper.startPage(10,10);
+        PageInfo<User> userPageInfo = new PageInfo<>(users);
+        return userPageInfo;
+    }
+
+    /**
+     * 注册页面
+     * @return
+     */
+    @GetMapping("/regist")
+    public String registPage(){
+        return pagePrefix+"registPage";
+    }
+    /**
+     * 注册结果页面
+     * @return
+     */
+    @GetMapping("/statusResult")
+    public String statusResult(){
+        return pagePrefix+"statusResultPage";
+    }
+    /**
+     * 登录页面
+     * @return
+     */
+    @GetMapping("/login")
+    public String loginPage(){
+        return pagePrefix+"loginPage";
+    }
+    /**
+     * 更改页面
+     * @return
+     */
+    @GetMapping("/editUser")
+    public String updatePage(){
+        return pagePrefix+"updatePage";
+    }
+    /**
+     * user数据保存方法
+     * @param user
+     * @return
+     */
+ /*   @PostMapping("/doSaveUser")
+    public String saveUser(User user, @RequestParam("file") MultipartFile file,ModelMap map){
+
+        boolean result = false;
+        //注册时，用户名和邮件必须唯一
+        if (Objects.isNull(user.getId())){
+            int userCountByUsername = userService.getUserCount(user, Contract.USER_TYPE_UNIQUE_USERNAME);
+            if (userCountByUsername>Contract.RESULT_NO_SQL_RESULT&&userCountByUsername!= Contract.RESULT_UNKNOWN_SQL_RESULT){
+                return  Contract.REDIRECT+urlPrefix+"regist";
+            }
+            int userCountByEmail = userService.getUserCount(user, Contract.USER_TYPE_UNIQUE_EMAIL);
+            if (userCountByEmail>Contract.RESULT_NO_SQL_RESULT&&userCountByUsername!= Contract.RESULT_UNKNOWN_SQL_RESULT){
+                return Contract.REDIRECT+urlPrefix+"regist";
+            }
+            //状态设置成未激活
+            user.setStatus(Contract.USER_TYPE_INVAILD_STATUS);
+            //随机生成状态激活码
+            user.setStatusCode(UUIDUtils.getUUID());
+            user.setDeleteFlag(Contract.UNDELETE_STATUS);
+            user.setCreateTime(new Date());
+            //上传图片
+            String fileName = FileUtils.fileUpLoad(file);
+            // 将src路径发送至html页面
+            map.addAttribute("fileName", "/images/rotPhoto/"+fileName);
+            user.setFileUrl(fileName);
+            result =  userService.saveOrUpdate(user);
+            //发送邮件
+            String emailTitle = Contract.SEND_EMAIL_TITLE;
+            //设置html
+            String context = "<a href="+appUrl+"/example/user/checkCode?code="+user.getStatusCode()+">激活请点击:"+user.getStatusCode()+"</a>";
+            mailService.sendHtmlMail(user.getEmail(),emailTitle,context);
+        }else {
+            user.setUpdateTime(new Date());
+            result = userService.saveOrUpdate(user);
+        }
+
+        if (result){
+            return  Contract.REDIRECT+urlPrefix+"statusResult";
+        }
+            return  Contract.REDIRECT+urlPrefix+"regist";
+    }*/
+
+    @ResponseBody
+    @RequestMapping("/doSaveUser")
+    public Result saveUser(User user ){
+        //创建保存数据结果
+        boolean result;
+        //user为空
+        if (Objects.isNull(user)){
+            return ResultUtils.error(Contract.NULL_CODE,Contract.CHINESE_SLECET_BLANK_USERNAME_MESSAGE);
+        }
+        //密码加密
+        if (!StringUtils.isBlank(user.getPassword())){
+            user.setPassword(MD5Utils.getMD5Str(user.getPassword()));
+        }
+        //注册时，用户名和邮件必须唯一
+        if (Objects.isNull(user.getId())){
+            int userCountByUsername = userService.getUserCount(user, Contract.USER_TYPE_UNIQUE_USERNAME);
+            if (userCountByUsername>Contract.RESULT_NO_SQL_RESULT&&userCountByUsername!= Contract.RESULT_UNKNOWN_SQL_RESULT){
+                return ResultUtils.error(Contract.ERROR_CODE,false);
+            }
+            int userCountByEmail = userService.getUserCount(user, Contract.USER_TYPE_UNIQUE_EMAIL);
+            if (userCountByEmail>Contract.RESULT_NO_SQL_RESULT&&userCountByUsername!= Contract.RESULT_UNKNOWN_SQL_RESULT){
+                return ResultUtils.error(Contract.ERROR_CODE,false);
+            }
+            //状态设置成未激活
+            user.setStatus(Contract.USER_TYPE_INVAILD_STATUS);
+            //随机生成状态激活码
+            user.setStatusCode(UUIDUtils.getUUID());
+            user.setDeleteFlag(Contract.UNDELETE_STATUS);
+            user.setCreateTime(new Date());
+            result =  userService.saveOrUpdate(user);
+            //发送邮件
+            String emailTitle = Contract.SEND_EMAIL_TITLE;
+            //设置html
+            String context = "<a href="+appUrl+"/example/user/checkCode?code="+user.getStatusCode()+">"+Contract.SEND_EMAIL_TEMPLATE2+user.getStatusCode()+"</a>";
+            mailService.sendHtmlMail(user.getEmail(),emailTitle,context);
+        }else {
+            user.setUpdateTime(new Date());
+            result = userService.saveOrUpdate(user);
+        }
+        //结果处理
+        if (result){
+            return ResultUtils.success();
+        }
+            return  ResultUtils.error(Contract.ERROR_CODE,false);
+
+    }
+
+    /**
+     * 邮政验证
+     * @param code
+     * @returnc
+     */
+    @RequestMapping("/checkCode")
+    public String checkCode(String code){
+        User user = new User();
+        user.setStatusCode(code);
+        System.out.println(userService.getUserCount(user,Contract.USER_TYPE_UNIQUE_STATUS_CODE));
+        if (userService.getUserCount(user,Contract.USER_TYPE_UNIQUE_STATUS_CODE)!=Contract.RESULT_ONE_SUCCESS_SQL_RESULT){
+            return Contract.REDIRECT+urlPrefix+"regist";
+        }
+        User dbUser = userService.getUser(user,Contract.USER_TYPE_UNIQUE_STATUS_CODE);
+        if (Objects.nonNull(dbUser)){
+            User update= new User();
+            update.setId(dbUser.getId());
+            userService.updateUser(dbUser,update,Contract.USER_TYPE_UP_VAILD_STATUS);
+        }
+        return Contract.REDIRECT+urlPrefix+"login";
+    }
+   /* @ResponseBody
+    @RequestMapping("/checkCode")
+    public Result checkCode(String code){
+        User user = new User();
+        user.setStatusCode(code);
+        System.out.println(userService.getUserCount(user,Contract.USER_TYPE_UNIQUE_STATUS_CODE));
+        if (userService.getUserCount(user,Contract.USER_TYPE_UNIQUE_STATUS_CODE)!=Contract.RESULT_ONE_SUCCESS_SQL_RESULT){
+            return ResultUtils.error(Contract.ERROR_CODE);
+        }
+        User dbUser = userService.getUser(user,Contract.USER_TYPE_UNIQUE_STATUS_CODE);
+        if (Objects.nonNull(dbUser)){
+            User update= new User();
+            update.setId(dbUser.getId());
+            userService.updateUser(dbUser,update,Contract.USER_TYPE_UP_VAILD_STATUS);
+        }
+        return ResultUtils.success();
+    }
+*/
+    /**
+     * user数据登录
+     * @param username
+     * @param password
+     * @return
+     */
+    /*@PostMapping("/doLogin")
+    public String loginUser(String username,String password){
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        User dbUser = userService.getUser(user, Contract.USER_TYPE_LOGIN);
+        if (Objects.nonNull(dbUser)){
+            return Contract.REDIRECT+urlPrefix+"userList";
+        }
+            return Contract.REDIRECT+urlPrefix+"login";
+    }*/
+    @ResponseBody
+    @RequestMapping("/doLogin")
+    public Result loginUser(String username,String password){
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(MD5Utils.getMD5Str(password));
+        System.out.println("ffffffffffffffffffffffffffffffffffffffffffffff:"+user.getPassword());
+        User dbUser = userService.getUser(user, Contract.USER_TYPE_LOGIN);
+        if (Objects.nonNull(dbUser)){
+            return ResultUtils.success();
+        }
+        return ResultUtils.error(Contract.ERROR_CODE,Contract.CHINESE_SLECET_BLANK_USERNAME_MESSAGE);
+    }
+
+    /**
+     * 删除某个user
+     * @param id
+     * @param map
+     * @return
+     */
+/*    @RequestMapping("/delete")
+    public String deleteUserById(Long id,ModelMap map){
+        boolean del = userService.removeById(id);
+        if (del){
+            return Contract.REDIRECT+urlPrefix+"userList";
+        }
+        map.addAttribute("message","操作失败");
+        return Contract.REDIRECT+urlPrefix+"userList";
+    }*/
+    @RequestMapping("/delete")
+    public Result deleteUserById(Long id,ModelMap map){
+        boolean del = userService.removeById(id);
+        if (del){
+            return ResultUtils.success();
+        }
+        return ResultUtils.error(Contract.ERROR_CODE);
+    }
+
+    /**
+     * 编辑user的数据
+     * @param id
+     * @param map
+     * @return
+     */
+    @RequestMapping("/update")
+    public String updateUser(Long id,ModelMap map){
+        User dbUser = userService.getById(id);
+        if (Objects.nonNull(dbUser)){
+            map.addAttribute("user",dbUser);
+            return pagePrefix+"updatePage";
+        }
+        return pagePrefix+"userListPage";
+    }
+
+}
+

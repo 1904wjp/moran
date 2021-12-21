@@ -1,0 +1,30 @@
+$(document).ready(function (){
+    $('#download').hide();
+});
+
+/**
+ * 获取对应表名
+ */
+function getTablesByDatabaseName(){
+        $('#tableName').append();
+        let  data = {
+            databaseName:$('#dbName').val()
+        }
+        alert($('#dbName').val());
+        $.ajax({
+            url: '/example/columns/getAllTables',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+            //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+        }).done(function (data) {
+            if (data.rs){
+                 for (let i = 0; i < data.data.length; i++) {
+                    $('#tableName').append("<option value=\""+data.data[i].tableName+"\">"+data.data[i].tableName+"("+data.data[i].tableComment+")"+"</option>");
+                  }
+
+            }else {
+                alert(data.msg);
+            };
+        });
+}

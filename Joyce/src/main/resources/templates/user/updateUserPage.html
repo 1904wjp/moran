@@ -1,0 +1,58 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>用户修改基本信息</title>
+</head>
+<div class="container">
+    <div class="row row-centered">
+        <div class="well col-md-6 col-centered">
+            <img id="display_img" th:src="${user.fileUrl}" width="100px" height="100px" class="img-circle pull-right"/>
+            <form class="form-horizontal center-block" role="form"  method="get">
+                <legend>用户修改信息</legend>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="username" >头像</label>
+                    <div  class="col-sm-4 " style="margin-right: -9%; width: 15%;">
+                        <input class="form-control"  id="photo_file" type="file" onchange="uploadUserPhoto()"/>
+                    </div>
+                </div>
+                <input name="id" id="id" type="hidden" th:value="${user.id}">
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="username" >用户名</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="username" type="text" name="username" placeholder="请输入用户名" th:value="${user.username}"/>
+                    </div>
+                </div>
+                    <input type="hidden"  name="fileUrl" th:value="${user.fileUrl}">
+                <div style="text-align: center;width: 300px;position: absolute; top: 0; font-size:16px; color: #413F43">
+                </div>
+              <!--  <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="password">密码</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" id="password" type="password"  name="password"  placeholder="请输入密码" th:value="${user.password}"/>
+                    </div>
+                </div>-->
+                <input class="form-control" id="password" type="hidden"  name="password"  placeholder="请输入密码" th:value="${user.password}"/>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="phone">手机号码</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" id="phone" type="text" name="phone"  placeholder="请输入手机号码"  th:value="${user.phone}"/>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="email">邮件</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" id="email" type="text"  name="email" placeholder="请输入邮件"  th:value="${user.email}"/>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="select"> </label>
+                    <div class="col-sm-4">
+                        <input class="btn btn-default pull-left" id="regist" type="button" onclick="updateUserFuc()" value="确认修改"/>
+                        <a class="btn btn-default pull-right" th:href="@{'/example/user/userList'}">返回</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>

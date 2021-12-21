@@ -1,0 +1,13 @@
+<head class="paneBar" th:replace="/common/public/commonHeader::header(~{::title})">
+    <title>菜单</title>
+    <link rel="stylesheet" th:href="@{/static/css/menu/menuSetting.css}"/>
+</head>
+    <div id="menu_div_setting">
+        <li class="menu_setting">初始类 <a onclick="addMenuFuc(-1)"><span class="glyphicon glyphicon-plus"/></a>
+            <ul id="sum_menu_setting"></ul>
+        </li>
+    </div>
+<head class="panelBar" th:replace="/common/public/commonFooter::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/menu/menuSetting.js}"></script>
+</html>
+

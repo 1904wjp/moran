@@ -1,0 +1,85 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>项目包配置</title>
+</head>
+<div class="log">
+    <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
+<div  class="container addPg">
+    <div class="row row-centered">
+        <div class="well col-md-6 col-centered">
+            <form class="form-horizontal center-block" role="form" method="post">
+                <legend>项目包配置</legend>
+                <input class="form-control" id="id" type="hidden" name="id" />
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="packageName">包名</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="packageName" type="text" name="packageName" placeholder="请输入包名称"   required="required"/>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="packageValue">包值</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="packageValue" type="text" name="packageValue" placeholder="请输入包值"   required="required"/>
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for=""> </label>
+                    <div class="col-sm-5">
+                        <input class="btn btn-default pull-left"  type="button" onclick="savePackage()" value="保存"/>
+                      <!--  <input class="btn btn-default pull-right"  type="button" onclick="applyPackage()" value="设为应用项目包"/>-->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<input class="title" title="" value="pg">
+<div  class="container-fluid pgs" style="width: 90%;margin-top:5%;margin-left: -3%">
+    <div style="margin-top: 6%;height: 100%;" class="col-md-1 nav">
+        <div  th:replace="/menu/menu::meau_left"></div>
+    </div>
+    <div class="col-md-11 content">
+        <div class="content-body">
+            <div id="user_list_div">
+                <div class="container-fluid">
+                    <div>
+                        <div id="toolbar-btn" class="btn-group pull-left" style="padding-bottom:10px;">
+                            <button id="btn_add" onclick="addPackage()" type="button" class="btn btn-primary btn-space">添加
+                            </button>
+                            <button id="btn_delete" onclick="deletePackages()" type="button" class="btn btn-danger btn-space">删除
+                            </button>
+                        </div>
+                        <div class="pull-right" id="query-form" style="padding-bottom:10px;">
+                            <input name="username" placeholder='用户名称' type="text"
+                                   style="float:left;width:150px;margin-right:5px;" v-model="username"
+                                   class="form-control">
+                            <div style="float:left;margin-right:5px;">
+                                <input name="packageName" placeholder='项目包名称' type="text"
+                                       style="float:left;width:150px;margin-right:5px;" v-model="packageName"
+                                       class="form-control">
+                            </div>
+                            <div style="float:left;margin-right:5px;">
+                                <input name="packageValue" placeholder='项目值名称' type="text"
+                                       style="float:left;width:150px;margin-right:5px;" v-model="packageValue"
+                                       class="form-control">
+                            </div>
+                            <div class="btn-group">
+                                <button id="btn_search" onclick="packageSearch()" type="button" class="btn btn-primary btn-space">搜索
+                                    <span class="fa fa-search" aria-hidden="true"></span>
+                                </button>
+                                <button id="btn_reset" onclick="resetSearch()" type="button" class="btn btn-default btn-space">重置
+                                    <span class="fa fa-eraser" aria-hidden="true"></span>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <table id="packageTable" data-mobile-responsive="true" class="mb-bootstrap-table text-nowrap"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+

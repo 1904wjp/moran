@@ -1,0 +1,19 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+  <title>主页</title>
+</head>
+<div class="log">
+    <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
+<div class="headerBar"></div>
+ <div style="width: 100%">
+   <div class="container" style="margin:10px auto">
+     <canvas id="canBoard"></canvas>
+     <button type="button" id="btnConvert" style="width:56.4%" class="btn btn-primary btn-block">祭拜</button>
+     <img   style="display:none;height:70%; width:40%"  id="imgTest" />
+   </div>
+   <audio id="main_music"></audio>
+ </div>
+<input class="title" type="hidden" value="index">
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/common/public/main.js}"></script>
+</html>

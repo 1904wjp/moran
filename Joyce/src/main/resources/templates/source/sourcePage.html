@@ -1,0 +1,47 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>用户修改基本信息</title>
+</head>
+<div class="container">
+    <div class="row row-centered">
+        <div class="well col-md-6 col-centered">
+            <img id="display_img_resource" width="100px" height="100px" class="img-circle pull-right"/>
+            <form class="form-horizontal center-block" role="form"  method="get">
+                <legend>资源上传</legend>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="source_file" >资源上传</label>
+                    <div  class="col-sm-4 " style="margin-right: -9%; width: 15%;">
+                        <input class="form-control"  id="source_file" type="file" onchange="uploadSource()"/>
+                    </div>
+                </div>
+                <input name="id" id="id" type="hidden">
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="sourceName" >资源名称</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="sourceName" type="text" name="sourceName" placeholder="请输入资源名称" />
+                    </div>
+                </div>
+                    <input type="hidden" id="source_url"  name="source_url" >
+                <div style="text-align: center;width: 300px;position: absolute; top: 0; font-size:16px; color: #413F43">
+                </div>
+
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="sort">排序</label>
+                   <div class="col-sm-4">
+                        <input class="form-control" id="sort" type="number"  name="sort" min="1" placeholder="" />
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="select"> </label>
+                    <div class="col-sm-4">
+                        <input class="btn btn-default pull-left"  type="button" onclick="saveSource()" value="确认添加"/>
+                      <!--  <a class="btn btn-default pull-right" th:href="@{'/example/user/userList'}">返回</a>-->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/source/source.js}"></script>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>

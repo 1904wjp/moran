@@ -1,0 +1,131 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+	<title>聊天室</title>
+</head>
+<div class="log">
+	<head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
+<style>
+	#message{
+		margin-top:20px;
+		border:1px solid gray;
+		padding:20px;
+	}
+</style>
+</head>
+<body>
+<div  style="margin:10% 0 0 0;width: 100%">
+	<input id="username" type="hidden" th:value="${user.username}"><span th:text="'老子是:'+${user.username}"></span>
+	<input id="websocketUrlPrefix" type="hidden" th:value="${websocketUrlPrefix}">
+	<input  id="text" type="text" />
+	<button onclick="send()">SEND MESSAGE</button>
+	<button onclick="closeWebSocket()">CLOSE</button>
+</div>
+<span>
+	<select name="to"  id="to">
+            <option th:each="user,userStat:${users}" th:value="${user.username}" th:text="${user.username}"></option>
+	</select>
+</span>
+<div id="message"></div>
+<input class="title" type="hidden" value="websocket">
+</body>
+<script>
+	//连接对象.
+	var websocket = null;//websocketUrlPrefix
+	var username = document.getElementById("username").value;
+	//判断当前的浏览器是否支持websocket.
+	if ("WebSocket" in window) {
+		/*websocket = new WebSocket("ws://localhost:8080/websocket/"+nickname);*/
+		var websocketUrlPrefix = document.getElementById("websocketUrlPrefix").value;
+		websocket = new WebSocket("ws://" + websocketUrlPrefix + "/" + username);
+		console.log("ws://" + websocketUrlPrefix + "/"+ username);
+	} else {
+		alert("Not support websocket");
+	}
+
+
+	//连接发生错误的回调方法
+	websocket.onerror = function(){
+		setMessageInnerHTML("error");
+	};
+
+
+	//连接成功建立的回调方法
+	websocket.onopen = function(event){
+		setMessageInnerHTML("open");
+	}
+
+
+	//接收到消息的回调方法
+	websocket.onmessage = function(event){
+	   var obj =JSON.parse(event.data);
+	   var ou = "";
+	   var mt = "";
+	   var fi = "";
+	   var tm = "";
+	   console.log(!isBlank(event.date));
+		if (!isBlank(obj.onlineUsers)){
+			ou="当前在线人数:"+obj.onlionUsers+":";
+	   }
+		if (!isBlank(obj.messageType)){
+			mt=obj.messageType+";        ";
+		}
+		if (!isBlank(obj.fromuserId)){
+			fi=obj.fromuserId+":";
+		}
+		if (!isBlank(obj.textMessage)){
+			tm=obj.textMessage;
+		}
+		var messages = ou+mt+"  "+fi+":"+tm;
+		setMessageInnerHTML(messages);
+
+	}
+
+
+	//连接关闭的回调方法
+	websocket.onclose = function(){
+		setMessageInnerHTML("close");
+	}
+
+
+	//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+	window.onbeforeunload = function(){
+		websocket.close();
+	}
+
+
+	//将消息显示在网页上
+	function setMessageInnerHTML(innerHTML){
+		document.getElementById('message').innerHTML += innerHTML + '<br/>';
+	}
+
+
+	//关闭连接
+	function closeWebSocket(){
+		websocket.close();
+	}
+
+
+	//发送消息
+	function send(){
+		var text = document.getElementById('text').value;
+	    var toOBJ =	document.getElementById("to");
+	    var index = toOBJ.selectedIndex;
+	    var to = toOBJ.options[index].value;
+	    console.log(to);
+		if (to==null||to==''){
+			to = "All";
+		}
+		var  innerHTML = "<div><p>我:"+text+"</p></div>"
+		setMessageInnerHTML(innerHTML);
+		var messages={
+			username:username,
+			message:text,
+			to:to
+		}
+		websocket.send(JSON.stringify(messages));
+		document.getElementById("text").value="";
+	}
+
+
+</script>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moon.joyce.example.mapper.UserMapper">
+
+    <!-- &lt;!&ndash; 开启二级缓存 &ndash;&gt;
+     <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+ -->
+    <!--先分页查询后对结果排序-->
+    <select id="getUsers" resultType="com.moon.joyce.example.entity.User">
+        SELECT *
+        FROM user
+        <where>
+            <if test="username != null and username != ''">
+                AND username LIKE CONCAT('%',#{username},'%')
+            </if>
+           <!-- <if test="password != null and password != ''">
+                AND password =#{password}
+            </if>-->
+            <if test="phone!= null and phone!= ''">
+                AND phone LIKE CONCAT('%',#{phone},'%')
+            </if>
+            <if test="email != null and email != ''">
+                AND email  LIKE CONCAT('%',#{email},'%')
+            </if>
+         <!--   <if test="secondarPassword != null and secondarPassword!=''">
+                AND secondar_password = #{secondarPassword}
+            </if>-->
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="userTypeId != null and userTypeId != ''">
+                AND user_type_id = #{userTypeId}
+            </if>
+        </where>
+        <if test="offset!=null and offset!=0 and  pageNumber!=null and  pageNumber!=0  ">
+            LIMIT #{offset}, #{pageNumber}
+        </if>
+
+    </select>
+
+    <!--统计所有数据数量-->
+    <select id="getTotal" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM user
+        <where>
+            <if test="id != null"> and id = #{id} </if>
+            <if test="username != null and username != ''"> and username = #{username} </if>
+            <!--<if test="password != null password != ''"> and password= #{password} </if>-->
+            <if test="phone!= null and phone!= ''"> and phone = #{phone} </if>
+            <if test="email != null and email != ''"> and email = #{email} </if>
+            <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+           <!-- <if test="secondarPassword != null and secondarPassword!=''"> and secondar_password = #{secondarPassword} </if>-->
+            <if test="status != null"> and status = #{status} </if>
+            <if test="userTypeId != null and userTypeId != ''"> and user_type_id = #{userTypeId} </if>
+         </where>
+    </select>
+
+
+</mapper>

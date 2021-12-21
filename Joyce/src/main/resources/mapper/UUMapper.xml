@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moon.joyce.example.mapper.UUMapper">
+    <select id="getListByType" resultType="java.lang.Long">
+        SELECT temp.userId FROM
+            (SELECT a.userb_id AS userId FROM u_u a
+             WHERE a.usera_id = #{userId}
+             AND a.type = #{type}
+             UNION
+             SELECT b.usera_id AS userId FROM u_u b
+             WHERE b.userb_id = #{userId}
+             AND b.type = #{type} ) temp
+    </select>
+</mapper>

@@ -1,0 +1,43 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>代码生成</title>
+</head>
+<div class="log">
+    <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
+<div class="container">
+    <div class="row row-centered">
+        <div class="well col-md-6 col-centered">
+            <form class="form-horizontal center-block" role="form" method="post">
+                <legend>生成代码</legend>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="tableName">表名称</label>
+                    <div  class="col-sm-4 ">
+                        <select class="form-control" id="tableName">
+                            <option value="">请选择表</option>
+                        </select>
+                        <!--<input class="form-control" id="tableName" type="text" name="tableName" placeholder="请输入表名称"   required="required"/>-->
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="dbName">database名称</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="dbName" type="text" name="dbName" placeholder="请输入database名称"   required="required" onchange=" getTablesByDatabaseName()"/>
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for=""> </label>
+                    <div class="col-sm-5">
+                        <input class="btn btn-default pull-left" id="sure" type="button" onclick="inputColumns()" value="确认"/>
+                        <input  class="btn btn-default pull-right" id="download" type="button" onclick="downloadWebFile()" value="下载"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<input class="title" type="hidden" value="columns">
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/tools/createCode/getColumn.js}"></script>
+</html>
