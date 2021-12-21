@@ -22,6 +22,8 @@
                       th:onclick="'editUserFuc('+${session.session_user.id}+',1)'"> 编辑信息</a></li>
               <li><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal"
                      th:onclick="rmUser()">退出登录</a></li>
+              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal"
+                     th:onclick="toAddSource()">添加背景</a></li>
          </ul>
     </span>
     </div>
@@ -29,6 +31,6 @@
 </div>
 <script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
 <script type="text/javascript" th:src="@{/static/js/user/user.js}"></script>
-<script type="text/javascript" th:src="@{/static/js/public/headerBar.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/common/public/headerBar.js}"></script>
 </html>
 

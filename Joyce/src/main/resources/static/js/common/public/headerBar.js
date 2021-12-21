@@ -122,7 +122,12 @@ $(function () {
     }*/
 });
 
-
+/**
+ * 添加资源背景
+ */
+function toAddSource(){
+    toList("/example/source/sourcePage");
+}
 
 /**
  *用户下拉菜单显示和隐藏
