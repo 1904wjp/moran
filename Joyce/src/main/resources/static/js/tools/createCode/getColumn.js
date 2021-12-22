@@ -10,7 +10,6 @@ function getTablesByDatabaseName(){
         let  data = {
             databaseName:$('#dbName').val()
         }
-        alert($('#dbName').val());
         $.ajax({
             url: '/example/columns/getAllTables',
             type: 'POST',
@@ -22,9 +21,10 @@ function getTablesByDatabaseName(){
                  for (let i = 0; i < data.data.length; i++) {
                     $('#tableName').append("<option value=\""+data.data[i].tableName+"\">"+data.data[i].tableName+"("+data.data[i].tableComment+")"+"</option>");
                   }
-
             }else {
-                alert(data.msg);
+                toastr.error(data.msg);
             };
+        }).fail(function (){
+            toastr.error(ajaxFailMsg);
         });
 }

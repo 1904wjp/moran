@@ -14,8 +14,11 @@ function password_change(id) {
  * @param url
  */
 function toList(url) {
-    $(location).attr('href', url);
+    setTimeout(function (){
+            $(location).attr('href', url);
+        }, 1000);
 }
+
 
 /**
  * 跳转主页
@@ -108,11 +111,11 @@ function getIds(obj) {
     var ids = "";
     var rows = obj.bootstrapTable('getSelections');
     if (rows.length == 0) {
-        alert("至少选中一项");
+       /* alert("至少选中一项");*/
+        toastr.warning('至少选中一项');
     } else {
         $(rows).each(function () {
             ids = ids + this.id + ",";
-
         });
         ids = ids.substring(0, ids.length - 1);
     }
@@ -376,7 +379,7 @@ function vailDate(data, filter) {
     }
 
     if (flag == false) {
-        alert("数据未填写完整");
+        toastr.warning("数据未填写完整");
     }
     return flag;
 }
@@ -400,21 +403,31 @@ function inputColumns() {
         "tableName": $('#tableName').val(),
         "dbName": $('#dbName').val()
     }
-    $.ajax({
-        url: '/example/columns/getColumns',
-        type: 'POST',
-        dataType: 'json',
-        data: data,
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
-    }).done(function (data) {
-        if (data.code == 200) {
-            $('#download').show();
-            alert(data.msg);
-        }
 
-    }).fail(function () {
+    if(vailDate(data)){
+        Ewin.confirm({message: "确认要提交数据？"}).on(function (e) {
+            if (!e) {
+                return;
+            }
+            $.ajax({
+                url: '/example/columns/getColumns',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+            }).done(function (data) {
+                if (data.rs) {
+                    $('#download').show();
+                    toastr.success(data.msg);
+                }else {
+                    toastr.error(data.msg);
+                }
+            }).fail(function () {
+                toastr.error(ajaxFailMsg);
+            });
+        });
+    }
 
-    });
 }
 
 /**
@@ -424,27 +437,5 @@ function downloadWebFile() {
     toList("/example/columns/downloadWebFile");
 }
 
-/**
- * ajax调用
- */
-function ajaxFunction(resUrl,resType,resData,toSuccessUrl,toFailUrl){
-    $.ajax({
-        url: resUrl,
-        type: resType,
-        dataType: 'json',
-        data: resData,
-    }).done(function (data) {
-        if (data.rs){
-            if (notBlank(toSuccessUrl)){
-                toList(toSuccessUrl);
-            }
-        }else{
-            if (notBlank(toFailUrl)){
-                toList(toFailUrl);
-            }
-        }
-        alert(data.msg);
-    }).fail(function () {
-    });
-}
+
 

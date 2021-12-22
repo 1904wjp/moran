@@ -52,6 +52,7 @@ public class UserController extends BaseController {
      * 页面路径前缀
      */
     private final String  pagePrefix = "user/";
+    private final String  commonPagePrefix = "common/error/";
 
     /**
      * url的路径前缀
@@ -149,9 +150,9 @@ public class UserController extends BaseController {
     @Transactional
     @GetMapping("/editUser/{id}")
     public String updateUserPage(@PathVariable Long id,ModelMap map){
-     if (!id.equals( getSessionUser().getId())){
-            return pagePrefix+"error";
-        }
+    /* if (!id.equals( getSessionUser().getId())){
+            return commonPagePrefix+"404";
+        }*/
         User dbUser = userService.getById(id);
         if (Objects.nonNull(dbUser)){
             map.addAttribute("user",dbUser);
@@ -324,14 +325,12 @@ public class UserController extends BaseController {
             return ResultUtils.error(Constant.NULL_CODE);
         }
         List<String> list = StringsUtils.StrToList(ids);
+        logger.info(list.toString()+"::"+getSessionUser().getId());
         if (StringsUtils.listIsContainsStr(getSessionUser().getId().toString(),list)){
             return ResultUtils.error(getSessionUser().getUsername()+"正在使用，无法操作");
         }
         boolean del = userService.removeByIds(list);
         if (del){
-            if (StringsUtils.listIsContainsStr(getSessionUser().getId().toString(),list)){
-                return ResultUtils.error(Constant.NULL_CODE);
-            }
             return ResultUtils.success();
         }
         return ResultUtils.error(Constant.ERROR_CODE);

@@ -33,19 +33,26 @@ function saveDataSource(){
             "id":$("#id").val()
         };
     if (vailDate(data,filter)){
-        $.ajax({
-            url: '/example/db/saveDb',
-            type: 'POST',
-            dataType: 'json',
-            data: data,
-            //传过来的data需要.data才可以获取当前对象。因为data是封装过的
-        }).done(function (data) {
-            if (data.rs){
-                toList("/example/db/dbPage");
+        Ewin.confirm({message: "确认提交数据？"}).on(function (e) {
+            if (!e){
+                return;
             }
-            alert(data.msg);
-        }).fail(function () {
-            alert(ajaxFailMsg);
+            $.ajax({
+                url: '/example/db/saveDb',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+            }).done(function (data) {
+                if (data.rs) {
+                    toastr.success(data.msg);
+                    toList("/example/db/dbPage");
+                }else {
+                    toastr.error(data.msg);
+                }
+            }).fail(function () {
+                toastr.error(ajaxFailMsg);
+            });
         });
     }
 }
@@ -55,23 +62,29 @@ function saveDataSource(){
  * 设为应用数据源信息
  */
 function applyDataSource(id){
-    console.log("id:"+id)
     var data = {
         "id":id
     };
-    $.ajax({
-        url: '/example/db/changeDb',
-        type: 'GET',
-        dataType: 'json',
-        data: data,
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
-    }).done(function (data) {
-        if (data.rs){
-            toList("/example/db/dbPage");
+    Ewin.confirm({message: "确认要将id为"+id+"的数据设置成应用数据源吗？"}).on(function (e) {
+        if (!e) {
+            return;
         }
-        alert(data.msg);
-    }).fail(function () {
-        alert(ajaxFailMsg);
+        $.ajax({
+            url: '/example/db/changeDb',
+            type: 'GET',
+            dataType: 'json',
+            data: data,
+            //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+        }).done(function (data) {
+            if (data.rs) {
+                toastr.success(data.ms);
+                toList("/example/db/dbPage");
+            }else {
+                toastr.error(data.msg);
+            }
+        }).fail(function () {
+            toastr.error(ajaxFailMsg);
+        });
     });
 }
 
@@ -91,11 +104,13 @@ function deleteSource(id){
         //传过来的data需要.data才可以获取当前对象。因为data是封装过的
     }).done(function (data) {
         if (data.rs){
+            toastr.success(data.msg);
             toList("/example/db/dbPage");
+        }else {
+            toastr.error(data.msg);
         }
-        alert(data.msg);
     }).fail(function () {
-        alert(ajaxFailMsg);
+        toastr.error(ajaxFailMsg);
     });
 }
 
@@ -176,22 +191,25 @@ function datasourceOpFormatter(value,row,index){
 //删除id为id的数据
 function deleteDbById(id){
     var data = {"ids":id};
-    if (!confirm("确认删除id为"+id+"的数据")){
-        alert("操作取消");
-        return false;
-    }
-    $.ajax({
-        url: '/example/db/deleteDb',
-        type: 'POST',
-        dataType: 'json',
-        data: data,
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
-    }).done(function (data) {
-        if (data.code==200){
-            toList('/example/db/dbPage');
+    Ewin.confirm({message: "确认要删除选择的数据吗？"}).on(function (e) {
+        if (!e) {
+            return;
         }
-        alert(data.msg);
-    }).fail(function () {
+        $.ajax({
+            url: '/example/db/deleteDb',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+        }).done(function (data) {
+            if (data.rs) {
+                toastr.success(data.msg);
+                toList('/example/db/dbPage');
+            } else {
+                toastr.error(data.msg);
+            }
+        }).fail(function () {
+            toastr.error(ajaxFailMsg);
+        });
     });
 }
 
@@ -201,8 +219,7 @@ function deleteDbById(id){
  * @param
  */
 function editDataSource(id){
-    console.log("id:"+id)
-    data = {
+   let data = {
         "id":id
     };
     $.ajax({
@@ -210,7 +227,6 @@ function editDataSource(id){
         type: 'GET',
         dataType: 'json',
         data: data,
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
     }).done(function (data) {
         if (data.rs){
             $('.dbs').hide();
@@ -223,11 +239,12 @@ function editDataSource(id){
             $('#tempCode').val(data.data.tempCode);
             $('#databaseType').val(data.data.databaseType);
             $('#url').val(data.data.url);
+            toastr.success(data.msg);
         }else {
-            alert(data.msg);
+            toastr.error(data.msg);
         }
     }).fail(function () {
-        alert(ajaxFailMsg);
+        toastr.error(ajaxFailMsg);
     });
 }
 
@@ -236,23 +253,29 @@ function deleteDbIds(){
     var ids =  getIds($("#dbTable"));
     if (ids!=''&&ids!=null){
         var data = {"ids":ids};
-        if (!confirm("确认删除id为:"+ids+"的数据?")){
-            alert("操作取消");
-            return false;
+        if(vailDate(data)){
+            Ewin.confirm({message: "确认要删除所选文件？"}).on(function (e) {
+                if (!e) {
+                    return;
+                }
+                $.ajax({
+                    url: '/example/db/deleteDb',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: data,
+                    //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+                }).done(function (data) {
+                    if (data.rs) {
+                        toastr.success(data.msg);
+                        toList('/example/db/dbPage');
+                    } else {
+                        toastr.error(data.msg);
+                    }
+                }).fail(function (){
+                    toastr.error(ajaxFailMsg);
+                });
+            });
         }
-        $.ajax({
-            url: '/example/db/deleteDb',
-            type: 'POST',
-            dataType: 'json',
-            data: data,
-            //传过来的data需要.data才可以获取当前对象。因为data是封装过的
-        }).done(function (data) {
-            if (data.rs){
-                toList('/example/db/dbPage');
-            }else {
-                alert(data.msg);
-            };
-        });
     }
 }
 
@@ -333,8 +356,7 @@ function addPackage(){
  * @param id
  */
 function editPackage(id){
-    console.log("id:"+id)
-    data = {
+    let data = {
         "id":id
     };
     $.ajax({
@@ -342,7 +364,6 @@ function editPackage(id){
         type: 'GET',
         dataType: 'json',
         data: data,
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
     }).done(function (data) {
         if (data.rs){
             $('.pgs').hide();
@@ -350,12 +371,12 @@ function editPackage(id){
             $('#id').val(data.data.id);
             $('#packageName').val(data.data.packageName);
             $('#packageValue').val(data.data.packageValue);
+            toastr.success(data.msg);
         }else {
-            alert(data.msg);
+            toastr.error(data.msg);
         }
-
     }).fail(function () {
-        alert(ajaxFailMsg);
+        toastr.error(ajaxFailMsg);
     });
 }
 
@@ -370,19 +391,26 @@ function savePackage(){
         "packageValue":$("#packageValue").val()
     };
     if (vailDate(data)){
-        $.ajax({
-            url: '/example/db/savePg',
-            type: 'POST',
-            dataType: 'json',
-            data: data,
-            //传过来的data需要.data才可以获取当前对象。因为data是封装过的
-        }).done(function (data) {
-            if (data.rs){
-                toList("/example/db/packagePage");
+        Ewin.confirm({message: "确认提交数据源？"}).on(function (e) {
+            if (!e) {
+                return;
             }
-            alert(data.msg);
-        }).fail(function () {
-            alert(ajaxFailMsg);
+            $.ajax({
+                url: '/example/db/savePg',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+            }).done(function (data) {
+                if (data.rs) {
+                    toastr.success(data.msg);
+                    toList("/example/db/packagePage");
+                }else {
+                    toastr.error(data.msg);
+                }
+            }).fail(function () {
+                toastr.error(ajaxFailMsg);
+            });
         });
     }
 }
@@ -396,6 +424,10 @@ function applyPackage(id){
     data = {
         "id":id
     };
+    Ewin.confirm({message: "确认要将id为"+id+"数据设置为主应用包吗？"}).on(function (e) {
+        if (!e) {
+            return;
+        }
     $.ajax({
         url: '/example/db/changePg',
         type: 'GET',
@@ -404,11 +436,14 @@ function applyPackage(id){
         //传过来的data需要.data才可以获取当前对象。因为data是封装过的
     }).done(function (data) {
         if (data.rs){
+            toastr.success(data.msg);
             toList('/example/db/packagePage');
+        }else {
+            toastr.error(data.msg);
         }
-        alert(data.msg);
     }).fail(function () {
-        alert(ajaxFailMsg);
+       toastr.error(ajaxFailMsg);
+    });
     });
 }
 
@@ -420,19 +455,25 @@ function deletePackage(id){
     data={
         "ids":id
     };
-    $.ajax({
-        url: '/example/db/deletePg',
-        type: 'GET',
-        dataType: 'json',
-        data: data,
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
-    }).done(function (data) {
-        if (data.rs){
-            toList("/example/db/packagePage");
+    Ewin.confirm({message: "确认要删除选择的数据吗？"}).on(function (e) {
+        if (!e) {
+            return;
         }
-        alert(data.msg);
-    }).fail(function () {
-        alert(ajaxFailMsg);
+        $.ajax({
+            url: '/example/db/deletePg',
+            type: 'GET',
+            dataType: 'json',
+            data: data,
+        }).done(function (data) {
+            if (data.rs) {
+                toastr.success(data.msg);
+                toList("/example/db/packagePage");
+            } else {
+                toastr.error(data.msg);
+            }
+        }).fail(function () {
+            toastr.error(ajaxFailMsg);
+        });
     });
 }
 //刷新
@@ -454,22 +495,27 @@ function deletePackages(){
     var ids =  getIds($("#packageTable"));
     if (ids!=''&&ids!=null){
         var data = {"ids":ids};
-        if (!confirm("确认删除id为:"+ids+"的数据?")){
-            alert("操作取消");
-            return false;
-        }
-        $.ajax({
-            url: '/example/db/deletePg',
-            type: 'POST',
-            dataType: 'json',
-            data: data,
-            //传过来的data需要.data才可以获取当前对象。因为data是封装过的
-        }).done(function (data) {
-            if (data.rs){
-                toList('/example/db/packagePage');
-            }else {
-                alert(data.msg);
-            };
+        Ewin.confirm({message: "确认要删除选择的数据吗？"}).on(function (e) {
+            if (!e) {
+                return;
+            }
+            $.ajax({
+                url: '/example/db/deletePg',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+            }).done(function (data) {
+                if (data.rs) {
+                    toastr.success(data.msg);
+                    toList('/example/db/packagePage');
+                } else {
+                    toastr.error(data.msg);
+                }
+                ;
+            }).fail(function () {
+                toastr.error(ajaxFailMsg);
+            });
         });
     }
 }
