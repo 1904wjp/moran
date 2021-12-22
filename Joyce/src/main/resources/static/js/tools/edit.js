@@ -103,7 +103,7 @@ function articleSearch() {
 }
 
 //删除id为ids的数据集合
-function deleteArticleFuc(id) {
+function deleteArticleFuc() {
     let ids = getIds($("#articleTable"));
     let data = {"ids": ids};
     Ewin.confirm({message: "确认删除所选的数据？"}).on(function (e) {
