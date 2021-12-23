@@ -42,8 +42,14 @@ $(function () {
         url: "/example/uedit/uEditorListPage",
         name: "写笔记",
         childs: []
+    },{
+        id: 6,
+        parentId: 0,
+        val: "covid",
+        url: "/example/covid/map",
+        name: "疫情数据",
+        childs: []
     }];
-
     let menu = $('#menu_bar');
     for (i = 0, len = menuList.length; i < len; i++) {
         if (menuList[i].parentId == 0) {

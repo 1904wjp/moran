@@ -1,0 +1,168 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>疫情数据</title>
+</head>
+    <style>
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+
+        #myEcharts {
+            width: 800px;
+            height: 500px;
+            border: solid 1px red;
+            margin: 0 auto;
+
+        }
+        #bg_div{
+            width: 800px;
+            height: 500px;
+            background-color: white;
+        }
+    </style>
+  <!--  <script src="https://www.echartsjs.com/examples/vendors/jquery/jquery.js"></script>
+    &lt;!&ndash; 引入 echarts.js &ndash;&gt;
+    <script src="https://www.echartsjs.com/examples/vendors/echarts/echarts.min.js?_v_=1578305236132"></script>
+    &lt;!&ndash;引入中国的地图数据js文件，引入后会自动注册地图名字和数据&ndash;&gt;
+    <script src="https://www.echartsjs.com/examples/vendors/echarts/map/js/china.js?_v_=1578305236132"></script>-->
+
+</head>
+
+<body>
+<div class="container">
+    <h3>累计确诊人数如下：</h3>
+    <!--为echarts准备一个dom容器-->
+    <div id="bg_div">
+        <div id="myEcharts"></div>
+    </div>
+</div>
+<input type="hidden"  class="title" value="covid">
+<script type="text/javascript" th:src="@{/static/js/utils/echarts/echarts.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/utils/echarts/china.js}"></script>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script>
+    //初始化echarts实例
+    var myChart = echarts.init(document.getElementById('myEcharts'));
+    // 指定图表的配置项和数据
+    option = {
+        title: {
+            text: '中国疫情图',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: function(a, b) {
+                return (
+                    `地区:${a['data'].name}</br>今日现确诊: ${a['data'].todayConfirmCuts}</br>今日未确诊: ${a['data'].todayConfirm}</br>确诊: ${a['data'].confirm}</br>现确诊: ${a['data'].nowConfirm}</br>疑似人数: ${a['data'].suspect}</br>死亡人数: ${a['data'].dead}</br>死亡率: ${a['data'].dataRete}</br>已治愈人数: ${a['data'].heal}</br>治愈率: ${a['data'].healRate}`
+                )
+            }
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['中国疫情图']
+        },
+        visualMap: {
+            type: 'piecewise',
+            pieces: [
+                { min: 1000, max: 1000000, label: '大于等于1000人', color: '#372a28' },
+                { min: 500, max: 999, label: '确诊500-999人', color: '#4e160f' },
+                { min: 100, max: 499, label: '确诊100-499人', color: '#974236' },
+                { min: 10, max: 99, label: '确诊10-99人', color: '#ee7263' },
+                { min: 1, max: 9, label: '确诊1-9人', color: '#f5bba7' },
+            ],
+            color: ['#E0022B', '#E09107', '#A3E00B']
+        },
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            top: 'center',
+            feature: {
+                mark: { show: true },
+                dataView: { show: true, readOnly: false },
+                restore: { show: true },
+                saveAsImage: { show: true }
+            }
+        },
+        roamController: {
+            show: true,
+            left: 'right',
+            mapTypeControl: {
+                'china': true
+            }
+        },
+        series: [
+            {
+                name: '确诊数',
+                type: 'map',
+                mapType: 'china',
+                roam: false,
+                label: {
+                    show: true,
+                    color: 'rgb(249, 249, 249)'
+                },
+                data: []
+            }
+        ]
+    };
+
+    //使用指定的配置项和数据显示图表
+    myChart.setOption(option);
+
+    //获取数据
+    function getData() {
+        $.ajax({
+            url: "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5",
+            dataType: "jsonp",
+            success: function (data) {
+                //  console.log(data.data)
+                var res = data.data || "";
+                res = JSON.parse(res);
+                var newArr = [];
+                if (res) {
+                    //获取到各个省份的数据
+                    var province = res.areaTree[0].children;
+                    for (var i = 0; i < province.length; i++) {
+                        var json = {
+                            name: province[i].name,
+                            todayConfirm: province[i].today.confirm,
+                            todayConfirmCuts: province[i].today.confirmCuts,
+                            confirm: province[i].total.confirm,
+                            nowConfirm: province[i].total.nowConfirm,
+                            suspect: province[i].total.suspect,
+                            dead: province[i].total.dead,
+                            dataRete: province[i].total.deadRate,
+                            heal: province[i].total.heal,
+                            healRate: province[i].total.healRate,
+                        }
+                        newArr.push(json);
+                    }
+                    //使用指定的配置项和数据显示图表
+                    myChart.setOption({
+                        series: [
+                            {
+                                name: '确诊人数',
+                                type: 'map',
+                                mapType: 'china',
+                                roam: false,
+                                label: {
+                                    show: true,
+                                    color: 'rgb(249, 249, 249)'
+                                },
+                                data: newArr
+                            }
+                        ],
+                    });
+                }
+            }
+
+        })
+    }
+    $(document).ready(function (){
+        getData(); // 第一次加载数据
+        setInterval(function(){
+            getData();
+        }, 15000);
+    });
+</script>
