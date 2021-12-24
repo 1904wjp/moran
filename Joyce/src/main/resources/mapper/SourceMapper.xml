@@ -19,6 +19,9 @@
              LEFT JOIN springboot.user u
              ON s.user_id = u.id
              WHERE s.delete_flag = 0
+            <if test="userId!=null">
+                AND s.user_id = #{userId}
+            </if>
             <if test="username!=null and username!=''">
                  AND u.username LIKE CONCAT('%',#{username},'%')
              </if>

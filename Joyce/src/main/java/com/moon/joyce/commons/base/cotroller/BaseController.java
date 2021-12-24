@@ -3,9 +3,11 @@ package com.moon.joyce.commons.base.cotroller;
 
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.entity.DbBaseSetting;
+import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
+import com.moon.joyce.example.service.UUService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -13,10 +15,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Xing Dao Rong
@@ -143,4 +142,5 @@ public class BaseController {
         }
         return false;
     }
+
 }

@@ -12,8 +12,10 @@
         <ul id="menu_bar" class="nav navbar-nav">
         </ul>
         <span id="user_info"  class="pull-right" style="margin-right: 3%">
+            <!--<span style="width: 100px;background-color: red">你好</span>-->
         <span>
-           <img id="user_img" th:src="${session.session_user.fileUrl}" class="img-circle" onclick="dropdownBlock()"><span th:text="${session.session_user.username}"></span>
+          <span><img id="user_img" th:src="${session.session_user.fileUrl}" class="img-circle" onclick="dropdownBlock()"></span>
+            <span style="margin: 100%;line-height: 0%" th:text="${session.session_user.username}"></span>
         </span>
          <ul class="list-group" style="display: none; margin-right: 7%">
               <li> <a href="javascript:void(0)" data-toggle="modal" data-target="#queryModel"

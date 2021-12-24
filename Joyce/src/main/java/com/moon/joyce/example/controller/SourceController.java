@@ -52,8 +52,8 @@ public class SourceController extends BaseController {
     @ResponseBody
     @GetMapping("/getList")
     public PageVo getList(Source source){
-       List<Source> list =  sourceService.getList(source);
        source.setUserId(getSessionUser().getId());
+       List<Source> list =  sourceService.getList(source);
        int total = sourceService.getCount(source);
        return new PageVo(list,total);
     }

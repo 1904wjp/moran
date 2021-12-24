@@ -9,6 +9,14 @@
         <div class="well col-md-6 col-centered">
             <form class="form-horizontal center-block" role="form" method="post">
                 <legend>生成代码</legend>
+
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="dbName">database名称</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="dbName" type="text" name="dbName" placeholder="请输入database名称"   required="required" onchange=" getTablesByDatabaseName()"/>
+                    </div>
+                </div>
+
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="tableName">表名称</label>
                     <div  class="col-sm-4 ">
@@ -18,14 +26,6 @@
                         <!--<input class="form-control" id="tableName" type="text" name="tableName" placeholder="请输入表名称"   required="required"/>-->
                     </div>
                 </div>
-
-                <div class="form-group ">
-                    <label class="col-sm-2 control-label" for="dbName">database名称</label>
-                    <div  class="col-sm-4 ">
-                        <input class="form-control" id="dbName" type="text" name="dbName" placeholder="请输入database名称"   required="required" onchange=" getTablesByDatabaseName()"/>
-                    </div>
-                </div>
-
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for=""> </label>
                     <div class="col-sm-5">

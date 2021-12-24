@@ -2,7 +2,6 @@ package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.moon.joyce.example.entity.UU;
-import joyce.example.entity.UserType;
 
 import java.util.List;
 
@@ -20,4 +19,17 @@ public interface UUService extends IService<UU> {
      * @return
      */
      List<Long> getList(String type,Long userId);
+
+    /**
+     * 发送好友请求
+     * @param uu
+     * @return
+     */
+    int sendArticleFriendApplication(UU uu);
+
+    /**
+     * 获取当前登录人所有的被申请列表
+     * @return
+     */
+    List<UU> getAllList(Long userId);
 }

@@ -26,10 +26,24 @@ public class UU extends BaseEntity {
     /**
      * 另一个用户id
      */
+    @TableField(exist = false)
+    private String usernameA;
+    /**
+     * 另一个用户id
+     */
     @TableField("userb_id")
     private Long userBId;
     /**
-     * 用户关系类型
+     * 另一个用户名
+     */
+    @TableField(exist = false)
+    private String usernameB;
+    /**
+     * 用户关系类型类型{1.好友，2.情侣，3.闺蜜，4.基友，5.黑名单}
      */
     private String type;
+    /**
+     * 添加好友时的一段话，最多60字
+     */
+    private String desc;
 }

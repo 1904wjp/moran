@@ -21,4 +21,11 @@ public interface UUMapper extends BaseMapper<UU> {
       * @return
       */
      List<Long> getListByType(@Param("type") String type,@Param("userId") Long userId);
+
+     /**
+      * 获取id为userId的用户所有的被申请关系集合
+      * @param userId
+      * @return
+      */
+     List<UU> selectList(Long userId);
 }

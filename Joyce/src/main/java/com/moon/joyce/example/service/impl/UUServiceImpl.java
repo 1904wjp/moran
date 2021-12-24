@@ -1,16 +1,16 @@
 package com.moon.joyce.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.mapper.UUMapper;
 import com.moon.joyce.example.service.UUService;
-import joyce.example.entity.UserType;
-import joyce.example.mapper.UserTypeMapper;
-import joyce.example.service.UserTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Joyce
@@ -25,4 +25,24 @@ public class UUServiceImpl extends ServiceImpl<UUMapper, UU> implements UUServic
     public List<Long> getList(String type, Long userId) {
         return uuMapper.getListByType(type,userId);
     }
+
+    @Override
+    public int sendArticleFriendApplication(UU uu) {
+        QueryWrapper<UU> wrapper = new QueryWrapper<>();
+        wrapper.eq("usera_id",uu.getUserAId());
+        wrapper.eq("userb_id",uu.getUserBId());
+        UU dbUu = baseMapper.selectOne(wrapper);
+        if (Objects.nonNull(dbUu)){
+            return -1;
+        }
+        uu.setDeleteFlag(Constant.UNDELETE_STATUS);
+        return baseMapper.insert(uu);
+    }
+
+    @Override
+    public List<UU> getAllList(Long userId) {
+        return uuMapper.selectList(userId);
+    }
+
+
 }
