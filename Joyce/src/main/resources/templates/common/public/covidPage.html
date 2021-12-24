@@ -25,11 +25,12 @@
     <script src="https://www.echartsjs.com/examples/vendors/echarts/echarts.min.js?_v_=1578305236132"></script>
     &lt;!&ndash;引入中国的地图数据js文件，引入后会自动注册地图名字和数据&ndash;&gt;
     <script src="https://www.echartsjs.com/examples/vendors/echarts/map/js/china.js?_v_=1578305236132"></script>-->
-
 </head>
 
-<body>
-<div class="container">
+<div class="log">
+    <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
+<div class="container" style="margin-top: 10%">
     <!--为echarts准备一个dom容器-->
     <div id="bg_div">
         <div id="myEcharts"></div>
