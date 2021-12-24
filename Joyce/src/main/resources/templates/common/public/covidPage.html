@@ -50,11 +50,27 @@
         },
         tooltip: {
             trigger: 'item',
-            formatter: function(a, b) {
-                return (
-                    `地区:${a['data'].name}</br>今日现确诊: ${a['data'].todayConfirmCuts}</br>今日未确诊: ${a['data'].todayConfirm}</br>确诊: ${a['data'].confirm}</br>现确诊: ${a['data'].nowConfirm}</br>疑似人数: ${a['data'].suspect}</br>死亡人数: ${a['data'].dead}</br>死亡率: ${a['data'].dataRete}</br>已治愈人数: ${a['data'].heal}</br>治愈率: ${a['data'].healRate}`
-                )
-            }
+           /* formatter: function(params) {
+                    /!*str ='';
+                    for(var i=0;i<params;i++){
+                       str=str+ '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + `${params[i]['data'].backgroundColor}` + ';color: #0a0a0a">' +
+                        `地区:${params[i]['data'].name}</br>
+                     今日现确诊: ${params[i]['data'].todayConfirmCuts}</br>
+                     今日未确诊: ${params[i]['data'].todayConfirm}</br>
+                     确诊: ${params[i]['data'].confirm}</br>
+                     现确诊: ${params[i]['data'].nowConfirm}</br>
+                     疑似人数: ${params[i]['data'].suspect}</br>
+                     死亡人数: ${params[i]['data'].dead}</br>
+                     死亡率: ${params[i]['data'].dataRete}</br>
+                     已治愈人数: ${params[i]['data'].heal}</br>
+                     治愈率: ${params[i]['data'].healRate}</br>
+                     治愈率: ${params[i]['data'].backgroundColor}`
+                        + '</span>'
+                    }*!/
+              return {
+                  params
+              };
+            }*/
         },
         legend: {
             orient: 'vertical',
@@ -123,6 +139,7 @@
                     //获取到各个省份的数据
                     var province = res.areaTree[0].children;
                     for (var i = 0; i < province.length; i++) {
+                       /*let  bgc =  getbgColor(province[i].total.confirm);
                         var json = {
                             name: province[i].name,
                             todayConfirm: province[i].today.confirm,
@@ -134,8 +151,24 @@
                             dataRete: province[i].total.deadRate,
                             heal: province[i].total.heal,
                             healRate: province[i].total.healRate,
+                            backgroundColor: bgc
+                        }*/
+                    let str=  "地区:"+province[i].name+"\n"+
+                     "今日现确诊:"+ province[i].today.confirm+"\n"+
+                     "今日未确诊:"+province[i].today.confirmCuts+"\n"+
+                     "确诊:" +province[i].total.confirm+"\n"+
+                     "现确诊:"+  province[i].total.nowConfirm+"\n"+
+                     "疑似人数:"+ province[i].total.suspect+"\n"+
+                     "死亡人数:"+ province[i].total.dead+"\n"+
+                     "死亡率:"+province[i].total.deadRate+"\n"+
+                     "已治愈人数:"+ province[i].total.heal+"\n"+
+                     "治愈率:" +province[i].total.healRate
+                        var data = {
+                            name: province[i].name,
+                            value: province[i].total.confirm
                         }
-                        newArr.push(json);
+                        console.log(JSON.stringify(data));
+                        newArr.push(data);
                     }
                     //使用指定的配置项和数据显示图表
                     myChart.setOption({
@@ -164,4 +197,21 @@
             getData();
         }, 15000);
     });
+    function getbgColor(confirm){
+        if(1000<=confirm<=1000000){
+            return '#372a28';
+        }
+        if(500<=confirm<=999){
+            return '#4e160f';
+        }
+        if(100<=confirm<=499){
+            return '#974236';
+        }
+        if(10<=confirm<=99){
+            return '#ee7263';
+        }
+        if(1<=confirm<=9){
+            return '#f5bba7';
+        }
+    }
 </script>
