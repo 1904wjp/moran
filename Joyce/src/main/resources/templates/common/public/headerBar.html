@@ -15,7 +15,7 @@
             <!--<span style="width: 100px;background-color: red">你好</span>-->
         <span>
           <span><img id="user_img" th:src="${session.session_user.fileUrl}" class="img-circle" onclick="dropdownBlock()"></span>
-            <span style="margin: 100%;line-height: 0%" th:text="${session.session_user.username}"></span>
+            <span style="margin: 100%;line-height: 0%" th:text="${session.session_user.username}"><!--</span><span class="glyphicon glyphicon-adjust"></span>-->
         </span>
          <ul class="list-group" style="display: none; margin-right: 7%">
               <li> <a href="javascript:void(0)" data-toggle="modal" data-target="#queryModel"

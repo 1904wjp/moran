@@ -1,9 +1,6 @@
 #端口号
 server:
   port: 9099
-  servlet:
-    session:
-      timeout: 120
 #app相关信息
 app:
   domain: 192.168.2.15
