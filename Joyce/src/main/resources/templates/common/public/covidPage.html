@@ -20,11 +20,7 @@
             background-color: white;
         }
     </style>
-  <!--  <script src="https://www.echartsjs.com/examples/vendors/jquery/jquery.js"></script>
-    &lt;!&ndash; 引入 echarts.js &ndash;&gt;
-    <script src="https://www.echartsjs.com/examples/vendors/echarts/echarts.min.js?_v_=1578305236132"></script>
-    &lt;!&ndash;引入中国的地图数据js文件，引入后会自动注册地图名字和数据&ndash;&gt;
-    <script src="https://www.echartsjs.com/examples/vendors/echarts/map/js/china.js?_v_=1578305236132"></script>-->
+
 </head>
 
 <div class="log">
@@ -41,91 +37,6 @@
 <script type="text/javascript" th:src="@{/static/js/utils/echarts/china.js}"></script>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
 <script>
-    //初始化echarts实例
-    var myChart = echarts.init(document.getElementById('myEcharts'));
-    // 指定图表的配置项和数据
-    option = {
-        title: {
-            text: '中国疫情图',
-            left: 'center'
-        },
-        tooltip: {
-            trigger: 'item',
-           /* formatter: function(params) {
-                    /!*str ='';
-                    for(var i=0;i<params;i++){
-                       str=str+ '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' + `${params[i]['data'].backgroundColor}` + ';color: #0a0a0a">' +
-                        `地区:${params[i]['data'].name}</br>
-                     今日现确诊: ${params[i]['data'].todayConfirmCuts}</br>
-                     今日未确诊: ${params[i]['data'].todayConfirm}</br>
-                     确诊: ${params[i]['data'].confirm}</br>
-                     现确诊: ${params[i]['data'].nowConfirm}</br>
-                     疑似人数: ${params[i]['data'].suspect}</br>
-                     死亡人数: ${params[i]['data'].dead}</br>
-                     死亡率: ${params[i]['data'].dataRete}</br>
-                     已治愈人数: ${params[i]['data'].heal}</br>
-                     治愈率: ${params[i]['data'].healRate}</br>
-                     治愈率: ${params[i]['data'].backgroundColor}`
-                        + '</span>'
-                    }*!/
-              return {
-                  params
-              };
-            }*/
-        },
-        legend: {
-            orient: 'vertical',
-            left: 'left',
-            data: ['中国疫情图']
-        },
-        visualMap: {
-            type: 'piecewise',
-            pieces: [
-                { min: 1000, max: 1000000, label: '大于等于1000人', color: '#372a28' },
-                { min: 500, max: 999, label: '确诊500-999人', color: '#4e160f' },
-                { min: 100, max: 499, label: '确诊100-499人', color: '#974236' },
-                { min: 10, max: 99, label: '确诊10-99人', color: '#ee7263' },
-                { min: 1, max: 9, label: '确诊1-9人', color: '#f5bba7' },
-            ],
-            color: ['#E0022B', '#E09107', '#A3E00B']
-        },
-        toolbox: {
-            show: true,
-            orient: 'vertical',
-            left: 'right',
-            top: 'center',
-            feature: {
-                mark: { show: true },
-                dataView: { show: true, readOnly: false },
-                restore: { show: true },
-                saveAsImage: { show: true }
-            }
-        },
-        roamController: {
-            show: true,
-            left: 'right',
-            mapTypeControl: {
-                'china': true
-            }
-        },
-        series: [
-            {
-                name: '确诊数',
-                type: 'map',
-                mapType: 'china',
-                roam: false,
-                label: {
-                    show: true,
-                    color: 'rgb(249, 249, 249)'
-                },
-                data: []
-            }
-        ]
-    };
-
-    //使用指定的配置项和数据显示图表
-    myChart.setOption(option);
-
     //获取数据
     function getData() {
         $.ajax({
@@ -133,6 +44,7 @@
             dataType: "jsonp",
             success: function (data) {
                 //  console.log(data.data)
+                var select = $('#select').val();
                 var res = data.data || "";
                 res = JSON.parse(res);
                 var newArr = [];
@@ -140,53 +52,80 @@
                     //获取到各个省份的数据
                     var province = res.areaTree[0].children;
                     for (var i = 0; i < province.length; i++) {
-                       /*let  bgc =  getbgColor(province[i].total.confirm);
-                        var json = {
-                            name: province[i].name,
-                            todayConfirm: province[i].today.confirm,
-                            todayConfirmCuts: province[i].today.confirmCuts,
-                            confirm: province[i].total.confirm,
-                            nowConfirm: province[i].total.nowConfirm,
-                            suspect: province[i].total.suspect,
-                            dead: province[i].total.dead,
-                            dataRete: province[i].total.deadRate,
-                            heal: province[i].total.heal,
-                            healRate: province[i].total.healRate,
-                            backgroundColor: bgc
-                        }*/
-                    let str=  "地区:"+province[i].name+"\n"+
-                     "今日现确诊:"+ province[i].today.confirm+"\n"+
-                     "今日未确诊:"+province[i].today.confirmCuts+"\n"+
-                     "确诊:" +province[i].total.confirm+"\n"+
-                     "现确诊:"+  province[i].total.nowConfirm+"\n"+
-                     "疑似人数:"+ province[i].total.suspect+"\n"+
-                     "死亡人数:"+ province[i].total.dead+"\n"+
-                     "死亡率:"+province[i].total.deadRate+"\n"+
-                     "已治愈人数:"+ province[i].total.heal+"\n"+
-                     "治愈率:" +province[i].total.healRate
-                        var data = {
-                            name: province[i].name,
-                            value: province[i].total.confirm
-                        }
-                        console.log(JSON.stringify(data));
-                        newArr.push(data);
+                       /*let  bgc =  getbgColor(province[i].total.confirm);*/
+                        var json={};
+                            json = {
+                                name: province[i].name,
+                                todayConfirm: province[i].today.confirm,
+                                todayConfirmCuts: province[i].today.confirmCuts,
+                                value: province[i].total.confirm,
+                                nowConfirm: province[i].total.nowConfirm,
+                                suspect: province[i].total.suspect,
+                                dead: province[i].total.dead,
+                                dataRete: province[i].total.deadRate,
+                                heal: province[i].total.heal,
+                                healRate: province[i].total.healRate,
+                                select: 1
+                            }
+                        newArr.push(json);
                     }
                     //使用指定的配置项和数据显示图表
-                    myChart.setOption({
+                    var option={
+                        backgroundColor: '#FFFFFFF',
+                        title: {
+                            text:'全国疫情大数据',
+                            subtext: '',
+                            x : 'center'
+                        },
+                        tooltip:{
+                            formatter:function (params){
+                                return "地区:"+params.name+"</br>"+
+                                    "新增确诊:"+params['data'].todayConfirm+"</br>"+
+                                /*    "今日现确诊:"+params['data'].todayConfirmCuts+"</br>"+*/
+                                    "确诊:"+params.value+"</br>"+
+                                    "现确诊:"+params['data'].nowConfirm+"</br>"+
+                                    "疑似人数:"+params['data'].suspect+"</br>"+
+                                    "死亡人数:"+params['data'].dead+"</br>"+
+                                    "死亡率:"+params['data'].dataRete+"</br>"+
+                                    "已治愈人数:"+params['data'].heal+"</br>"+
+                                    "治愈率:"+params['data'].healRate+"</br>";
+                            }
+                        },
+                        //左侧小导航图标
+                        visualMap : {
+                            min : 0,
+                            max : 35000,
+                            text : [ '多', '少' ],
+                            realtime : false,
+                            calculable : true,
+                            inRange : {
+                                color : [ 'lightskyblue', 'yellow', 'orangered','brown' ]
+                            }
+                        },
                         series: [
                             {
-                                name: '确诊人数',
+                                /*name: '确诊人数',*/
                                 type: 'map',
                                 mapType: 'china',
                                 roam: false,
                                 label: {
                                     show: true,
-                                    color: 'rgb(249, 249, 249)'
+                                    normal: {
+                                        show: true
+                                    },
+                                    emphasis: {
+                                        show: true
+                                    }
                                 },
                                 data: newArr
                             }
-                        ],
-                    });
+                        ]
+                    };
+
+                    //初始化echarts实例
+                    var myChart = echarts.init(document.getElementById('myEcharts'));
+                    //使用制定的配置项和数据显示图表
+                    myChart.setOption(option);
                 }
             }
 
@@ -198,21 +137,5 @@
             getData();
         }, 15000);
     });
-    function getbgColor(confirm){
-        if(1000<=confirm<=1000000){
-            return '#372a28';
-        }
-        if(500<=confirm<=999){
-            return '#4e160f';
-        }
-        if(100<=confirm<=499){
-            return '#974236';
-        }
-        if(10<=confirm<=99){
-            return '#ee7263';
-        }
-        if(1<=confirm<=9){
-            return '#f5bba7';
-        }
-    }
+
 </script>
