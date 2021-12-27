@@ -2,6 +2,7 @@ package com.moon.joyce.commons.utils;
 
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -14,6 +15,9 @@ import javax.servlet.http.HttpSession;
  * @describe: session工具类
  */
 public class SessionUtils {
+    private SessionUtils() throws JoyceException {
+        throw JoyceExceptionUtils.exception("工具类无法实例化");
+    }
     //获得session
     public static HttpSession getSession(){
         return  ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();

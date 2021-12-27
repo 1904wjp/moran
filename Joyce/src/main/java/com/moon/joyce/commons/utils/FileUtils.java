@@ -1,6 +1,7 @@
 package com.moon.joyce.commons.utils;
 
 
+import com.moon.joyce.example.functionality.entity.JoyceException;
 import com.moon.joyce.example.functionality.entity.PageComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -24,7 +25,9 @@ import java.util.zip.ZipOutputStream;
  */
 public class FileUtils implements Serializable {
     private static final long serialVersionUID = 6813374997135795261L;
-
+    private FileUtils() throws JoyceException {
+        throw JoyceExceptionUtils.exception("工具类无法实例化");
+    }
     /**
      * 文件上传工具类
      *

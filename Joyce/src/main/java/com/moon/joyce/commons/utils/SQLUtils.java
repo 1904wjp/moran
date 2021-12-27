@@ -1,5 +1,7 @@
 package com.moon.joyce.commons.utils;
 
+import com.moon.joyce.example.functionality.entity.JoyceException;
+
 import java.io.Serializable;
 
 /**
@@ -9,5 +11,7 @@ import java.io.Serializable;
  */
 public class SQLUtils implements Serializable {
     private static final long serialVersionUID = -726828122220412530L;
-
+    private SQLUtils() throws JoyceException {
+        throw JoyceExceptionUtils.exception("工具类无法实例化");
+    }
 }

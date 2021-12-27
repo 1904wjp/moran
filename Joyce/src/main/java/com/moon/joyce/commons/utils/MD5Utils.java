@@ -1,5 +1,6 @@
 package com.moon.joyce.commons.utils;
 
+import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -15,6 +16,9 @@ import java.security.NoSuchAlgorithmException;
  */
 public class MD5Utils  implements Serializable {
     private static final long serialVersionUID = -8921608517556867794L;
+    private MD5Utils() throws JoyceException {
+        throw JoyceExceptionUtils.exception("工具类无法实例化");
+    }
     public static String getMD5Str(String str) {
         //非空判断
         if (StringUtils.isBlank(str)){

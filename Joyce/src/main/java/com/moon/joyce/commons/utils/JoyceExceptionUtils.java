@@ -12,6 +12,9 @@ import java.util.Objects;
  * JoyceException工具类
  */
 public class JoyceExceptionUtils {
+    private JoyceExceptionUtils() throws JoyceException {
+        throw new JoyceException("工具类无法实例化");
+    }
     /**
      * 异常方法
      * @param code
@@ -31,5 +34,13 @@ public class JoyceExceptionUtils {
      */
     public static JoyceException exception(String msg, String type){
         return new JoyceException(Constant.ERROR_CODE,msg,type);
+    }
+    /**
+     * 异常方法
+     * @param msg
+     * @return
+     */
+    public static JoyceException exception(String msg){
+        return new JoyceException(msg);
     }
 }

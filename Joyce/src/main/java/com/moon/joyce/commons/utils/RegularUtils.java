@@ -1,5 +1,6 @@
 package com.moon.joyce.commons.utils;
 
+import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -13,6 +14,9 @@ import java.util.regex.Pattern;
  */
 public class RegularUtils implements Serializable {
     private static final long serialVersionUID = -6630082575745822212L;
+    private RegularUtils() throws JoyceException {
+        throw JoyceExceptionUtils.exception("工具类无法实例化");
+    }
     /**
      * 正则匹配
      * @param var 需要匹配的参数

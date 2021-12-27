@@ -1,6 +1,7 @@
 package com.moon.joyce.commons.utils;
 
 import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.mail.*;
@@ -16,6 +17,9 @@ import java.util.Properties;
  */
 public class EmailUtils implements Serializable {
     private static final long serialVersionUID = 4647492534040558478L;
+    private EmailUtils() throws JoyceException {
+        throw JoyceExceptionUtils.exception("工具类无法实例化");
+    }
     /**
      * 发送验证码
      * @param recipient 邮件地址

@@ -2,8 +2,10 @@ package com.moon.joyce.commons.utils;
 
 
 import com.baomidou.mybatisplus.generator.config.IFileCreate;
+import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +17,12 @@ import java.util.regex.Pattern;
  * @date 2021/9/17 14:00
  * @desc 字符串工具类
  */
-public class StringsUtils {
+public class StringsUtils  implements Serializable {
+    private static final long serialVersionUID = 3375173776417938676L;
+
+    private StringsUtils() throws JoyceException {
+        throw JoyceExceptionUtils.exception("工具类无法实例化");
+    }
     //字符串转集合
     public static List<String> StrToList(String str){
         String[] strs ={};

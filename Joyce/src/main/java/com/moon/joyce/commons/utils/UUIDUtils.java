@@ -1,5 +1,7 @@
 package com.moon.joyce.commons.utils;
 
+import com.moon.joyce.example.functionality.entity.JoyceException;
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -10,7 +12,9 @@ import java.util.UUID;
  */
 public class UUIDUtils implements Serializable {
     private static final long serialVersionUID = 8384493443192564756L;
-
+    private UUIDUtils() throws JoyceException {
+        throw JoyceExceptionUtils.exception("工具类无法实例化");
+    }
     /**
      * 获得一个纯数字字母的字符串
      * @return

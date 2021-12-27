@@ -2,6 +2,7 @@ package com.moon.joyce.commons.utils;
 
 
 import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -18,7 +19,9 @@ import java.util.Objects;
  */
 public class DateUtils implements Serializable {
     private static final long serialVersionUID = 1345446751056258222L;
-
+    private DateUtils() throws JoyceException {
+      throw JoyceExceptionUtils.exception("工具类无法实例化");
+    }
     /**
      * 时间转字符串
      * @param pattern
