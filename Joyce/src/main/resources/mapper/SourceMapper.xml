@@ -31,10 +31,11 @@
             <if test="url!=null and url!=''">
                 AND s.url LIKE CONCAT('%',#{url},'%')
             </if>
-            <if test="offset!=null and  pageNumber!=null   ">
+             ORDER BY s.sort ,s.id
+            <if test="offset!=null and  pageNumber!=null  and pageNumber!=0 ">
                 LIMIT #{offset}, #{pageNumber}
             </if>
-            ORDER BY s.sort ,s.id
+
     </select>
 
     <select id="selectCount" resultType="java.lang.Integer">
