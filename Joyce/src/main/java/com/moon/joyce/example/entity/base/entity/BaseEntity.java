@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author Xing Dao Rong
@@ -36,7 +37,8 @@ public class BaseEntity implements Serializable {
     @TableField(value = "delete_flag")
     private Integer deleteFlag;
 
-
+    @TableField(exist = false)
+    private Map<String,String> params;
 
     public Long getId() {
         return id;
@@ -84,5 +86,13 @@ public class BaseEntity implements Serializable {
 
     public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
     }
 }

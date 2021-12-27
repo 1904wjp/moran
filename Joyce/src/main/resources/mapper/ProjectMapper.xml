@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moon.joyce.example.mapper.ProjectMapper">
+    <sql id="projectColumns">
+        p.id, p.create_by, p.create_time, p.delete_flag, p.update_by, p.update_time, p.project_name, p.`desc`, p.charge_person, p.user_id
+    </sql>
+    <select id="getList" resultType="com.moon.joyce.example.entity.Project"
+            parameterType="com.moon.joyce.example.entity.Project">
+        SELECT
+        <include refid="projectColumns"/>
+        FROM springboot.project p
+        WHERE delete_flag=0
+        <if test="projectName!=null and projectName!=''">
+            AND p.project_name LIKE CONCAT('%',#{projectName},'%')
+        </if>
+        <if test="userId!=null">
+            AND p.user_id =#{userId}
+        </if>
+        <if test="offset!=null  and  pageNumber!=null   ">
+            LIMIT #{offset}, #{pageNumber}
+        </if>
+        ORDER BY p.id DESC
+    </select>
+    <select id="getCount" resultType="java.lang.Integer" parameterType="com.moon.joyce.example.entity.Project">
+        SELECT COUNT(*)
+        FROM springboot.project p
+        WHERE delete_flag=0
+        <if test="projectName!=null and projectName!=''">
+            AND p.project_name LIKE CONCAT('%',#{projectName},'%')
+        </if>
+        <if test="userId!=null">
+            AND p.user_id =#{userId}
+        </if>
+    </select>
+</mapper>

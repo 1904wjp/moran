@@ -1,0 +1,68 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>每日看板列表</title>
+</head>
+
+<div class="container-fluid" style="width: 90%;margin-top:5%;margin-left: -3%">
+    <div class="col-md-11 content">
+        <div class="content-body">
+            <div id="user_list_div">
+                <div class="container-fluid">
+                    <div>
+                        <div id="toolbar-btn" class="btn-group pull-left" style="padding-bottom:10px;">
+                            <button id="btn_add" onclick="toList('/example/user/regist')" type="button"
+                                    class="btn btn-primary btn-space">添加
+                            </button>
+                            <!--<button id="btn_delete" onclick="deleteIdsFuc()" type="button" class="btn btn-danger btn-space">删除 </button>-->
+                        </div>
+                        <div class="pull-right" id="query-form"  style="padding-bottom:10px;">
+
+                             <div class="col-md-3"  style="width:18%;margin-right:5px;">
+                                 <label>创建者:</label>
+                                 <select id="userId"  name="userId" >
+                                     <option value="0">请选择</option>
+                                     <option th:each="user:${users}"
+                                             th:value="${user.id}" th:text="${user.username }"></option>
+                                 </select>
+                             </div>
+
+                            <div class="col-md-3"  style="width:18%;margin-right:5px;">
+                                <label>所属项目:</label>
+                                <select id="projectId"  name="projectId">
+                                    <option value="0">请选择</option>
+                                    <option th:each="project:${projects}" th:value="${project.id}"
+                                            th:text="${project.projectName }"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3"  style="margin-right:5px;">
+                                <label>创建日期:</label>
+                                <input id="startTime" name="startTime" placeholder='创建日期开始' type="date" v-model="startTime" class="form-control">
+                                <input id="endTime" name="endTime" placeholder='创建日期结束' type="date"  v-model="endTime" class="form-control">
+                            </div>
+
+                            <div class="col-md-3"  style="margin-right:5px;">
+                                <label>结束日期:</label>
+                                <input id="startTime2" name="startTime2" placeholder='结束日期开始' type="date" v-model="startTime2" class="form-control">
+                                <input id="endTime2" name="endTime2" placeholder='结束日期结束' type="date"  v-model="endTime2" class="form-control">
+                            </div>
+
+                            <div class="btn-group">
+                                <button id="btn_search" onclick="dayTaskSearch()" type="button"
+                                        class="btn btn-primary btn-space">搜索
+                                    <span class="fa fa-search" aria-hidden="true"></span>
+                                </button>
+                                <button id="btn_reset" onclick="resetSearch()" type="button"
+                                        class="btn btn-default btn-space">重置
+                                    <span class="fa fa-eraser" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="dayTaskTable" data-mobile-responsive="true"
+                           class="mb-bootstrap-table text-nowrap"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/tools/task/dayTask.js}"></script>

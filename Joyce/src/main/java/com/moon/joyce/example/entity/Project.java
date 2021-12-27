@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 
 /**
  * @Author: XingDaoRong
@@ -20,11 +19,7 @@ import java.util.Date;
 @TableName("project")
 public class Project extends Page {
     private static final long serialVersionUID = 7516486402681355169L;
-    /**
-     * 项目id
-     */
-    @TableField("project_id")
-    private Long projectId;
+
     /**
      * 项目名称
      */
@@ -35,4 +30,14 @@ public class Project extends Page {
      */
     @TableField("desc")
     private String desc;
+    /**
+     * 项目负责人
+     */
+    @TableField("charge_person")
+    private String chargePerson;
+    /**
+     * 用户id
+     */
+    @TableField("user_id")
+    private Long userId;
 }

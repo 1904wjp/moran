@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moon.joyce.example.mapper.DayTaskMapper">
+    <sql id="dayTaskColumns">
+               dt.id,
+               dt.create_by,
+               dt.create_time,
+               dt.update_by,
+               dt.update_time,
+               dt.end_time,
+               dt.today_task,
+               dt.finaly_task,
+               dt.project_id,
+               dt.project_name,
+               dt.user_id
+    </sql>
+    <select id="selectList" resultType="com.moon.joyce.example.entity.DayTask"
+            parameterType="com.moon.joyce.example.entity.DayTask">
+        SELECT
+            <include refid="dayTaskColumns"/>
+        FROM springboot.day_task dt
+        WHERE delete_flag =0
+        <if test="params.startTime!=null">
+          #{params.startTime} &lt;= date_format(dt.create_time,'%Y-%m-%d')
+        </if>
+        <if test="params.endTime!=null">
+            #{params.endTime} &gt;= date_format(dt.create_time,'%Y-%m-%d')
+        </if>
+        /*dt.update_by,
+        dt.update_time,*/
+        <if test="params.startTime2!=null">
+            #{params.startTime2} &lt;= date_format( dt.end_time,'%Y-%m-%d')
+        </if>
+        <if test="params.endTime2!=null">
+            #{params.endTime2} &gt;= date_format(dt.end_time,'%Y-%m-%d')
+        </if>
+        <if test="projectId!=null ">
+            dt.project_id = {projectId}
+        </if>
+        <if test="userId!=null ">
+            dt.user_id = {userId}
+        </if>
+        <if test="offset!=null  and  pageNumber!=null   ">
+            LIMIT #{offset}, #{pageNumber}
+        </if>
+        OREDER BY  dt.update_time ,dt.id DESC
+    </select>
+    <select id="selectCount" resultType="java.lang.Integer"
+            parameterType="com.moon.joyce.example.entity.DayTask">
+        SELECT
+         COUNT(*)
+        FROM springboot.day_task dt
+        WHERE delete_flag =0
+        <if test="params.startTime!=null">
+            #{params.startTime} &lt;= date_format(dt.create_time,'%Y-%m-%d')
+        </if>
+        <if test="params.endTime!=null">
+            #{params.endTime} &gt;= date_format(dt.create_time,'%Y-%m-%d')
+        </if>
+        /*dt.update_by,
+        dt.update_time,*/
+        <if test="params.startTime2!=null">
+            #{params.startTime2} &lt;= date_format( dt.end_time,'%Y-%m-%d')
+        </if>
+        <if test="params.endTime2!=null">
+            #{params.endTime2} &gt;= date_format(dt.end_time,'%Y-%m-%d')
+        </if>
+        <if test="todayTask!=null and todayTask!=''">
+            dt.today_task Like #{todayTask}
+        </if>
+        <if test="finalyTask!=null and finalyTask!=''">
+            dt.finaly_task Like #{finalyTask}
+        </if>
+        <if test="projectId!=null ">
+            dt.project_id = {projectId}
+        </if>
+        <if test="userId!=null ">
+            dt.user_id = {userId}
+        </if>
+
+
+    </select>
+</mapper>

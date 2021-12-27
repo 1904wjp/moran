@@ -9,6 +9,7 @@ $(document).ready(function () {
       });*/
 });
 
+
 function getUserTabler() {
     var obj = $('#userTable');
     var url = '/example/user/userListData';

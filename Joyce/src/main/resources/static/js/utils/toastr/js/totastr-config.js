@@ -3,7 +3,7 @@
  */
 $(function (){
     toastr.options.positionClass = 'toast-bottom-right';
-    /*toastr.options = {
+    toastr.options = {
         closeButton: false,
         debug: false,
         progressBar: true,
@@ -45,5 +45,19 @@ allowHtml: false,
         titleClass: 'toast-title',
         toastClass: 'toast'
 
-};*/
+ };
 });
+
+/**
+ * 提示框
+ * @param params1
+ * @param params2
+ */
+function tips(params1,params2){
+    if (params1===true){
+        toastr.success(params2);
+    }
+    if (params1===false){
+        toastr.success(params2);
+    }
+}

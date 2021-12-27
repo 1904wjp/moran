@@ -1,6 +1,7 @@
 package joyce.example.controller;
 
 
+import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/example/userType")
-public class UserTypeController extends BaseEntity {
+public class UserTypeController extends BaseController {
 
 }
 
