@@ -36,7 +36,7 @@ public class Article extends Page {
     private Long userId;
     /*@Column(name = "class_id",columnDefinition = "bigint(32) COMMENT '分类主键'")*/
     @TableField("class_id")
-    private Long classId;
+    private Long  classId;
     @TableField(exist = false)
     private String result;
 }
