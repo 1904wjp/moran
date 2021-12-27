@@ -32,7 +32,7 @@
                 AND user_type_id = #{userTypeId}
             </if>
         </where>
-        <if test="offset!=null and offset!=0 and  pageNumber!=null and  pageNumber!=0  ">
+        <if test="offset!=null and   pageNumber!=null   ">
             LIMIT #{offset}, #{pageNumber}
         </if>
 

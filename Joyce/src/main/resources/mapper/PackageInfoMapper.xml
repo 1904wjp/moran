@@ -31,7 +31,7 @@
         <if test="username!=null and username!=''">
             AND b.username Like CONCAT('%',#{username},'%')
         </if>
-        <if test="offset!=null  and  pageNumber!=null  and offset!=0 and pageNumber!=0 ">
+        <if test="offset!=null  and  pageNumber!=null   ">
              LIMIT #{offset}, #{pageNumber}
         </if>
     </select>

@@ -31,7 +31,7 @@
             <if test="url!=null and url!=''">
                 AND s.url LIKE CONCAT('%',#{url},'%')
             </if>
-            <if test="offset!=null and offset!=0 and  pageNumber!=null and  pageNumber!=0  ">
+            <if test="offset!=null and  pageNumber!=null   ">
                 LIMIT #{offset}, #{pageNumber}
             </if>
             ORDER BY s.sort ,s.id

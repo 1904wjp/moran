@@ -41,7 +41,7 @@
         <if test="url!=null and url!=''">
             AND a.url LIKE CONCAT('%',#{url},'%')
         </if>
-        <if test="offset!=null  and  pageNumber!=null  and offset!=0 and pageNumber!=0 ">
+        <if test="offset!=null  and  pageNumber!=null   ">
              LIMIT #{offset}, #{pageNumber}
         </if>
     </select>

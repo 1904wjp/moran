@@ -13,16 +13,16 @@
         <if test="article.author!=null and article.author!=''">
             AND a.author LIKE concat('%',#{article.author},'%')
         </if>
-
-        <if test="article.offset!=null and article.offset!=0 and  article.pageNumber!=null and  article.pageNumber!=0  ">
-            LIMIT #{article.offset}, #{article.pageNumber}
-        </if>
         <if test=" idList!=null">
             AND a.user_id IN
             <foreach collection="idList"  item="id" index="" open="(" close=")" separator=",">
                 #{id}
             </foreach>
         </if>
+        <if test="article.offset!=null and  article.pageNumber!=null   ">
+            LIMIT #{article.offset}, #{article.pageNumber}
+        </if>
+
     </select>
 
     <select id="getTotal" resultType="java.lang.Integer">
