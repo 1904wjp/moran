@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.moon.joyce.example.entity.DayTask;
 import joyce.example.entity.UserType;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -31,4 +32,11 @@ public interface DayTaskService extends IService<DayTask> {
      * 查找最后一条数据
      */
     DayTask getLastData(Long id);
+
+    /**
+     * 到处excel表
+     * @param list
+     * @return
+     */
+    boolean exportTable(List<DayTask> list, HttpServletResponse response);
 }

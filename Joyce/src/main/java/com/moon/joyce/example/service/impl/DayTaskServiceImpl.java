@@ -1,15 +1,21 @@
 package com.moon.joyce.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moon.joyce.commons.utils.DateUtils;
+import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.example.entity.DayTask;
 import com.moon.joyce.example.mapper.DayTaskMapper;
 import com.moon.joyce.example.service.DayTaskService;
+import com.sun.deploy.net.HttpResponse;
 import joyce.example.entity.UserType;
 import joyce.example.mapper.UserTypeMapper;
 import joyce.example.service.UserTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,5 +43,23 @@ public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> impl
     @Override
     public DayTask getLastData(Long id) {
         return dayTaskMapper.getLastData(id);
+    }
+
+    @Override
+    public boolean exportTable(List<DayTask> list, HttpServletResponse response) {
+        List<String> titleList = Arrays.asList("序号","创建人","创建时间","今日任务","最终任务","完成时间","所属项目");
+        List<List<String>> dataList = new ArrayList();
+        for (DayTask dayTask : list) {
+            List<String> dayTaskFlies = new ArrayList<>();
+            dayTaskFlies.add(dayTask.getCreateBy());
+            dayTaskFlies.add(DateUtils.dateForMat("d",dayTask.getCreateTime()));
+            dayTaskFlies.add(dayTask.getTodayTask());
+            dayTaskFlies.add(dayTask.getFinalyTask());
+            dayTaskFlies.add(DateUtils.dateForMat("d",dayTask.getEndTimes()));
+            dayTaskFlies.add(dayTask.getProjectName());
+            dataList.add(dayTaskFlies);
+        }
+        FileUtils.exporExcel(response,"apply.xlsx",titleList,dataList);
+        return false;
     }
 }

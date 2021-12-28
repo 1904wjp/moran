@@ -22,13 +22,7 @@ import java.util.Date;
 @TableName("day_task")
 public class DayTask extends Page {
     private static final long serialVersionUID = 7069213413492251570L;
-    /**
-     * 结束时间
-     */
-    @TableField("end_times")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
-    private Date endTimes;
+
     /**
      * 今日任务
      */
@@ -56,32 +50,39 @@ public class DayTask extends Page {
     private Long userId;
 
     /**
+     * 结束时间
+     */
+    @TableField("end_times")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat( pattern="yyyy-MM-dd")
+    private Date endTimes;
+    /**
      * 开始时间
      */
     @TableField(exist = false)
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
+    @JsonFormat( pattern="yyyy-MM-dd")
     private Date startTime;
     /**
      * 结束时间
      */
     @TableField(exist = false)
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
+    @JsonFormat( pattern="yyyy-MM-dd")
     private Date endTime;
     /**
      * 开始时间
      */
     @TableField(exist = false)
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
+    @JsonFormat( pattern="yyyy-MM-dd")
     private Date startTime2;
     /**
      * 结束时间
      */
     @TableField(exist = false)
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
+    @JsonFormat( pattern="yyyy-MM-dd")
     private Date endTime2;
 
 }

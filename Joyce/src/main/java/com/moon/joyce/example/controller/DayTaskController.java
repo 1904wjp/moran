@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -66,6 +67,7 @@ public class DayTaskController extends BaseController {
     @RequestMapping("/getList")
     public PageVo getDayTasks(DayTask dayTask){
         List<DayTask> list = dayTaskService.getList(dayTask);
+        setSession(getSessionUser().getUsername()+"excel",list);
         int total = dayTaskService.getCount(dayTask);
         return new PageVo(list,total);
     }
@@ -133,5 +135,26 @@ public class DayTaskController extends BaseController {
         }
         return ResultUtils.error();
     }
+
+    /**
+     * 导出表格
+     */
+    @ResponseBody
+    @GetMapping("/exportTasks")
+    public Result exportTasks(HttpServletResponse response){
+        List<DayTask> list= (List<DayTask>) getSessionValue(getSessionUser().getUsername() + "excel");
+        boolean res =  dayTaskService.exportTable(list,response);
+        if (res){
+            return ResultUtils.success("导出成功");
+        }
+        return ResultUtils.error();
+    }
 }
+
+
+
+
+
+
+
 

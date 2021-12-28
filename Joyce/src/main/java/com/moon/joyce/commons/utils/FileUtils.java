@@ -352,7 +352,7 @@ public class FileUtils implements Serializable {
      * @param columnList 每列的标题名
      * @param dataList 导出的数据
      */
-    public static void uploadExcelAboutUser(HttpServletResponse response, String fileName, List<String> columnList,List<List<String>> dataList){
+    public static void exporExcel(HttpServletResponse response, String fileName, List<String> columnList,List<List<String>> dataList){
         //声明输出流
         OutputStream os = null;
         //设置响应头
@@ -382,9 +382,9 @@ public class FileUtils implements Serializable {
                     //内层for循环创建每行对应的列，并赋值
                     for(int j = -1;j<dataList.get(0).size();j++){//由于多了一列序号列所以内层循环从-1开始
                         Cell cell = dataRow.createCell(j+1);
-                        if(j==-1){//第一列是序号列，不是在数据库中读取的数据，因此手动递增赋值
+                       if(j==-1){//第一列是序号列，不是在数据库中读取的数据，因此手动递增赋值
                             cell.setCellValue(count++);
-                        }else{//其余列是数据列，将数据库中读取到的数据依次赋值
+                        }else{//其余列是数据列，将数据库中读取到的数据依次赋值*/
                             cell.setCellValue(dataList.get(i).get(j));
                         }
                     }

@@ -53,6 +53,9 @@ function dayTaskSearch() {
     $('#dayTaskTable').bootstrapTable('refresh');
 }
 
+/**
+ * 添加每日任务
+ */
 function addDayTask(){
     $("#tables").hide();
     $("#add_dayTask").show();
@@ -75,6 +78,17 @@ function addDayTask(){
     });
 }
 
+/**
+ * 导出excel表格
+ */
+function exportDayTaskTable(){
+       toList('/example/dayTask/exportTasks');
+}
+
+/**
+ * 编辑每日任务
+ * @param id
+ */
 function editDayTask(id){
     $("#tables").hide();
     $("#add_dayTask").show();
@@ -98,6 +112,9 @@ function editDayTask(id){
     });
 }
 
+/**
+ * 保存每日任务
+ */
 function saveDayTask(){
    /* var date = formatDate($('#addEndTimes').val());*/
     let data = {
@@ -122,6 +139,9 @@ function saveDayTask(){
     });
 }
 
+/**
+ * 取消关闭
+ */
 function cencel(){
     $("#tables").show();
     $("#add_dayTask").hide();
