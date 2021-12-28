@@ -2,14 +2,13 @@
     <title>每日看板列表</title>
 </head>
 
-<div class="container-fluid" style="width: 90%;margin-top:5%;margin-left: -3%">
-    <div class="col-md-11 content">
+<div  class="container-fluid" >
+    <div id="tables" >
         <div class="content-body">
             <div id="user_list_div">
                 <div class="container-fluid">
-                    <div>
                         <div id="toolbar-btn" class="btn-group pull-left" style="padding-bottom:10px;">
-                            <button id="btn_add" onclick="toList('/example/user/regist')" type="button"
+                            <button id="btn_add" onclick="addDayTask()" type="button"
                                     class="btn btn-primary btn-space">添加
                             </button>
                             <!--<button id="btn_delete" onclick="deleteIdsFuc()" type="button" class="btn btn-danger btn-space">删除 </button>-->
@@ -56,12 +55,57 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+
                     <table id="dayTaskTable" data-mobile-responsive="true"
                            class="mb-bootstrap-table text-nowrap"></table>
                 </div>
             </div>
         </div>
+    </div>
+
+</div>
+<div id="add_dayTask"  style="width: 35%" class="row row-centered">
+    <div class="well col-md-12 col-centered">
+        <form class="form-horizontal center-block" role="form"  method="get">
+            <legend>任务添加</legend>
+            <input id="addId" type="hidden"/>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="addTodayTask">今日任务</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="addTodayTask"  style="width: 50%" type="text" name="addTodayTask" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="addFinalyTask">最终任务</label>
+                <div class="col-sm-4">
+                    <input class="form-control" id="addFinalyTask"  style="width: 50%" type="text"  name="addFinalyTask"  onchange="password_change(this.id)" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="addEndTimes">结束时间</label>
+                <div class="col-sm-4">
+                    <input class="form-control"  style="width: 50%" id="addEndTimes" type="date" name="addEndTimes"  placeholder="请输入手机号码"/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="addProjectId">所属项目</label>
+                <div class="col-sm-4">
+                    <select id="addProjectId"  style="width: 50%">
+                        <option value="0">请选择</option>
+                        <option th:each="project:${projects}" th:value="${project.id}"
+                                th:text="${project.projectName }"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="regist"> </label>
+                <div class="col-sm-5">
+                    <input class="btn btn-default pull-left" id="regist" type="button" onclick="saveDayTask()" value="确定"/>
+                    <a class="btn btn-default pull-right" onclick="cencel()">取消</a>
+                </div>
+            </div>
+        </form>
+
     </div>
 </div>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>

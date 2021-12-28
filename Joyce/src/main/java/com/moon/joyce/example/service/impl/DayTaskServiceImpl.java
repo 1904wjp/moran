@@ -33,4 +33,9 @@ public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> impl
     public int getCount(DayTask dayTask) {
         return dayTaskMapper.selectCount(dayTask);
     }
+
+    @Override
+    public DayTask getLastData(Long id) {
+        return dayTaskMapper.getLastData(id);
+    }
 }

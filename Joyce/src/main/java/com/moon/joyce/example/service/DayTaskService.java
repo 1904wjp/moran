@@ -27,4 +27,8 @@ public interface DayTaskService extends IService<DayTask> {
      * @return
      */
     int getCount(DayTask dayTask);
+    /**
+     * 查找最后一条数据
+     */
+    DayTask getLastData(Long id);
 }

@@ -87,8 +87,11 @@ spring:
     multipart:
       #最大的上传数据
       max-file-size: 30MB
-
-  #jpa配置
+# 接受参数json格式
+  jackson:
+    date-format: yyyy-MM-dd
+    time-zone: GMT+8
+#jpa配置
 #  jpa:
 #    database: mysql
 #    show-sql: true

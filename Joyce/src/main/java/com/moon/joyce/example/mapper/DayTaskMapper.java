@@ -27,4 +27,8 @@ public interface DayTaskMapper  extends BaseMapper<DayTask>{
      * @return
      */
     int selectCount(DayTask dayTask);
+    /**
+     * 获取最后一条数据
+     */
+    DayTask getLastData(Long id);
 }

@@ -32,7 +32,6 @@ public class DateUtils implements Serializable {
         if (Objects.isNull(pattern)){
             pattern="dv";
         }
-
         if (Objects.isNull(date)){
             date=new Date();
         }
@@ -158,6 +157,26 @@ public class DateUtils implements Serializable {
             e.printStackTrace();
         }
        return   (dateTime2-dateTime1)>number;
+    }
+
+    /**
+     * 时间的比较
+     * @param var1
+     * @param var2
+     * @param number
+     * @return
+     */
+    public static boolean dateCompare( Date var1,Date var2,Long number,String pattern) {
+        SimpleDateFormat dfm = new SimpleDateFormat(pattern);
+        Long dateTime1 = null;
+        Long dateTime2 = null;
+        try {
+            dateTime1 = dfm.parse(dfm.format(var1)).getTime();
+            dateTime2 = dfm.parse(dfm.format(var2)).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return   (dateTime2-dateTime1)>number;
     }
 
 }

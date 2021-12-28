@@ -7,6 +7,7 @@ import com.moon.joyce.example.entity.dto.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -24,9 +25,10 @@ public class DayTask extends Page {
     /**
      * 结束时间
      */
-    @TableField("end_time")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date endTime;
+    @TableField("end_times")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
+    private Date endTimes;
     /**
      * 今日任务
      */
@@ -52,4 +54,34 @@ public class DayTask extends Page {
      */
     @TableField("user_id")
     private Long userId;
+
+    /**
+     * 开始时间
+     */
+    @TableField(exist = false)
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
+    private Date startTime;
+    /**
+     * 结束时间
+     */
+    @TableField(exist = false)
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
+    private Date endTime;
+    /**
+     * 开始时间
+     */
+    @TableField(exist = false)
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
+    private Date startTime2;
+    /**
+     * 结束时间
+     */
+    @TableField(exist = false)
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd")
+    private Date endTime2;
+
 }

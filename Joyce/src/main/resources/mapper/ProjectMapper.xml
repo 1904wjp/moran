@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.moon.joyce.example.mapper.ProjectMapper">
     <sql id="projectColumns">
-        p.id, p.create_by, p.create_time, p.delete_flag, p.update_by, p.update_time, p.project_name, p.`desc`, p.charge_person, p.user_id
+        p.id, p.create_by, p.create_time, p.delete_flag, p.update_by, p.update_time, p.project_name, p.descs, p.charge_person, p.user_id
     </sql>
     <select id="getList" resultType="com.moon.joyce.example.entity.Project"
             parameterType="com.moon.joyce.example.entity.Project">

@@ -353,7 +353,7 @@ function password_update_verify() {
 }
 
 //刷新
-function customSearch(text) {
+function customSearch() {
     //刷新Table，Bootstrap Table 会自动执行重新查询
     $('#userTable').bootstrapTable('refresh');
 }

@@ -3,14 +3,11 @@ package com.moon.joyce.example.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.moon.joyce.example.entity.Project;
 import joyce.example.entity.UserType;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * <p>
- *  服务类
- * </p>
- *
  * @author Joyce
  * @since 2021-09-25
  */

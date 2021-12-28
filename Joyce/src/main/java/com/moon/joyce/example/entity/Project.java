@@ -28,8 +28,8 @@ public class Project extends Page {
     /**
      * 项目介绍
      */
-    @TableField("desc")
-    private String desc;
+    @TableField("descs")
+    private String descs;
     /**
      * 项目负责人
      */
