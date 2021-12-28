@@ -1,6 +1,9 @@
 <head class="paneBar" th:replace="/common/public/header::header(~{::title})">
     <title>每日看板列表</title>
 </head>
+<div class="log">
+    <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
 
 <div  class="container-fluid" >
     <div id="tables" >
@@ -106,8 +109,9 @@
                 </div>
             </div>
         </form>
-
     </div>
 </div>
+<!--菜单-->
+<input class="title" type="hidden" value="dayTask"/>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
 <script type="text/javascript" th:src="@{/static/js/tools/task/dayTask.js}"></script>
