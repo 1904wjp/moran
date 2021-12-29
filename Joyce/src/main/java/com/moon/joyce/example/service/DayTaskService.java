@@ -39,7 +39,7 @@ public interface DayTaskService extends IService<DayTask> {
      * @param list
      * @return
      */
-    boolean exportTable(List<DayTask> list, HttpServletResponse response);
+    void exportTable(List<DayTask> list, HttpServletResponse response);
 
     /**
      * 导处excel表（分组）
@@ -47,5 +47,5 @@ public interface DayTaskService extends IService<DayTask> {
      * @param response
      * @return
      */
-    boolean exportTableByManySheet(Map<String, List<DayTask>> map, HttpServletResponse response);
+    void exportTableByManySheet(Map<String, List<DayTask>> map, HttpServletResponse response);
 }

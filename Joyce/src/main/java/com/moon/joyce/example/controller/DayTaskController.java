@@ -143,13 +143,9 @@ public class DayTaskController extends BaseController {
      */
     @ResponseBody
     @GetMapping("/exportTasks")
-    public Result exportTasks(HttpServletResponse response){
+    public void exportTasks(HttpServletResponse response){
         List<DayTask> list= (List<DayTask>) getSessionValue(getSessionUser().getUsername() + "excel");
-        boolean res =  dayTaskService.exportTable(list,response);
-        if (res){
-            return ResultUtils.success("导出成功");
-        }
-        return ResultUtils.error();
+        dayTaskService.exportTable(list,response);
     }
 
     /**
@@ -157,14 +153,10 @@ public class DayTaskController extends BaseController {
      */
     @ResponseBody
     @GetMapping("/exportTasksByManySheet")
-    public Result exportTasksByManySheet(HttpServletResponse response){
+    public void exportTasksByManySheet(HttpServletResponse response){
         List<DayTask> list= (List<DayTask>) getSessionValue(getSessionUser().getUsername() + "excel");
         Map<String, List<DayTask>> map = list.stream().collect(Collectors.groupingBy(DayTask::getNickname));
-        boolean res =  dayTaskService.exportTableByManySheet(map,response);
-        if (res){
-            return ResultUtils.success("导出成功");
-        }
-        return ResultUtils.error();
+         dayTaskService.exportTableByManySheet(map,response);
     }
 }
 

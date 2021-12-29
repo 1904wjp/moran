@@ -40,22 +40,21 @@ public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> impl
     }
 
     @Override
-    public boolean exportTable(List<DayTask> list, HttpServletResponse response) {
+    public void exportTable(List<DayTask> list, HttpServletResponse response) {
         List<String> titleList = Arrays.asList("序号","姓名","创建时间","今日任务","最终任务","完成时间","所属项目");
         List<List<String>> dataList = getExportTableDataList(list);
         FileUtils.exporExcel(response,"每日看板.xlsx",titleList,dataList,null);
-        return false;
     }
 
     @Override
-    public boolean exportTableByManySheet(Map<String, List<DayTask>> map, HttpServletResponse response) {
+    public void exportTableByManySheet(Map<String, List<DayTask>> map, HttpServletResponse response) {
         List<String> titleList = Arrays.asList("序号","姓名","创建时间","今日任务","最终任务","完成时间","所属项目");
         Map<String, List<List<String>>> hashMap = new HashMap<>();
         for (Map.Entry<String, List<DayTask>> entry : map.entrySet()) {
             hashMap.put(entry.getKey(),getExportTableDataList(entry.getValue()));
         }
         FileUtils.exporExcel2(response,"每日看板.xlsx",titleList,hashMap);
-        return false;
+
     }
 
     /**
