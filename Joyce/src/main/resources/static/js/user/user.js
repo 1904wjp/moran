@@ -197,13 +197,10 @@ function editUserFuc(id) {
             dataType: 'json',
             data: data,
         }).done(function (data) {
+           tips(data.rs,data.msg)
             if (data.rs) {
-                toastr.success(data.msg)
                 toList('/example/user/editUser/' + id);
-            } else {
-                toastr.error(data.msg)
             }
-            ;
         }).fail(function () {
             toastr.error(ajaxFailMsg);
         });
@@ -220,11 +217,10 @@ function queryUserFuc(id) {
         dataType: 'json',
         data: data,
     }).done(function (data) {
+        tips(data.rs,data.msg);
         if (data.rs) {
-            toastr.success(data.msg)
+
             toList('/example/user/queryUser/' + id);
-        } else {
-            toastr.error(data.msg)
         }
     }).fail(function () {
             toastr.error(ajaxFailMsg);
@@ -269,10 +265,8 @@ function getEmailCodeFuc() {
                 dataType: 'json',
                 data: data,
             }).done(function (data) {
+                tips(data.rs,data.msg);
                 if (data.rs) {
-                    toastr.success(data.msg);
-                } else {
-                    toastr.error(data.msg);
                 }
             }).fail(function () {
                 toastr.error(ajaxFailMsg);
@@ -300,12 +294,10 @@ function forget_password_update_verifyFuc() {
                 dataType: 'json',
                 data: data,
             }).done(function (data) {
+                tips(data.rs,data.msg);
                 if (data.rs) {
                     $("#updatePasswordModal").modal('hide');
-                    toastr.success(data.msg);
                     toList("/example/user/login");
-                } else {
-                    toastr.error(data.msg);
                 }
             }).fail(function () {
                 toastr.error(ajaxFailMsg);
@@ -338,12 +330,11 @@ function password_update_verify() {
                 dataType: 'json',
                 data: data,
             }).done(function (data) {
+                tips(data.rs,data.msg);
                 if (data.rs) {
                     $("#updatePasswordModal").modal('hide');
                     toastr.success(data.msg);
                     toList("/example/user/login");
-                } else {
-                    toastr.error(data.msg);
                 }
             }).fail(function () {
                 toastr.error(ajaxFailMsg);
@@ -378,7 +369,8 @@ function updateUserFuc() {
         password: $("#password").val(),
         phone: $("#phone").val(),
         fileUrl: $("input[name='fileUrl']").val(),
-        email: $("#email").val()
+        email: $("#email").val(),
+        nickname: $('#nickname').val()
     };
     var fdata = {
         username: $("#username").val(),
@@ -398,11 +390,9 @@ function updateUserFuc() {
                 dataType: 'json',
                 data: data,
             }).done(function (data) {
+                tips(data.rs,data.msg);
                 if (data.rs) {
-                    toastr.success(data.msg);
                     toMain();
-                }else {
-                    toastr.error(data.msg);
                 }
             }).fail(function () {
                 toastr.error(ajaxFailMsg);
@@ -424,10 +414,9 @@ function rmUser() {
             dataType: 'json',
         }).done(function (data) {
             if (data.rs) {
-                toastr.success(data.msg);
                 toList('/example/user/editUser/login');
             }else {
-                toastr.error(data.msg);
+               tips(false,data.msg);
             }
         }).fail(function () {
             toastr.error(ajaxFailMsg);

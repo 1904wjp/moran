@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Joyce
@@ -144,6 +146,21 @@ public class DayTaskController extends BaseController {
     public Result exportTasks(HttpServletResponse response){
         List<DayTask> list= (List<DayTask>) getSessionValue(getSessionUser().getUsername() + "excel");
         boolean res =  dayTaskService.exportTable(list,response);
+        if (res){
+            return ResultUtils.success("导出成功");
+        }
+        return ResultUtils.error();
+    }
+
+    /**
+     * 导出表格
+     */
+    @ResponseBody
+    @GetMapping("/exportTasksByManySheet")
+    public Result exportTasksByManySheet(HttpServletResponse response){
+        List<DayTask> list= (List<DayTask>) getSessionValue(getSessionUser().getUsername() + "excel");
+        Map<String, List<DayTask>> map = list.stream().collect(Collectors.groupingBy(DayTask::getNickname));
+        boolean res =  dayTaskService.exportTableByManySheet(map,response);
         if (res){
             return ResultUtils.success("导出成功");
         }

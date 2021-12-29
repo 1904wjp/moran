@@ -6,6 +6,7 @@ import joyce.example.entity.UserType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -34,9 +35,17 @@ public interface DayTaskService extends IService<DayTask> {
     DayTask getLastData(Long id);
 
     /**
-     * 到处excel表
+     * 导处excel表
      * @param list
      * @return
      */
     boolean exportTable(List<DayTask> list, HttpServletResponse response);
+
+    /**
+     * 导处excel表（分组）
+     * @param map
+     * @param response
+     * @return
+     */
+    boolean exportTableByManySheet(Map<String, List<DayTask>> map, HttpServletResponse response);
 }

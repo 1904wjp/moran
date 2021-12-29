@@ -44,6 +44,10 @@ public class DayTask extends Page {
     @TableField("project_name")
     private String projectName;
     /**
+     * 昵称
+     */
+    private String nickname;
+    /**
      * 用户id
      */
     @TableField("user_id")

@@ -44,13 +44,12 @@ function loginFuc() {
             data: data,
             //传过来的data需要.data才可以获取当前对象。因为data是封装过的
         }).done(function (data) {
-            if (data.code == 200) {
+            if (data.rs) {
                 toList("/main");
-            } else {
-                alert(data.msg);
             }
+                tips(data.rs,data.msg);
         }).fail(function () {
-            alert(ajaxFailMsg);
+            tips(false,ajaxFailMsg);
         });
     }
 }
@@ -63,7 +62,8 @@ function registFuc() {
         username: $("#username").val(),
         password: $("#password").val(),
         phone: $("#phone").val(),
-        email: $("#email").val()
+        email: $("#email").val(),
+        nickname: $('#nickname').val()
     };
     if (vailDate(data)) {
         $.ajax({
@@ -73,14 +73,12 @@ function registFuc() {
             data: data,
             //传过来的data需要.data才可以获取当前对象。因为data是封装过的
         }).done(function (data) {
-            if (data.code == 200) {
-                alert(data.msg);
+            tips(data.rs,data.msg);
+            if (data.rs) {
                 toList('/example/user/statusResult');
-            } else {
-                alert(data.msg);
             }
         }).fail(function () {
-            alert(ajaxFailMsg);
+            tips(false,ajaxFailMsg);
         });
     }
 }

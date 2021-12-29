@@ -55,6 +55,11 @@ public class User extends Person {
   /*  @Column(name="user_type_id" ,columnDefinition = "varchar(32) COMMENT '角色id'")*/
     private Long UserTypeId;
     /**
+     * 昵称
+     */
+    @TableField(value = "nickname")
+    private String nickname;
+    /**
      * websocketSessionId的值
      */
   /*  @TableField(value = "websocket_session_id")
@@ -115,5 +120,13 @@ public class User extends Person {
 
     public void setUserTypeId(Long userTypeId) {
         UserTypeId = userTypeId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

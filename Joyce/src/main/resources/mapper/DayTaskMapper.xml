@@ -12,7 +12,8 @@
                dt.finaly_task,
                dt.project_id,
                dt.project_name,
-               dt.user_id
+               dt.user_id,
+               u.nickname
     </sql>
 
     <select id="selectList" resultType="com.moon.joyce.example.entity.DayTask"
@@ -20,7 +21,9 @@
         SELECT
             <include refid="dayTaskColumns"/>
         FROM springboot.day_task dt
-        WHERE delete_flag =0
+        LEFT JOIN springboot.user u
+        ON dt.user_id = u.id
+        WHERE dt.delete_flag =0
         <if test="startTime!=null">
           AND  date_format(#{startTime},'%Y-%m-%d')  &lt;= date_format(dt.create_time,'%Y-%m-%d')
         </if>
@@ -51,7 +54,9 @@
         SELECT
          COUNT(*)
         FROM springboot.day_task dt
-        WHERE delete_flag =0
+        LEFT JOIN springboot.user u
+        ON dt.user_id = u.id
+        WHERE dt.delete_flag =0
         <if test="startTime!=null">
             AND  #{startTime} &lt;= date_format(dt.create_time,'%Y-%m-%d')
         </if>

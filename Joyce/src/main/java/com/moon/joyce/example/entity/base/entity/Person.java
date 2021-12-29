@@ -14,12 +14,7 @@ import com.moon.joyce.example.entity.dto.Page;
 /*@Entity
 @Table(name = "person")*/
 public class Person extends Page {
-    /**
-     * 昵称
-     */
-    @TableField(value = "nick_name")
-   /* @Column(name= "nick_name",columnDefinition = "varchar(64) COMMENT '昵称'")*/
-    private String nickName;
+
     /**
      * 名字
      */
@@ -62,13 +57,6 @@ public class Person extends Page {
     /*@Column(name= "person_desc",columnDefinition = "varchar(255)  COMMENT '个人简历'")*/
     private String personDesc;
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
 
 
     public Integer getAge() {

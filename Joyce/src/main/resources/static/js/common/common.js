@@ -138,7 +138,7 @@ function uploadFile(file, restUrl, img, objUrl, size) {
     formData.append('file', file[0].files[0]);
     //设置图片类型
     if (!/.(gif|jpg|jpeg|png|gif|jpg|png)$/.test(file.val())) {
-        alert("图片类型不符合要求");
+        tips(false,"图片类型不符合要求");
         return;
     }
     if (isBlank(size)){
@@ -146,7 +146,7 @@ function uploadFile(file, restUrl, img, objUrl, size) {
     }
     //设置图片大小
     if (file[0].size.toFixed(2) >= (size  * 1024 * 1024)) {
-        alert("上传图片小于" + size + "MB");
+        tips(false,"上传图片小于" + size + "MB");
         return;
     }
     $.ajax({
@@ -158,12 +158,13 @@ function uploadFile(file, restUrl, img, objUrl, size) {
         // jQuery不要去处理发送的数据
         processData: false,
         success: function (data) {
+            tips(data.rs,data.msg);
             if (data.rs) {
                 img.attr("src", data.data);
                 $("input[name=" + objUrl + "]").val(data.data);
-            } else {
-                alert(data.msg);
             }
+
+
         }
     });
 }

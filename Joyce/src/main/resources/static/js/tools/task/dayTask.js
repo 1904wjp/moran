@@ -35,8 +35,8 @@ function getDayTaskTable(){
             title: '项目名称',
             sortables: true,
         },{
-            field: 'createBy',
-            title: '创建者',
+            field: 'nickname',
+            title: '姓名',
             sortables: true
         }, {
             title: '操作',
@@ -82,7 +82,8 @@ function addDayTask(){
  * 导出excel表格
  */
 function exportDayTaskTable(){
-       toList('/example/dayTask/exportTasks');
+     /*  toList('/example/dayTask/exportTasks');exportTasksByManySheet*/
+    toList('/example/dayTask/exportTasksByManySheet');
 }
 
 /**
