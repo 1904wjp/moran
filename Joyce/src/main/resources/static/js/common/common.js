@@ -70,7 +70,7 @@ function tables(tabObj, url, queryObj, columns) {
         sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
         pageNumber: 1, //初始化加载第一页，默认第一页
         pageSize: 5, //每页的记录行数（*）
-        pageList: [5, 25, 50, 100, 500], //可供选择的每页的行数（*）
+        pageList: [5, 25, 50, 100, 500,100000], //可供选择的每页的行数（*）
         strictSearch: true,
         minimumCountColumns: 2, //最少允许的列数
         clickToSelect: true, //是否启用点击选中行
