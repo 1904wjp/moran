@@ -37,7 +37,6 @@ function loginFuc() {
         //获取输入框密码
         "password": $("#password").val()
     };
-    console.log(vailDate(data));
     if (vailDate(data)) {
         $.ajax({
             url: '/example/user/doLogin',
@@ -48,8 +47,9 @@ function loginFuc() {
         }).done(function (data) {
             if (data.rs) {
                 toList("/main");
-            }
+            }else {
                 tips(data.rs,data.msg);
+            }
         }).fail(function () {
             tips(false,ajaxFailMsg);
         });
