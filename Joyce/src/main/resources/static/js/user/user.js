@@ -219,7 +219,6 @@ function queryUserFuc(id) {
     }).done(function (data) {
         tips(data.rs,data.msg);
         if (data.rs) {
-
             toList('/example/user/queryUser/' + id);
         }
     }).fail(function () {
@@ -266,8 +265,6 @@ function getEmailCodeFuc() {
                 data: data,
             }).done(function (data) {
                 tips(data.rs,data.msg);
-                if (data.rs) {
-                }
             }).fail(function () {
                 toastr.error(ajaxFailMsg);
             });

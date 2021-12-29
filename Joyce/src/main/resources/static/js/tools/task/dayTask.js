@@ -150,6 +150,9 @@ function cencel(){
 //操作按钮
 function datTaskOpFormatter(value, row, index) {
     var actions = [];
-    actions.push('<a class="btn btn-primary btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#editModal" onclick="editDayTask(\'' + row.id + '\')"><i class="fa fa-edit"></i> 编辑</a> ');
+    let userId = $('#session_user_id').val();
+    if (userId==(row.userId)){
+        actions.push('<a class="btn btn-primary btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#editModal" onclick="editDayTask(\'' + row.id + '\')"><i class="fa fa-edit"></i> 编辑</a> ');
+    }
     return actions.join('');
 }

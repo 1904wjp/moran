@@ -46,6 +46,7 @@ public class DayTask extends Page {
     /**
      * 昵称
      */
+    @TableField(exist = false)
     private String nickname;
     /**
      * 用户id

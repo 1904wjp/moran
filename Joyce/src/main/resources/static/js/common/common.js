@@ -452,3 +452,15 @@ var formatDate = function (date) {
     return y + '-' + m + '-' + d;
 };
 
+/**
+ * 返回上一页
+ */
+function back(){
+    history.back(-1);
+}
+/**
+ * 返回上一页展示新页面
+ */
+function backNew(){
+    history.go(-1);
+}

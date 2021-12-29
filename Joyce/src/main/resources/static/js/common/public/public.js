@@ -14,8 +14,10 @@ function loadBackGround() {
     }).done(function (data) {
         var img =  Math.floor(Math.random()* (data.rows.length-1)) ;
         var Img = data.rows;
-        if (document.readyState === "loading" || document.readyState === "interactive" || document.readyState === "complete") {
-            backGroundSetting(Img[img].url);
+        if (Img.length!=0){
+            if (document.readyState === "loading" || document.readyState === "interactive" || document.readyState === "complete") {
+                backGroundSetting(Img[img].url);
+            }
         }
     }).fail(function () {
 

@@ -42,7 +42,7 @@
         <if test="userId!=null and userId!=0">
             AND dt.user_id = #{userId}
         </if>
-        ORDER BY  dt.update_time ,dt.id DESC
+        ORDER BY dt.user_id ASC, dt.update_time ,dt.id DESC
         <if test="offset!=null  and  pageNumber!=null  and pageNumber!=0 ">
             LIMIT #{offset}, #{pageNumber}
         </if>
