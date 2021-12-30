@@ -14,10 +14,10 @@ function indexLoadBackGround(){
         dataType: 'json',
         //传过来的data需要.data才可以获取当前对象。因为data是封装过的
     }).done(function (data) {
-        if (data.code==200){
+        if (data.rs){
           appendVideo($("#index_video"),"index_v",data.data.menuUrl);
         }else {
-            alert(data.msg);
+            tips(data.rs,data.msg);
         }
     }).fail(function () {
       /*  alert("获取资源失败");*/
