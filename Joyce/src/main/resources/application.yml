@@ -1,6 +1,12 @@
 #端口号
 server:
   port: 9099
+  servlet:
+    session:
+      timeout: 86400
+  tomcat:
+    max-http-form-post-size: -1
+  max-http-header-size: 80KB
 #app相关信息
 app:
   domain: 192.168.2.15

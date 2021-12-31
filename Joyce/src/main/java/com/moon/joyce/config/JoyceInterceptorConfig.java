@@ -46,7 +46,10 @@ public class JoyceInterceptorConfig implements WebMvcConfigurer, ErrorPageRegist
                 "/**/*.js",
                 "/**/*.css",
                 "/**/*.jpg",
-                "/**/*.png"
+                "/**/*.png",
+                "/**/*.ttf",
+                "/**/*.woff",
+                "/**/*.map"
         );
     }
 
