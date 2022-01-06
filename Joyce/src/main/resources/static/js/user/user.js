@@ -254,10 +254,6 @@ function getEmailCodeFuc() {
         "email": email
     };
     if (vailDate(data)){
-        Ewin.confirm({message: "确认要退出登录？"}).on(function (e) {
-            if (!e) {
-                return;
-            }
             $.ajax({
                 url: '/example/user/getEmailCode',
                 type: 'POST',
@@ -266,9 +262,8 @@ function getEmailCodeFuc() {
             }).done(function (data) {
                 tips(data.rs,data.msg);
             }).fail(function () {
-                toastr.error(ajaxFailMsg);
+                tips(false,ajaxFailMsg);
             });
-        });
     }
 
 }
@@ -398,25 +393,19 @@ function updateUserFuc() {
     }
 }
 
-//退出登录
+//忘记密码
 function rmUser() {
-
-    Ewin.confirm({message: "确认要退出登录？"}).on(function (e) {
-        if (!e) {
-            return;
-        }
         $.ajax({
             url: '/example/user/toRemoveUser',
             type: 'GET',
             dataType: 'json',
         }).done(function (data) {
+            tips(data.rs,data.msg);
             if (data.rs) {
-                toList('/example/user/editUser/login');
-            }else {
-               tips(false,data.msg);
+                toList('/example/user/login');
             }
         }).fail(function () {
-            toastr.error(ajaxFailMsg);
+           tips(false,ajaxFailMsg)
         });
-    });     
+
 }

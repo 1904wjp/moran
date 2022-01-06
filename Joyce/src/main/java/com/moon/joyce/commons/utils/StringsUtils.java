@@ -2,12 +2,16 @@ package com.moon.joyce.commons.utils;
 
 
 import com.baomidou.mybatisplus.generator.config.IFileCreate;
+import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -195,6 +199,20 @@ public class StringsUtils  implements Serializable {
             fileName = fileName.substring(fileName.length()-6);
         }
         return fileName;
+    }
+    /**
+     * 字符串转时间
+     * @return
+     */
+    public static Date StringToDate(String dateStr){
+        SimpleDateFormat dfm =  new SimpleDateFormat(Constant.DATE_TIME_DAY);
+        Date parse = null;
+        try {
+            parse = dfm.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return  parse;
     }
 
 

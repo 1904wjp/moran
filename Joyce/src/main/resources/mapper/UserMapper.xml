@@ -8,16 +8,16 @@
     <!--先分页查询后对结果排序-->
     <select id="getUsers" resultType="com.moon.joyce.example.entity.User">
         SELECT *
-        FROM user
-        <where>
+        FROM springboot.user u
+        WHERE u.delete_flag = 0
             <if test="username != null and username != ''">
-                AND username LIKE CONCAT('%',#{username},'%')
+                AND u.username LIKE CONCAT('%',#{username},'%')
             </if>
            <!-- <if test="password != null and password != ''">
                 AND password =#{password}
             </if>-->
             <if test="phone!= null and phone!= ''">
-                AND phone LIKE CONCAT('%',#{phone},'%')
+                AND u.phone LIKE CONCAT('%',#{phone},'%')
             </if>
             <if test="email != null and email != ''">
                 AND email  LIKE CONCAT('%',#{email},'%')
@@ -26,34 +26,33 @@
                 AND secondar_password = #{secondarPassword}
             </if>-->
             <if test="status != null">
-                AND status = #{status}
+                AND u.status = #{status}
             </if>
             <if test="userTypeId != null and userTypeId != ''">
-                AND user_type_id = #{userTypeId}
+                AND u.user_type_id = #{userTypeId}
             </if>
-        </where>
-        <if test="offset!=null and   pageNumber!=null   ">
-            LIMIT #{offset}, #{pageNumber}
-        </if>
-
+            <if test="nickname != null and nickname != ''">
+                AND u.nickname LIKE  CONCAT('%',#{nickname} ,'%')
+            </if>
+            <if test="offset!=null and   pageNumber!=null  and  pageNumber!=0">
+                LIMIT #{offset}, #{pageNumber}
+            </if>
     </select>
 
     <!--统计所有数据数量-->
     <select id="getTotal" resultType="java.lang.Integer">
         SELECT count(*)
-        FROM user
-        <where>
-            <if test="id != null"> and id = #{id} </if>
-            <if test="username != null and username != ''"> and username = #{username} </if>
+        FROM springboot.user u
+        WHERE u.delete_flag =0
+            <if test="id != null"> and u.id = #{id} </if>
+            <if test="username != null and username != ''"> AND u.username Like CONCAT('%',#{username},'%')  </if>
             <!--<if test="password != null password != ''"> and password= #{password} </if>-->
-            <if test="phone!= null and phone!= ''"> and phone = #{phone} </if>
-            <if test="email != null and email != ''"> and email = #{email} </if>
-            <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+            <if test="phone!= null "> AND u.phone Like CONCAT('%',#{phone} ,'%')</if>
+            <if test="email != null and email != ''"> AND u.email Like CONCAT('%',#{email} ,'%') </if>
+            <if test="nickname != null and nickname != ''"> AND u.nickname = #{nickname} </if>
            <!-- <if test="secondarPassword != null and secondarPassword!=''"> and secondar_password = #{secondarPassword} </if>-->
-            <if test="status != null"> and status = #{status} </if>
-            <if test="userTypeId != null and userTypeId != ''"> and user_type_id = #{userTypeId} </if>
-         </where>
+            <if test="status != null"> AND u.status = #{status} </if>
+            <if test="userTypeId != null and userTypeId != ''"> AND u.user_type_id = #{userTypeId} </if>
     </select>
-
 
 </mapper>

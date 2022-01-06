@@ -41,7 +41,7 @@ public class BaseController {
     @Value("${setting.super_administrator}")
     public String superAdministrator;
     //sessionMap
-    public Map<String,Object> sessionMap = new HashMap<>();
+    public List<User> sessionUsers = new ArrayList<>();
     @Autowired
     private DbBaseSettingService dbBaseSettingService;
     /**

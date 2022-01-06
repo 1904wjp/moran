@@ -4,44 +4,83 @@
 <div class="log">
 	<head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
 </div>
-<style>
-	#message{
-		margin-top:20px;
-		border:1px solid gray;
-		padding:20px;
-	}
-</style>
-</head>
-<body>
-<div  style="margin:10% 0 0 0;width: 100%">
-	<input id="username" type="hidden" th:value="${user.username}"><span th:text="'老子是:'+${user.username}"></span>
-	<input id="websocketUrlPrefix" type="hidden" th:value="${websocketUrlPrefix}">
-	<input  id="text" type="text" />
-	<button onclick="send()">SEND MESSAGE</button>
-	<button onclick="closeWebSocket()">CLOSE</button>
+	<link  rel="stylesheet" th:href="@{/static/css/websocket/default.css}"/>
+	<link  rel="stylesheet" th:href="@{/static/css/websocket/normalize.css}"/>
+	<link  rel="stylesheet" th:href="@{/static/css/websocket/styles.css}"/>
+
+<div class="htmleaf-container">
+	<header class="htmleaf-header">
+	</header>
+	<input id="id" type="hidden" th:value="${user.id}">
+	<div class="htmleaf-content bgcolor-3">
+		<div id="chatbox">
+			<div id="friendslist">
+				<div id="topmenu">
+					<span class="friends"></span>
+					<span class="chats"></span>
+					<span class="history"></span>
+				</div>
+
+				<div id="friends">
+					<div id="search">
+						<input type="text" id="searchfield" placeholder="Search contacts..." />
+					</div>
+				</div>
+			</div>
+
+			<div id="chatview" class="p1">
+				<div id="profile">
+				</div>
+				<div id="chat-messages">
+					<!--<label>Thursday 02</label>
+
+					<div class="message">
+						<img th:src="@{/static/img/websocket/1_copy.jpg}" />
+						<div class="bubble">
+							Really cool stuff!
+							<div class="corner"></div>
+							<span>3 min</span>
+						</div>
+					</div>
+
+					<div class="message right">
+						<img th:src="@{/static/img/websocket/2_copy.jpg}" />
+						<div class="bubble">
+							Can you share a link for the tutorial?
+							<div class="corner"></div>
+							<span>1 min</span>
+						</div>
+					</div>
+-->
+
+				</div>
+
+				<div id="sendmessage">
+					<input id="messageText" type="text" placeholder="Send message..." />
+					<button id="send" onclick="send()"></button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 </div>
-<span>
-	<select name="to"  id="to">
-            <option th:each="user,userStat:${users}" th:value="${user.username}" th:text="${user.username}"></option>
-	</select>
-</span>
-<div id="message"></div>
 <input class="title" type="hidden" value="websocket">
-</body>
-<script>
+<input id="to" type="hidden">
+<input id="websocketUrlPrefix" type="hidden" th:value="${websocketUrlPrefix}">
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/websocket/websocket.js}"></script>
+<script type="text/javascript">
 	//连接对象.
 	var websocket = null;//websocketUrlPrefix
-	var username = document.getElementById("username").value;
+	var id = $("#id").val();
 	//判断当前的浏览器是否支持websocket.
 	if ("WebSocket" in window) {
-		/*websocket = new WebSocket("ws://localhost:8080/websocket/"+nickname);*/
-		var websocketUrlPrefix = document.getElementById("websocketUrlPrefix").value;
-		websocket = new WebSocket("ws://" + websocketUrlPrefix + "/" + username);
-		console.log("ws://" + websocketUrlPrefix + "/"+ username);
+		var websocketUrlPrefix = $("#websocketUrlPrefix").val();
+		websocket = new WebSocket("ws://" + websocketUrlPrefix + "/" + id);
 	} else {
 		alert("Not support websocket");
 	}
-
 
 	//连接发生错误的回调方法
 	websocket.onerror = function(){
@@ -57,15 +96,15 @@
 
 	//接收到消息的回调方法
 	websocket.onmessage = function(event){
-	   var obj =JSON.parse(event.data);
-	   var ou = "";
-	   var mt = "";
-	   var fi = "";
-	   var tm = "";
-	   console.log(!isBlank(event.date));
+		var obj =JSON.parse(event.data);
+		var ou = "";
+		var mt = "";
+		var fi = "";
+		var tm = "";
+		console.log(!isBlank(event.date));
 		if (!isBlank(obj.onlineUsers)){
 			ou="当前在线人数:"+obj.onlionUsers+":";
-	   }
+		}
 		if (!isBlank(obj.messageType)){
 			mt=obj.messageType+";        ";
 		}
@@ -95,7 +134,7 @@
 
 	//将消息显示在网页上
 	function setMessageInnerHTML(innerHTML){
-		document.getElementById('message').innerHTML += innerHTML + '<br/>';
+		$('#messageText').innerHTML += innerHTML + '<br/>';
 	}
 
 
@@ -107,25 +146,23 @@
 
 	//发送消息
 	function send(){
-		var text = document.getElementById('text').value;
-	    var toOBJ =	document.getElementById("to");
-	    var index = toOBJ.selectedIndex;
-	    var to = toOBJ.options[index].value;
-	    console.log(to);
+		var text = $('#messageText').val();
+		var to=	$("#to").val();
 		if (to==null||to==''){
 			to = "All";
 		}
 		var  innerHTML = "<div><p>我:"+text+"</p></div>"
 		setMessageInnerHTML(innerHTML);
 		var messages={
-			username:username,
-			message:text,
-			to:to
+			id:id,
+			to:to,
+			message:text
 		}
 		websocket.send(JSON.stringify(messages));
-		document.getElementById("text").value="";
+		$('#messageText').attr('text','');
 	}
-
-
 </script>
-<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+
+
+
+

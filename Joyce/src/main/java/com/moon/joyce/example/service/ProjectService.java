@@ -3,6 +3,7 @@ package com.moon.joyce.example.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.moon.joyce.example.entity.Project;
 import joyce.example.entity.UserType;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,4 +26,11 @@ public interface ProjectService extends IService<Project> {
      * @return
      */
     int getCount(Project project);
+
+    /**
+     * 根据名称获取项目
+     * @param projectName
+     * @return
+     */
+    Project getOne(String projectName);
 }

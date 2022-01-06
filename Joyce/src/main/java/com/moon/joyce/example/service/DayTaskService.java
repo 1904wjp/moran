@@ -35,17 +35,23 @@ public interface DayTaskService extends IService<DayTask> {
     DayTask getLastData(Long id);
 
     /**
-     * 导处excel表
+     * 导出excel表
      * @param list
      * @return
      */
     void exportTable(List<DayTask> list, HttpServletResponse response);
 
     /**
-     * 导处excel表（分组）
+     * 导出excel表（分组）
      * @param map
      * @param response
      * @return
      */
     void exportTableByManySheet(Map<String, List<DayTask>> map, HttpServletResponse response);
+    /**
+     * 导入excel表（分组）
+     * @param path
+     * @return
+     */
+    String importDayTaskData(String path);
 }

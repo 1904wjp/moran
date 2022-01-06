@@ -58,6 +58,13 @@ function tips(params1,params2){
         toastr.success(params2);
     }
     if (params1===false){
-        toastr.success(params2);
+        toastr.error(params2);
+    }
+    if (params1==""){
+        toastr.warning(params2);
+    }
+    if (params1=null) {
+        toastr.info(params2);
     }
 }
+

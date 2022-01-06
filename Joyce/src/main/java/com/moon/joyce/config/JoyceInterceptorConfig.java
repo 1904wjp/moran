@@ -37,6 +37,7 @@ public class JoyceInterceptorConfig implements WebMvcConfigurer, ErrorPageRegist
                 "/example/sysMeun/doGetIndexMeun",
                 "/example/user/doLogin",
                 "/example/user/doSaveUser",
+                "/example/user/getEmailCode",
                 "/css/**",
                 "/js/**",
                 "/img/**",
@@ -49,7 +50,9 @@ public class JoyceInterceptorConfig implements WebMvcConfigurer, ErrorPageRegist
                 "/**/*.png",
                 "/**/*.ttf",
                 "/**/*.woff",
-                "/**/*.map"
+                "/**/*.map",
+                "/**/*.eot",
+                "/**/*.svg"
         );
     }
 

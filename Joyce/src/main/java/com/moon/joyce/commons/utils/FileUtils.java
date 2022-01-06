@@ -1,13 +1,17 @@
 package com.moon.joyce.commons.utils;
 
 
+import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 import com.moon.joyce.example.functionality.entity.PageComponent;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -19,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -33,6 +38,7 @@ public class FileUtils implements Serializable {
     private FileUtils() throws JoyceException {
         throw JoyceExceptionUtils.exception("工具类无法实例化");
     }
+
     /**
      * 文件上传工具类
      *
@@ -474,6 +480,76 @@ public class FileUtils implements Serializable {
                 e.printStackTrace();
             }
         }
+    }
+    /**
+     * 判断Excel的版本,获取Workbook
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static Workbook getWorkbok(File file) {
+        Workbook wb = null;
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(file);
+            if(file.getName().endsWith(Constant.EXCEL_XLS)){
+                wb = new HSSFWorkbook(in);
+            }else if(file.getName().endsWith(Constant.EXCEL_XLSX)){
+                wb = new XSSFWorkbook(in);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return wb;
+    }
+
+    /**
+     * XSSFCell转换成String
+     */
+    public static String getCellValue(Cell cell) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String ret = "";
+        if (cell == null) return ret;
+        CellType type = cell.getCellTypeEnum();
+        switch (type) {
+            case BLANK:
+                ret = "";
+                break;
+            case BOOLEAN:
+                ret = String.valueOf(cell.getBooleanCellValue());
+                break;
+            case ERROR:
+                ret = null;
+                break;
+            case FORMULA:
+                Workbook wb = cell.getSheet().getWorkbook();
+                CreationHelper crateHelper = wb.getCreationHelper();
+                FormulaEvaluator evaluator = crateHelper.createFormulaEvaluator();
+                ret = getCellValue(evaluator.evaluateInCell(cell));
+                break;
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    Date theDate = cell.getDateCellValue();
+                    ret = simpleDateFormat.format(theDate);
+                } else {
+                    ret = NumberToTextConverter.toText(cell.getNumericCellValue());
+                }
+                break;
+            case STRING:
+                ret = cell.getRichStringCellValue().getString();
+                break;
+            default:
+                ret = "";
+        }
+
+        return ret; // 有必要自行trim
+    }
+
+    /**
+     * XSSFCell转换成String并且去空格
+     */
+    public static String getCellValueOfTrim(Cell cell) {
+       return getCellValue(cell).trim();
     }
 }
 

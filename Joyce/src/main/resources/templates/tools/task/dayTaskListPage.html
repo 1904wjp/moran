@@ -105,12 +105,13 @@
                 <label class="col-sm-2 control-label" for="regist"> </label>
                 <div class="col-sm-5">
                     <input class="btn btn-default pull-left" id="regist" type="button" onclick="saveDayTask()" value="确定"/>
-                    <a class="btn btn-default pull-right" onclick="cencel()">取消</a>
+                    <a class="btn btn-default pull-right" onclick="cancel()">取消</a>
                 </div>
             </div>
         </form>
     </div>
 </div>
+<input id="excelTable" type="text"/> <input  type="button" onclick="importExcel()"/>
 <!--菜单-->
 <input class="title" type="hidden" value="dayTask"/>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>

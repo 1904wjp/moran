@@ -105,9 +105,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (Objects.nonNull(user.getStatusCode())&&StringUtils.isNotEmpty(user.getStatusCode().trim())){
             wrapper.eq("status_code",user.getStatusCode());
         }
-     /*   if (Objects.nonNull(user.getWebsocketSessionId())&&StringUtils.isNotEmpty(user.getWebsocketSessionId().trim())){
-            wrapper.eq("websocket_session_id",user.getWebsocketSessionId());
-        }*/
+        if (StringUtils.isNoneBlank(user.getNickname())){
+            wrapper.eq("nickname",user.getNickname());
+        }
+
             wrapper.eq("delete_flag",Constant.UNDELETE_STATUS);
         return baseMapper.selectCount(wrapper);
 
@@ -149,9 +150,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (Objects.nonNull(user.getStatusCode())&&StringUtils.isNotEmpty(user.getStatusCode().trim())){
             wrapper.eq("status_code",user.getStatusCode());
         }
-       /* if (Objects.nonNull(user.getWebsocketSessionId())&&StringUtils.isNotEmpty(user.getWebsocketSessionId().trim())){
-            wrapper.eq("websocket_session_id",user.getWebsocketSessionId());
-        }*/
+        if (StringUtils.isNoneBlank(user.getNickname())){
+            wrapper.eq("nickname",user.getNickname());
+        }
         wrapper.eq("delete_flag",Constant.UNDELETE_STATUS);
         return baseMapper.selectOne(wrapper);
     }

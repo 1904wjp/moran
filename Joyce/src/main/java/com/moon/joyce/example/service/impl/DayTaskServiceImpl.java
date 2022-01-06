@@ -3,17 +3,29 @@ package com.moon.joyce.example.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.utils.DateUtils;
 import com.moon.joyce.commons.utils.FileUtils;
+import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.DayTask;
+import com.moon.joyce.example.entity.Project;
+import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.mapper.DayTaskMapper;
 import com.moon.joyce.example.service.DayTaskService;
+import com.moon.joyce.example.service.ProjectService;
+import com.moon.joyce.example.service.UserService;
 import com.sun.deploy.net.HttpResponse;
 import joyce.example.entity.UserType;
 import joyce.example.mapper.UserTypeMapper;
 import joyce.example.service.UserTypeService;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -24,6 +36,10 @@ import java.util.*;
 public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> implements DayTaskService {
     @Autowired
     private DayTaskMapper dayTaskMapper;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ProjectService projectService;
     @Override
     public List<DayTask> getList(DayTask dayTask) {
         return dayTaskMapper.selectList(dayTask);
@@ -55,6 +71,50 @@ public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> impl
         }
         FileUtils.exporExcel2(response,"每日看板.xlsx",titleList,hashMap);
 
+    }
+
+    @Override
+    public String importDayTaskData(String path) {
+        ArrayList<DayTask> dayTasks = new ArrayList<>();
+        File file = new File(path);
+        Workbook workbok = FileUtils.getWorkbok(file);
+        for (int numSheet = 0; numSheet < workbok.getNumberOfSheets(); numSheet++) {
+            Sheet sheetAt = workbok.getSheetAt(numSheet);
+            if (Objects.isNull(sheetAt)){
+                continue;
+            }
+            String name = FileUtils.getCellValueOfTrim(sheetAt.getRow(0).getCell(0));
+            User user = new User();
+            user.setNickname(name);
+            User dbUser = userService.getUser(user, "");
+            for (int i = 2; i < sheetAt.getLastRowNum(); i++) {
+                Row row = sheetAt.getRow(i);
+                DayTask dayTask = new DayTask();
+                String projectName = FileUtils.getCellValueOfTrim(row.getCell(0));
+                Project dbProject = projectService.getOne(projectName);
+                if (Objects.nonNull(dbProject)){
+                    dayTask.setProjectName(projectName);
+                    dayTask.setProjectId(dbProject.getId());
+                }
+                dayTask.setUserId(dbUser.getId());
+                dayTask.setStartTime(StringsUtils.StringToDate(FileUtils.getCellValueOfTrim(row.getCell(1))));
+                dayTask.setTodayTask(FileUtils.getCellValueOfTrim(row.getCell(2)));
+                dayTask.setEndTimes(StringsUtils.StringToDate(FileUtils.getCellValueOfTrim(row.getCell(3))));
+                dayTask.setFinalyTask(FileUtils.getCellValueOfTrim(row.getCell(4)));
+                dayTasks.add(dayTask);
+            }
+        }
+        String str ="";
+        for (DayTask dayTask : dayTasks) {
+            if (Objects.isNull(dayTask)){
+                continue;
+            }
+            int rs = baseMapper.insert(dayTask);
+            if (rs==0){
+                str=str+dayTask.getStartTime()+":"+dayTask.getNickname()+"的"+dayTask.getTodayTask()+"任务插入失败";
+            }
+        }
+        return str;
     }
 
     /**

@@ -87,52 +87,6 @@ $(function () {
         }
     }
 
-
-  /*  if (val=="index"){
-        $('#menu_bar').append(
-            "            <li class='active'><a href=\"/main\">首页</a></li>\n"  +
-            "            <li><a href=\"/example/user/websocket\">一起聊天</a></li>\n" +
-            "            <li><a href=\"/example/columns/getColumnsPage\">生成代码</a></li>\n" +
-            "            <li><a href=\"/example/uedit/uEditorListPage\">写笔记</a></li>");
-    }
-    if (val=="websocket"){
-        $('#menu_bar').append(
-            "            <li><a href=\"/main\">首页</a></li>\n"  +
-            "            <li class='active'><a href=\"/example/user/websocket\">一起聊天</a></li>\n" +
-            "            <li><a href=\"/example/columns/getColumnsPage\">生成代码</a></li>\n" +
-            "            <li><a href=\"/example/uedit/uEditorListPage\">写笔记</a></li>");
-    }
-    if (val=="pg"){
-        $('#menu_bar').append(
-            "            <li><a href=\"/main\">首页</a></li>\n"  +
-            "            <li><a href=\"/example/columns/getColumnsPage\">生成代码</a></li>\n" +
-            "            <li class='active'><a href=\"/example/db/packagePage\">配置包</a></li>\n" +
-            "            <li><a href=\"/example/db/dbPage\">配置数据源</a></li>");
-
-    }
-    if (val=="db"){
-        $('#menu_bar').append(
-            "            <li><a href=\"/main\">首页</a></li>\n"  +
-            "            <li><a href=\"/example/columns/getColumnsPage\">生成代码</a></li>\n" +
-            "            <li><a href=\"/example/db/packagePage\">配置包</a></li>\n" +
-            "            <li class='active'><a href=\"/example/db/dbPage\">配置数据源</a></li>");
-
-    }
-    if (val=="columns"){
-        $('#menu_bar').append(
-            "            <li><a href=\"/main\">首页</a></li>\n"  +
-            "            <li class='active'><a href=\"/example/columns/getColumnsPage\">生成代码</a></li>\n" +
-            "            <li><a href=\"/example/db/packagePage\">配置包</a></li>\n" +
-            "            <li><a href=\"/example/db/dbPage\">配置数据源</a></li>");
-
-    }
-    if (val =="uedit"){
-        $('#menu_bar').append(
-            "            <li><a href=\"/main\">首页</a></li>\n"  +
-            "            <li><a href=\"/example/user/websocket\">一起聊天</a></li>\n" +
-            "            <li><a href=\"/example/columns/getColumnsPage\">生成代码</a></li>\n" +
-            "            <li class='active'><a href=\"/example/uedit/uEditorListPage\">写笔记</a></li>");
-    }*/
 });
 
 /**
@@ -148,9 +102,9 @@ function toAddSource(){
 var index = 0;
 function dropdownBlock(){
     if (index%2==0){
-        $(".list-group").css("display","block");
+        $(".list-group").show();
     }else {
-        $(".list-group").css("display","none");
+        $(".list-group").hide();
     }
     ++index;
 }

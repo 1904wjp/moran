@@ -5,8 +5,10 @@ package com.moon.joyce.example.controller;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
+import com.moon.joyce.example.entity.ChatRecord;
 import com.moon.joyce.example.entity.DbBaseSetting;
 import com.moon.joyce.example.entity.vo.PageVo;
+import com.moon.joyce.example.entity.vo.UserChartVo;
 import com.moon.joyce.example.functionality.entity.DataSource;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.entity.User;
@@ -15,6 +17,7 @@ import com.moon.joyce.example.functionality.entity.VerifyCode;
 import com.moon.joyce.example.functionality.server.WebSocket;
 import com.moon.joyce.example.functionality.service.DataSourceService;
 import com.moon.joyce.example.functionality.service.FileService;
+import com.moon.joyce.example.service.ChatRecordService;
 import com.moon.joyce.example.service.UserService;
 import com.moon.joyce.example.service.serviceControllerDetails.UserServiceControllerDetailService;
 import org.apache.commons.lang3.StringUtils;
@@ -28,12 +31,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * <p>
- *  用户前端控制器
- * </p>
- *
  * @author Joyce
  * @since 2021-09-01
  */
@@ -47,7 +47,8 @@ public class UserController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private ChatRecordService chatRecordService;
     /**
      * 页面路径前缀
      */
@@ -74,8 +75,6 @@ public class UserController extends BaseController {
     @Autowired
     private UserServiceControllerDetailService userServiceControllerDetailService;
 
-    @Autowired
-    private DataSourceService dataSourceService;
     /**
      * 聊天服务
      */
@@ -135,7 +134,6 @@ public class UserController extends BaseController {
      */
     @GetMapping("/queryUser/{id}")
     public String queryUserPage(@PathVariable("id") Long id,ModelMap map){
-
         User dbUser = userService.getById(id);
         map.addAttribute("user",dbUser);
         return pagePrefix+"queryUserPage";
@@ -176,8 +174,72 @@ public class UserController extends BaseController {
         return pagePrefix+"websocketPage";
     }
 
+
+
+
+
     /**************************************************************************************************************************************************************************************************************/
     /**********逻辑判断**********/
+
+    /**
+     * 好友
+     */
+    @ResponseBody
+    @GetMapping("/sessionUsers")
+    public Result getSessionUsers(@RequestParam String nickname) {
+        User user = new User();
+        user.setNickname(nickname);
+        List<User> userList = userService.getUserList(user);
+        List<UserChartVo> userChartVos = new ArrayList<>();
+        for (int i = 0; i < userList.size(); i++) {
+            boolean flag = false;
+            for (int i1 = 0; i1 < sessionUsers.size(); i1++) {
+                if (userList.get(i).getUsername().equals(sessionUsers.get(i1).getUsername())){
+                    flag = true;
+                }
+                if (i1==sessionUsers.size()-1){
+                    UserChartVo userChartVo = new UserChartVo();
+                    if (flag){
+                        userChartVo.setId(sessionUsers.get(i1).getId());
+                        userChartVo.setNickname(sessionUsers.get(i1).getNickname());
+                        userChartVo.setUsername(sessionUsers.get(i1).getUsername());
+                        userChartVo.setAddress(sessionUsers.get(i1).getAddress());
+                        userChartVo.setFileUrl(sessionUsers.get(i1).getFileUrl());
+                        userChartVo.setEmail(sessionUsers.get(i1).getEmail());
+                        userChartVo.setChartStatus(1);
+                    }else {
+                        userChartVo.setId(userList.get(i).getId());
+                        userChartVo.setNickname(userList.get(i).getNickname());
+                        userChartVo.setUsername(userList.get(i).getUsername());
+                        userChartVo.setAddress(userList.get(i).getAddress());
+                        userChartVo.setFileUrl(userList.get(i).getFileUrl());
+                        userChartVo.setEmail(userList.get(i).getEmail());
+                        userChartVo.setChartStatus(0);
+                    }
+                    userChartVos.add(userChartVo);
+                }
+            }
+        }
+        return ResultUtils.success(userChartVos);
+    }
+
+    /**
+     * 用户发送数据
+     * @param id
+     * @param msg
+     */
+    @ResponseBody
+    @GetMapping("/sendTo")
+    public void sendTo(@RequestParam("id") Long id,@RequestParam("msg") String msg) {
+        ChatRecord chatRecord = new ChatRecord();
+        chatRecord.setUserAId(getSessionUser().getId());
+        chatRecord.setUserBId(id);
+        chatRecord.setContent(msg);
+        chatRecordService.save(chatRecord);
+        webSocket.sendMessageTo(msg,id);
+    }
+
+
     /**
      * user数据保存方法
      * @param user
@@ -288,6 +350,8 @@ public class UserController extends BaseController {
             }
             //设置当前登录人
             setSession(Constant.SESSION_USER,dbUser);
+            //设置当前在线集合
+            sessionUsers.add(dbUser);
             //检测是否存在当前登录人的相关配置
             Setting currentSetting = userServiceControllerDetailService.checkData(getSessionUser().getId());
             if (Objects.nonNull(currentSetting)){
@@ -325,7 +389,6 @@ public class UserController extends BaseController {
             return ResultUtils.error(Constant.NULL_CODE);
         }
         List<String> list = StringsUtils.StrToList(ids);
-        logger.info(list.toString()+"::"+getSessionUser().getId());
         if (StringsUtils.listIsContainsStr(getSessionUser().getId().toString(),list)){
             return ResultUtils.error(getSessionUser().getUsername()+"正在使用，无法操作");
         }
@@ -393,8 +456,8 @@ public class UserController extends BaseController {
     @ResponseBody
     @Transactional
     @RequestMapping("/doQueryUser")
-    public Result updateUser(@RequestParam String id){
-        User dbUser = userService.getById(Long.valueOf(id));
+    public Result updateUser(@RequestParam Long id){
+        User dbUser = userService.getById(id);
         if (Objects.nonNull(dbUser)){
             if (Constant.USER_TYPE_INVAILD_STATUS.equals(dbUser.getStatus())){
                 return ResultUtils.error(Constant.INACTIVE_CODE);
@@ -426,8 +489,8 @@ public class UserController extends BaseController {
             return ResultUtils.error(Constant.NULL_CODE);
         }
         VerifyCode sessionVerifyCode= (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
-
         if (Objects.isNull(sessionVerifyCode)){
+            logger.info("sdadsa:"+user.getEmail());
             mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
             VerifyCode verifyCode = new VerifyCode();
             verifyCode.setCreateTime(new Date());
@@ -551,15 +614,6 @@ public class UserController extends BaseController {
         return ResultUtils.success();
     }
 
-    /**
-     * 用户发送数据
-     * @param username
-     * @param msg
-     */
-    @ResponseBody
-    @GetMapping("/sendTo")
-    public void sendTo(@RequestParam("username") String username,@RequestParam("msg") String msg) {
-        webSocket.sendMessageTo(msg,username);
-    }
+
 }
 

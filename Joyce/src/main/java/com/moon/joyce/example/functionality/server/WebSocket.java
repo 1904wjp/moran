@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date: 2021/09/26-- 23:13
  * @describe:
  */
-@ServerEndpoint(value="/websocket/{username}")// websocket连接点映射.
+@ServerEndpoint(value="/websocket/{id}")// websocket连接点映射.
 @Component
 public class WebSocket {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -31,11 +31,11 @@ public class WebSocket {
     private static int onlineNumber = 0;
     //用来存储每个客户端对应的MyWebSocket对象.
   //  private static CopyOnWriteArraySet<WebSocket> webSocketSet = new CopyOnWriteArraySet<WebSocket>();
-    private static Map<String,WebSocket> clients = new ConcurrentHashMap<String,WebSocket>();
+    private static Map<Long,WebSocket> clients = new ConcurrentHashMap<>();
     //用来记录sessionId和该session之间的绑定关系.
    // private static Map<String, Session> map = new HashMap<String,Session>();
     private Session session;//当前会话的session.
-    private String username;//昵称.
+    private Long id;//昵称.
 
 
 
@@ -44,24 +44,24 @@ public class WebSocket {
      * 成功建立连接调用的方法.
      */
     @OnOpen
-    public void onOpen(Session session,@PathParam("username") String username){
+    public void onOpen(Session session,@PathParam("id") Long id){
         
         this.session = session;
-        this.username = username;
+        this.id = id;
         /*String sId = SessionUtils.getSessionUser().getWebsocketSessionId();
         map.put(sId, session);
         webSocketSet.add(this);//加入set中.*/
         Map<String, Object> map1 = new HashMap<>();
         map1.put("messageType",1);
-        map1.put("username",username);
-        sendMessageAll(JSON.toJSONString(map1),username);
-        clients.put(username,this);
+        map1.put("id",id);
+        sendMessageAll(JSON.toJSONString(map1),id);
+        clients.put(id,this);
         logger.info("有连接关闭!当前在线人数:"+clients.size());
         HashMap<String, Object> map2 = new HashMap<>();
         map2.put("messageType",3);
-        Set<String> set = clients.keySet();
+        Set<Long> set = clients.keySet();
         map2.put("onlionUsers",set);
-        sendMessageTo(JSON.toJSONString(map2),username);
+        sendMessageTo(JSON.toJSONString(map2),id);
     }
 
 
@@ -72,13 +72,13 @@ public class WebSocket {
     public void onClose(Session session){
         onlineNumber --;
 //        webSocketSet.remove(this);//从set中移除.
-        clients.remove(username);
+        clients.remove(id);
         //messageType 1代表上线 2代表下线 3代表在线名单  4代表普通消息
         Map<String,Object> map1 = new HashMap<>();
         map1.put("messageType",2);
         map1.put("onlineUsers",clients.keySet());
-        map1.put("username",username);
-        sendMessageAll(JSON.toJSONString(map1),username);
+        map1.put("id",id);
+        sendMessageAll(JSON.toJSONString(map1),id);
         //logger.info("有连接关闭！ 当前在线人数" + onlineNumber);
         logger.info("有连接关闭！ 当前在线人数" + clients.size());
     }
@@ -87,7 +87,7 @@ public class WebSocket {
      * 收到客户端消息后调用的方法.
      */
     @OnMessage
-    public void onMessage(String message,Session session,@PathParam("username") String username){
+    public void onMessage(String message,Session session,@PathParam("id") Long id){
 
       /*  //message 不是普通的string ，而是我们定义的SocketMsg json字符串.
         try {
@@ -125,8 +125,8 @@ public class WebSocket {
             System.out.println("------------  :"+message);
             JSONObject jsonObject = JSON.parseObject(message);
             String textMessage = jsonObject.getString("message");
-            String fromuserId = jsonObject.getString("username");
-            String touserId = jsonObject.getString("to");
+            Long fromuserId = Long.valueOf(jsonObject.getString("id"));
+            Long touserId = Long.valueOf(jsonObject.getString("to"));
             //如果不是发给所有，那么就发给某一个人
             //messageType 1代表上线 2代表下线 3代表在线名单  4代表普通消息
             Map<String,Object> map1 = new HashMap();
@@ -139,7 +139,7 @@ public class WebSocket {
             }
             else{
                 map1.put("touserId",touserId);
-                System.out.println("开始推送消息给"+touserId);
+                logger.info("开始推送消息给"+touserId);
                 /*sendMessageTo(JSON.toJSONString(map1),zz);*/
                 sendMessageTo(JSON.toJSONString(map1),touserId);
             }
@@ -162,21 +162,21 @@ public class WebSocket {
     /**
      * 单一发送消息
      * @param message
-     * @param toUsername
+     * @param id
      */
-    public void sendMessageTo(String message, String toUsername){
+    public void sendMessageTo(String message, Long id){
         for (WebSocket item : clients.values()) {
-            if (item.username.equals(toUsername)){
+            if (item.id.equals(id)){
                 item.session.getAsyncRemote().sendText(message);
             }
         }
     }
     /**
      * 群发的方法.
-     * @param socketMsg
-     * @param fromUsername
+     * @param message
+     * @param id
      */
-    private void sendMessageAll(String message, String fromUsername) {
+    private void sendMessageAll(String message, Long id) {
         for (WebSocket item : clients.values()) {
             item.session.getAsyncRemote().sendText(message);
         }
@@ -194,7 +194,7 @@ public class WebSocket {
      * 在线人员
      * @return
      */
-    public  synchronized Map<String, WebSocket>  getOnlineUsers(){
+    public  synchronized Map<Long, WebSocket>  getOnlineUsers(){
        return clients;
     }
 

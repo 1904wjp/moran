@@ -1,7 +1,11 @@
 $().ready(function (){
     $("#add_dayTask").hide();
     getDayTaskTable();
-});
+})
+
+/**
+ * 看板列表
+ */
 function getDayTaskTable(){
 
         var obj = $('#dayTaskTable');
@@ -67,7 +71,6 @@ function addDayTask(){
         url: '/example/dayTask/justTasks',
         type: 'GET',
         dataType: 'json',
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
     }).done(function (data) {
         if (data.rs) {
             $('#addEndTimes').val(data.data.endTimes);
@@ -101,7 +104,6 @@ function editDayTask(id){
             type: 'GET',
         dataType: 'json',
         data: data,
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
     }).done(function (data) {
         if (data.rs) {
             $('#addId').val(data.data.id);
@@ -131,7 +133,6 @@ function saveDayTask(){
         type: 'POST',
         dataType: 'json',
         data: data,
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
     }).done(function (data) {
         if (data.rs){
             toList('/example/dayTask/dayTaskListPage');
@@ -143,7 +144,7 @@ function saveDayTask(){
 /**
  * 取消关闭
  */
-function cencel(){
+function cancel(){
     $("#tables").show();
     $("#add_dayTask").hide();
 }
@@ -155,4 +156,31 @@ function datTaskOpFormatter(value, row, index) {
         actions.push('<a class="btn btn-primary btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#editModal" onclick="editDayTask(\'' + row.id + '\')"><i class="fa fa-edit"></i> 编辑</a> ');
     }
     return actions.join('');
+}
+function importExcel(){
+
+    let data = {
+        path:$('#excelTable').val()
+    }
+    $.ajax({
+        url: '/example/dayTask/importExcel',
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+    }).done(function (data) {
+        tips(data.rs,data.msg);
+    });
+}
+
+//获取上传图片路径2
+function getObjectURL(file) {
+    var url = null;
+    if (window.createObjectURL != undefined) { // basic
+        url = window.createObjectURL(file);
+    } else if (window.URL != undefined) { // mozilla(firefox)
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL != undefined) { // webkit or chrome
+        url = window.webkitURL.createObjectURL(file);
+    }
+    return url;
 }

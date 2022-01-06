@@ -30,12 +30,12 @@ public class Constant {
 //    在20分、25分、30分执行一次：0 20,25,30 * * * ?
 
     //邮件密令
-    @Value("${email.password}")
+/*    @Value("${email.password}")
     public static   String password ;
     @Value("${email.emailPassword}")
     public static   String emailPassword ;
     @Value("${email.username}")
-    public static   String email ;
+    public static   String email ;*/
     /**
      * 算法类型
      */
@@ -170,13 +170,13 @@ public class Constant {
      * qq_email参数设置
      */
     //发送人的qq邮件
-    public static final String SEND_EMAIL_CODE = email;
+    public static final String SEND_EMAIL_CODE = "1154517070@qq.com";
     //发送人的qq密码
-    public static final String SEND_EMAIL_PASSWORD = emailPassword;
+    public static final String SEND_EMAIL_PASSWORD = "cbeilolivceihghd";
     //发送邮件格式
     public static final String SEND_EMAIL_FORMATE = "text/html;charset=UTF-8";
     //发送人的授权码
-    public static final String SEND_EMAIL_AUTH_CODE = password;
+    public static final String SEND_EMAIL_AUTH_CODE = "hj951206";
     //发送验证码的模板
     public static final String SEND_EMAIL_TEMPLATE = "来自Joyce网站的验证,您本次的验证码为:";
     //发送url激活模板
@@ -299,5 +299,13 @@ public class Constant {
      */
     //当前应用配置
     public static final String CURRENT_SETTING ="current_setting";
+
+    /**
+     * excel版本
+     */
+    //Excel&nbsp;2003
+    public static final String EXCEL_XLS = "xls";
+    // Excel 2007/2010
+    public static final String EXCEL_XLSX = "xlsx";
 
 }

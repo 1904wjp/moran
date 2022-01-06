@@ -19,9 +19,67 @@ public class ResultUtils implements Serializable {
     private ResultUtils() throws JoyceException {
         throw JoyceExceptionUtils.exception("工具类无法实例化");
     }
+
+    /**
+     * 返回结果
+     * @param rs
+     * @param data
+     * @return
+     */
+    public static Result dataResult(boolean rs,Object data){
+       if (rs){
+           return success(data);
+       }
+        return error();
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs){
+        if (rs){
+            return success();
+        }
+        return error();
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs,Integer code){
+        if (rs){
+            return success(code);
+        }
+        return error(code);
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs,Integer code,String msg){
+        if (rs){
+            return success(code,msg);
+        }
+        return error(code,msg);
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs,Integer code,String msg,Object data){
+        if (rs){
+            return success(code,msg,data);
+        }
+        return error(code,msg,false);
+    }
     /**
      * 成功的方法
      */
+
     //分页
     public PageVo success(List<Object> rows, int total) {
         return new PageVo(rows,total);
@@ -31,6 +89,9 @@ public class ResultUtils implements Serializable {
             msg=Constant.RESULT_SUCCESS_MSG;
         }
         return new Result(Constant.SUCCESS_CODE,msg,rs,data);
+    }
+    public static Result success(Integer code,String msg){
+        return new Result(code,msg,true);
     }
     public static Result success(String msg,Boolean rs){
         if (Objects.isNull(msg)){
@@ -43,6 +104,9 @@ public class ResultUtils implements Serializable {
             msg=Constant.RESULT_SUCCESS_MSG;
         }
         return new Result(Constant.SUCCESS_CODE,msg,true,data);
+    }
+    public static Result success(Integer code,String msg,Object data){
+        return new Result(code,msg,true,data);
     }
     public static Result success(String msg){
         if (Objects.isNull(msg)){
@@ -164,7 +228,6 @@ public class ResultUtils implements Serializable {
             if (Constant.ERROR_FILL_ERROR_CODE==code){
                 msg=Constant.RESULT_FILL_ERROR_MSG;
             }
-
         return msg;
     }
 }

@@ -8,7 +8,6 @@ import com.moon.joyce.commons.utils.ResultUtils;
 import com.moon.joyce.example.entity.DayTask;
 import com.moon.joyce.example.entity.Project;
 import com.moon.joyce.example.entity.User;
-import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.service.DayTaskService;
@@ -157,6 +156,15 @@ public class DayTaskController extends BaseController {
         List<DayTask> list= (List<DayTask>) getSessionValue(getSessionUser().getUsername() + "excel");
         Map<String, List<DayTask>> map = list.stream().collect(Collectors.groupingBy(DayTask::getNickname));
          dayTaskService.exportTableByManySheet(map,response);
+    }
+    @ResponseBody
+    @PostMapping("/importExcel")
+    public Result importExcel(@RequestParam String path){
+        String str = dayTaskService.importDayTaskData(path);
+        if (Objects.isNull(str)){
+            return ResultUtils.success();
+        }
+        return ResultUtils.error(Constant.ERROR_CODE,"操作失败",str);
     }
 }
 
