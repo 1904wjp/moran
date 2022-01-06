@@ -340,6 +340,7 @@ public class UserController extends BaseController {
         user.setUsername(username);
         user.setPassword(MD5Utils.getMD5Str(password));
         User dbUser = userService.getUser(user, Constant.USER_TYPE_LOGIN);
+        logger.info(username+"======>登录中");
         if (Objects.nonNull(dbUser)){
             if(!user.getPassword().equals(dbUser.getPassword())){
               return ResultUtils.error(Constant.CHINESE_PASSWORD_ERROR_MESSAGE);
@@ -355,8 +356,10 @@ public class UserController extends BaseController {
             //检测是否存在当前登录人的相关配置
             Setting currentSetting = userServiceControllerDetailService.checkData(getSessionUser().getId());
             if (Objects.nonNull(currentSetting)){
+                logger.info(username+"======>设置装配中");
                 setSession(getSessionUser().getId()+Constant.CURRENT_SETTING,currentSetting);
             }
+            logger.info(username+"======>登录成功");
             return ResultUtils.success();
         }
         return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SLECET_BLANK_USERNAME_MESSAGE);

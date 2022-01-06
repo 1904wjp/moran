@@ -113,6 +113,9 @@ function initFuc(){
     });
 }
 
+/**
+ * 查询好友
+ */
 $('#search').keydown(function (e){
    if (e.keyCode===13){
        $('.friend').remove();
@@ -178,3 +181,42 @@ $("#friends").on('click', '.friend', function(e) {
         $('#chat-messages').append("<div>暂无信息</div>>");
     });
 });
+
+function userInfo(id,to,message){
+    var data ={
+        id:id
+    }
+    var data2 ={
+        "id":id,
+        "to":to,
+        "message":message
+    }
+    $.ajax({
+        url: '/example/user/doQueryUser',
+        type: 'GET',
+        dataType: 'json',
+        data:data,
+    }).done(function (data) {
+       let chatHtml ="";
+        if (getSessionUserId===data.data[i].id){
+            chatHtml = chatHtml+ "<div class=\"message\">" ;
+        }else {
+            chatHtml = chatHtml+ "<div class=\"message right\">" ;
+        }
+        chatHtml = chatHtml+
+            "<img src=\""+data.data[i].fileUrl+"\" />" +
+            "<div class=\"bubble\">" +
+            message +
+            "</div></div>";
+
+    }).fail(function (){
+        tips(false,ajaxFailMsg);
+    });
+    $.ajax({
+        url: '/example/user/sendTo',
+        type: 'POST',
+        dataType: 'json',
+        data:data2,
+    }).done(function (data) {
+    });
+}

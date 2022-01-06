@@ -464,3 +464,11 @@ function back(){
 function backNew(){
     history.go(-1);
 }
+
+/**
+ * 获取当前登录人id
+ * @returns {*|jQuery}
+ */
+function getSessionUserId(){
+    return  $('#session_user_id').val();
+}
