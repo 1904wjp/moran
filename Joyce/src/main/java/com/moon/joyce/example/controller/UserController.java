@@ -199,21 +199,15 @@ public class UserController extends BaseController {
                 }
                 if (i1==sessionUsers.size()-1){
                     UserChartVo userChartVo = new UserChartVo();
+                    userChartVo.setId(userList.get(i).getId());
+                    userChartVo.setNickname(userList.get(i).getNickname());
+                    userChartVo.setUsername(userList.get(i).getUsername());
+                    userChartVo.setAddress(userList.get(i).getAddress());
+                    userChartVo.setFileUrl(userList.get(i).getFileUrl());
+                    userChartVo.setEmail(userList.get(i).getEmail());
                     if (flag){
-                        userChartVo.setId(sessionUsers.get(i1).getId());
-                        userChartVo.setNickname(sessionUsers.get(i1).getNickname());
-                        userChartVo.setUsername(sessionUsers.get(i1).getUsername());
-                        userChartVo.setAddress(sessionUsers.get(i1).getAddress());
-                        userChartVo.setFileUrl(sessionUsers.get(i1).getFileUrl());
-                        userChartVo.setEmail(sessionUsers.get(i1).getEmail());
                         userChartVo.setChartStatus(1);
                     }else {
-                        userChartVo.setId(userList.get(i).getId());
-                        userChartVo.setNickname(userList.get(i).getNickname());
-                        userChartVo.setUsername(userList.get(i).getUsername());
-                        userChartVo.setAddress(userList.get(i).getAddress());
-                        userChartVo.setFileUrl(userList.get(i).getFileUrl());
-                        userChartVo.setEmail(userList.get(i).getEmail());
                         userChartVo.setChartStatus(0);
                     }
                     userChartVos.add(userChartVo);
@@ -229,9 +223,10 @@ public class UserController extends BaseController {
      * @param msg
      */
     @ResponseBody
-    @GetMapping("/sendTo")
+    @PostMapping("/sendTo")
     public void sendTo(@RequestParam("id") Long id,@RequestParam("msg") String msg) {
         ChatRecord chatRecord = new ChatRecord();
+        chatRecord.setCreateTime(new Date());
         chatRecord.setUserAId(getSessionUser().getId());
         chatRecord.setUserBId(id);
         chatRecord.setContent(msg);

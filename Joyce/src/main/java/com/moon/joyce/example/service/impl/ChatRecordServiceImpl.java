@@ -30,12 +30,15 @@ public class ChatRecordServiceImpl extends ServiceImpl<ChatRecordMapper, ChatRec
     @Override
     public List<ChatRecord> getAll(ChatRecord chatRecord) {
         List<ChatRecord> allRecord = chatRecordMapper.selectAll(chatRecord);
+        if (allRecord.isEmpty()){
+            return allRecord;
+        }
         List<ChatRecord> chatRecords = new ArrayList<>();
         for (ChatRecord record : allRecord) {
             if (Objects.isNull(record)){
                 continue;
             }
-            record.setCreateTimeValue(DateUtils.showDate(record.getCreateTime(),"dv"));
+            record.setCreateTimeValue(DateUtils.showDate(record.getCreateTime(),"sv"));
             chatRecords.add(record);
         }
         return chatRecords;

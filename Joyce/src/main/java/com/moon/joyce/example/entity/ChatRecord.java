@@ -27,7 +27,7 @@ public class ChatRecord extends BaseEntity {
      * 用户a名称
      */
     @TableField(exist = false)
-    private Long userAName;
+    private String userAName;
     /**
      * 用户b id
      */
@@ -37,7 +37,7 @@ public class ChatRecord extends BaseEntity {
      * 用户b名称
      */
     @TableField(exist = false)
-    private Long userBName;
+    private String userBName;
     /**
      * 用户聊天信息
      */

@@ -40,26 +40,26 @@ function initFuc(){
 
     var preloadbg = document.createElement('img');
     preloadbg.src = '/static/img/websocket/timeline1.png';
-    $('#searchfield').focus(function () {
+    /*$('#searchfield').focus(function () {
         if ($(this).val() == 'Search contacts...') {
             $(this).val('');
         }
-    });
-    $('#searchfield').focusout(function () {
+    });*/
+   /* $('#searchfield').focusout(function () {
         if ($(this).val() == '') {
             $(this).val('Search contacts...');
         }
-    });
-    $('#sendmessage input').focus(function () {
+    });*/
+   /* $('#sendmessage input').focus(function () {
         if ($(this).val() == 'Send message...') {
             $(this).val('');
         }
-    });
-    $('#sendmessage input').focusout(function () {
+    });*/
+    /*$('#sendmessage input').focusout(function () {
         if ($(this).val() == '') {
             $(this).val('Send message...');
         }
-    });
+    });*/
     $('.friend').each(function () {
         $(this).click(function () {
             var childOffset = $(this).offset();
@@ -124,7 +124,7 @@ $('#search').keydown(function (e){
 });
 
 $("#friends").on('click', '.friend', function(e) {
-
+    $('#to').val($(this).find("input").val());
     let data = {
         id:$(this).find("input").val()
     }
@@ -162,61 +162,47 @@ $("#friends").on('click', '.friend', function(e) {
         data:data2,
     }).done(function (data) {
         let chatHtml ="";
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data.data.length; i++) {
            chatHtml = chatHtml+
             "<label>"+data.data[i].createTimeValue+"</label>" ;
-           if ($('#session_user_id').val()===data.data[i].userAId){
-               chatHtml = chatHtml+ "<div class=\"message\">" ;
+           if ($('#session_user_id').val()==data.data[i].userAId){
+               chatHtml = chatHtml+ "<div class=\"message right\">"+
+                   "<img src=\""+data.data[i].afileUrl+"\" />" ;
            }else {
-               chatHtml = chatHtml+ "<div class=\"message right\">" ;
+               chatHtml = chatHtml+ "<div class=\"message\">"+
+                   "<img src=\""+data.data[i].bfileUrl+"\" />" ;
            }
-           chatHtml = chatHtml+
-            "<img src=\""+data.data[i].aFileUrl+"\" />" +
+           chatHtml = chatHtml +
             "<div class=\"bubble\">" +
                data.data[i].content +
             "</div></div>";
+            $('#tosrc').val(data.data[0].bfileUrl);
         }
         $('#chat-messages').append(chatHtml);
+
     }).fail(function (){
-        $('#chat-messages').append("<div>暂无信息</div>>");
+        $('#chat-messages').append("<div>暂无信息</div>");
     });
 });
 
-function userInfo(id,to,message){
-    var data ={
+function saveInfo(to,message){
+   /* var data ={
         id:id
+    }*/
+    var data ={
+       "id":to,
+        "msg":message
     }
-    var data2 ={
-        "id":id,
-        "to":to,
-        "message":message
-    }
-    $.ajax({
-        url: '/example/user/doQueryUser',
-        type: 'GET',
-        dataType: 'json',
-        data:data,
-    }).done(function (data) {
-       let chatHtml ="";
-        if (getSessionUserId===data.data[i].id){
-            chatHtml = chatHtml+ "<div class=\"message\">" ;
-        }else {
-            chatHtml = chatHtml+ "<div class=\"message right\">" ;
-        }
-        chatHtml = chatHtml+
-            "<img src=\""+data.data[i].fileUrl+"\" />" +
-            "<div class=\"bubble\">" +
-            message +
-            "</div></div>";
 
-    }).fail(function (){
-        tips(false,ajaxFailMsg);
-    });
+
     $.ajax({
         url: '/example/user/sendTo',
         type: 'POST',
         dataType: 'json',
-        data:data2,
+        data:data,
     }).done(function (data) {
+
+    }).fail(function (){
+        tips(false,ajaxFailMsg);
     });
 }

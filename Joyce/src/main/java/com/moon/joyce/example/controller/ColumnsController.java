@@ -149,6 +149,9 @@ public class ColumnsController extends BaseController {
             }else {
                 logger.info("数据源关闭失败");
             }
+            if (tables.isEmpty()){
+                return ResultUtils.error("该数据库无数据或者连接有误");
+            }
             return ResultUtils.success(tables);
         }
 

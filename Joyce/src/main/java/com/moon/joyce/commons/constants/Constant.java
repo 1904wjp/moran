@@ -256,10 +256,10 @@ public class Constant {
     public static final String DATE_TIME_MONTH= "yyyy-MM";
     //日期(天)
     public static final String DATE_TIME_DAY= "yyyy-MM-dd";
-    //时间(分)
-    public static final String DATE_TIME_MINUTE= "yyyy-MM-dd hh:mm";
     //时间(时)
     public static final String DATE_TIME_HOUER= "yyyy-MM-dd hh";
+    //时间(分)
+    public static final String DATE_TIME_MINUTE= "yyyy-MM-dd hh:mm";
     //时间(秒)
     public static final String DATE_TIME_SECOND= "yyyy-MM-dd hh:mm:ss";
 

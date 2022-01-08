@@ -70,11 +70,11 @@ $(function () {
                 if (val == menuList[i].val) {
                     let temp = " <li class='active'><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a><ul>";
                     for (let j = 0; j < menuList[i].childs.length; j++) {
-                        temp = temp+"<li class='child'><a href=\"" + menuList[menuList[i].childs[j]].url + " \">" + menuList[menuList[i].childs[j]].name + "</a></li>";
+                        temp = temp+"<li class='childs'><a href=\"" + menuList[menuList[i].childs[j]].url + " \">" + menuList[menuList[i].childs[j]].name + "</a></li>";
                     }
                     temp = temp+"</ul></li>";
                     menu.append(temp);
-                    $('.child').show();
+                    $('.childs').show();
                 } else {
                     let temp = " <li><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a><ul>";
                     for (let j = 0; j < menuList[i].childs.length; j++) {

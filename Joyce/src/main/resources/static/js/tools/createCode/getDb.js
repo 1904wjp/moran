@@ -524,7 +524,17 @@ function deletePackages(){
  * 自动填充数据
  */
 $('#domain').bind('input propertychange', function() {
+    autoFill();
+})
+$('#port').bind('input propertychange', function() {
+    autoFill();
+})
+/**
+ * 自动填充数据
+ */
+
+function autoFill(){
     $('#url').val("jdbc:mysql://"+$('#domain').val()+":"+$('#port').val());
     $('#driverName').val("com.mysql.cj.jdbc.Driver");
     $('#databaseType').val("mysql");
-})
+}

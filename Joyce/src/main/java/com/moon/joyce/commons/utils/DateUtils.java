@@ -68,13 +68,13 @@ public class DateUtils implements Serializable {
                     pattern = Constant.DATE_TIME_MINUTE;break;
                 //获得年月日时分值
                 case "mv":
-                    pattern = Constant.DATE_TIME_MINUTE.replace("-","").replace(" ","").replace(":","").trim();break;
+                    pattern = Constant.DATE_TIME_MINUTE.replace("-","").replace(" ","").replace(":","").replace(" ","").replace(":","").trim();break;
                 //获得年月日时分秒
                 case "s":
                     pattern = Constant.DATE_TIME_SECOND;break;
                 //获得年月日时分秒值
                 case "sv":
-                    pattern = Constant.DATE_TIME_SECOND.replace("-","").replace(" ","").replace(":","").trim();break;
+                    pattern = Constant.DATE_TIME_SECOND.replace("-","").replace(" ","").replace(":","").replace(" ","").replace(":","").trim();break;
                 //获得年月日
                 default:
                     pattern = Constant.DATE_TIME_DAY;break;
@@ -191,15 +191,14 @@ public class DateUtils implements Serializable {
         String year = dateStr.substring(0,4);
         Long yearNum =Long.parseLong(year);
         int month = Integer.parseInt(dateStr.substring(5,7));
-        int day = Integer.parseInt(dateStr.substring(8,10));
-        String hour = dateStr.substring(11,13);
-        String minute = dateStr.substring(14,16);
-
+        int day = Integer.parseInt(dateStr.substring(6,8));
+        String hour = dateStr.substring(8,10);
+        String minute = dateStr.substring(10,12);
         long addtime =date.getTime();
         long today = System.currentTimeMillis();//当前时间的毫秒数
         Date now = new Date(today);
         String  nowStr=dateForMat(pattern,now);
-        int  nowDay = Integer.parseInt(nowStr.substring(8,10));
+        int  nowDay = Integer.parseInt(nowStr.substring(6,8));
         String result="";
         long l=today-addtime;//当前时间与给定时间差的毫秒数
         long days=l/(24*60*60*1000);//这个时间相差的天数整数，大于1天为前天的时间了，小于24小时则为昨天和今天的时间

@@ -12,6 +12,7 @@
 	<header class="htmleaf-header">
 	</header>
 	<input id="id" type="hidden" th:value="${user.id}">
+	<input id="fileUrl" type="hidden" th:value="${user.fileUrl}">
 	<div class="htmleaf-content bgcolor-3">
 		<div id="chatbox">
 			<div id="friendslist">
@@ -32,27 +33,6 @@
 				<div id="profile">
 				</div>
 				<div id="chat-messages">
-					<!--<label>Thursday 02</label>
-
-					<div class="message">
-						<img th:src="@{/static/img/websocket/1_copy.jpg}" />
-						<div class="bubble">
-							Really cool stuff!
-							<div class="corner"></div>
-							<span>3 min</span>
-						</div>
-					</div>
-
-					<div class="message right">
-						<img th:src="@{/static/img/websocket/2_copy.jpg}" />
-						<div class="bubble">
-							Can you share a link for the tutorial?
-							<div class="corner"></div>
-							<span>1 min</span>
-						</div>
-					</div>
--->
-
 				</div>
 
 				<div id="sendmessage">
@@ -66,7 +46,8 @@
 
 </div>
 <input class="title" type="hidden" value="websocket">
-<input id="to" type="hidden">
+<input id="to" type="text">
+<input id="tosrc" type="hidden">
 <input id="websocketUrlPrefix" type="hidden" th:value="${websocketUrlPrefix}">
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
 <script type="text/javascript" th:src="@{/static/js/websocket/websocket.js}"></script>
@@ -96,27 +77,38 @@
 
 	//接收到消息的回调方法
 	websocket.onmessage = function(event){
-		var obj =JSON.parse(event.data);
-		var ou = "";
-		var mt = "";
-		var fi = "";
-		var tm = "";
-		console.log(!isBlank(event.date));
-		if (!isBlank(obj.onlineUsers)){
-			ou="当前在线人数:"+obj.onlionUsers+":";
+		if (event.date!=null){
+			var obj =JSON.parse(event.data);
+			var ou = "";
+			var mt = "";
+			var fi = "";
+			var tm = "";
+			if (!isBlank(obj.onlineUsers)){
+				ou="当前在线人数:"+obj.onlionUsers+":";
+			}
+			if (!isBlank(obj.messageType)){
+				mt=obj.messageType+";        ";
+			}
+			if (!isBlank(obj.fromuserId)){
+				fi=obj.fromuserId+":";
+			}
+			if (!isBlank(obj.textMessage)){
+				tm=obj.textMessage;
+			}
+			var fileUrl = $('#fileUrl').val();
+		/*	if (getSessionUserId==returnData.id){
+				chatHtml = chatHtml+ "<div class=\"message\">" ;
+			}else {
+				chatHtml = chatHtml+ "<div class=\"message right\">" ;
+			}*/
+			chatHtml =  "<div class=\"message right\">"+
+					"<img src=\""+fileUrl+"\" />" +
+					"<div class=\"bubble\">" +
+					tm +
+					"</div></div>";
+			/*$('#chat-messages').append(chatHtml);*/
+			setMessageInnerHTML(chatHtml);
 		}
-		if (!isBlank(obj.messageType)){
-			mt=obj.messageType+";        ";
-		}
-		if (!isBlank(obj.fromuserId)){
-			fi=obj.fromuserId+":";
-		}
-		if (!isBlank(obj.textMessage)){
-			tm=obj.textMessage;
-		}
-		var messages = ou+mt+"  "+fi+":"+tm;
-		setMessageInnerHTML(messages);
-
 	}
 
 
@@ -134,7 +126,7 @@
 
 	//将消息显示在网页上
 	function setMessageInnerHTML(innerHTML){
-		$('#messageText').innerHTML += innerHTML + '<br/>';
+		$('#messageText').innerHTML += innerHTML ;
 	}
 
 
@@ -151,10 +143,11 @@
 		if (to==null){
 			to = "All";
 		}
-		var  innerHTML = "<div><p>我:"+text+"</p></div>"
-		setMessageInnerHTML(innerHTML);
+		/*var  innerHTML = "<div><p>我:"+text+"</p></div>"
+		setMessageInnerHTML(innerHTML);*/
+		saveInfo(to,text);
 		var messages={
-			id:id,
+			id:$("#id").val(),
 			to:to,
 			message:text
 		}

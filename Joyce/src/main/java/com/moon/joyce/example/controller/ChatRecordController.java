@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,25 +27,16 @@ public class ChatRecordController extends BaseController {
     private ChatRecordService chatRecordService;
     /**
      * 获取所有用户的聊天记录
-     * @param chatRecord
+     * @param userBId
      * @return
      */
     @ResponseBody
     @GetMapping("/getAllRecord")
-    public Result getAllRecord(ChatRecord chatRecord){
+    public Result getAllRecord(@RequestParam Long userBId){
+        ChatRecord chatRecord = new ChatRecord();
+        chatRecord.setUserBId(userBId);
         chatRecord.setUserAId(getSessionUser().getId());
         return ResultUtils.success(chatRecordService.getAll(chatRecord));
-    }
-    /**
-     * 聊天记录计入数据库
-     * @param chatRecord
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("/addRecord")
-    public Result addRecord(ChatRecord chatRecord){
-        boolean result = chatRecordService.save(chatRecord);
-        return ResultUtils.success(result);
     }
 }
 
