@@ -393,19 +393,21 @@ function updateUserFuc() {
     }
 }
 
-//忘记密码
+//退出登录
 function rmUser() {
+    Ewin.confirm({message: "确认要退出吗？"}).on(function (e) {
         $.ajax({
             url: '/example/user/toRemoveUser',
             type: 'GET',
             dataType: 'json',
         }).done(function (data) {
-            tips(data.rs,data.msg);
             if (data.rs) {
                 toList('/example/user/login');
+            }else {
+                tips(data.rs, data.msg);
             }
         }).fail(function () {
-           tips(false,ajaxFailMsg)
+            tips(false, ajaxFailMsg)
         });
-
+    });
 }

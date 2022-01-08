@@ -6,7 +6,7 @@ $().ready(function (){
  * 获取对应表名
  */
 function getTablesByDatabaseName(){
-        $('#tableName').append();
+        $('#tableName')[0].options.length=0;
         let  data = {
             databaseName:$('#dbName').val()
         }

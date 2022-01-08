@@ -436,6 +436,7 @@ function inputColumns() {
  */
 function downloadWebFile() {
     toList("/example/columns/downloadWebFile");
+    $('#download').hide();
 }
 
 /**
