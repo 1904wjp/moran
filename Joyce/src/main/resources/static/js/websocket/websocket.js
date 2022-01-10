@@ -145,8 +145,12 @@ function sendInfo(){
     }).done(function (data) {
         let chatHtml ="";
         for (let i = 0; i < data.data.length; i++) {
-            chatHtml = chatHtml+
-                "<label>"+data.data[i].createTimeValue+"</label>" ;
+            let date =  "<label>"+data.data[i].createTimeValue+"</label>" ;
+            if ((new Date()).getTime()-data.data[i].createTimeValue.getTime>3*60*1000){
+                date  = "";
+            }
+            chatHtml = chatHtml + date;
+
             if ($('#session_user_id').val()==data.data[i].userAId){
                 chatHtml = chatHtml+ "<div class=\"message right\">"+
                     "<img src=\""+data.data[i].afileUrl+"\" />" ;
@@ -189,3 +193,17 @@ function saveInfo(to,message){
         tips(false,ajaxFailMsg);
     });
 }
+
+/**
+ * 限制字数
+ */
+$("#messageText").keyup(function(){
+    var max  =30;
+    var this_ = $(this).val();
+    var len = this_.length;
+    $(this).attr({maxlength:""+max});
+    if (len>=max){
+        tips("","输入文字不可多余"+max);
+    }
+});
+

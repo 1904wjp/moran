@@ -38,7 +38,7 @@
             u2.file_url AS bFileUrl,
             u2.nickname AS bNickname,
             cr.content AS content
-        FROM springboot.chat_record cr
+         FROM springboot.chat_record cr
         LEFT JOIN springboot.user u
         ON cr.user_a_id =u.id
         LEFT JOIN springboot.user u2
@@ -61,12 +61,12 @@
             u23.file_url AS bFileUrl,
             u23.nickname AS bNickname,
             cr3.content AS content
-        FROM springboot.chat_record cr3
+         FROM springboot.chat_record cr3
         LEFT JOIN springboot.user u3
         ON cr3.user_a_id =u3.id
         LEFT JOIN springboot.user u23
         ON cr3.user_b_id = u23.id
         WHERE (cr3.user_b_id = #{userAId} AND cr3.user_a_id = #{userBId})) temp
-
+        ORDER BY temp.id
     </select>
 </mapper>
