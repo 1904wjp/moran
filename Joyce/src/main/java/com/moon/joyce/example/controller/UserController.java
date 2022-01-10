@@ -233,7 +233,7 @@ public class UserController extends BaseController {
         chatRecord.setContent(msg);
         boolean save = chatRecordService.save(chatRecord);
         if (save){
-            webSocket.sendMessageTo(msg,id);
+           /* webSocket.sendMessageTo(msg,id);*/
             return ResultUtils.success("发送成功");
         }
 

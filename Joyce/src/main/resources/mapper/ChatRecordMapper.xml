@@ -66,7 +66,7 @@
         ON cr3.user_a_id =u3.id
         LEFT JOIN springboot.user u23
         ON cr3.user_b_id = u23.id
-        WHERE (cr3.user_b_id = #{userBId} AND cr3.user_a_id = #{userAId})) temp
+        WHERE (cr3.user_b_id = #{userAId} AND cr3.user_a_id = #{userBId})) temp
 
     </select>
 </mapper>

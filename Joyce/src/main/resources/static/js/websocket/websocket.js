@@ -152,7 +152,7 @@ function sendInfo(){
                     "<img src=\""+data.data[i].afileUrl+"\" />" ;
             }else {
                 chatHtml = chatHtml+ "<div class=\"message\">"+
-                    "<img src=\""+data.data[i].bfileUrl+"\" />" ;
+                    "<img src=\""+data.data[i].afileUrl+"\" />" ;
             }
             chatHtml = chatHtml +
                 "<div class=\"bubble\">" +
