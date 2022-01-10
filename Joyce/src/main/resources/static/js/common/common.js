@@ -479,10 +479,7 @@ function getSessionUserId(){
  * @param obj
  */
 function toBut(obj){
-    console.log(obj.scrollHeight,":::",obj.clientHeight);
     if(obj.scrollHeight > obj.clientHeight) {
-        console.log("设置滚动条到最底部");
         obj.scrollTop = obj.scrollHeight;
     }
-
 }
