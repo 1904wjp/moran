@@ -18,6 +18,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -106,18 +107,9 @@ public class WebSocket {
                     toWS.getAsyncRemote().sendText(JSON.toJSONString(chatRecord));
                 }
             }else {
-                /*sendMessageAll(message,fromuserId);*/
+                sendMessageAll(message,fromuserId);
             }
-           /* if(touserId.equals("All")){
-                map1.put("touserId","所有人");
-                sendMessageAll(JSON.toJSONString(map1),fromuserId);
-            }
-            else{
-                map1.put("touserId",touserId);
-                logger.info("开始推送消息给"+touserId);
-                *//*sendMessageTo(JSON.toJSONString(map1),zz);*//*
-                this.sendMessage(JSON.toJSONString(map1));
-            }*/
+
         }
         catch (Exception e){
             e.printStackTrace();
@@ -137,32 +129,39 @@ public class WebSocket {
     public void sendMessage(String message){
         this.session.getAsyncRemote().sendText(message);
     }
+
     /**
-     * 单一发送消息
+     * 公告.
      * @param message
      * @param id
      */
-   /* public void sendMessageTo(String message, Long id){
-        for (WebSocket item : map.values()) {
-            logger.info("查看发送id是否相等:"+item.id+":"+id);
-            if (item.id.equals(id)){
-                Session session = item.session;
-                synchronized (session){
-                    session.getAsyncRemote().sendText(message);
-                }
-            }
-        }
-    }*/
-    /**
-     * 群发的方法.
-     * @param message
-     * @param id
-     */
-   /* private void sendMessageAll(String message, Long id) {
-        for (WebSocket item : clients.values()) {
+   private void sendMessageAll(String message, Long id) {
+        for (WebSocket item : clients) {
             item.session.getAsyncRemote().sendText(message);
         }
-    }*/
+    }
+
+    /**
+     * 群发.
+     * @param textMessage
+     * @param fileUrl
+     * @param fromuserId
+     * @param ids
+     */
+    private void sendMessages(String textMessage,String fileUrl,Long fromuserId,List<Long> ids) {
+        Session fromWS = map.get(fromuserId);
+        ChatRecord chatRecord = new ChatRecord();
+        chatRecord.setContent(textMessage);
+        chatRecord.setUserAId(fromuserId);
+        chatRecord.setAFileUrl(fileUrl);
+        fromWS.getAsyncRemote().sendText(JSON.toJSONString(chatRecord));
+        for (Long touserId : ids) {
+            Session toWS = map.get(touserId);
+            if (toWS!=null){
+                toWS.getAsyncRemote().sendText(JSON.toJSONString(chatRecord));
+            }
+        }
+    }
 
     /**
      * 获得在线人数
