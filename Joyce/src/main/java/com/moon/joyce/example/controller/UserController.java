@@ -223,15 +223,21 @@ public class UserController extends BaseController {
      * @param msg
      */
     @ResponseBody
+    @Transactional
     @PostMapping("/sendTo")
-    public void sendTo(@RequestParam("id") Long id,@RequestParam("msg") String msg) {
+    public Result sendTo(@RequestParam("id") Long id,@RequestParam("msg") String msg) {
         ChatRecord chatRecord = new ChatRecord();
         chatRecord.setCreateTime(new Date());
         chatRecord.setUserAId(getSessionUser().getId());
         chatRecord.setUserBId(id);
         chatRecord.setContent(msg);
-        chatRecordService.save(chatRecord);
-        webSocket.sendMessageTo(msg,id);
+        boolean save = chatRecordService.save(chatRecord);
+        if (save){
+            webSocket.sendMessageTo(msg,id);
+            return ResultUtils.success("发送成功");
+        }
+
+        return ResultUtils.error("发送失败");
     }
 
 

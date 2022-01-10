@@ -1,32 +1,72 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.moon.joyce.example.mapper.ChatRecordMapper">
-    <sql id="chatRecordColumns">
-               cr.id,
-               cr.create_by,
-               cr.create_time,
-               cr.delete_flag,
-               cr.update_by,
-               cr.update_time,
-               cr.user_a_id,
-               u.username AS userAName,
-               u.file_url AS aFileUrl,
-               u.nickname AS aNickname,
-               cr.user_b_id,
-               u2.username AS userBName,
-               u2.file_url AS bFileUrl,
-               u2.nickname AS bNickname,
-               cr.content
-    </sql>
+
+
+
     <select id="selectAll" resultType="com.moon.joyce.example.entity.ChatRecord">
         SELECT
-             <include refid="chatRecordColumns"/>
+            temp.id,
+            temp.create_by,
+            temp.create_time,
+            temp.delete_flag,
+            temp.update_by,
+            temp.update_time,
+            temp.user_a_id,
+            temp.userAName,
+            temp.aFileUrl,
+            temp.aNickname,
+            temp.user_b_id,
+            temp.userBName,
+            temp.bFileUrl,
+            temp.bNickname,
+            temp.content
+        FROM
+        (SELECT
+            cr.id AS id,
+            cr.create_by AS create_by,
+            cr.create_time AS create_time,
+            cr.delete_flag AS delete_flag,
+            cr.update_by AS update_by,
+            cr.update_time AS update_time,
+            cr.user_a_id AS user_a_id,
+            u.username AS userAName,
+            u.file_url AS aFileUrl,
+            u.nickname AS aNickname,
+            cr.user_b_id AS user_b_id,
+            u2.username AS userBName,
+            u2.file_url AS bFileUrl,
+            u2.nickname AS bNickname,
+            cr.content AS content
         FROM springboot.chat_record cr
         LEFT JOIN springboot.user u
         ON cr.user_a_id =u.id
         LEFT JOIN springboot.user u2
         ON cr.user_b_id = u2.id
         WHERE (cr.user_a_id = #{userAId} AND cr.user_b_id = #{userBId})
-        OR (cr.user_b_id = #{userBId} AND cr.user_a_id = #{userAId})
+        UNION
+        SELECT
+            cr3.id AS id,
+            cr3.create_by AS create_by,
+            cr3.create_time AS create_time,
+            cr3.delete_flag AS delete_flag,
+            cr3.update_by AS update_by,
+            cr3.update_time AS update_time,
+            cr3.user_a_id AS user_a_id,
+            u3.username AS userAName,
+            u3.file_url AS aFileUrl,
+            u3.nickname AS aNickname,
+            cr3.user_b_id AS user_b_id,
+            u23.username AS userBName,
+            u23.file_url AS bFileUrl,
+            u23.nickname AS bNickname,
+            cr3.content AS content
+        FROM springboot.chat_record cr3
+        LEFT JOIN springboot.user u3
+        ON cr3.user_a_id =u3.id
+        LEFT JOIN springboot.user u23
+        ON cr3.user_b_id = u23.id
+        WHERE (cr3.user_b_id = #{userBId} AND cr3.user_a_id = #{userAId})) temp
+
     </select>
 </mapper>

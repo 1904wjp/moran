@@ -40,26 +40,6 @@ function initFuc(){
 
     var preloadbg = document.createElement('img');
     preloadbg.src = '/static/img/websocket/timeline1.png';
-    /*$('#searchfield').focus(function () {
-        if ($(this).val() == 'Search contacts...') {
-            $(this).val('');
-        }
-    });*/
-   /* $('#searchfield').focusout(function () {
-        if ($(this).val() == '') {
-            $(this).val('Search contacts...');
-        }
-    });*/
-   /* $('#sendmessage input').focus(function () {
-        if ($(this).val() == 'Send message...') {
-            $(this).val('');
-        }
-    });*/
-    /*$('#sendmessage input').focusout(function () {
-        if ($(this).val() == '') {
-            $(this).val('Send message...');
-        }
-    });*/
     $('.friend').each(function () {
         $(this).click(function () {
             var childOffset = $(this).offset();
@@ -123,7 +103,9 @@ $('#search').keydown(function (e){
    }
 });
 
-$("#friends").on('click', '.friend', function(e) {
+$("#friends").on('click', '.friend', sendInfo);
+
+function sendInfo(){
     $('#to').val($(this).find("input").val());
     let data = {
         id:$(this).find("input").val()
@@ -138,14 +120,14 @@ $("#friends").on('click', '.friend', function(e) {
         dataType: 'json',
         data:data,
     }).done(function (data) {
-    let html =
-        '<div class="close">' +
-        '<div class="cy"></div>' +
-        '<div class="cx"></div>' +
-        '</div>' +
-        '<img style="width: 20%;height: 15%" src='+data.data.fileUrl+'/>' +
-        '<p>'+data.data.nickname+'</p>' +
-        '<span>'+data.data.email+'</span>';
+        let html =
+            '<div class="close">' +
+            '<div class="cy"></div>' +
+            '<div class="cx"></div>' +
+            '</div>' +
+            '<img style="width: 20%;height: 15%" src='+data.data.fileUrl+'/>' +
+            '<p>'+data.data.nickname+'</p>' +
+            '<span>'+data.data.email+'</span>';
         $("#chatview").show();
         $('#profile p').show();
         $("#friends").hide();
@@ -163,19 +145,19 @@ $("#friends").on('click', '.friend', function(e) {
     }).done(function (data) {
         let chatHtml ="";
         for (let i = 0; i < data.data.length; i++) {
-           chatHtml = chatHtml+
-            "<label>"+data.data[i].createTimeValue+"</label>" ;
-           if ($('#session_user_id').val()==data.data[i].userAId){
-               chatHtml = chatHtml+ "<div class=\"message right\">"+
-                   "<img src=\""+data.data[i].afileUrl+"\" />" ;
-           }else {
-               chatHtml = chatHtml+ "<div class=\"message\">"+
-                   "<img src=\""+data.data[i].bfileUrl+"\" />" ;
-           }
-           chatHtml = chatHtml +
-            "<div class=\"bubble\">" +
-               data.data[i].content +
-            "</div></div>";
+            chatHtml = chatHtml+
+                "<label>"+data.data[i].createTimeValue+"</label>" ;
+            if ($('#session_user_id').val()==data.data[i].userAId){
+                chatHtml = chatHtml+ "<div class=\"message right\">"+
+                    "<img src=\""+data.data[i].afileUrl+"\" />" ;
+            }else {
+                chatHtml = chatHtml+ "<div class=\"message\">"+
+                    "<img src=\""+data.data[i].bfileUrl+"\" />" ;
+            }
+            chatHtml = chatHtml +
+                "<div class=\"bubble\">" +
+                data.data[i].content +
+                "</div></div>";
             $('#tosrc').val(data.data[0].bfileUrl);
         }
         $('#chat-messages').append(chatHtml);
@@ -183,17 +165,18 @@ $("#friends").on('click', '.friend', function(e) {
     }).fail(function (){
         $('#chat-messages').append("<div>暂无信息</div>");
     });
-});
+}
 
+/**
+ * 保存信息
+ * @param to
+ * @param message
+ */
 function saveInfo(to,message){
-   /* var data ={
-        id:id
-    }*/
     var data ={
        "id":to,
         "msg":message
     }
-
 
     $.ajax({
         url: '/example/user/sendTo',
@@ -201,7 +184,7 @@ function saveInfo(to,message){
         dataType: 'json',
         data:data,
     }).done(function (data) {
-
+        tips(data.rs,data.msg);
     }).fail(function (){
         tips(false,ajaxFailMsg);
     });

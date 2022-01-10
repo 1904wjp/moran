@@ -12,6 +12,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -81,6 +82,11 @@ public class WebSocket {
         sendMessageAll(JSON.toJSONString(map1),id);
         //logger.info("有连接关闭！ 当前在线人数" + onlineNumber);
         logger.info("有连接关闭！ 当前在线人数" + clients.size());
+        try {
+            session.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -89,37 +95,7 @@ public class WebSocket {
     @OnMessage
     public void onMessage(String message,Session session,@PathParam("id") Long id){
 
-      /*  //message 不是普通的string ，而是我们定义的SocketMsg json字符串.
-        try {
-            SocketMsg socketMsg = new ObjectMapper().readValue(message, SocketMsg.class);
-            //单聊.
-            if(socketMsg.getType() == 1){
-                //单聊：需要找到发送者和接受者即可.
-                socketMsg.setFromUser(session.getId());//发送者.
-                //socketMsg.setToUser(toUser);//这个是由客户端进行设置.
-                Session fromSession = map.get(socketMsg.getFromUser());
-                Session toSession = map.get(socketMsg.getToUser());
-                if(toSession != null){
-                    //发送消息.
-                    fromSession.getAsyncRemote().sendText(username+"："+socketMsg.getMsg());
-                    toSession.getAsyncRemote().sendText(username+"："+socketMsg.getMsg());
-                }else{
-                    fromSession.getAsyncRemote().sendText("系统消息：对方不在线或者您输入的频道号有误");
-                }
-            }else {
-                //群发给每个客户端.
-                broadcast(socketMsg,username);
-            }
-        } catch (JsonParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }*/
+
         try {
             logger.info("来自客户端消息：" + message+"客户端的id是："+session.getId());
             System.out.println("------------  :"+message);
@@ -167,7 +143,10 @@ public class WebSocket {
     public void sendMessageTo(String message, Long id){
         for (WebSocket item : clients.values()) {
             if (item.id.equals(id)){
-                item.session.getAsyncRemote().sendText(message);
+                Session session = item.session;
+                synchronized (session){
+                    session.getAsyncRemote().sendText(message);
+                }
             }
         }
     }
