@@ -30,10 +30,10 @@ public class DateUtils implements Serializable {
      */
     public static String dateForMat(String pattern, Date date){
         if (Objects.isNull(pattern)){
-            pattern="dv";
+           return null;
         }
         if (Objects.isNull(date)){
-            date=new Date();
+            return null;
         }
         //判断是否为自定义格式
         if (pattern.contains("@p:")&&pattern.trim().length()>3){
@@ -183,11 +183,10 @@ public class DateUtils implements Serializable {
     /**
      * 获取事件计算格式
      * @param date
-     * @param pattern
      * @return
      */
-    public static String showDate(Date date,String pattern){
-        String  dateStr=dateForMat(pattern,date);
+    public static String showDate(Date date){
+        String  dateStr=dateForMat("sv",date);
         String year = dateStr.substring(0,4);
         Long yearNum =Long.parseLong(year);
         int month = Integer.parseInt(dateStr.substring(5,7));
@@ -197,7 +196,7 @@ public class DateUtils implements Serializable {
         long addtime =date.getTime();
         long today = System.currentTimeMillis();//当前时间的毫秒数
         Date now = new Date(today);
-        String  nowStr=dateForMat(pattern,now);
+        String  nowStr=dateForMat("sv",now);
         int  nowDay = Integer.parseInt(nowStr.substring(6,8));
         String result="";
         long l=today-addtime;//当前时间与给定时间差的毫秒数
@@ -218,13 +217,14 @@ public class DateUtils implements Serializable {
                 result=hours+"小时 前";
             }
         } else if(min > 0){
-            if(min>0 && min<15){
-                result="刚刚";
-            } else {
+            if(min>3 && min<=59){
                 result=min+"分 前";
+            }else {
+                result = "";
             }
         }else {
-            result=s+"秒 前";
+            //result=s+"秒 前";
+            result = "";
         }
         return result;
     }

@@ -38,7 +38,7 @@ public class ChatRecordServiceImpl extends ServiceImpl<ChatRecordMapper, ChatRec
             if (Objects.isNull(record)){
                 continue;
             }
-            record.setCreateTimeValue(DateUtils.showDate(record.getCreateTime(),"sv"));
+            record.setCreateTimeValue(DateUtils.showDate(record.getCreateTime()));
             chatRecords.add(record);
         }
         return chatRecords;

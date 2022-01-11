@@ -5,7 +5,7 @@ import com.moon.joyce.example.functionality.entity.WebEntity;
 
 public interface WebFileHandle {
      /**
-      * 处理包和继承实现类名
+      * 检测并且处理包和继承实现类名
       * @param webEntity
       * @return
       */
@@ -24,4 +24,11 @@ public interface WebFileHandle {
       * @return
       */
      String getEntityBody(WebEntity webEntity);
+
+     /**
+      * 获取过滤实体类
+      * @param webEntity
+      * @return
+      */
+     String getEntityFilter(WebEntity webEntity);
 }

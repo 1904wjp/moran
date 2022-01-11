@@ -50,6 +50,11 @@ public class WebEntity extends BaseEntity   {
     @TableField("is_extends")
     private Integer isExtends;
     /**
+     * 继承的父类id
+     */
+    @TableField("extend_father_id")
+    private String extendFatherId;
+    /**
      * 继承的父类名称
      */
     @TableField("extend_father")
@@ -70,10 +75,10 @@ public class WebEntity extends BaseEntity   {
     @TableField("is_implements")
     private Integer isImplements;
     /**
-     * 实现的父类名称
+     * 实现的父类id集合
      */
-    @TableField("implement_father")
-    private String implementFather;
+    @TableField("implement_father_ids")
+    private String implementFatherIds;
     /**
      * 实现的父类id的包集合
      */

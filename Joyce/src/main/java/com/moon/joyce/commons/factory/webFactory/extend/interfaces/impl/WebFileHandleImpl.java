@@ -25,7 +25,11 @@ public class WebFileHandleImpl implements WebFileHandle {
         }
         //是否实现
         if (1==webEntity.getIsImplements()){
-            father = father+" "+webEntity.getImplementFather();
+            //实现的是多个继承
+            String[] implementFathers = webEntity.getImplementFatherIds().split(",");
+            for (String implementFather : implementFathers) {
+                father = father +" "+implementFather;
+            }
             for (String implPackage : webEntity.getImplementPackageValue()) {
                 sumPackage = sumPackage +"\n\t\timport "+implPackage;
             }
