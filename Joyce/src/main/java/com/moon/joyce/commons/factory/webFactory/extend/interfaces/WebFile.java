@@ -8,5 +8,10 @@ import com.moon.joyce.example.functionality.entity.WebEntity;
  * web文件接口
  */
 public interface WebFile {
+    /**
+     * 创建web三层
+     * @param webEntity
+     * @return
+     */
     int createWebFile(WebEntity webEntity);
 }

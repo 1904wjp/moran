@@ -38,7 +38,7 @@ public class StringsUtils  implements Serializable {
     //集合是否含有某个字符串
     public static boolean listIsContainsStr(String str,List<String> list){
         for (String string : list) {
-            if(org.apache.commons.lang3.StringUtils.isBlank(string)) {
+            if(StringUtils.isBlank(string)) {
                 continue;
             }
             if (string.equals(str)) {
@@ -197,6 +197,20 @@ public class StringsUtils  implements Serializable {
             fileName = fileName.substring(fileName.length()-6);
         }
         return fileName;
+    }
+    /**
+     * 字符串转时间
+     * @return
+     */
+    public static Date StringToDate(String dateStr,String pattern){
+        SimpleDateFormat dfm =  new SimpleDateFormat(pattern);
+        Date parse = null;
+        try {
+            parse = dfm.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return  parse;
     }
     /**
      * 字符串转时间

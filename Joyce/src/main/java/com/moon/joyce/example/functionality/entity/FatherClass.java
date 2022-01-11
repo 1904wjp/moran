@@ -28,4 +28,14 @@ public class FatherClass extends BaseEntity {
      */
     @TableField("father_class_desc")
     private String fatherClassDesc;
+    /**
+     * 对应包id
+     */
+    @TableField("package_id")
+    private Long packageId;
+    /**
+     * 对应包名称
+     */
+    @TableField(exist = false)
+    private String packageName;
 }

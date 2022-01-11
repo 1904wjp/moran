@@ -62,7 +62,6 @@ public class WebFileHandleImpl implements WebFileHandle {
                     if (webEntity.getColumns().get(i).getColumnName().equals(webEntity.getFilterColumnNames().get(i1))) {
                         list.remove(webEntity.getColumns().get(i));
                     }
-
                 }
             }
         }

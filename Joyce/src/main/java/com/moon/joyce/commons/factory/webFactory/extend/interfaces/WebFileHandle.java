@@ -25,10 +25,5 @@ public interface WebFileHandle {
       */
      String getEntityBody(WebEntity webEntity);
 
-     /**
-      * 获取过滤实体类
-      * @param webEntity
-      * @return
-      */
-     String getEntityFilter(WebEntity webEntity);
+
 }
