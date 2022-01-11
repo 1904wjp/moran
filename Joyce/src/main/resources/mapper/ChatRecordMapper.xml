@@ -43,7 +43,14 @@
         ON cr.user_a_id =u.id
         LEFT JOIN springboot.user u2
         ON cr.user_b_id = u2.id
-        WHERE (cr.user_a_id = #{userAId} AND cr.user_b_id = #{userBId})
+        <where>
+            <if test="userAId!=null and userBId!=null"  >
+                cr.user_a_id = #{userAId} AND cr.user_b_id = #{userBId}
+            </if>
+            <if test="creteTime!=null">
+               and cr.create_time = #{creteTime}
+            </if>
+        </where>
         UNION
         SELECT
             cr3.id AS id,
@@ -66,7 +73,14 @@
         ON cr3.user_a_id =u3.id
         LEFT JOIN springboot.user u23
         ON cr3.user_b_id = u23.id
-        WHERE (cr3.user_b_id = #{userAId} AND cr3.user_a_id = #{userBId})) temp
+        <where>
+            <if test="userAId!=null and userBId!=null"  >
+                cr3.user_b_id = #{userAId} AND cr3.user_a_id = #{userBId}
+            </if>
+            <if test="creteTime!=null">
+                and cr.create_time = #{creteTime}
+            </if>
+        </where>) temp
         ORDER BY temp.id
     </select>
 </mapper>

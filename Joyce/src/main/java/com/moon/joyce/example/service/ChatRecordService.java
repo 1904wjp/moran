@@ -16,4 +16,5 @@ public interface ChatRecordService extends IService<ChatRecord> {
      * @return
      */
     List<ChatRecord> getAll(ChatRecord chatRecord);
+
 }
