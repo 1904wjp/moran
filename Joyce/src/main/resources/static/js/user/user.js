@@ -281,7 +281,7 @@ function forget_password_update_verifyFuc() {
             if (!e) {
                 return;
             }
-            addLoadingModal($('#loading'),'正在提交数据...请稍后');
+            addLoadingModal('正在提交数据...请稍后');
             $("#forgetPasswordModal").modal('hide');
             $.ajax({
                 url: '/example/user/forgetPassword',

@@ -410,7 +410,7 @@ function inputColumns() {
             if (!e) {
                 return;
             }
-            addLoadingModal($('#loading'),"正在创建数据...请稍后")
+            addLoadingModal("正在创建数据...请稍后")
             $.ajax({
                 url: '/example/columns/getColumns',
                 type: 'POST',
@@ -491,12 +491,12 @@ function toBut(obj){
  * @param obj
  * @param msg
  */
-function addLoadingModal(obj,msg){
+function addLoadingModal(msg){
     if (isBlank(msg)){
         msg="正在加载...请稍等！"
     }
     $('#loadingModal').remove();
-    obj.append(
+    $("#loading").append(
         "<div class=\"modal fade\" id=\"loadingModal\">\n" +
         "<div style=\"width: 200px;height:20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 50%;margin-left:-100px;margin-top:-10px\">\n" +
         "<div class=\"progress progress-striped active\" style=\"margin-bottom: 0;\">\n" +

@@ -7,7 +7,7 @@ $().ready(function (){
  */
 function getTablesByDatabaseName(){
         $('#tableName')[0].options.length=0;
-        addLoadingModal($("#loading"),"查询中...请稍后");
+        addLoadingModal("查询中...请稍后");
         let  data = {
             databaseName:$('#dbName').val()
         }

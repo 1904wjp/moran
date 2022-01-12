@@ -39,7 +39,7 @@ function saveDataSource(){
                 return;
             }
             $(".addDb").hide();
-            addLoadingModal($(".loading"));
+            addLoadingModal();
             $.ajax({
                 url: '/example/db/saveDb',
                 type: 'POST',

@@ -39,7 +39,7 @@ function loginFuc() {
     };
 
     if (vailDate(data)) {
-        addLoadingModal($('#loading'),"正在登录...请稍后");
+        addLoadingModal("正在登录...请稍后");
         $.ajax({
             url: '/example/user/doLogin',
             type: 'POST',
