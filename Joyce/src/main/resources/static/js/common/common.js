@@ -410,6 +410,7 @@ function inputColumns() {
             if (!e) {
                 return;
             }
+            addLoadingModal($('#loading'),"正在创建数据...请稍后")
             $.ajax({
                 url: '/example/columns/getColumns',
                 type: 'POST',
@@ -417,6 +418,7 @@ function inputColumns() {
                 data: data,
                 //传过来的data需要.data才可以获取当前对象。因为data是封装过的
             }).done(function (data) {
+                loading(false);
                 if (data.rs) {
                     $('#download').show();
                     toastr.success(data.msg);
@@ -493,7 +495,7 @@ function addLoadingModal(obj,msg){
     if (isBlank(msg)){
         msg="正在加载...请稍等！"
     }
-    obj.remove($('#loadingModal'));
+    $('#loadingModal').remove();
     obj.append(
         "<div class=\"modal fade\" id=\"loadingModal\">\n" +
         "<div style=\"width: 200px;height:20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 50%;margin-left:-100px;margin-top:-10px\">\n" +
