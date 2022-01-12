@@ -88,7 +88,7 @@ public class WebUtils {
                 "     * @return\n" +
                 "     */\n" +
                 "    @GetMapping(\"/list\")\n" +
-                "  /*  @PreAuthorize(hasPermi = \"system:" + StringsUtils.getUp(tableName) + ":list\")*/\n" +
+                "   @PreAuthorize(hasPermi = \"system:" + StringsUtils.getUp(tableName) + ":list\")\n" +
                 "    public TableDataInfo list(" + StringsUtils.getClassName(tableName) + " " + StringsUtils.getUp(tableName) + "){\n" +
                 "        startPage();\n" +
                 "        List<" + StringsUtils.getClassName(tableName) + "> list = " + StringsUtils.getUp(tableName) + "Service.getList(" + StringsUtils.getUp(tableName) + ");\n" +
@@ -101,7 +101,7 @@ public class WebUtils {
                 "     * @return\n" +
                 "     */\n" +
                 "    @PostMapping(\"/add\")\n" +
-                "  /*  @PreAuthorize(hasPermi = \"system:" + StringsUtils.getUp(tableName) + ":add\")*/\n" +
+                "   @PreAuthorize(hasPermi = \"system:" + StringsUtils.getUp(tableName) + ":add\")\n" +
                 "    @Log(title = \"" + tableComment + "-添加\", businessType = BusinessType.INSERT)\n" +
                 "    public AjaxResult addInfo( " + StringsUtils.getClassName(tableName) + " " + StringsUtils.getUp(tableName) + "){\n" +
                 "        return toAjax(" + StringsUtils.getUp(tableName) + "Service.insertOne(" + StringsUtils.getUp(tableName) + "));\n" +
@@ -111,7 +111,7 @@ public class WebUtils {
                 "     * 获取" + tableComment + "\n" +
                 "     * @param  id\n" +
                 "     */\n" +
-                "/*    @PreAuthorize(hasPermi = \"system:" + StringsUtils.getUp(tableName) + ":query\")*/\n" +
+                "    @PreAuthorize(hasPermi = \"system:" + StringsUtils.getUp(tableName) + ":query\")\n" +
                 "    @GetMapping(value = \"/get/{id}\")\n" +
                 "    public AjaxResult getInfo(@PathVariable(\"id\") Long id) {\n" +
                 "        " + StringsUtils.getClassName(tableName) + " " + StringsUtils.getUp(tableName) + " = " + StringsUtils.getUp(tableName) + "Service.getOne(id);\n" +
@@ -125,7 +125,7 @@ public class WebUtils {
                 "     * 修改" + tableComment + "\n" +
                 "     * @param " + StringsUtils.getUp(tableName) + "\n" +
                 "     */\n" +
-                "/*    @PreAuthorize(hasPermi = \"system:" + StringsUtils.getUp(tableName) + ":edit\")*/\n" +
+                "    @PreAuthorize(hasPermi = \"system:" + StringsUtils.getUp(tableName) + ":edit\")\n" +
                 "    @Log(title = \"" + tableComment + "-修改\", businessType = BusinessType.UPDATE)\n" +
                 "    @PutMapping(\"/update\")\n" +
                 "    public AjaxResult editInfo(" + StringsUtils.getClassName(tableName) + " " + StringsUtils.getUp(tableName) + "){\n" +
@@ -134,7 +134,7 @@ public class WebUtils {
                 " /**\n" +
                 "     * 删除" + tableComment + "\n" +
                 "     */\n" +
-                "  /*  @PreAuthorize(hasPermi = \"system:" + StringsUtils.getUp(tableName) + ":remove\")*/\n" +
+                "    @PreAuthorize(hasPermi = \"system:" + StringsUtils.getUp(tableName) + ":remove\")\n" +
                 "    @Log(title = \"" + tableComment + "\", businessType = BusinessType.DELETE)\n" +
                 "    @DeleteMapping(\"/delete/ids\")\n" +
                 "    public AjaxResult remove(@PathVariable Long[] ids)\n" +

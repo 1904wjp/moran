@@ -275,17 +275,22 @@ function forget_password_update_verifyFuc() {
         "email": $("#forget_email").val(),
         "newPassword": $("#new_password").val()
     };
+
     if (vailDate(data)){
         Ewin.confirm({message: "确认提交数据？"}).on(function (e) {
             if (!e) {
                 return;
             }
+            addLoadingModal($('#loading'),'正在提交数据...请稍后');
+            $("#forgetPasswordModal").modal('hide');
             $.ajax({
                 url: '/example/user/forgetPassword',
                 type: 'POST',
                 dataType: 'json',
                 data: data,
             }).done(function (data) {
+                loading(false)
+                $("#forgetPasswordModal").modal('show');
                 tips(data.rs,data.msg);
                 if (data.rs) {
                     $("#updatePasswordModal").modal('hide');

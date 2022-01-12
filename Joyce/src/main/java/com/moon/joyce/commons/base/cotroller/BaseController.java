@@ -86,7 +86,7 @@ public class BaseController {
     }
 
     /**
-     * set sessions属性
+     * 设置 sessions属性
      * @param key
      * @param object
      */

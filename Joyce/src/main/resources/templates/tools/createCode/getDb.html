@@ -4,6 +4,7 @@
 <div class="log">
     <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
 </div>
+<div class="loading"></div>
 <div class="container addDb">
     <div class="row row-centered">
         <div class="well col-md-6 col-centered">
@@ -103,11 +104,6 @@
                                        style="float:left;width:150px;margin-right:5px;" v-model="url"
                                        class="form-control">
                             </div>
-                           <!-- <div style="float:left;margin-right:5px;">
-                                <input name="password" placeholder='数据库密码' type="text"
-                                       style="float:left;width:150px;margin-right:5px;" v-model="password"
-                                       class="form-control">
-                            </div>-->
                             <div style="float:left;margin-right:5px;">
                                 <input name="driverName" placeholder='驱动' type="text"
                                        style="float:left;width:150px;margin-right:5px;" v-model="driverName"
@@ -140,7 +136,7 @@
         </div>
     </div>
 </div>
-<input class="title" title="" value="db">
+<input class="title"  type="hidden" value="db">
 <head class="panelBar" th:replace="/common/public/footer::footer">
 
 </head>

@@ -42,25 +42,28 @@ public class DataSourceServiceImpl implements DataSourceService {
                    dbBaseSetting.getTempCode(),
                    dbBaseSetting.getDatabaseType(),
                    dbBaseSetting.getDriverName());
-                logger.info("数据源确定完成:"+dbBaseSetting.getDataSourceName());
                 //创建并且检查数据源连接.若存在则不需要创建
                 try {
                     dynamicDataSource.createDataSourceWithCheck(dataSource);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.info("数据源创建失败,Exception:"+e);
+                    return false;
                 }
                 //切换到改数据源
                 DbContextHolder.setDataSource(dataSource.getDataSourceName());
+                 logger.info("数据源确定完成:"+dbBaseSetting.getDataSourceName());
                 return true;
 
     }
 
      public boolean testDateSource(DataSource dataSource){
+         logger.info("启动测试指定数据源:"+dataSource.getDataSourceName());
          return dynamicDataSource.testDatasource(dataSource.getDataSourceName(), dataSource.getDriver(), dataSource.getUrl(), dataSource.getUserName(), dataSource.getPassWord());
      }
 
     @Override
-    public boolean deleteDateSource(String dataSourceId) {
-        return dynamicDataSource.delDatasources(dataSourceId);
+    public boolean deleteDateSource(String datasourceName) {
+        logger.info("启动删除指定数据源:"+datasourceName);
+        return dynamicDataSource.delDatasources(datasourceName);
     }
 }

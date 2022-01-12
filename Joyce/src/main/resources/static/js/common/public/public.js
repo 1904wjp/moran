@@ -37,7 +37,9 @@ function loginFuc() {
         //获取输入框密码
         "password": $("#password").val()
     };
+
     if (vailDate(data)) {
+        addLoadingModal($('#loading'),"正在登录...请稍后");
         $.ajax({
             url: '/example/user/doLogin',
             type: 'POST',
@@ -45,6 +47,7 @@ function loginFuc() {
             data: data,
             //传过来的data需要.data才可以获取当前对象。因为data是封装过的
         }).done(function (data) {
+            loading(false);
             if (data.rs) {
                 toList("/main");
             }else {

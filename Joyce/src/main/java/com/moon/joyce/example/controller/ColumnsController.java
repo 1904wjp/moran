@@ -93,20 +93,22 @@ public class ColumnsController extends BaseController {
       //创建对应类的文件名称存入session
       Map<String, String> map = new HashMap<>();
       String className = StringsUtils.getClassName(columns1.get(0).getTableName());
-      map.put("entity", className +".java");
-      map.put("Controller", className +"Controller.java");
-      map.put("Service", className +"Service.java");
-      map.put("ServiceImpl", className +"ServiceImpl.java");
-      map.put("Mapper", className +"Mapper.java");
-      map.put("Mapperxml", className +"Mapper.xml");
-      setSession(getSessionUser().getUsername()+"webFile",map);
-      logger.info("创建："+columns1.get(0).getTableName());
-       boolean res = shutdownDatasource();
-       if (res){
-           logger.info("数据源关闭成功");
-       }else {
-           logger.info("数据源关闭失败");
-       }
+      synchronized (className){
+          map.put("entity", className +".java");
+          map.put("Controller", className +"Controller.java");
+          map.put("Service", className +"Service.java");
+          map.put("ServiceImpl", className +"ServiceImpl.java");
+          map.put("Mapper", className +"Mapper.java");
+          map.put("Mapperxml", className +"Mapper.xml");
+          setSession(getSessionUser().getUsername()+"webFile",map);
+          logger.info("创建："+columns1.get(0).getTableName());
+          boolean res = shutdownDatasource();
+          if (res){
+              logger.info("数据源关闭成功");
+          }else {
+              logger.info("数据源关闭失败");
+          }
+      }
        return ResultUtils.success();
    }
 
@@ -124,13 +126,20 @@ public class ColumnsController extends BaseController {
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Disposition","attachment; filename="+zipName);
         ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
-        for (Map.Entry<String, String> entry : webFile.entrySet()) {
-            FileUtils.doCompress( path+entry.getValue(),out);
-            response.flushBuffer();
-            System.out.println("下载执行:"+entry.getValue());
-            /*fileService.downloadFile(response,request,entry.getKey(),entry.getValue());*/
+        synchronized (webFile){
+            for (Map.Entry<String, String> entry : webFile.entrySet()) {
+                FileUtils.doCompress( path+entry.getValue(),out);
+                response.flushBuffer();
+                System.out.println("下载执行:"+entry.getValue());
+                /*fileService.downloadFile(response,request,entry.getKey(),entry.getValue());*/
+            }
+            removeSessionValue(getSessionUser().getUsername()+"webFile");
         }
-        removeSessionValue(getSessionUser().getUsername()+"webFile");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
         @ResponseBody
         @RequestMapping("/getAllTables")

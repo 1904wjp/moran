@@ -19,6 +19,7 @@ function addDataSource(){
  * 保存数据源信息
  */
 function saveDataSource(){
+
         var data = {
             "id":$("#id").val(),
             "dataSourceName":$("#dataSourceName").val(),
@@ -37,6 +38,8 @@ function saveDataSource(){
             if (!e){
                 return;
             }
+            $(".addDb").hide();
+            addLoadingModal($(".loading"));
             $.ajax({
                 url: '/example/db/saveDb',
                 type: 'POST',
@@ -44,6 +47,8 @@ function saveDataSource(){
                 data: data,
                 //传过来的data需要.data才可以获取当前对象。因为data是封装过的
             }).done(function (data) {
+                $(".addDb").show();
+                loading(false);
                 if (data.rs) {
                     toastr.success(data.msg);
                     toList("/example/db/dbPage");

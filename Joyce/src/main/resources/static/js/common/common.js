@@ -483,3 +483,38 @@ function toBut(obj){
         obj.scrollTop = obj.scrollHeight;
     }
 }
+
+/**
+ * 添加弹窗
+ * @param obj
+ * @param msg
+ */
+function addLoadingModal(obj,msg){
+    if (isBlank(msg)){
+        msg="正在加载...请稍等！"
+    }
+    obj.remove($('#loadingModal'));
+    obj.append(
+        "<div class=\"modal fade\" id=\"loadingModal\">\n" +
+        "<div style=\"width: 200px;height:20px; z-index: 20000; position: absolute; text-align: center; left: 50%; top: 50%;margin-left:-100px;margin-top:-10px\">\n" +
+        "<div class=\"progress progress-striped active\" style=\"margin-bottom: 0;\">\n" +
+        "<div class=\"progress-bar\" style=\"width: 100%;\"></div>\n" +
+        "</div>\n" +
+        "<h5 style=\"color:black\"> <strong>"+msg+"</strong> </h5>\n" +
+        "</div>\n" +
+        "</div>"
+    )
+   loading(true);
+}
+
+/**
+ * 弹窗开启和关闭
+ * @param bool
+ */
+function loading(bool){
+    if (bool){
+        $("#loadingModal").modal('show');
+    }else {
+        $("#loadingModal").modal('hide');
+    }
+}
