@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50725
 File Encoding         : 65001
 
-Date: 2021-12-22 14:43:22
+Date: 2022-01-12 11:24:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,7 +32,7 @@ CREATE TABLE `source` (
   `sort` int(16) DEFAULT NULL COMMENT '排序',
   `user_id` bigint(32) DEFAULT NULL COMMENT '用户id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='实体基础类';
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COMMENT='资源类';
 
 -- ----------------------------
 -- Records of source
@@ -59,3 +59,4 @@ INSERT INTO `source` VALUES ('19', 'xdr', '2021-12-19 19:20:44', '0', null, null
 INSERT INTO `source` VALUES ('20', 'xdr', '2021-12-19 19:20:54', '0', null, null, 'dasf', null, '/static/1/img/photo/20211219/32472a443aa36531a73a86ab81_00.jpg', '30', '1');
 INSERT INTO `source` VALUES ('21', 'xdr', '2021-12-19 19:21:01', '0', null, null, 'dasffasdas', null, '/static/1/img/photo/20211219/bf68c047a29fc9e836d0d08af1_ao.jpg', '30', '1');
 INSERT INTO `source` VALUES ('22', 'xdr', '2021-12-21 16:46:54', '0', null, null, '你好', null, '/static/1/img/photo/20211221/03fe724f80a11ccf8453c5b426_1).png', '21', '1');
+INSERT INTO `source` VALUES ('23', 'xdr', '2021-12-22 14:53:02', '0', null, null, '就让他r\'f\'h', null, '/static/1/img/photo/20211222/c69829432b9bdb02df1ff7f368_ao.jpg', '55', '1');

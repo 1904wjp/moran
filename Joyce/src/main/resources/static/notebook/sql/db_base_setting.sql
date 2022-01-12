@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50725
 File Encoding         : 65001
 
-Date: 2021-12-22 14:43:01
+Date: 2022-01-12 11:24:09
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -38,10 +38,11 @@ CREATE TABLE `db_base_setting` (
   `apply_status` int(3) DEFAULT NULL COMMENT '应用状态：1代表应用',
   `driver_name` varchar(255) DEFAULT NULL COMMENT '数据库驱动名',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='数据库配置';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='数据库配置';
 
 -- ----------------------------
 -- Records of db_base_setting
 -- ----------------------------
 INSERT INTO `db_base_setting` VALUES ('4', 'xdr', '2021-12-17 11:41:02', '0', 'xdr', '2021-12-22 14:23:29', 'jdbc:mysql://112.123.228.65:3306', 'wrkj', 'Wrkj1234?!', null, null, '智慧社区项目数据源', 'mysql', '1', '112.123.228.65', '1', 'com.mysql.cj.jdbc.Driver');
 INSERT INTO `db_base_setting` VALUES ('5', 'sunwukong', '2021-12-17 15:20:57', '0', 'sunwukong', '2021-12-17 15:25:08', 'jdbc:mysql://112.123.228.65:3306', 'wrkj', 'Wrkj1234?!', null, null, '小区', 'mysql', '3', '112.123.228.65', '1', 'com.mysql.cj.jdbc.Driver');
+INSERT INTO `db_base_setting` VALUES ('6', 'sj', '2021-12-24 15:23:28', '0', 'sj', '2021-12-24 15:23:43', 'jdbc:mysql://112.123.228.65:3306', 'wrkj', 'Wrkj1234?!', null, null, 'xiaoxiaioixao', 'mysql', '2', 'user', '1', 'com.mysql.cj.jdbc.Driver');
