@@ -125,8 +125,8 @@ public class StringsUtils  implements Serializable {
      */
     public static String getClass(String str ){
         str = getUp(str);
-        String[] var1 = {"bigint","varchar","datetime","char","int"};
-        String[] var2 = {"Long","String","Date","String","Integer"};
+        String[] var1 = {"bigint","varchar","datetime","char","int","double"};
+        String[] var2 = {"Long","String","Date","String","Integer","Double"};
         for (int i = 0; i < var1.length; i++) {
             str = str.replace(var1[i],var2[i]);
         }

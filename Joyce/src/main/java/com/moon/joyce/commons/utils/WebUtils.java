@@ -5,6 +5,7 @@ import com.moon.joyce.example.functionality.entity.Column;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Author: XingDaoRong
@@ -12,8 +13,9 @@ import java.util.List;
  * 网络基本模板
  */
 public class WebUtils {
-    private static String mainPackage ="E:\\Program Files\\project\\sc\\wr-modules\\wr-aiot\\src\\main";
-    private static String packagePre = mainPackage+"\\java\\com\\wr\\aiot";
+
+    private static String mainPackage ="E:\\Program Files\\project\\data_center\\dc-modules\\modules-system\\src\\main";
+    private static String packagePre = mainPackage+"\\java\\com\\wr\\source";
     private static String packageResource = mainPackage+"\\resources";
     private static  String otherpack  = System.getProperty("user.dir")+"\\Joyce\\target\\classes\\templates\\files\\";
     /**
@@ -25,30 +27,35 @@ public class WebUtils {
         String defaultPackage = "package "+packageInfo.getPackageValue()+".entity;\n" +
                 "\n" +
                 "import com.fasterxml.jackson.annotation.JsonFormat;\n" +
-                "import com.wr.common.core.web.domain.BaseEntity;\n" +
+               /* "import com.wr.common.core.web.domain.BaseEntity;\n" +*/
                 "import java.math.BigDecimal;\n" +
                 "import java.util.Date;\n";
         String str = "";
+        String extendsBaseEntity = "extends BaseEntity";
         String[] filter = {"create_time","create_by","update_time","update_by"};
+        //关闭过滤
+        filter = new String[]{};
         List<Column> list = new ArrayList<>(columns);
-        System.out.println("xxxxx:"+columns.size());
-        for (int i1 = 0; i1 < filter.length; i1++) {
-        for (int i = 0; i < columns.size(); i++) {
-                if (columns.get(i).getColumnName().equals(filter[i1])){
-                    list.remove(columns.get(i));
+        if (filter.length!=0&& Objects.nonNull(filter)){
+            for (int i1 = 0; i1 < filter.length; i1++) {
+                for (int i = 0; i < columns.size(); i++) {
+                    if (columns.get(i).getColumnName().equals(filter[i1])){
+                        list.remove(columns.get(i));
+                    }
                 }
             }
         }
-        System.out.println("xxxxx:"+list.size());
-        for (Column column : list) {
 
+        for (Column column : list) {
                 String temp = "/**\n*" + column.getColumnComment() + "\n*/\n" +
                         "private " + StringsUtils.changeType2(StringsUtils.changeType(column.getColumnType())) +
                         " " + StringsUtils.getUp(column.getColumnName()) + ";\n";
                 str = str + temp;
 
         }
-        defaultPackage = defaultPackage+"\n/**"+columns.get(0).getTableComment()+"实体类,表"+columns.get(0).getTableName()+"\n*/\n"+ "public class " + StringsUtils.getClassName(columns.get(0).getTableName()) + " extends BaseEntity {\n" + str + "\n}";
+        //关闭继承基础类
+        extendsBaseEntity = "";
+        defaultPackage = defaultPackage+"\n/**"+columns.get(0).getTableComment()+"实体类,表"+columns.get(0).getTableName()+"\n*/\n"+ "public class " + StringsUtils.getClassName(columns.get(0).getTableName()) +" "+extendsBaseEntity+ "  {\n" + str + "\n}";
         if (!type.equals("1")){
             path = otherpack + StringsUtils.getClassName(columns.get(0).getTableName()) + ".java";
         }
@@ -480,10 +487,10 @@ public class WebUtils {
      */
     public static void createWeb(List<Column> columns, String type, PackageInfo packageInfo) {
         createEntity(columns,type,packageInfo);
-        createController(columns.get(0).getTableName(), columns.get(0).getTableComment(),type,packageInfo);
+       /* createController(columns.get(0).getTableName(), columns.get(0).getTableComment(),type,packageInfo);
         createService(columns.get(0).getTableName(), columns.get(0).getTableComment(),type,packageInfo);
         createServiceImpl(columns.get(0).getTableName(),type,packageInfo);
         createMapper(columns.get(0).getTableName(), columns.get(0).getTableComment(),type,packageInfo);
-        createMapperXml(columns,type,packageInfo);
+        createMapperXml(columns,type,packageInfo);*/
     }
 }

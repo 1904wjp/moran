@@ -8,6 +8,8 @@ import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import com.moon.joyce.example.service.UUService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import java.util.*;
  */
 @Controller
 public class BaseController {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     //app链接
     @Value("${app.url}")
     public String appUrl;
@@ -127,19 +130,21 @@ public class BaseController {
     //关闭数据源
     public  boolean shutdownDatasource(){
         if (Objects.nonNull(getCurrentSetting())){
-            if (Objects.nonNull(getCurrentSetting().getDbBaseSetting())){
+                logger.info("数据源关闭成功");
                 return dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.REMOVE_DATASOURCE);
-            }
         }
+         logger.info("数据源关闭失败");
         return false;
     }
     //开启数据源
     public boolean startupDatasource(){
         if (Objects.nonNull(getCurrentSetting())){
             if (Objects.nonNull(getCurrentSetting().getDbBaseSetting())){
+                 logger.info("当前为默认系统数据源");
                 return dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.CREATE_DATASOURCE);
             }
         }
+        logger.info("当前数据源:" + getCurrentSetting().getDbBaseSetting().getDataSourceName());
         return false;
     }
 

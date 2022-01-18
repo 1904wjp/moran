@@ -20,6 +20,7 @@ function getTablesByDatabaseName(){
         }).done(function (data) {
             loading(false);
             if (data.rs){
+                $('#tableName').append('<option value="">请选择表</option>');
                  for (let i = 0; i < data.data.length; i++) {
                     $('#tableName').append("<option value=\""+data.data[i].tableName+"\">"+data.data[i].tableName+"("+data.data[i].tableComment+")"+"</option>");
                   }
