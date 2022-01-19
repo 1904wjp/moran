@@ -149,8 +149,8 @@ public class StringsUtils  implements Serializable {
      * @return
      */
     public static String changeType2(String type){
-        String[] var1 = {"bigint","varchar","datetime","char","int","text","decimal"};
-        String[] var2 = {"Long","String","Date","String","Integer","String","BigDecimal"};
+        String[] var1 = {"bigint","varchar","datetime","char","int","text","decimal","date","tinyint"};
+        String[] var2 = {"Long","String","Date","String","Integer","String","BigDecimal","Date","Integer"};
         for (int i = 0; i < var1.length; i++) {
             if (type.equals(var1[i])){
                 return var2[i];
