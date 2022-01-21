@@ -76,10 +76,8 @@ public class ColumnsController extends BaseController {
             logger.info("size:" + columns.size());
             List<Column> columns1 = new ArrayList();
             logger.info("size:" + columns.size());
-            int temp = 0;
             tableName = columns.get(0).getTableName().substring(columns.get(0).getTableName().indexOf("_") + 1);
             for (Column column : columns) {
-                temp++;
                 column.setTableName(tableName);
                 columns1.add(column);
             }
