@@ -56,7 +56,14 @@ $(function () {
         url: "/example/dayTask/dayTaskListPage",
         name: "每日看板",
         childs: []
-    }];
+    }, {
+        id: 8,
+        parentId: 0,
+        val: "au",
+        url: "/aboutUs",
+        name: "关于我们",
+        childs: []
+    }  ];
     let menu = $('#menu_bar');
     for (i = 0, len = menuList.length; i < len; i++) {
         if (menuList[i].parentId == 0) {

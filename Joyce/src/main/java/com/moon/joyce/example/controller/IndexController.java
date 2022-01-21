@@ -28,6 +28,7 @@ import java.util.Objects;
 public class IndexController extends BaseController {
     @Autowired
     private FileService fileService;
+
     /**
      * 头菜单
      * @return
@@ -49,6 +50,15 @@ public class IndexController extends BaseController {
      * 未发现页面
      * @return
      */
+    @RequestMapping("/aboutUs")
+    public String aboutUs(){
+        return "common/public/aboutUs";
+    }
+
+    /**
+     * 未发现页面
+     * @return
+     */
     @RequestMapping("/404")
     public String notFindPage(){
         return "common/error/404";
@@ -58,9 +68,9 @@ public class IndexController extends BaseController {
      * 服务错误页面
      * @return
      */
-    @RequestMapping("/500")
+   /* @RequestMapping("/500")
     public String codeErrorPage(){
-        return "common/error/500";}
+        return "common/error/500";}*/
 
     /**
      * 主页
@@ -69,6 +79,7 @@ public class IndexController extends BaseController {
     @RequestMapping("/main")
     public String projectMainPage(){
         return "common/public/main";}
+
 
     /**
      * 主页配置
@@ -95,6 +106,21 @@ public class IndexController extends BaseController {
         }
         return ResultUtils.success(Constant.FILE_DEFAULT_NAME);
     }
+
+    /**
+     * 关于我们
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/aboutUsData")
+    public Result aboutUsData(){
+        String aboutUs = "1692239985@qq.com";
+        if (StringUtils.isNoneBlank(aboutUs)){
+            return ResultUtils.success(Constant.RESULT_SUCCESS_MSG,aboutUs);
+        }
+        return ResultUtils.error(Constant.NULL_CODE);
+    }
+
 
 }
 

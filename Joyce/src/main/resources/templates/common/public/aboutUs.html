@@ -1,10 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>About us</title>
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>关于我们</title>
 </head>
-<body>
+<div class="log">
+    <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
 
-</body>
-</html>
+    <div  style="margin-top: 10%" class="col-md-6">
+        <h3 style="width: 20%">请用百度app扫描二维码</h3>
+        <div id="qrcode"></div>
+    </div>
+
+<input class="title" type="hidden" value="au"/>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/jQuery.qrcode.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/common/public/aboutUs.js}"></script>

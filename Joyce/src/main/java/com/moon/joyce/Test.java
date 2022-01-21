@@ -17,16 +17,7 @@ import java.util.List;
  */
 public class Test {
     public static void main(String[] args) {
-        String path = "E:\\Program Files\\project\\data_center\\dc-modules\\modules-system\\src\\main\\java\\com\\wr\\source\\entity";
-        File file = new File(path);
-        File[] files = file.listFiles();
-        int i = 0;
-        int max = 0;
-        while (i+19<143){
-            max=i+19;
-            System.out.println(i+1+":"+files[i+1].getName()+"::"+max+":"+files[max].getName());
-            i+=19;
-        }
+       task01();
     }
 
     public static void getContext(){
@@ -106,4 +97,20 @@ public class Test {
         }
         System.out.println(onlyOne +":::"+(eor^onlyOne));
     }*/
+    public static void task01(){
+        String path = "E:\\Program Files\\project\\data_center\\dc-modules\\modules-system\\src\\main\\java\\com\\wr\\source\\entity";
+        File file = new File(path);
+        File[] files = file.listFiles();
+        int i = 0;
+        int max = 0;
+        System.out.println(files[110].getName());
+       /* while (true){
+            max=i+19;
+            System.out.println(i+1+":"+files[i+1].getName()+"::"+max+":"+files[max].getName());
+            i+=19;
+            if (i+19>=143){
+                break;
+            }
+        }*/
+    }
 }
