@@ -14,9 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Xing Dao Rong
@@ -114,9 +112,15 @@ public class IndexController extends BaseController {
     @ResponseBody
     @RequestMapping("/aboutUsData")
     public Result aboutUsData(){
-        String aboutUs = "1692239985@qq.com";
-        if (StringUtils.isNoneBlank(aboutUs)){
-            return ResultUtils.success(Constant.RESULT_SUCCESS_MSG,aboutUs);
+        String form = "1692239985@qq.com";
+        String vx ="wxp://f2f02G94YifDWYRnnR2seljn7DoPsl_cpDXe_D6g1qTP9G8";
+        String zfb = "https://qr.alipay.com/fkx15354mdrzidzicds5cc2?t=1642754834489";
+        List<String> list = new ArrayList<>();
+        list.add(form);
+        list.add(vx);
+        list.add(zfb);
+        if (!list.isEmpty()){
+            return ResultUtils.success(list);
         }
         return ResultUtils.error(Constant.NULL_CODE);
     }

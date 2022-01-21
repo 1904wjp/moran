@@ -545,15 +545,38 @@ function toUtf8(str) {
 //生成二维码
 function outputQRCod(txt, width, height) {
     //先清空
-    $("#qrcode").empty();
-
+    $(".qrcode").empty();
     //中文格式转换
     var str = toUtf8(txt);
     //生成二维码
-    $("#qrcode").qrcode({
+    $(".qrcode").qrcode({
         render: "canvas",//canvas和table两种渲染方式
         width: width,
         height: height,
         text: str
     });
+}
+//生成二维码
+function outputQRCod2(array, width, height) {
+     var a = ["联系我们","微信打赏","支付宝打赏"]
+    //Jquery 循环map的用法
+       for (var i=0;i<array.length;i++){
+           var key = "qrcode"+i;
+           $("#qrcode").append("<h3>"+a[i]+"</h3>" +
+               "<div class='card' style=''>" +
+               "<div class='"+key+" col-md-3 card-body'></div>"+
+           "</div>");
+           //先清空
+           var obj = "."+key;
+           $(obj).empty();
+           //中文格式转换
+           var str = toUtf8(array[i]);
+           //生成二维码
+           $(obj).qrcode({
+               render: "canvas",//canvas和table两种渲染方式
+               width: width,
+               height: height,
+               text: str
+           });
+       }
 }
