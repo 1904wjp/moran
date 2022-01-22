@@ -549,5 +549,27 @@ public class FileUtils implements Serializable {
     public static String getCellValueOfTrim(Cell cell) {
        return getCellValue(cell).trim();
     }
+
+
+    public static BufferedReader getReadObj(String path ){
+        System.out.println("我结束后需要关闭资源");
+        BufferedReader bufferedReader = null;
+        try {
+           bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bufferedReader;
+    }
+    public static BufferedReader getReadObj(File file ){
+        System.out.println("我结束后需要关闭资源");
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bufferedReader;
+    }
 }
 

@@ -562,9 +562,10 @@ function outputQRCod2(array, width, height) {
     //Jquery 循环map的用法
        for (var i=0;i<array.length;i++){
            var key = "qrcode"+i;
-           $("#qrcode").append("<h3>"+a[i]+"</h3>" +
-               "<div class='card' style=''>" +
-               "<div class='"+key+" col-md-3 card-body'></div>"+
+           $("#qrcode").append(
+               "<div class='card col-md-3' style=''>" +
+               "<label style='font-size: 50px'>"+a[i]+"</label>" +
+               "<div class='"+key+"  card-body'></div>"+
            "</div>");
            //先清空
            var obj = "."+key;

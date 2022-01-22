@@ -8,7 +8,7 @@ $(function () {
     }).done(function (data) {
         console.log("sss:",data.rs);
         if (data.rs){
-            outputQRCod2(data.data, 100, 100);
+            outputQRCod2(data.data, 300, 300);
         }else {
             tips(data.rs,data.msg);
         }
