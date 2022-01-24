@@ -1,3 +1,4 @@
+
 /**
  * 密码框触发器
  * @param id
@@ -580,4 +581,17 @@ function outputQRCod2(array, width, height) {
                text: str
            });
        }
+}
+
+/**
+ * 正则表达谁
+ * @param reg
+ * @param msg
+ */
+function checkFill(str,regType,msg){
+    if(!reg.test(str)){
+        tips(false,msg);
+        return;
+    }
+
 }

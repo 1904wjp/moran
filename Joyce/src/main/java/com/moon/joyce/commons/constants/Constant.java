@@ -199,22 +199,22 @@ public class Constant {
     public static final String CHINESE_BLANK_MESSAGE= "请勿填写空白信息";
     public static final String BLANK_MESSAGE= "Do not fill in blank information";
     //查询的数据为空
-    public static final String CHINESE_SLECET_BLANK_MESSAGE= "该数据不存在";
+    public static final String CHINESE_SELECT_BLANK_MESSAGE= "该数据不存在";
     public static final String SELECT_BLANK_MESSAGE= "The data does not exist";
     //查询的数据已存在
-    public static final String CHINESE_SLECET_EXIST_MESSAGE= "该数据已存在";
+    public static final String CHINESE_SELECT_EXIST_MESSAGE= "该数据已存在";
     public static final String SELECT_EXIST_MESSAGE= "The data already exist";
     //查询的用户为空
-    public static final String CHINESE_SLECET_BLANK_USERNAME_MESSAGE= "该用户不存在";
+    public static final String CHINESE_SELECT_BLANK_USERNAME_MESSAGE= "该用户不存在";
     public static final String SELECT_BLANK_USERNAME_MESSAGE= "The username does not exist";
     //查询的用户已存在
-    public static final String CHINESE_SLECET_EXIST_USERNAME_MESSAGE= "该用户已存在";
+    public static final String CHINESE_SELECT_EXIST_USERNAME_MESSAGE= "该用户已存在";
     public static final String SELECT_EXIST_USERNAME_MESSAGE= "The username already exist";
     //查询的用户已存在
-    public static final String CHINESE_SLECET_EXIST_EMAIL_MESSAGE= "该邮件已注册";
+    public static final String CHINESE_SELECT_EXIST_EMAIL_MESSAGE= "该邮件已注册";
     public static final String SELECT_EXIST_EMAIL_MESSAGE= "The email already exist";
     //查询的用户已存在
-    public static final String CHINESE_SLECET_EXIST_PHONE_MESSAGE= "该手机号码已存在";
+    public static final String CHINESE_SELECT_EXIST_PHONE_MESSAGE= "该手机号码已存在";
     public static final String SELECT_EXIST_PHONE_MESSAGE= "The phone already exist";
     //未知错误
     public static final String CHINESE_ERROR_MESSAGE= "系统繁忙，请稍后再试！";

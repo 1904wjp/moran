@@ -1,3 +1,12 @@
+
+//邮件正则
+var emailReg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+//返回信息
+
+var returnEmailMsg = "输入的邮件号有误";
+//手机正则
+var phoneReg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+var returnPhoneMsg = "输入的手机号有误";
 $(document).ready(function () {
     loadBackGround();
 });
@@ -86,4 +95,13 @@ function registFuc() {
             tips(false,ajaxFailMsg);
         });
     }
+}
+
+function phoneReg(){
+    var phone= $('#phone').val();
+    checkFill(phone,phoneReg,returnPhoneMsg);
+}
+function emailReg(){
+    var email= $('#email').val();
+    checkFill(email,emailReg,returnEmailMsg);
 }

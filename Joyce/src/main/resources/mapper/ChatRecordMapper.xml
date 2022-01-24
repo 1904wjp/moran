@@ -47,8 +47,8 @@
             <if test="userAId!=null and userBId!=null"  >
                 cr.user_a_id = #{userAId} AND cr.user_b_id = #{userBId}
             </if>
-            <if test="creteTime!=null">
-               and cr.create_time = #{creteTime}
+            <if test="createTime!=null">
+               and cr.create_time = #{createTime}
             </if>
         </where>
         UNION
@@ -77,8 +77,8 @@
             <if test="userAId!=null and userBId!=null"  >
                 cr3.user_b_id = #{userAId} AND cr3.user_a_id = #{userBId}
             </if>
-            <if test="creteTime!=null">
-                and cr.create_time = #{creteTime}
+            <if test="createTime!=null">
+                and cr.create_time = #{createTime}
             </if>
         </where>) temp
         ORDER BY temp.id

@@ -270,16 +270,21 @@ public class UserController extends BaseController {
             }
             //用户是否唯一
             if (userCountByUsername>Constant.RESULT_NO_SQL_RESULT){
-                return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SLECET_EXIST_USERNAME_MESSAGE);
+                return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_EXIST_USERNAME_MESSAGE);
             }
             //非空判断
             int userCountByEmail = userService.getUserCount(user, Constant.USER_TYPE_UNIQUE_EMAIL);
+            int userCountByPhone = userService.getUserCount(user, Constant.USER_TYPE_UNIQUE_PHONE);
             if (userCountByEmail== Constant.RESULT_UNKNOWN_SQL_RESULT){
                 return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);
             }
             //邮件是否唯一
             if (userCountByEmail>Constant.RESULT_NO_SQL_RESULT){
-                return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SLECET_EXIST_EMAIL_MESSAGE);
+                return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_EXIST_EMAIL_MESSAGE);
+            }
+            //手机号是否唯一
+            if (userCountByPhone>Constant.RESULT_NO_SQL_RESULT){
+                return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_EXIST_PHONE_MESSAGE);
             }
             user.setStatus(Constant.USER_TYPE_VAILD_STATUS);
             user.setDeleteFlag(Constant.UNDELETE_STATUS);
@@ -363,7 +368,7 @@ public class UserController extends BaseController {
             logger.info(username+"======>登录成功");
             return ResultUtils.success();
         }
-        return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SLECET_BLANK_USERNAME_MESSAGE);
+        return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
     }
 
     /**
