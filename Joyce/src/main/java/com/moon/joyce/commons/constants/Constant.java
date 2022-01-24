@@ -288,7 +288,8 @@ public class Constant {
     public static final String BACKGROUND_DEFAULT_TYPE= "img";
     //backgroundColor默认值
     public static final String BACKGROUND_DEFAULT_COLOR= "white";
-
+    //默认配置文件
+    public static final String DEFAULT_CONFIG_FILE = "dcfJoyce";
     /**
      * 数据库类
      */
@@ -308,4 +309,9 @@ public class Constant {
     // Excel 2007/2010
     public static final String EXCEL_XLSX = "xlsx";
 
+    /**
+     * 日志
+     */
+    //日志文件夹路径
+    public static final String LOGGER_PATH = "G://Joyce/joyce.log";
 }

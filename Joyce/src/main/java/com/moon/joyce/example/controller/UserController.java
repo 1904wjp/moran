@@ -23,6 +23,7 @@ import com.moon.joyce.example.service.serviceControllerDetails.UserServiceContro
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,10 +42,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/example/user")
 public class UserController extends BaseController {
 
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 /*********************************************************************************************************************************************/
 /**************全局变量***********************/
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -279,8 +280,6 @@ public class UserController extends BaseController {
                removeSessionUser();
             }
             setSession(Constant.SESSION_USER,user);
-            //加载配置文件
-            fileService.writeJoyceConfig(user.getUsername(),null);
             return ResultUtils.success();
         }
             return  ResultUtils.error(Constant.ERROR_CODE,false);
@@ -323,8 +322,9 @@ public class UserController extends BaseController {
         User user = new User();
         user.setUsername(username);
         user.setPassword(MD5Utils.getMD5Str(password));
-        User dbUser = userService.getUser(user, Constant.USER_TYPE_LOGIN);
         logger.info(username+"======>登录中");
+        User dbUser = userService.getUser(user, Constant.USER_TYPE_LOGIN);
+        user.setStatus(dbUser.getStatus());
         if (Objects.nonNull(dbUser)){
             if(!user.getPassword().equals(dbUser.getPassword())){
               return ResultUtils.error(Constant.CHINESE_PASSWORD_ERROR_MESSAGE);
@@ -343,13 +343,16 @@ public class UserController extends BaseController {
             //设置当前在线集合
             sessionUsers.add(dbUser);
             //检测是否存在当前登录人的相关配置
-            Setting currentSetting = userServiceControllerDetailService.checkData(getSessionUser().getId());
-            if (Objects.nonNull(currentSetting)){
-                logger.info(username+"======>设置装配中");
-                setSession(getSessionUser().getId()+Constant.CURRENT_SETTING,currentSetting);
+            if (user.getStatus()==2){
+                Setting currentSetting = userServiceControllerDetailService.checkData(getSessionUser().getId());
+                if (Objects.nonNull(currentSetting)){
+                    logger.info(username+"======>设置装配中");
+                    setSession(getSessionUser().getId()+Constant.CURRENT_SETTING,currentSetting);
+                }
             }
             logger.info(username+"======>登录成功");
-            return ResultUtils.success();
+            setSession("index",0);
+            return ResultUtils.success(Constant.RESULT_SUCCESS_MSG,user.getStatus());
         }
         return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
     }

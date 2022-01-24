@@ -118,6 +118,7 @@ public class UserServiceControllerDetailServiceImpl implements UserServiceContro
         if (user.getStatus().equals(Constant.INACTIVE_CODE)){
             return ResultUtils.error(Constant.INACTIVE_CODE);
         }
+
         return ResultUtils.success();
     }
 

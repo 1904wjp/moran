@@ -6,6 +6,7 @@ import com.moon.joyce.example.functionality.entity.JoyceException;
 import com.moon.joyce.example.functionality.entity.PageComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -570,6 +571,42 @@ public class FileUtils implements Serializable {
             e.printStackTrace();
         }
         return bufferedReader;
+    }
+
+    /**
+     * 一行一行读取文件转成字符串集合
+     * @param path
+     * @return
+     */
+    public static List<String> readyLineFileConvertList(String path) {
+        BufferedReader readObj = getReadObj(path);
+        List<String> list = new ArrayList<>();
+        String text;
+        try {
+            while ((text = readObj.readLine()) != null) {//使用readLine方法，一次读一行
+                list.add(text);
+            }
+            readObj.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
+    /**
+     * 集合相加
+     * @param param1
+     * @param param2
+     * @return
+     */
+    public static List<String> addList(List<String> param1, List<String> param2) {
+        for (String o : param2) {
+            if (!StringsUtils.listIsContainsStr(o,param1)){
+                param1.add(o);
+            }
+        }
+        return param1;
     }
 }
 

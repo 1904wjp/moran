@@ -5,7 +5,7 @@
 <link rel="stylesheet" th:href="@{/static/css/common/public/headerBar.css}"/>
 
 <div th:fragment="bar" xmlns="http://www.w3.org/1999/html">
-
+    <input class="main_type" type="hidden" th:value="${session.session_user.status}"/>
     <div id="app_bar" class="navbar navbar-default" style="" role="navigation">
         <div class="navbar-header">
            <a href="##" class="navbar-brand">Joyce</a>

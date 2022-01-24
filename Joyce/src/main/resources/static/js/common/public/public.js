@@ -57,7 +57,7 @@ function loginFuc() {
         }).done(function (data) {
             loading(false);
             if (data.rs) {
-                toList("/main");
+                toList("/main?type="+data.data);
             }else {
                 tips(data.rs,data.msg);
             }

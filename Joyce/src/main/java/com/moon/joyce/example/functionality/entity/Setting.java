@@ -4,6 +4,8 @@ import com.moon.joyce.example.entity.DbBaseSetting;
 import com.moon.joyce.example.entity.PackageInfo;
 
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.util.Map;
 
 /**
  * @Author: XingDaoRong
@@ -20,12 +22,20 @@ public class Setting implements Serializable {
      */
     private PackageInfo packageInfo;
 
+    /**
+     * 其余的配置
+     */
+    private Map<String,Object> map;
     public Setting() {
     }
-
     public Setting(DbBaseSetting dbBaseSetting, PackageInfo packageInfo) {
         this.dbBaseSetting = dbBaseSetting;
         this.packageInfo = packageInfo;
+    }
+    public Setting(DbBaseSetting dbBaseSetting, PackageInfo packageInfo,Map map) {
+        this.dbBaseSetting = dbBaseSetting;
+        this.packageInfo = packageInfo;
+        this.map = map;
     }
 
     public DbBaseSetting getDbBaseSetting() {
@@ -44,12 +54,12 @@ public class Setting implements Serializable {
         this.packageInfo = packageInfo;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Setting{");
-        sb.append("dbBaseSetting=").append(dbBaseSetting);
-        sb.append(", packageInfo=").append(packageInfo);
-        sb.append('}');
-        return sb.toString();
+    public Map<String, Object> getMap() {
+        return map;
     }
+
+    public void setMap(Map<String, Object> map) {
+        this.map = map;
+    }
+
 }
