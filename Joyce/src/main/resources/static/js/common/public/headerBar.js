@@ -1,4 +1,5 @@
 $(function () {
+    getInitL2D();
     var val = $('.title').val();
     var menuList = [{
         id: 0,

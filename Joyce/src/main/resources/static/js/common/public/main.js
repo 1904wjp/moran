@@ -1,5 +1,4 @@
 $(function() {
-    /*$('.headerBar').load("headerBar.html");*/
     createStructImageFuc();
 });
 

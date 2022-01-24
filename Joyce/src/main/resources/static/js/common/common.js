@@ -594,4 +594,22 @@ function checkFill(str,reg,msg){
         return;
     }
 
+    /**
+     *
+      */
+function getInitL2D(){
+        $(body).append("<div class=\"waifu\" id=\"waifu\">\n" +
+            "    <div class=\"waifu-tips\" style=\"opacity: 1;\"></div>\n" +
+            "    <canvas id=\"live2d\" width=\"280\" height=\"250\" class=\"live2d\"></canvas>\n" +
+            "    <div class=\"waifu-tool\">\n" +
+            "        <span class=\"fui-home\"></span>\n" +
+            "        <span class=\"fui-chat\"></span>\n" +
+            "        <span class=\"fui-eye\"></span>\n" +
+            "        <span class=\"fui-user\"></span>\n" +
+            "        <span class=\"fui-photo\"></span>\n" +
+            "        <span class=\"fui-info-circle\"></span>\n" +
+            "        <span class=\"fui-cross\"></span>\n" +
+            "    </div>\n" +
+            "</div>");
+}
 }

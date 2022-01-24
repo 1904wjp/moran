@@ -58,10 +58,10 @@ public class JoyceInterceptorConfig implements WebMvcConfigurer, ErrorPageRegist
 
     @Override
     public void registerErrorPages(ErrorPageRegistry registry) {
-      /* ErrorPage errorPage = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/500");*/
+        ErrorPage errorPage = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/500");
         ErrorPage notFoundPage = new ErrorPage(HttpStatus.NOT_FOUND, "/404");
         registry.addErrorPages(notFoundPage);
-      /*  registry.addErrorPages(errorPage,notFoundPage);*/
+        registry.addErrorPages(errorPage,notFoundPage);
 
     }
 }
