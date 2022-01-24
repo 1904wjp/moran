@@ -49,9 +49,9 @@
                    <div class="form-group ">
                        <label class="col-sm-2 control-label" for="login"> </label>
                        <div class="col-sm-5">
-                           <input class="btn btn-default pull-left" id="login" type="button" onclick="loginFuc()" value="登录"/>
-                           <a href="javascript:void(0)" style="margin: 0 12%;" onclick="openForgetPasswordModelFuc()">忘记密码</a>
-                           <a class="btn btn-default pull-right" th:href="@{'/example/user/regist'}">去注册</a>
+                           <input class="btn btn-default pull-left regist" id="login" type="button" onclick="loginFuc()" value="登录"/>
+                           <a href="javascript:void(0)" class="regist" style="margin: 0 12%;" onclick="openForgetPasswordModelFuc()">忘记密码</a>
+                           <a class="btn btn-default pull-right regist" th:href="@{'/example/user/regist'}">去注册</a>
                        </div>
                    </div>
                </form>

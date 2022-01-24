@@ -83,10 +83,10 @@ public class DataSourceController extends BaseController {
             dbBaseSetting.setCreateBy(getSessionUser().getUsername());
             dbBaseSetting.setCreateTime(new Date());
             if (dbBaseSettingService.getCount(dbBaseSetting, Constant.DATA_TYPE_UNIQUE_NAME) != 0) {
-                return ResultUtils.error(Constant.CHINESE_SLECET_EXIST_MESSAGE + "(数据名称重复，修改名称)");
+                return ResultUtils.error(Constant.CHINESE_SELECT_EXIST_MESSAGE + "(数据名称重复，修改名称)");
             }
             if (dbBaseSettingService.getCount(dbBaseSetting, Constant.DATA_TYPE_UNIQUE) != 0) {
-                return ResultUtils.error(Constant.CHINESE_SLECET_EXIST_MESSAGE + "(数据称重复，请查看数据修改后提交)");
+                return ResultUtils.error(Constant.CHINESE_SELECT_EXIST_MESSAGE + "(数据称重复，请查看数据修改后提交)");
             }
         } else {
             dbBaseSetting.setUpdateBy(getSessionUser().getUsername());

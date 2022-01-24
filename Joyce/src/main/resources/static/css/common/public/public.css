@@ -25,4 +25,9 @@
  }
  body{
      background: url("/static/img/userImg/common.png");
+     background-repeat: no-repeat;
+     background-size: cover;
+ }
+ .regist{
+
  }
