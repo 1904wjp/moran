@@ -175,9 +175,6 @@ public class UserController extends BaseController {
     }
 
 
-
-
-
     /**************************************************************************************************************************************************************************************************************/
     /**********逻辑判断**********/
 
@@ -262,30 +259,11 @@ public class UserController extends BaseController {
         }
         //注册
         if (Objects.isNull(user.getId())){
+            Result checkRegistResult = userServiceControllerDetailService.checkRegistData(user);
+            if (!checkRegistResult.getRs()){
+                return checkRegistResult;
+            }
             user.setStatus(0);
-            //非空判断
-            int userCountByUsername = userService.getUserCount(user, Constant.USER_TYPE_UNIQUE_USERNAME);
-            if (userCountByUsername== Constant.RESULT_UNKNOWN_SQL_RESULT){
-                return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);
-            }
-            //用户是否唯一
-            if (userCountByUsername>Constant.RESULT_NO_SQL_RESULT){
-                return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_EXIST_USERNAME_MESSAGE);
-            }
-            //非空判断
-            int userCountByEmail = userService.getUserCount(user, Constant.USER_TYPE_UNIQUE_EMAIL);
-            int userCountByPhone = userService.getUserCount(user, Constant.USER_TYPE_UNIQUE_PHONE);
-            if (userCountByEmail== Constant.RESULT_UNKNOWN_SQL_RESULT){
-                return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);
-            }
-            //邮件是否唯一
-            if (userCountByEmail>Constant.RESULT_NO_SQL_RESULT){
-                return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_EXIST_EMAIL_MESSAGE);
-            }
-            //手机号是否唯一
-            if (userCountByPhone>Constant.RESULT_NO_SQL_RESULT){
-                return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_EXIST_PHONE_MESSAGE);
-            }
             user.setStatus(Constant.USER_TYPE_VAILD_STATUS);
             user.setDeleteFlag(Constant.UNDELETE_STATUS);
             //发送邮件
@@ -354,6 +332,11 @@ public class UserController extends BaseController {
             //头像为空则为默认值
             if (StringUtils.isEmpty(dbUser.getFileUrl())){
                 dbUser.setFileUrl(Constant.FILE_DEFAULT_NAME);
+            }
+            //设置当前登录账号的状态
+            Result checkLoginResult = userServiceControllerDetailService.checkLoginData(dbUser);
+            if (!checkLoginResult.getRs()){
+                return checkLoginResult;
             }
             //设置当前登录人
             setSession(Constant.SESSION_USER,dbUser);

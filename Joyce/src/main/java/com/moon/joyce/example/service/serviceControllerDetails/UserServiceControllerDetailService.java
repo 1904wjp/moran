@@ -2,6 +2,7 @@ package com.moon.joyce.example.service.serviceControllerDetails;
 
 import com.moon.joyce.example.entity.DbBaseSetting;
 import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.entity.Setting;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +27,9 @@ public interface UserServiceControllerDetailService {
      */
     Setting checkData(Long userId);
 
+    //注册基础数据检测
+    Result checkRegistData(User user);
 
+    //登录基础数据检测
+    Result checkLoginData(User user);
 }

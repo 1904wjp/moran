@@ -1,5 +1,6 @@
 $(function () {
-
+    $('#app_bar').hide();
+    
     var val = $('.title').val();
     var menuList = [{
         id: 0,
