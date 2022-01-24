@@ -31,7 +31,7 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
     modeCfg.highlightFormatting = false;
 
   // Maximum number of nested blockquotes. Set to 0 for infinite nesting.
-  // Excess `>` will emit `error` token.
+  // Excess `>` will  `error` token.
   if (modeCfg.maxBlockquoteDepth === undefined)
     modeCfg.maxBlockquoteDepth = 0;
 

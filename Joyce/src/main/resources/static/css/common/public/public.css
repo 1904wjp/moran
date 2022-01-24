@@ -28,6 +28,8 @@
      background-repeat: no-repeat;
      background-size: cover;
  }
- .regist{
-
+ .loginBtns{
+     justify-content: flex-start;
+     flex-direction: row;
+     display: flex;
  }

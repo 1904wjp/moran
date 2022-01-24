@@ -97,11 +97,12 @@ function registFuc() {
     }
 }
 
-function phoneReg(){
+function phoneRegFuc(){
     var phone= $('#phone').val();
     checkFill(phone,phoneReg,returnPhoneMsg);
 }
-function emailReg(){
+
+function emailRegFuc(){
     var email= $('#email').val();
     checkFill(email,emailReg,returnEmailMsg);
 }

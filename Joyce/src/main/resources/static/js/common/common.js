@@ -588,7 +588,7 @@ function outputQRCod2(array, width, height) {
  * @param reg
  * @param msg
  */
-function checkFill(str,regType,msg){
+function checkFill(str,reg,msg){
     if(!reg.test(str)){
         tips(false,msg);
         return;
