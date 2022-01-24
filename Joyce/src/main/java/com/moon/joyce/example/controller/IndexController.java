@@ -94,10 +94,8 @@ public class IndexController extends BaseController {
     public String projectMainPage(){
         User sessionUser = getSessionUser();
         String filePathName = confPath + getSessionUser().getUsername() + "_config.xml";
-        //改变用户状态
-        if (sessionUser.getStatus().equals(Constant.APPLY_STATUS)){
-            sessionUser.setStatus(2);
-        }else {
+
+        if (!sessionUser.getStatus().equals(Constant.APPLY_STATUS)){
             File file = new File(filePathName);
             if (!file.exists()){
                 Map<String, Object> map = new HashMap<>();
@@ -164,7 +162,13 @@ public class IndexController extends BaseController {
         }else if(code.equals("clear")){
             strings.clear();
             strings.add("########********###");
-        }else {
+        }else if(code.equalsIgnoreCase("Terminate batch operation(y/n):y")){
+            strings.clear();
+            strings.add("########********###::y");
+        }else if(code.equalsIgnoreCase("Terminate batch operation(y/n):n")){
+            strings.clear();
+            strings.add("########********###::n");
+        }else  {
             strings.clear();
             strings.add("The command was not found");
         }
@@ -216,6 +220,18 @@ public class IndexController extends BaseController {
         return ResultUtils.error(Constant.NULL_CODE);
     }
 
+    /**
+     * 改变状态
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/changeStatus")
+    public Result changeStatus(){
+        User sessionUser = getSessionUser();
+        sessionUser.setStatus(2);
+        userService.saveOrUpdate(sessionUser);
+        return ResultUtils.error(Constant.NULL_CODE);
+    }
 
 }
 

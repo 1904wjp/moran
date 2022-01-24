@@ -1,6 +1,6 @@
 $(function () {
 
-    if ($(".main_type").val()=='2'){
+    if ($(".main_type").val()!='2'){
         $('#app_bar').hide();
     }
     var val = $('.title').val();
