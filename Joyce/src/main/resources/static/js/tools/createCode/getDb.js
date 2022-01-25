@@ -45,7 +45,7 @@ function saveDataSource(){
                 type: 'POST',
                 dataType: 'json',
                 data: data,
-                //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
             }).done(function (data) {
                 $(".addDb").show();
                 loading(false);
@@ -79,7 +79,7 @@ function applyDataSource(id){
             type: 'GET',
             dataType: 'json',
             data: data,
-            //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
         }).done(function (data) {
             if (data.rs) {
                 toastr.success(data.ms);
@@ -106,7 +106,7 @@ function deleteSource(id){
         type: 'GET',
         dataType: 'json',
         data: data,
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
     }).done(function (data) {
         if (data.rs){
             toastr.success(data.msg);
@@ -268,7 +268,7 @@ function deleteDbIds(){
                     type: 'POST',
                     dataType: 'json',
                     data: data,
-                    //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
                 }).done(function (data) {
                     if (data.rs) {
                         toastr.success(data.msg);
@@ -405,7 +405,7 @@ function savePackage(){
                 type: 'POST',
                 dataType: 'json',
                 data: data,
-                //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
             }).done(function (data) {
                 if (data.rs) {
                     toastr.success(data.msg);
@@ -438,7 +438,7 @@ function applyPackage(id){
         type: 'GET',
         dataType: 'json',
         data: data,
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
     }).done(function (data) {
         if (data.rs){
             toastr.success(data.msg);
@@ -509,7 +509,7 @@ function deletePackages(){
                 type: 'POST',
                 dataType: 'json',
                 data: data,
-                //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
             }).done(function (data) {
                 if (data.rs) {
                     toastr.success(data.msg);

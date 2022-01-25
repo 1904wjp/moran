@@ -115,7 +115,7 @@ function deleteArticleFuc() {
             type: 'POST',
             dataType: 'json',
             data: data,
-            //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
         }).done(function (data) {
             if (data.rs) {
                 toastr.success(data.msg);
@@ -152,7 +152,7 @@ function queryArticleFuc(id) {
            type: 'POST',
            dataType: 'json',
            data: data,
-           //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
        }).done(function (data) {
            if (data.rs){
                $("#article_id").val(data.data.id);

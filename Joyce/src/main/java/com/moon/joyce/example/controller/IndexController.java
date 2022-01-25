@@ -13,7 +13,6 @@ import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.UserService;
 import com.moon.joyce.example.service.serviceControllerDetails.UserServiceControllerDetailService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,10 +90,12 @@ public class IndexController extends BaseController {
      * @return
      */
     @RequestMapping("/main")
-    public String projectMainPage(){
+    public String mainPage(){
         User sessionUser = getSessionUser();
+        if (sessionUser.getStatus()==2){
+            return "main/main2";
+        }
         String filePathName = confPath + getSessionUser().getUsername() + "_config.xml";
-
         if (!sessionUser.getStatus().equals(Constant.APPLY_STATUS)){
             File file = new File(filePathName);
             if (!file.exists()){
@@ -105,7 +106,8 @@ public class IndexController extends BaseController {
             }
         }
         userService.saveOrUpdate(sessionUser);
-        return "common/public/main";}
+        return "main/main";}
+
     /**
      * 主页
      * @return

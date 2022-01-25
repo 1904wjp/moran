@@ -18,7 +18,7 @@ function loadBackGround() {
         url: '/example/source/getList',
         type: 'GET',
         dataType: 'json',
-        //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
     }).done(function (data) {
         var img =  Math.floor(Math.random()* (data.rows.length-1)) ;
         var Img = data.rows;
@@ -53,11 +53,11 @@ function loginFuc() {
             type: 'POST',
             dataType: 'json',
             data: data,
-            //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
         }).done(function (data) {
             loading(false);
             if (data.rs) {
-                toList("/main?type="+data.data);
+                toList("/main");
             }else {
                 tips(data.rs,data.msg);
             }
@@ -84,7 +84,7 @@ function registFuc() {
             type: 'POST',
             dataType: 'json',
             data: data,
-            //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
         }).done(function (data) {
             tips(data.rs,data.msg);
             if (data.rs) {

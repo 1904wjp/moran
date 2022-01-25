@@ -1,0 +1,140 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>主页</title>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/common/public/main.css}"/>
+<div class="log">
+    <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
+<link rel="stylesheet" th:href="@{/static/css/main/normalize.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/main/demo.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/main/layout-simple.css}"/>
+
+<div id="loading"></div>
+<div id="container" class="container">
+    <header class="intro">
+        <img class="intro__image" th:src="@{static/img/main/header03.jpg}" alt="Iceland galcier"/>
+        <div id="intro__content" class="intro__content">
+            <h1 class="intro__title">Joyce App</h1>
+            <div class="intro__subtitle">
+                <div class="intro__description">
+                    A gift for a big fool
+                    <!--<a href="http://instagram.com/danrubin/">Dan Rubin</a>.-->
+                    <div class="demos">
+                        <a class="demos__item demos__item--current" th:href="@{'/main'}">Simple</a>
+                        <a class="demos__item" href="layout-multi.html">Multi</a>
+                    </div>
+                </div>
+                <button class="trigger">
+                    <svg width="100%" height="100%" viewBox="0 0 60 60" preserveAspectRatio="none">
+                        <g class="icon icon--grid">
+                            <rect x="32.5" y="5.5" width="22" height="22"/>
+                            <rect x="4.5" y="5.5" width="22" height="22"/>
+                            <rect x="32.5" y="33.5" width="22" height="22"/>
+                            <rect x="4.5" y="33.5" width="22" height="22"/>
+                        </g>
+                        <g class="icon icon--cross">
+                            <line x1="4.5" y1="55.5" x2="54.953" y2="5.046"/>
+                            <line x1="54.953" y1="55.5" x2="4.5" y2="5.047"/>
+                        </g>
+                    </svg>
+                    <span>View content</span>
+                </button>
+            </div>
+        </div><!-- /intro__content -->
+    </header><!-- /intro -->
+    <section class="items-wrap">
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item01.jpg}" alt="item01"/>
+            <h2 class="item__title">Magnificence</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item02.jpg}" alt="item02"/>
+            <h2 class="item__title">Electrifying</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item03.jpg}" alt="item03"/>
+            <h2 class="item__title">Dynamic</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item04.jpg}" alt="item04"/>
+            <h2 class="item__title">Crucial</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item05.jpg}" alt="item05"/>
+            <h2 class="item__title">Awe-inspiring</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item06.jpg}" alt="item06"/>
+            <h2 class="item__title">Serene</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item07.jpg}" alt="item07"/>
+            <h2 class="item__title">Vulnerable</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item08.jpg}" alt="item08"/>
+            <h2 class="item__title">Bountiful</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item09.jpg}" alt="item09"/>
+            <h2 class="item__title">Endangered</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item10.jpg}" alt="item10"/>
+            <h2 class="item__title">Beautiful</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item11.jpg}" alt="item11"/>
+            <h2 class="item__title">Inspiring</h2>
+        </a>
+        <a href="#" class="item">
+            <img class="item__image" th:src="@{/static/img/main/item12.jpg}" alt="item12"/>
+            <h2 class="item__title">Refreshing</h2>
+        </a>
+    </section>
+    <input class="title" type="hidden" value="index"/>
+</div><!-- /container -->
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<input class="title" type="hidden" value="index"/>
+<script type="text/javascript" th:src="@{/static/js/main/html5.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/main/classie.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/main/modernizr.custom.js}"></script>
+<script>
+    (function () {
+        var container = document.getElementById('container'),
+            trigger = container.querySelector('button.trigger');
+
+        function toggleContent() {
+            if (classie.has(container, 'container--open')) {
+                classie.remove(container, 'container--open');
+                classie.remove(trigger, 'trigger--active');
+                window.addEventListener('scroll', noscroll);
+            } else {
+                classie.add(container, 'container--open');
+                classie.add(trigger, 'trigger--active');
+                window.removeEventListener('scroll', noscroll);
+            }
+        }
+
+        function noscroll() {
+            window.scrollTo(0, 0);
+        }
+
+        // reset scrolling position
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+
+        // disable scrolling
+        window.addEventListener('scroll', noscroll);
+
+        trigger.addEventListener('click', toggleContent);
+
+        // For Demo purposes only (prevent jump on click)
+        [].slice.call(document.querySelectorAll('.items-wrap a')).forEach(function (el) {
+            el.onclick = function () {
+                return false;
+            }
+        });
+    })();
+</script>
+</body>
+</html>

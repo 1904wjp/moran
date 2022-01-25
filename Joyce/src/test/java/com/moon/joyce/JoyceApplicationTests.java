@@ -4,10 +4,7 @@ package com.moon.joyce;
 
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.StringsUtils;
-import com.moon.joyce.dataSource.DynamicDataSource;
-import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.Column;
-import com.moon.joyce.example.functionality.entity.DataSource;
 import com.moon.joyce.example.entity.DbBaseSetting;
 import com.moon.joyce.example.functionality.service.ColumnsService;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
@@ -18,14 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.File;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JoyceApplication.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class JoyceApplicationTests {
-    @Autowired
-    private UserService userService;
     @Autowired DbBaseSettingService dbBaseSettingService;
     @Autowired
     private ColumnsService columnsService;
@@ -36,7 +30,6 @@ public class JoyceApplicationTests {
         dbBaseSetting.setUserId(1l);
         DbBaseSetting db = dbBaseSettingService.getDbBaseSetting(dbBaseSetting);
         boolean b = dbBaseSettingService.switchDataSource(db, Constant.CREATE_DATASOURCE);
-        System.out.println("res:"+b);
         List<Column> columns = columnsService.selectAllTables("sc_cloud");
         List<Column> columns1 = columnsService.selectAllTables("sc_device");
         List<Column> columns2 = columnsService.selectAllTables("sc_govern");
@@ -70,6 +63,5 @@ public class JoyceApplicationTests {
         }
 
     }
-
 
 }

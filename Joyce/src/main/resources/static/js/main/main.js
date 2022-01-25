@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
     stopFuc();
     enterFuc();
 });
@@ -99,7 +98,7 @@ function createStructImageFuc(){
          url: '/doMain',
          type: 'POST',
          dataType: 'json',
-         //传过来的data需要.data才可以获取当前对象。因为data是封装过的
+
      }).done(function (data) {
          if (data.rs){
              img.attr('src',data.data);
