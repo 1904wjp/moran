@@ -44,10 +44,9 @@ function enterFuc(){
 
 
 function optionCmdFuc(startIndex,data){
-    console.log("params:"+$('.stop').val());
     for (let i = startIndex; i < data.length; i++) {
         if (notBlank($("#in").val())){
-            $("ul").append("<li class='cmd_li'>"+$("#in").val()+"</li>"); //将输入的输出到界面
+            $(".cmd").append("<li class='cmd_li'>"+$("#in").val()+"</li>"); //将输入的输出到界面
         }
         $("#in").val("");
         if (data[i]!="########********###"){
@@ -55,7 +54,16 @@ function optionCmdFuc(startIndex,data){
                 setTimeout(function () {
                     if ($('.stop').val()==2){
                         //获取返回值并输出
-                        $("ul").append("<li class='cmd_li'>"+data[i]+"</li>");
+                        $(".cmd").append("<li class='cmd_li'>"+data[i]+"</li>");
+                        if (i==data.length-1){
+                            $.ajax({
+                                type: "POST",
+                                url: "/changeStatus",
+                                data: data,
+                                success: function(data){
+                                }
+                            });
+                        }
                     }else if ($('.stop').val()==1){
                         $('.stop').val(2);
                     }else if($('.stop').val()==0){
@@ -72,9 +80,7 @@ function optionCmdFuc(startIndex,data){
         }else {
             $('.cmd_li').remove();
         }
-        if (i==data.length-1){
 
-        }
     }
     $("#in").val(""); //清空输入框
     $("#text").scrollTop($("#text").scrollTop()+32);//滚动条拉到最下面，显示出输入框

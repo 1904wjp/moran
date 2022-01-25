@@ -50,10 +50,11 @@ public class ResultUtils implements Serializable {
      */
     public static Result dataResult(boolean rs,Integer code){
         if (rs){
-            return success(code);
+            return success();
         }
         return error(code);
     }
+
     /**
      * 返回结果
      * @param rs
@@ -61,7 +62,7 @@ public class ResultUtils implements Serializable {
      */
     public static Result dataResult(boolean rs,Integer code,String msg){
         if (rs){
-            return success(code,msg);
+            return success(msg);
         }
         return error(code,msg);
     }
@@ -72,9 +73,42 @@ public class ResultUtils implements Serializable {
      */
     public static Result dataResult(boolean rs,Integer code,String msg,Object data){
         if (rs){
-            return success(code,msg,data);
+            return success(msg,data);
         }
         return error(code,msg,false);
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs,String errorMsg,String successMsg){
+        if (rs){
+            return success(successMsg);
+        }
+        return error(errorMsg);
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs,String errorMsg,String successMsg,Object data){
+        if (rs){
+            return success(successMsg,data);
+        }
+        return error(errorMsg);
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs,Integer code,String errorMsg,String successMsg,Object data){
+        if (rs){
+            return success(successMsg,data);
+        }
+        return error(code,errorMsg,false);
     }
     /**
      * 成功的方法

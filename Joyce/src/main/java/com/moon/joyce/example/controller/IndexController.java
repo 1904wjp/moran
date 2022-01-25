@@ -229,8 +229,8 @@ public class IndexController extends BaseController {
     public Result changeStatus(){
         User sessionUser = getSessionUser();
         sessionUser.setStatus(2);
-        userService.saveOrUpdate(sessionUser);
-        return ResultUtils.error(Constant.NULL_CODE);
+        boolean rs = userService.saveOrUpdate(sessionUser);
+        return ResultUtils.dataResult(rs,"Joyce初始化失败","Joyce初始化成功");
     }
 
 }
