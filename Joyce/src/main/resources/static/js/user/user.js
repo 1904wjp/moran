@@ -401,6 +401,9 @@ function updateUserFuc() {
 //退出登录
 function rmUser() {
     Ewin.confirm({message: "确认要退出吗？"}).on(function (e) {
+        if (!e) {
+            return;
+        }
         $.ajax({
             url: '/example/user/toRemoveUser',
             type: 'GET',

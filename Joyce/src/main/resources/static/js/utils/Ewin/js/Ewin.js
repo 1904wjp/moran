@@ -1,7 +1,7 @@
 (function ($) {
 
     window.Ewin = function () {
-        var html = '<div id="[Id]" class="modal fade" role="dialog" aria-labelledby="modalLabel">' +
+        var html = '<div id="[Id]" class="modal fade" role="dialog" aria-labelledby="modalLabel" style="margin-top: 5%">' +
             '<div class="modal-dialog modal-sm">' +
             '<div class="modal-content">' +
             '<div class="modal-header">' +
@@ -9,7 +9,7 @@
             '<h4 class="modal-title" id="modalLabel">[Title]</h4>' +
             '</div>' +
             '<div class="modal-body">' +
-            '<p>[Message]</p>' +
+            '<p style="color: #0a0a0a">[Message]</p>' +
             '</div>' +
             '<div class="modal-footer">' +
             '<button type="button" class="btn btn-default cancel" data-dismiss="modal">[BtnCancel]</button>' +
