@@ -82,13 +82,13 @@ function saveArticleFuc() {
             }).done(function (data) {
                 if (data.rs) {
                     $('#add_article_info').modal('hide');
-                   tpis(rs,data.msg)
+                   tips(rs,data.msg)
                     toList("/example/uedit/uEditorListPage");
                 } else {
-                    tpis(data.rs,data.msg)
+                    tips(data.rs,data.msg)
                 }
             }).fail(function () {
-                tpis(false,data.msg)
+                tips(false,data.msg)
             });
         });
     }
@@ -118,13 +118,13 @@ function deleteArticleFuc() {
 
         }).done(function (data) {
             if (data.rs) {
-               tpis(rs,data.msg)
+               tips(rs,data.msg)
                 articleSearch();
             } else {
-                tpis(data.rs,data.msg)
+                tips(data.rs,data.msg)
             }
         }).fail(function () {
-            tpis(false,data.msg)
+            tips(false,data.msg)
         });
     });
 }

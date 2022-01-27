@@ -120,6 +120,7 @@ function sendInfo(){
         dataType: 'json',
         data:data,
     }).done(function (data) {
+        console.log(JSON.stringify(data.data))
         let html =
             '<div class="close">' +
             '<div class="cy"></div>' +

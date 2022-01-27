@@ -422,12 +422,12 @@ function inputColumns() {
                 loading(false);
                 if (data.rs) {
                     $('#download').show();
-                   tpis(rs,data.msg)
+                   tips(rs,data.msg)
                 }else {
-                    tpis(data.rs,data.msg)
+                    tips(data.rs,data.msg)
                 }
             }).fail(function () {
-                tpis(false,data.msg)
+                tips(false,data.msg)
             });
         });
     }

@@ -25,9 +25,9 @@ function getTablesByDatabaseName(){
                     $('#tableName').append("<option value=\""+data.data[i].tableName+"\">"+data.data[i].tableName+"("+data.data[i].tableComment+")"+"</option>");
                   }
             }else {
-                tpis(data.rs,data.msg)
+                tips(data.rs,data.msg)
             };
         }).fail(function (){
-            tpis(false,data.msg)
+            tips(false,data.msg)
         });
 }

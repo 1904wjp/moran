@@ -12,8 +12,8 @@ function indexLoadBackGround(){
         url: '/example/sysMenu/getIndexVideo',
         type: 'GET',
         dataType: 'json',
-
     }).done(function (data) {
+        console.log("sss:"+JSON.stringify(data.data));
         if (data.rs){
           appendVideo($("#index_video"),"index_v",data.data.menuUrl);
         }else {

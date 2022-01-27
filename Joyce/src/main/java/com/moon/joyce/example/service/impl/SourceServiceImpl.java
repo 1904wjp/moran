@@ -56,21 +56,5 @@ public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> impleme
         return baseMapper.selectOne(wrapper);
     }
 
-    @Override
-    public int setMain(Source source) {
-        QueryWrapper<Source> wrapper = new QueryWrapper<>();
-        wrapper.eq("type",source.getType());
-        wrapper.eq("apply_status",Constant.APPLY_STATUS);
-        wrapper.eq("delete_flag", Constant.UNDELETE_STATUS);
-        Source dbSource = baseMapper.selectOne(wrapper);
-        if (Objects.nonNull(dbSource)){
-            UpdateWrapper<Source> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("id",dbSource.getId());
-            updateWrapper.set("apply_status",Constant.SPARE_STATUS);
-        }
-        UpdateWrapper<Source> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id",source.getId());
-        updateWrapper.set("apply_status",Constant.APPLY_STATUS);
-        return baseMapper.update(source,updateWrapper);
-    }
+
 }

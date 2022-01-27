@@ -197,7 +197,6 @@ public class IndexController extends BaseController {
         Source dbSource = sourceService.getOne(source);
         source.setApplyStatus(Constant.SPARE_STATUS);
         List<Source> list = sourceService.getList(source);
-        HashMap<Source, List<Source>> map = new HashMap<>();
         if (Objects.nonNull(dbSource)&&!list.isEmpty()){
             MainSource mainSource = new MainSource(1l,dbSource, list);
             return ResultUtils.dataResult(true,mainSource);
@@ -219,7 +218,7 @@ public class IndexController extends BaseController {
         list.add(form);
         list.add(vx);
         list.add(zfb);
-        return ResultUtils.dataResult(!list.isEmpty(),Constant.NULL_CODE);
+        return ResultUtils.dataResult(!list.isEmpty(),Constant.NULL_CODE,list);
     }
 
     /**

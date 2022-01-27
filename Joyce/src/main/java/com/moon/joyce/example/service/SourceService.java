@@ -36,9 +36,5 @@ public interface SourceService extends IService<Source> {
      */
     Source getOne(Source source);
 
-    /**
-     * 更换应用资源
-     * @param source
-     */
-    int setMain(Source source);
+
 }

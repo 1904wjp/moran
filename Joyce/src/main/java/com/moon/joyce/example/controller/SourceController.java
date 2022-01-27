@@ -66,6 +66,13 @@ public class SourceController extends BaseController {
     @ResponseBody
     @PostMapping("/saveSource")
     public Result addSource(Source source){
+        Source source1 = new Source();
+        source1.setSourceName(source.getSourceName());
+        source1.setUserId(getSessionUserId());
+        Source one = sourceService.getOne(source1);
+        if (Objects.nonNull(one)){
+            return ResultUtils.error("资源名已存在，请修改资源名重新上传");
+        }
         if (Objects.isNull(source.getId())){
             source.setCreateBy(getSessionUser().getUsername());
             source.setUserId(getSessionUser().getId());
@@ -92,9 +99,21 @@ public class SourceController extends BaseController {
             return ResultUtils.error(Constant.NULL_CODE);
         }
         source.setUpdateBy(getSessionUser().getUsername());
-        source.setUserId(getSessionUser().getId());
         source.setUpdateTime(new Date());
-        int rs = sourceService.setMain(source);
+        Source source1 = new Source();
+        source1.setDeleteFlag(Constant.UNDELETE_STATUS);
+        source1.setApplyStatus(Constant.APPLY_STATUS);
+        source1.setUserId(getSessionUserId());
+        Source one = sourceService.getOne(source1);
+        one.setApplyStatus(Constant.SPARE_STATUS);
+        if (Objects.nonNull(one)){
+            boolean rs = sourceService.saveOrUpdate(one);
+            if (!rs){
+                return ResultUtils.error("修改失败");
+            }
+        }
+        source.setApplyStatus(Constant.APPLY_STATUS);
+        boolean rs = sourceService.saveOrUpdate(source);
         return ResultUtils.dataResult(rs,"修改失败","修改成功",source);
     }
 

@@ -433,7 +433,11 @@ public class UserController extends BaseController {
     @RequestMapping("/doQueryUser")
     public Result updateUser(@RequestParam Long id){
         User dbUser = userService.getById(id);
-        return userServiceControllerDetailService.checkStatusData(dbUser);
+        Result result = userServiceControllerDetailService.checkStatusData(dbUser);
+        if (!result.getRs()){
+            return result;
+        }
+        return ResultUtils.success(dbUser);
     }
 
     /**
