@@ -100,10 +100,7 @@ public class DayTaskController extends BaseController {
            }
         }
         boolean update = dayTaskService.saveOrUpdate(dayTask);
-        if (update){
-            return ResultUtils.success();
-        }
-        return ResultUtils.error();
+        return ResultUtils.dataResult(update);
     }
 
     /**
@@ -115,10 +112,7 @@ public class DayTaskController extends BaseController {
     @GetMapping("/getTasks")
     public Result getTasks(@RequestParam Long id){
         DayTask dayTask = dayTaskService.getById(id);
-        if (Objects.isNull(dayTask)){
-            return ResultUtils.error(Constant.NULL_CODE);
-        }
-        return ResultUtils.success(dayTask);
+        return ResultUtils.success(Objects.isNull(dayTask),Constant.NULL_CODE);
     }
 
     /**
@@ -130,9 +124,7 @@ public class DayTaskController extends BaseController {
         DayTask dayTask = dayTaskService.getLastData(getSessionUser().getId());
         if (Objects.nonNull(dayTask)){
             boolean rs = DateUtils.dateCompare(new Date(), dayTask.getEndTimes(), 0l, "yyyy-MM-dd");
-            if (rs){
-                return ResultUtils.success(dayTask);
-            }
+            return ResultUtils.dataResult(rs,dayTask);
         }
         return ResultUtils.error();
     }
@@ -157,14 +149,17 @@ public class DayTaskController extends BaseController {
         Map<String, List<DayTask>> map = list.stream().collect(Collectors.groupingBy(DayTask::getNickname));
          dayTaskService.exportTableByManySheet(map,response);
     }
+
+    /**
+     * 导入表格
+     * @param path
+     * @return
+     */
     @ResponseBody
     @PostMapping("/importExcel")
     public Result importExcel(@RequestParam String path){
         String str = dayTaskService.importDayTaskData(path);
-        if (Objects.isNull(str)){
-            return ResultUtils.success();
-        }
-        return ResultUtils.error(Constant.ERROR_CODE,"操作失败",str);
+        return ResultUtils.dataResult(Objects.isNull(str),Constant.ERROR_CODE,"操作失败","操作成功",str);
     }
 }
 

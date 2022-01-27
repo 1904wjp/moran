@@ -2,6 +2,7 @@ package com.moon.joyce.example.controller;
 
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
+import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.ResultUtils;
 import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.entity.vo.PageVo;
@@ -75,12 +76,29 @@ public class SourceController extends BaseController {
             source.setUserId(getSessionUser().getId());
             source.setUpdateTime(new Date());
         }
-        boolean update = sourceService.saveOrUpdate(source);
-        if (update){
-            return ResultUtils.success();
-        }
-        return ResultUtils.error();
+        boolean rs = sourceService.saveOrUpdate(source);
+        return ResultUtils.dataResult(rs);
     }
+
+    /**
+     * 保存资源
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/setMainSource")
+    public Result addSource(@RequestParam("id") Long id){
+        Source source = sourceService.getById(id);
+        if (Objects.isNull(source)){
+            return ResultUtils.error(Constant.NULL_CODE);
+        }
+        source.setUpdateBy(getSessionUser().getUsername());
+        source.setUserId(getSessionUser().getId());
+        source.setUpdateTime(new Date());
+        int rs = sourceService.setMain(source);
+        return ResultUtils.dataResult(rs,"修改失败","修改成功",source);
+    }
+
+
 
     /**
      * 上传资源

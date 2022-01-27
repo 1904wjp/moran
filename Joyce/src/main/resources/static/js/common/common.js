@@ -422,12 +422,12 @@ function inputColumns() {
                 loading(false);
                 if (data.rs) {
                     $('#download').show();
-                    toastr.success(data.msg);
+                   tpis(rs,data.msg)
                 }else {
-                    toastr.error(data.msg);
+                    tpis(data.rs,data.msg)
                 }
             }).fail(function () {
-                toastr.error(ajaxFailMsg);
+                tpis(false,data.msg)
             });
         });
     }

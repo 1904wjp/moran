@@ -85,10 +85,7 @@ public class ProjectController extends BaseController {
              project.setUpdateTime(new Date());
         }
         boolean result = projectService.saveOrUpdate(project);
-        if (result){
-            return ResultUtils.success();
-        }
-        return ResultUtils.error();
+        return ResultUtils.dataResult(result);
     }
     /**
      * 获取项目信息
@@ -102,7 +99,7 @@ public class ProjectController extends BaseController {
         if (Objects.isNull(project)){
             return ResultUtils.error(Constant.NULL_CODE);
         }
-        return ResultUtils.success(project);
+        return ResultUtils.dataResult(Objects.isNull(project),Constant.NULL_CODE,project);
     }
     /**
      * 删除项目信息
@@ -111,14 +108,11 @@ public class ProjectController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/delProjects")
-    public Result delProjects(@RequestParam String ids){
+    public Result delProjects(@RequestParam String ids) {
         List<String> list = StringsUtils.StrToList(ids);
         boolean result = projectService.removeByIds(list);
-        if (result){
-            return ResultUtils.success("删除成功");
-        }
-        return ResultUtils.error("删除失败");
-        }
+        return ResultUtils.dataResult(result, "删除失败", "删除成功");
+    }
 
 }
 

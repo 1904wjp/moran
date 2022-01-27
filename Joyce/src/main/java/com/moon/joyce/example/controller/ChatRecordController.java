@@ -36,7 +36,8 @@ public class ChatRecordController extends BaseController {
         ChatRecord chatRecord = new ChatRecord();
         chatRecord.setUserBId(userBId);
         chatRecord.setUserAId(getSessionUser().getId());
-        return ResultUtils.success(chatRecordService.getAll(chatRecord));
+        List<ChatRecord> list = chatRecordService.getAll(chatRecord);
+        return ResultUtils.dataResult(!list.isEmpty(),list);
     }
 }
 

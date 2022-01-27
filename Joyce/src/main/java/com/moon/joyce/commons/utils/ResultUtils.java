@@ -22,15 +22,117 @@ public class ResultUtils implements Serializable {
 
     /**
      * 返回结果
-     * @param rs
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi){
+        if (rsi!=0){
+            return ResultUtils.success();
+        }
+        return ResultUtils.error();
+    }
+
+    /**
+     * 返回结果
+     * @param rsi
      * @param data
      * @return
      */
-    public static Result dataResult(boolean rs,Object data){
-       if (rs){
-           return success(data);
+    public static Result dataResult(int rsi,Object data){
+       if (rsi!=0){
+           return ResultUtils.success(data);
        }
-        return error();
+        return ResultUtils.error();
+    }
+
+
+    /**
+     * 返回结果
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi,Integer code){
+        if (rsi!=0){
+            return success();
+        }
+        return error(code);
+    }
+    /**
+     * 返回结果
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi,String msg){
+        if (rsi!=0){
+            return success(msg);
+        }
+        return error(msg);
+    }
+    /**
+     * 返回结果
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi,Integer code,String msg){
+        if (rsi!=0){
+            return success(msg);
+        }
+        return error(code,msg);
+    }
+    /**
+     * 返回结果
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi,Integer code,Object data){
+        if (rsi!=0){
+            return success(data);
+        }
+        return error(code);
+    }
+    /**
+     * 返回结果
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi,Integer code,String msg,Object data){
+        if (rsi!=0){
+            return success(msg,data);
+        }
+        return error(code,msg,false);
+    }
+    /**
+     * 返回结果
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi,String errorMsg,String successMsg){
+        if (rsi!=0){
+            return success(successMsg);
+        }
+        return error(errorMsg);
+    }
+    /**
+     * 返回结果
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi,String errorMsg,String successMsg,Object data){
+        if (rsi!=0){
+            return success(successMsg,data);
+        }
+        return error(errorMsg);
+    }
+    /**
+     * 返回结果
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi,Integer code,String errorMsg,String successMsg,Object data){
+        if (rsi!=0){
+            return success(successMsg,data);
+        }
+        return error(code,errorMsg,false);
     }
     /**
      * 返回结果
@@ -46,6 +148,19 @@ public class ResultUtils implements Serializable {
     /**
      * 返回结果
      * @param rs
+     * @param data
+     * @return
+     */
+    public static Result dataResult(boolean rs,Object data){
+       if (rs){
+           return success(data);
+       }
+        return error();
+    }
+
+    /**
+     * 返回结果
+     * @param rs
      * @return
      */
     public static Result dataResult(boolean rs,Integer code){
@@ -54,7 +169,17 @@ public class ResultUtils implements Serializable {
         }
         return error(code);
     }
-
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs,String msg){
+        if (rs){
+            return success(msg);
+        }
+        return error(msg);
+    }
     /**
      * 返回结果
      * @param rs
@@ -65,6 +190,17 @@ public class ResultUtils implements Serializable {
             return success(msg);
         }
         return error(code,msg);
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs,Integer code,Object data){
+        if (rs){
+            return success(data);
+        }
+        return error(code);
     }
     /**
      * 返回结果

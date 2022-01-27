@@ -103,9 +103,7 @@ public class ColumnsController extends BaseController {
             setSession(getSessionUser().getUsername() + "webFile", map);
             logger.info("创建：" + columns1.get(0).getTableName());
             shutdownDatasource();
-
         }
-
         return ResultUtils.success();
     }
 
@@ -128,7 +126,6 @@ public class ColumnsController extends BaseController {
             for (Map.Entry<String, String> entry : webFile.entrySet()) {
                 FileUtils.doCompress(path + entry.getValue(), out);
                 response.flushBuffer();
-                System.out.println("下载执行:" + entry.getValue());
                 /*fileService.downloadFile(response,request,entry.getKey(),entry.getValue());*/
             }
             removeSessionValue(getSessionUser().getUsername() + "webFile");

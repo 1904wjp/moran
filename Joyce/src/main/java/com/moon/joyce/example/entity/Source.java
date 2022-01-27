@@ -45,4 +45,14 @@ public class Source  extends Page {
      */
     @TableField(exist = false)
     private String username;
+    /**
+     * 应用状态【0:普通页面1:主页 2:主页选项】
+     */
+    @TableField("apply_status")
+    private Integer applyStatus;
+    /**
+     * 标题注释
+     */
+    @TableField("desc_content")
+    private String descContent;
 }

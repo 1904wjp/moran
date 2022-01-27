@@ -6,16 +6,13 @@ import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
 import com.moon.joyce.example.entity.ChatRecord;
-import com.moon.joyce.example.entity.DbBaseSetting;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.entity.vo.UserChartVo;
-import com.moon.joyce.example.functionality.entity.DataSource;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.entity.VerifyCode;
 import com.moon.joyce.example.functionality.server.WebSocket;
-import com.moon.joyce.example.functionality.service.DataSourceService;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.ChatRecordService;
 import com.moon.joyce.example.service.UserService;
@@ -23,7 +20,6 @@ import com.moon.joyce.example.service.serviceControllerDetails.UserServiceContro
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Joyce
@@ -76,11 +71,6 @@ public class UserController extends BaseController {
     @Autowired
     private UserServiceControllerDetailService userServiceControllerDetailService;
 
-    /**
-     * 聊天服务
-     */
-    @Autowired
-    private WebSocket webSocket;
 
     /*****************************************************************************************************************************************************************/
     /***********页面映射****************/
@@ -264,7 +254,7 @@ public class UserController extends BaseController {
             if (!checkRegistResult.getRs()){
                 return checkRegistResult;
             }
-            user.setStatus(0);
+            user.setStatus(Constant.UNDELETE_STATUS);
             user.setStatus(Constant.USER_TYPE_VAILD_STATUS);
             user.setDeleteFlag(Constant.UNDELETE_STATUS);
             //发送邮件
@@ -275,8 +265,7 @@ public class UserController extends BaseController {
         }
         //结果处理
         if (result){
-            User sessionUser = getSessionUser();
-            if (null!=sessionUser){
+            if (null!=getSessionUser()){
                removeSessionUser();
             }
             setSession(Constant.SESSION_USER,user);
@@ -388,10 +377,7 @@ public class UserController extends BaseController {
             return ResultUtils.error(getSessionUser().getUsername()+"正在使用，无法操作");
         }
         boolean del = userService.removeByIds(list);
-        if (del){
-            return ResultUtils.success();
-        }
-        return ResultUtils.error(Constant.ERROR_CODE);
+        return ResultUtils.dataResult(del,Constant.ERROR_CODE);
     }
 
     /**
@@ -414,10 +400,7 @@ public class UserController extends BaseController {
         }
         dbUser.setStatus(Constant.USER_TYPE_FROZEN_STATUS);
         boolean update = userService.updateById(dbUser);
-        if (update){
-            return ResultUtils.success();
-        }
-        return ResultUtils.error(Constant.ERROR_CODE);
+        return ResultUtils.dataResult(update,Constant.ERROR_CODE);
     }
 
     /**
@@ -437,10 +420,7 @@ public class UserController extends BaseController {
         }
         dbUser.setStatus(Constant.USER_TYPE_VAILD_STATUS);
         boolean update = userService.updateById(dbUser);
-        if (update){
-            return ResultUtils.success();
-        }
-        return ResultUtils.error(Constant.ERROR_CODE);
+        return ResultUtils.dataResult(update,Constant.ERROR_CODE);
     }
 
     /**
@@ -545,9 +525,7 @@ public class UserController extends BaseController {
             getSession().removeAttribute(Constant.SESSION_VERIFY_CODE+dbUser);
             dbUser.setPassword(newPassword);
             boolean result = userService.updateById(dbUser);
-            if (result) {
-                return ResultUtils.success();
-            }
+            return ResultUtils.dataResult(result);
         }
         return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);
     }

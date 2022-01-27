@@ -68,11 +68,7 @@ public class UUController extends BaseController {
         if (isAgree){
             dbUu.setType("1");
             boolean result = uuService.updateById(dbUu);
-            if (result){
-                return ResultUtils.success("已为您添加为好友");
-            }else {
-                return ResultUtils.error();
-            }
+            return ResultUtils.dataResult(result,"异常失败","对方已是您的好友");
         }
         return ResultUtils.error("已拒绝");
     }

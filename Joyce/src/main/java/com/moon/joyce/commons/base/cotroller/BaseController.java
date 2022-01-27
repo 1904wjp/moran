@@ -62,6 +62,21 @@ public class BaseController {
     public User getSessionUser(){
         return  (User) getSession().getAttribute(Constant.SESSION_USER);
     }
+    /**
+     * 获取在线用户id
+     * @return
+     */
+    public String getSessionUserName(){
+        return  ((User) getSession().getAttribute(Constant.SESSION_USER)).getUsername();
+    }
+
+    /**
+     * 获取在线用户id
+     * @return
+     */
+    public Long getSessionUserId(){
+        return  ((User) getSession().getAttribute(Constant.SESSION_USER)).getId();
+    }
 
     /**
      * 获取会话数据

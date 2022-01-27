@@ -28,4 +28,17 @@ public interface SourceService extends IService<Source> {
      * @return
      */
     int getCount(Source source);
+
+    /**
+     * 查询单个资源
+     * @param source
+     * @return
+     */
+    Source getOne(Source source);
+
+    /**
+     * 更换应用资源
+     * @param source
+     */
+    int setMain(Source source);
 }

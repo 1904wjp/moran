@@ -112,10 +112,7 @@ public class DataSourceController extends BaseController {
     @RequestMapping("/getDb")
     public Result getDbBaseSetting(@RequestParam(value = "id") Long id) {
         DbBaseSetting dbBaseSetting = dbBaseSettingService.getById(id);
-        if (Objects.nonNull(dbBaseSetting)){
-            return ResultUtils.success(true,dbBaseSetting);
-        }
-        return ResultUtils.error(Constant.NULL_CODE);
+        return ResultUtils.dataResult(Objects.nonNull(dbBaseSetting),Constant.NULL_CODE,dbBaseSetting);
     }
 
     /**
@@ -135,11 +132,7 @@ public class DataSourceController extends BaseController {
             }
         }
         boolean del = dbBaseSettingService.removeByIds(list);
-        if (del){
-            return ResultUtils.success();
-        }
-
-        return ResultUtils.error();
+        return ResultUtils.dataResult(del);
     }
 
     /**
@@ -201,10 +194,7 @@ public class DataSourceController extends BaseController {
             aPackageInfo.setUpdateBy(getSessionUser().getUsername());
         }
         boolean saveOrUpdate = packageInfoService.saveOrUpdate(aPackageInfo);
-        if (saveOrUpdate) {
-            return ResultUtils.success("数据包保存成功");
-        }
-        return ResultUtils.error("数据包保存失败");
+        return ResultUtils.dataResult(saveOrUpdate,"数据包保存失败","数据包保存成功");
     }
 
     /**
@@ -227,10 +217,7 @@ public class DataSourceController extends BaseController {
                 }
             }
         boolean del = packageInfoService.removeByIds(list);
-        if (del) {
-            return ResultUtils.success("数据包删除成功");
-        }
-        return ResultUtils.error("数据包删除失败");
+        return ResultUtils.dataResult(del,"数据包删除失败","数据包删除成功");
     }
 
     /**
@@ -242,10 +229,7 @@ public class DataSourceController extends BaseController {
     @RequestMapping("/getPg")
     public Result getPg(@RequestParam(value = "id") Long id) {
         PackageInfo packageInfo = packageInfoService.getById(id);
-        if (Objects.nonNull(packageInfo)){
-            return ResultUtils.success(packageInfo);
-        }
-        return ResultUtils.error(Constant.NULL_CODE);
+        return ResultUtils.dataResult(Objects.nonNull(packageInfo),Constant.NULL_CODE,packageInfo);
     }
 
     /**

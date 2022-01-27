@@ -92,13 +92,13 @@ function deleteIdFuc(id) {
             
         }).done(function (data) {
             if (data.rs) {
-                toastr.success(data.msg);
+               tpis(rs,data.msg)
                 toList('/example/user/userList');
             }else {
-                toastr.error(data.msg);
+                tpis(data.rs,data.msg)
             }
         }).fail(function () {
-            toastr.error(ajaxFailMsg);
+            tpis(false,data.msg)
         });
     });
 }
@@ -124,7 +124,7 @@ function freezeUserFuc(id) {
                 toastr.error(data.msg)
             }
         }).fail(function () {
-            toastr.error(ajaxFailMsg);
+            tpis(false,data.msg)
         });
     });    
 }
@@ -143,13 +143,13 @@ function recoverUserFuc(id) {
             data: data,
         }).done(function (data) {
             if (data.rs) {
-                toastr.success(data.msg);
+               tpis(rs,data.msg)
                 toList('/example/user/userList');
             }else {
                 toastr.error(data.msg)
             }
         }).fail(function () {
-            toastr.error(ajaxFailMsg);
+            tpis(false,data.msg)
         });
     });    
 }
@@ -179,7 +179,7 @@ function deleteIdsFuc() {
                     toastr.error(data.msg)
                 }
             }).fail(function () {
-            toastr.error(ajaxFailMsg);
+            tpis(false,data.msg)
 
             });
         });
@@ -202,7 +202,7 @@ function editUserFuc(id) {
                 toList('/example/user/editUser/' + id);
             }
         }).fail(function () {
-            toastr.error(ajaxFailMsg);
+            tpis(false,data.msg)
         });
 }
 
@@ -222,7 +222,7 @@ function queryUserFuc(id) {
             toList('/example/user/queryUser/' + id);
         }
     }).fail(function () {
-            toastr.error(ajaxFailMsg);
+            tpis(false,data.msg)
 
     });
 }
@@ -297,7 +297,7 @@ function forget_password_update_verifyFuc() {
                     toList("/example/user/login");
                 }
             }).fail(function () {
-                toastr.error(ajaxFailMsg);
+                tpis(false,data.msg)
             });
         });
     }
@@ -330,11 +330,11 @@ function password_update_verify() {
                 tips(data.rs,data.msg);
                 if (data.rs) {
                     $("#updatePasswordModal").modal('hide');
-                    toastr.success(data.msg);
+                   tpis(rs,data.msg)
                     toList("/example/user/login");
                 }
             }).fail(function () {
-                toastr.error(ajaxFailMsg);
+                tpis(false,data.msg)
             });
         });
     }
@@ -392,7 +392,7 @@ function updateUserFuc() {
                     toMain();
                 }
             }).fail(function () {
-                toastr.error(ajaxFailMsg);
+                tpis(false,data.msg)
             });
         });
     }

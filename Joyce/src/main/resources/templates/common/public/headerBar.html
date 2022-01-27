@@ -6,7 +6,7 @@
 
 <div th:fragment="bar" xmlns="http://www.w3.org/1999/html">
     <input class="main_type" type="hidden" th:value="${session.session_user.status}"/>
-    <div id="app_bar" class="navbar navbar-default" style="" role="navigation">
+    <div id="app_bar" class="navbar navbar-default" style="z-index: 9999999999!important;" role="navigation">
         <div class="navbar-header">
            <a href="##" class="navbar-brand">Joyce</a>
         </div>
@@ -16,7 +16,7 @@
             <input id="session_user_id" type="hidden" th:value="${session.session_user.id}">
           <span><img id="user_img" th:src="${session.session_user.fileUrl}" class="img-circle" onclick="dropdownBlock()"></span>
             <span style="margin: 100%;line-height: 0%" th:text="${session.session_user.username}"></span>
-        <span><ul class="list-group" style="display: none; margin-right: 7%">
+        <span><ul class="list-group" style="display: none; margin-right: 7%;">
               <li> <a href="javascript:void(0)" data-toggle="modal" data-target="#queryModel"
                       th:onclick="'queryUserFuc('+${session.session_user.id}+')'"> 详细信息</a> </li>
               <li> <a href="javascript:void(0)" data-toggle="modal" data-target="#editModal"

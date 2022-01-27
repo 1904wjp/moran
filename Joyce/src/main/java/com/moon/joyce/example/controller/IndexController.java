@@ -5,11 +5,13 @@ import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.PageComponent;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.FileService;
+import com.moon.joyce.example.service.SourceService;
 import com.moon.joyce.example.service.UserService;
 import com.moon.joyce.example.service.serviceControllerDetails.UserServiceControllerDetailService;
 import org.apache.commons.lang3.StringUtils;
@@ -36,6 +38,8 @@ public class IndexController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${file.config.path}")
     private String confPath;
+    @Autowired
+    private SourceService sourceService;
     @Autowired
     private FileService fileService;
     @Autowired
@@ -92,7 +96,7 @@ public class IndexController extends BaseController {
     @RequestMapping("/main")
     public String mainPage(){
         User sessionUser = getSessionUser();
-        if (sessionUser.getStatus()==2){
+        if (sessionUser.getStatus().equals(Constant.START_STATUS)){
             return "main/main2";
         }
         String filePathName = confPath + getSessionUser().getUsername() + "_config.xml";
@@ -109,7 +113,7 @@ public class IndexController extends BaseController {
         return "main/main";}
 
     /**
-     * 主页
+     * 主页初始化
      * @return
      */
     @ResponseBody
@@ -149,6 +153,8 @@ public class IndexController extends BaseController {
                     FileUtils.addList(strings, list);
                 }
                 strings.add(filePathName+" has been loaded");
+                user.setStatus(Constant.START_STATUS);
+                setSession(Constant.SESSION_USER,user);
             }else {
                 strings.clear();
                 strings.add("Joyce no start");
@@ -181,25 +187,21 @@ public class IndexController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/doMain")
+    @RequestMapping("/getSourceImage")
     public Result doProjectMainPage(){
-        User sessionUser = getSessionUser();
-        Map<String, List<PageComponent>> stringListMap = fileService.readJoyceConfig(sessionUser.getUsername());
-        if (Objects.isNull(stringListMap)){
-            return ResultUtils.success(Constant.FILE_DEFAULT_NAME);
+        Source source = new Source();
+        source.setDeleteFlag(Constant.UNDELETE_STATUS);
+        source.setApplyStatus(Constant.APPLY_STATUS);
+        source.setUserId(getSessionUserId());
+        Source dbSource = sourceService.getOne(source);
+        source.setApplyStatus(Constant.SPARE_STATUS);
+        List<Source> list = sourceService.getList(source);
+        HashMap<Source, List<Source>> map = new HashMap<>();
+        if (Objects.nonNull(dbSource)&&!list.isEmpty()){
+            map.put(dbSource,list);
+            return ResultUtils.dataResult(true,map);
         }
-        if (!sessionUser.getFileUrl().equals(Constant.FILE_DEFAULT_NAME)){
-            return ResultUtils.success(true,sessionUser.getFileUrl());
-        }
-        List<PageComponent> list = stringListMap.get("init_page_config");
-        for (PageComponent pageComponent : list) {
-            if (pageComponent.getName().equals("菜单")){
-                if (StringUtils.isNotEmpty(pageComponent.getParams().get(Constant.FILE_DEFAULT_SET_NAME))){
-                    return ResultUtils.success(true,pageComponent.getParams().get(Constant.FILE_DEFAULT_SET_NAME));
-                }
-            }
-        }
-        return ResultUtils.success(Constant.FILE_DEFAULT_NAME);
+        return ResultUtils.error("数据无配置");
     }
 
     /**
@@ -216,10 +218,7 @@ public class IndexController extends BaseController {
         list.add(form);
         list.add(vx);
         list.add(zfb);
-        if (!list.isEmpty()){
-            return ResultUtils.success(list);
-        }
-        return ResultUtils.error(Constant.NULL_CODE);
+        return ResultUtils.dataResult(!list.isEmpty(),Constant.NULL_CODE);
     }
 
     /**
@@ -230,7 +229,7 @@ public class IndexController extends BaseController {
     @RequestMapping("/changeStatus")
     public Result changeStatus(){
         User sessionUser = getSessionUser();
-        sessionUser.setStatus(2);
+        sessionUser.setStatus(Constant.START_STATUS);
         boolean rs = userService.saveOrUpdate(sessionUser);
         return ResultUtils.dataResult(rs,"Joyce初始化失败","Joyce初始化成功");
     }

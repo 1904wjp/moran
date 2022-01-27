@@ -94,10 +94,7 @@ public class UEditorController extends BaseController {
            article.setUpdateTime(new Date());
        }
        boolean update = uEditorService.saveOrUpdate(article);
-       if (update){
-           return ResultUtils.success();
-       }
-       return ResultUtils.error();
+       return ResultUtils.dataResult(update);
    }
 
     /**
@@ -160,9 +157,6 @@ public class UEditorController extends BaseController {
     public Result delArticle(@RequestParam String ids){
         List<String> list = StringsUtils.StrToList(ids);
         boolean del = uEditorService.removeByIds(list);
-        if (del){
-            return ResultUtils.success("删除成功");
-        }
-        return ResultUtils.error("删除失败");
+        return ResultUtils.dataResult(del,"删除失败","删除成功");
     }
 }

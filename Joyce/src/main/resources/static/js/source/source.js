@@ -30,12 +30,12 @@ function saveSource(){
 
         }).done(function (data) {
             if (data.rs) {
-                toastr.success(data.msg);
+               tpis(rs,data.msg)
             } else {
-                toastr.error(data.msg);
+                tpis(data.rs,data.msg)
             }
         }).fail(function () {
-            toastr.error(ajaxFailMsg);
+            tpis(false,data.msg)
         });
         });
     }

@@ -1,12 +1,11 @@
 package com.moon.joyce;
 
+import com.moon.joyce.commons.utils.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +16,15 @@ import java.util.List;
  */
 public class Test {
     public static void main(String[] args) {
-       task01();
+        getContext();
     }
 
     public static void getContext(){
-        File file = new File("E:\\寒门状元");
+        File file = new File("E:\\我的绝色美女房客");
         if (!file.exists()){
             file.mkdir();
         }
-        String url = "http://www.biquge5200.com/31_31746/12331189.html";
+        String url = "http://www.biqu5200.net/41_41858/16122457.html";
         int i = 0;
         while (i < 1739) {
             Document document = getDoc(url);
@@ -103,7 +102,7 @@ public class Test {
         File[] files = file.listFiles();
         int i = 0;
         int max = 0;
-        System.out.println(files[110].getName());
+        System.out.println(files[73].getName());
        /* while (true){
             max=i+19;
             System.out.println(i+1+":"+files[i+1].getName()+"::"+max+":"+files[max].getName());
@@ -112,5 +111,29 @@ public class Test {
                 break;
             }
         }*/
+    }
+    public static void task02(){
+        BufferedReader readObj = FileUtils.getReadObj("E:\\Program Files\\project\\data_center\\dc-modules\\modules-system\\src\\main\\java\\com\\wr\\source\\web\\SourceController.java");
+        String text = null;
+        List<String> list = new ArrayList<>();
+        try {
+            while((text = readObj.readLine())!=null){//使用readLine方法，一次读一行
+                list.add(text);
+            }
+            readObj.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int index = 0;
+        for (int i = 0; i < list.size(); i++) {
+            String s = list.get(i);
+            if (s.contains("@GetMapping(\"/")&&!list.get(i-2).contains("/*")){
+                String url = s.substring(s.indexOf("/"), s.indexOf("\")"));
+                String title = list.get(i-1).substring(list.get(i-1).indexOf("title = \"")+9,list.get(i-1).indexOf("\", "));
+                url = "source"+url;
+                System.out.println("list.add(new Source("+index+"l,\""+title+"\",\""+url+"\"));");
+                ++index;
+            }
+        }
     }
 }

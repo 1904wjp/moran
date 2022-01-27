@@ -50,13 +50,13 @@ function saveDataSource(){
                 $(".addDb").show();
                 loading(false);
                 if (data.rs) {
-                    toastr.success(data.msg);
+                    tpis(rs,data.msg)
                     toList("/example/db/dbPage");
                 }else {
-                    toastr.error(data.msg);
+                    tpis(data.rs,data.msg);
                 }
             }).fail(function () {
-                toastr.error(ajaxFailMsg);
+                tpis(false,ajaxFailMsg)
             });
         });
     }
@@ -85,10 +85,10 @@ function applyDataSource(id){
                 toastr.success(data.ms);
                 toList("/example/db/dbPage");
             }else {
-                toastr.error(data.msg);
+                tpis(data.rs,data.msg)
             }
         }).fail(function () {
-            toastr.error(ajaxFailMsg);
+            tpis(false,data.msg)
         });
     });
 }
@@ -109,13 +109,13 @@ function deleteSource(id){
 
     }).done(function (data) {
         if (data.rs){
-            toastr.success(data.msg);
+           tpis(rs,data.msg)
             toList("/example/db/dbPage");
         }else {
-            toastr.error(data.msg);
+            tpis(data.rs,data.msg)
         }
     }).fail(function () {
-        toastr.error(ajaxFailMsg);
+        tpis(false,data.msg)
     });
 }
 
@@ -207,13 +207,13 @@ function deleteDbById(id){
             data: data,
         }).done(function (data) {
             if (data.rs) {
-                toastr.success(data.msg);
+               tpis(rs,data.msg)
                 toList('/example/db/dbPage');
             } else {
-                toastr.error(data.msg);
+                tpis(data.rs,data.msg)
             }
         }).fail(function () {
-            toastr.error(ajaxFailMsg);
+            tpis(false,data.msg)
         });
     });
 }
@@ -244,12 +244,12 @@ function editDataSource(id){
             $('#tempCode').val(data.data.tempCode);
             $('#databaseType').val(data.data.databaseType);
             $('#url').val(data.data.url);
-            toastr.success(data.msg);
+           tpis(rs,data.msg)
         }else {
-            toastr.error(data.msg);
+            tpis(data.rs,data.msg)
         }
     }).fail(function () {
-        toastr.error(ajaxFailMsg);
+        tpis(false,data.msg)
     });
 }
 
@@ -271,13 +271,13 @@ function deleteDbIds(){
 
                 }).done(function (data) {
                     if (data.rs) {
-                        toastr.success(data.msg);
+                       tpis(rs,data.msg)
                         toList('/example/db/dbPage');
                     } else {
-                        toastr.error(data.msg);
+                        tpis(data.rs,data.msg)
                     }
                 }).fail(function (){
-                    toastr.error(ajaxFailMsg);
+                    tpis(false,data.msg)
                 });
             });
         }
@@ -376,12 +376,12 @@ function editPackage(id){
             $('#id').val(data.data.id);
             $('#packageName').val(data.data.packageName);
             $('#packageValue').val(data.data.packageValue);
-            toastr.success(data.msg);
+           tpis(rs,data.msg)
         }else {
-            toastr.error(data.msg);
+            tpis(data.rs,data.msg)
         }
     }).fail(function () {
-        toastr.error(ajaxFailMsg);
+        tpis(false,data.msg)
     });
 }
 
@@ -408,13 +408,13 @@ function savePackage(){
 
             }).done(function (data) {
                 if (data.rs) {
-                    toastr.success(data.msg);
+                   tpis(rs,data.msg)
                     toList("/example/db/packagePage");
                 }else {
-                    toastr.error(data.msg);
+                    tpis(data.rs,data.msg)
                 }
             }).fail(function () {
-                toastr.error(ajaxFailMsg);
+                tpis(false,data.msg)
             });
         });
     }
@@ -441,13 +441,13 @@ function applyPackage(id){
 
     }).done(function (data) {
         if (data.rs){
-            toastr.success(data.msg);
+           tpis(rs,data.msg)
             toList('/example/db/packagePage');
         }else {
-            toastr.error(data.msg);
+            tpis(data.rs,data.msg)
         }
     }).fail(function () {
-       toastr.error(ajaxFailMsg);
+       tpis(false,data.msg)
     });
     });
 }
@@ -471,13 +471,13 @@ function deletePackage(id){
             data: data,
         }).done(function (data) {
             if (data.rs) {
-                toastr.success(data.msg);
+               tpis(rs,data.msg)
                 toList("/example/db/packagePage");
             } else {
-                toastr.error(data.msg);
+                tpis(data.rs,data.msg)
             }
         }).fail(function () {
-            toastr.error(ajaxFailMsg);
+            tpis(false,data.msg)
         });
     });
 }
@@ -512,14 +512,14 @@ function deletePackages(){
 
             }).done(function (data) {
                 if (data.rs) {
-                    toastr.success(data.msg);
+                   tpis(rs,data.msg)
                     toList('/example/db/packagePage');
                 } else {
-                    toastr.error(data.msg);
+                    tpis(data.rs,data.msg)
                 }
                 ;
             }).fail(function () {
-                toastr.error(ajaxFailMsg);
+                tpis(false,data.msg)
             });
         });
     }

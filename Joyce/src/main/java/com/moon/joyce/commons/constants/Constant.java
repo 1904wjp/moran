@@ -104,6 +104,10 @@ public class Constant {
     public static final Integer UNDELETE_STATUS =0;
     //应用状态
     public static final Integer APPLY_STATUS =1;
+    //备用状态
+    public static final Integer SPARE_STATUS =2;
+    //启用状态
+    public static final Integer START_STATUS =3;
     //会员用户
     public static final Integer USER_TYPE_VIP_STATUS =2;
     //冻结状态
