@@ -27,15 +27,10 @@ function saveSource(){
             type: 'POST',
             dataType: 'json',
             data: data,
-
         }).done(function (data) {
-            if (data.rs) {
-               tpis(rs,data.msg)
-            } else {
-                tpis(data.rs,data.msg)
-            }
+            tips(data.rs,data.msg);
         }).fail(function () {
-            tpis(false,data.msg)
+            tips(false,ajaxFailMsg);
         });
         });
     }

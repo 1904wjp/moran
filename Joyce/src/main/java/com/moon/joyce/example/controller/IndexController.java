@@ -7,6 +7,7 @@ import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.ResultUtils;
 import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.entity.vo.MainSource;
 import com.moon.joyce.example.functionality.entity.PageComponent;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.entity.Setting;
@@ -198,8 +199,8 @@ public class IndexController extends BaseController {
         List<Source> list = sourceService.getList(source);
         HashMap<Source, List<Source>> map = new HashMap<>();
         if (Objects.nonNull(dbSource)&&!list.isEmpty()){
-            map.put(dbSource,list);
-            return ResultUtils.dataResult(true,map);
+            MainSource mainSource = new MainSource(1l,dbSource, list);
+            return ResultUtils.dataResult(true,mainSource);
         }
         return ResultUtils.error("数据无配置");
     }

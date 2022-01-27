@@ -323,9 +323,9 @@ public class UserController extends BaseController {
                 dbUser.setFileUrl(Constant.FILE_DEFAULT_NAME);
             }
             //设置当前登录账号的状态
-            Result checkLoginResult = userServiceControllerDetailService.checkLoginData(dbUser);
-            if (!checkLoginResult.getRs()){
-                return checkLoginResult;
+            Result checkStatusResult = userServiceControllerDetailService.checkStatusData(dbUser);
+            if (!checkStatusResult.getRs()){
+                return checkStatusResult;
             }
             //设置当前登录人
             setSession(Constant.SESSION_USER,dbUser);
@@ -433,18 +433,7 @@ public class UserController extends BaseController {
     @RequestMapping("/doQueryUser")
     public Result updateUser(@RequestParam Long id){
         User dbUser = userService.getById(id);
-        if (Objects.nonNull(dbUser)){
-            if (Constant.USER_TYPE_INVAILD_STATUS.equals(dbUser.getStatus())){
-                return ResultUtils.error(Constant.INACTIVE_CODE);
-            }
-            if (Constant.USER_TYPE_FROZEN_STATUS.equals(dbUser.getStatus())){
-                return ResultUtils.error(Constant.FROZEN_CODE);
-            }
-            if (Constant.USER_TYPE_VAILD_STATUS.equals(dbUser.getStatus())){
-                return ResultUtils.success(dbUser);
-            }
-        }
-        return ResultUtils.error(Constant.NULL_CODE);
+        return userServiceControllerDetailService.checkStatusData(dbUser);
     }
 
     /**

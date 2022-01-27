@@ -30,6 +30,6 @@ public interface UserServiceControllerDetailService {
     //注册基础数据检测
     Result checkRegistData(User user);
 
-    //登录基础数据检测
-    Result checkLoginData(User user);
+    //用户状态数据检测
+    Result checkStatusData(User user);
 }

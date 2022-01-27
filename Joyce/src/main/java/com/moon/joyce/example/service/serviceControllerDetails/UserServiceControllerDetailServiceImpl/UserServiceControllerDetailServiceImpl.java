@@ -105,7 +105,11 @@ public class UserServiceControllerDetailServiceImpl implements UserServiceContro
     }
 
     @Override
-    public Result checkLoginData(User user) {
+    public Result checkStatusData(User user) {
+        //用户为空（异常）
+        if (Objects.isNull(user)){
+            return ResultUtils.error(Constant.NULL_CODE);
+        }
         //状态为空（异常）
         if (Objects.isNull(user.getStatus())){
             return ResultUtils.error(Constant.NULL_CODE,"该账号状态异常，请联系客服");
@@ -118,8 +122,10 @@ public class UserServiceControllerDetailServiceImpl implements UserServiceContro
         if (user.getStatus().equals(Constant.INACTIVE_CODE)){
             return ResultUtils.error(Constant.INACTIVE_CODE);
         }
-
-        return ResultUtils.success();
+        //通过状态
+        if (user.getStatus().equals(Constant.USER_TYPE_VAILD_STATUS)||user.getStatus().equals(Constant.START_STATUS)) {
+            return ResultUtils.success();}
+        return ResultUtils.error();
     }
 
 }

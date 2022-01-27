@@ -10,27 +10,25 @@ function initMainPictures(){
       url: '/getSourceImage',
       type: 'GET',
       dataType: 'json',
-      data: data,
    }).done(function (data) {
       loading(false);
       if (data.rs){
-         $.each(data.data,function (key,value){
-            $('.intro__title').attrs("text",key.sourceName);
-            $('.intro__description__content').attrs("text",key.descContent);
-            $('.intro__image').attrs("src",key.url);
-            $(value).each(function (){
-               $('.items-wrap').append("<a href=\"#\" class=\"item\">\n" +
-                   "            <input type='hidden' value='"+this.id+"'/>"+
-                   "            <img class=\"item__image\" src=\""+this.url+"\" alt=\"item01\"/>\n" +
-                   "            <h2 class=\"item__title\">this.sourceName</h2>\n" +
-                   "        </a>");
-            });
-         });
+            $('.intro__title').text(data.data.source.sourceName);
+            $('.intro__description__content').text(data.data.source.descContent);
+            $('.intro__image').attr("src",data.data.source.url);
+         for (let i = 0; i < data.data.list; i++) {
+            console.log(i);
+            $('.items-wrap').append("<a href=\"#\" class=\"item\">\n" +
+                "            <input type='hidden' value='"+data.data.list[i].id+"'/>"+
+                "            <img class=\"item__image\" src=\""+data.data.list[i].url+"\" alt=\"item01\"/>\n" +
+                "            <h2 class=\"item__title\">data.data.list[i].sourceName</h2>\n" +
+                "        </a>");
+         }
       }else {
          tpis(data.rs,data.msg);
       };
    }).fail(function (){
-      tpis(false,data.msg)
+      tpis(false,ajaxFailMsg)
    });
 }
 

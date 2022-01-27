@@ -31,7 +31,17 @@ public class ResultUtils implements Serializable {
         }
         return ResultUtils.error();
     }
-
+    /**
+     * 返回结果
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi,Result errorRs ,Result successRs){
+        if (rsi!=0){
+            return successRs;
+        }
+        return errorRs;
+    }
     /**
      * 返回结果
      * @param rsi
@@ -144,6 +154,20 @@ public class ResultUtils implements Serializable {
             return success();
         }
         return error();
+    }
+
+    /**
+     * 返回结果
+     * @param rs
+     * @param errorRs
+     * @param successRs
+     * @return
+     */
+    public static Result dataResult(boolean rs,Result errorRs ,Result successRs){
+        if (rs){
+            return successRs;
+        }
+        return errorRs;
     }
     /**
      * 返回结果

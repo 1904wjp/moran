@@ -44,11 +44,14 @@ public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> impleme
     public Source getOne(Source source) {
         QueryWrapper<Source> wrapper = new QueryWrapper<>();
         wrapper.eq("delete_flag",source.getDeleteFlag());
-        if (Objects.isNull(source.getApplyStatus())){
+        if (Objects.nonNull(source.getApplyStatus())){
             wrapper.eq("apply_status",source.getApplyStatus());
         }
         if (StringUtils.isNoneBlank(source.getSourceName())){
             wrapper.eq("source_name",source.getSourceName());
+        }
+        if (Objects.nonNull(source.getUserId())){
+            wrapper.eq("user_id",source.getUserId());
         }
         return baseMapper.selectOne(wrapper);
     }
