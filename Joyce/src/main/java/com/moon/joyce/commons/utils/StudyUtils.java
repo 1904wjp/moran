@@ -1,5 +1,7 @@
 package com.moon.joyce.commons.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.concurrent.*;
 
 /**
@@ -9,7 +11,7 @@ import java.util.concurrent.*;
  */
 public class StudyUtils {
     public static void main(String[] args) {
-        synchronousQueueJoyce();
+     threadPoolsJoyce(StudyUtils.single,6);
     }
 
     /**
@@ -174,4 +176,49 @@ public class StudyUtils {
         },"t1").start();
     }
 
+    /**
+     * 线程池三次方法
+     */
+
+    private static String  single = "single";
+    private static String  fixed = "fixed";
+    private static String  cached = "cached";
+   public static void threadPoolsJoyce(String type,int number){
+
+       if (StringUtils.isBlank(type)){
+           return ;
+       }
+       ExecutorService threadPool = null;
+       if (number==0){
+           number=3;
+       }
+       switch (type){
+           //单一线程池（始终只有一个线程）
+           case "single": threadPool=Executors.newSingleThreadExecutor();break;
+           //固定线程池（固定数值线程）
+           case "fixed": threadPool=Executors.newFixedThreadPool(number);break;
+           //缓存线程池（随着cpu和并发限制可大可小）
+           case "cached": threadPool=Executors.newCachedThreadPool();break;
+       }
+       try {
+           for (int i = 0; i < 100; i++) {
+               threadPool.execute(()->{
+                   System.out.println(Thread.currentThread().getName());
+               });
+           }
+       } catch (Exception e) {
+           e.printStackTrace();
+       } finally {
+           threadPool.shutdown();
+       }
+
+   }
+   //七大参数
+    // corePoolSize:核心并发数量(必须开启的最小设置并发数量)
+    // maximumPoolSize:最大并发数量
+    // keepAliveTime:保持连接时间
+    // unit:超时单位
+    // workQueue：阻塞队列
+    // Executors.defaultThreadFactory():线程池工厂
+    // defaultHandler:线程池拒绝策略
 }
