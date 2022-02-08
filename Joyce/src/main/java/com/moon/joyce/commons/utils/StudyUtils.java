@@ -142,17 +142,20 @@ public class StudyUtils {
 
     /**
      * 不存储元素，边加边出
+     * put()添加元素
+     * take()拿出元素
+     * put()后必须take()才能继续put()
      */
     public static void synchronousQueueJoyce(){
         SynchronousQueue<String> queue = new SynchronousQueue<>();
         new Thread(()->{
             try {
-                queue.put("a");
                 System.out.println(Thread.currentThread().getName()+"put a");
-                queue.put("b");
+                queue.put("a");//等"a"运行结束（出来）后"b"才会进入
                 System.out.println(Thread.currentThread().getName()+"put b");
-                queue.put("c");
+                queue.put("b");
                 System.out.println(Thread.currentThread().getName()+"put c");
+                queue.put("c");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
