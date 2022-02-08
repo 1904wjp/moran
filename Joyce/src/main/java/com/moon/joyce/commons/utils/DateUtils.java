@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * @author: Joyce
@@ -90,9 +91,8 @@ public class DateUtils implements Serializable {
      * @return
      */
     @Deprecated
-    public static String dateForMat(){
-        SimpleDateFormat dfm =  new SimpleDateFormat(Constant.DATE_TIME_DAY);
-        return  dfm.format(new Date());
+    public static Supplier<String> dateForMat(){
+        return ()-> new SimpleDateFormat(Constant.DATE_TIME_DAY).format(new Date());
     }
 
 

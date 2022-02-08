@@ -1,14 +1,15 @@
 package com.moon.joyce;
 
+import com.moon.joyce.commons.utils.DateUtils;
 import com.moon.joyce.commons.utils.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.*;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @Author: XingDaoRong
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public class Test {
     public static void main(String[] args) {
-        getContext();
+        task03();
     }
 
     public static void getContext(){
@@ -135,5 +136,9 @@ public class Test {
                 ++index;
             }
         }
+    }
+    public static void task03(){
+        Supplier<String> supplier = DateUtils.dateForMat();
+        System.out.println(supplier.get());
     }
 }

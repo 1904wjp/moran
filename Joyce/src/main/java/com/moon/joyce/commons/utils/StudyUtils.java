@@ -1,8 +1,14 @@
 package com.moon.joyce.commons.utils;
 
+import com.moon.joyce.commons.utils.entity.ForkJoinDemo;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.concurrent.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.LongStream;
 
 /**
  * @Author: XingDaoRong
@@ -10,8 +16,10 @@ import java.util.concurrent.*;
  * 学习工具类
  */
 public class StudyUtils {
-    public static void main(String[] args) {
-     threadPoolsJoyce(StudyUtils.single,6);
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        //addJoyce();//sum=500000000500000000::7078
+        //forkJoinJoyce();//sum=500000000500000000::5832
+        addStreamJoyce();//sum=500000000500000000::393
     }
 
     /**
@@ -177,9 +185,8 @@ public class StudyUtils {
     }
 
     /**
-     * 线程池三次方法
+     * 线程池三中方法（不建议使用）
      */
-
     private static String  single = "single";
     private static String  fixed = "fixed";
     private static String  cached = "cached";
@@ -215,10 +222,140 @@ public class StudyUtils {
    }
    //七大参数
     // corePoolSize:核心并发数量(必须开启的最小设置并发数量)
-    // maximumPoolSize:最大并发数量
+    // maximumPoolSize:最大并发数量(多余开启窗口数量)
     // keepAliveTime:保持连接时间
     // unit:超时单位
-    // workQueue：阻塞队列
+    // workQueue：阻塞队列(等待区的位子数量)
     // Executors.defaultThreadFactory():线程池工厂
     // defaultHandler:线程池拒绝策略
+
+    /**
+     * 自定义线程池及其四个拒绝策略
+     * @param type
+     */
+
+    private static String abortPolicy = "abortPolicy";
+    private static String callerRunsPolicy = "callerRunsPolicy";
+    private static String discardOldestPolicy = "discardOldestPolicy";
+    private static String discardPolicy = "discardPolicy";
+    public static void threadPolicy(String type){
+        ThreadPoolExecutor threadPoolExecutor = null;
+        /**
+         * CPU 密集型 查看运行的系统是几核，那么maxSize就选择是几个
+         * IO 密集型 IO线程有多少，那么maxSize就大于它，一般是两倍
+         */
+        int maxSize = 0;
+        //获取系统核数量
+        maxSize = Runtime.getRuntime().availableProcessors();
+        switch (type){
+            //超过最大承载会拒绝线程进入，抛出异常
+            case "abortPolicy":threadPoolExecutor =new ThreadPoolExecutor(1, maxSize, 3,TimeUnit.SECONDS, new LinkedBlockingQueue<>(3), Executors.defaultThreadFactory(),new ThreadPoolExecutor.AbortPolicy() );break;
+            //超过最大承载会拒绝线程进入，拒绝的线程会回到调用线程的（哪来回哪儿去）
+            case "callerRunsPolicy":threadPoolExecutor =new ThreadPoolExecutor(2, maxSize, 3,TimeUnit.SECONDS, new LinkedBlockingQueue<>(3), Executors.defaultThreadFactory(),new ThreadPoolExecutor.CallerRunsPolicy() );break;
+            //超过最大承载会拒绝线程进入，不会抛出异常
+            case "discardOldestPolicy":threadPoolExecutor =new ThreadPoolExecutor(2, maxSize, 3,TimeUnit.SECONDS, new LinkedBlockingQueue<>(3), Executors.defaultThreadFactory(),new ThreadPoolExecutor.DiscardOldestPolicy() );break;
+            //超过最大承载会尝试和最早的线程竞争
+            case "discardPolicy":threadPoolExecutor =new ThreadPoolExecutor(2, maxSize, 3,TimeUnit.SECONDS, new LinkedBlockingQueue<>(3), Executors.defaultThreadFactory(),new ThreadPoolExecutor.DiscardPolicy() );break;
+        }
+
+            try {
+                int len = 8;//最大承载是maxSize + 阻塞队列中的数量
+                for (int i = 1; i <= len; i++) {
+                threadPoolExecutor.execute(()->{
+                    System.out.println(Thread.currentThread().getName());
+                });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                threadPoolExecutor.shutdown();
+            }
+    }
+
+    /**
+     * Function函数式接口
+     * 参数为Object
+     * 返回值为String
+     */
+    public static void functionJoyce(){
+     /*   Function function = new Function<String, String>() {
+            @Override
+            public String apply(String s) {
+                return s;
+            }
+        };*/
+        Function<Object,String> function=s-> s.toString();
+        System.out.println(function);
+    }
+    /**
+     * Predicate 断定函数式接口
+     * 参数为String
+     * 返回值为Boolean
+     */
+    public static void predicateJoyce(){
+      /*  Predicate predicate = new Predicate<String>() {
+            @Override
+            public boolean test(String str) {
+                return str.isEmpty();
+            }
+        };*/
+        Predicate<String> predicate =str->str.isEmpty();
+        System.out.println(predicate);
+    }
+
+    /**
+     * 消费型接口，定义String参数
+     */
+    public static void consumerJoyce(){
+       /* Consumer consumer = new Consumer<String> () {
+            @Override
+            public void accept(String o) {
+                System.out.println(o);
+            }
+        };*/
+        Consumer<String> consumer = str->{
+
+        };
+        System.out.println(consumer);
+
+    }
+    /**
+     * 消费型接口，定义String参数
+     */
+    public static void supplierJoyce(){
+       /* Supplier supplier = new Supplier<String>() {
+            @Override
+            public String get() {
+                return "123";
+            }
+        };*/
+        Supplier<String> supplier = ()->{return "123456";};
+        System.out.println(supplier);
+    }
+    public static void addJoyce()  {
+        long startTime = System.currentTimeMillis();
+        Long sum = 0l;
+        for (long i = 0; i <= 10_0000_0000l; i++) {
+            sum+=i;
+        }
+        long endTime = System.currentTimeMillis();
+        System.out.println("sum="+sum+"::"+(endTime-startTime));
+    }
+    //forkJoin操作
+    public static void forkJoinJoyce() throws ExecutionException, InterruptedException {
+        long startTime = System.currentTimeMillis();
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        ForkJoinDemo task = new ForkJoinDemo(0l, 10_0000_0000l);
+        ForkJoinTask<Long> submit = forkJoinPool.submit(task);
+        Long sum = 0l;
+        sum = submit.get();
+        long endTime = System.currentTimeMillis();
+        System.out.println("sum="+sum+"::"+(endTime-startTime));
+    }
+    public static void addStreamJoyce()  {
+        long startTime = System.currentTimeMillis();
+        Long sum = LongStream.rangeClosed(0l,10_0000_0000l).parallel().reduce(0,Long::sum);
+        long endTime = System.currentTimeMillis();
+        System.out.println("sum="+sum+"::"+(endTime-startTime));
+    }
 }
