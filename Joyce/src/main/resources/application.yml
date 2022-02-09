@@ -142,11 +142,11 @@ pagehelper:
 #文件路径上传路径
 file:
   config:
-    path: G:/${app.name}/files/config/
+    path: D:/${app.name}/files/config/
   upload:
     access: /img/photo/
     relative: ${file.upload.access}**
-    path: G:/${app.name}/upload/images/
+    path: D:/${app.name}/upload/images/
 
 #监听获得当前登录者
 context:

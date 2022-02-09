@@ -313,8 +313,8 @@ public class UserController extends BaseController {
         user.setPassword(MD5Utils.getMD5Str(password));
         logger.info(username+"======>登录中");
         User dbUser = userService.getUser(user, Constant.USER_TYPE_LOGIN);
-        user.setStatus(dbUser.getStatus());
         if (Objects.nonNull(dbUser)){
+            user.setStatus(dbUser.getStatus());
             if(!user.getPassword().equals(dbUser.getPassword())){
               return ResultUtils.error(Constant.CHINESE_PASSWORD_ERROR_MESSAGE);
             }
