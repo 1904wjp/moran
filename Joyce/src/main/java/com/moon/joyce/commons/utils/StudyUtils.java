@@ -4,6 +4,7 @@ import com.moon.joyce.commons.utils.entity.ForkJoinDemo;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -16,10 +17,16 @@ import java.util.stream.LongStream;
  * 学习工具类
  */
 public class StudyUtils {
+
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         //addJoyce();//sum=500000000500000000::7078
         //forkJoinJoyce();//sum=500000000500000000::5832
-        addStreamJoyce();//sum=500000000500000000::393
+        //addStreamJoyce();//sum=500000000500000000::393
+        //futureJoyce();
+        //futureJoyce2();
+        //JMMDemo2();
+        volatileJoyce();
+        //volatileJoyce2();
     }
 
     /**
@@ -119,7 +126,7 @@ public class StudyUtils {
      * add()//添加超过初始容量就会报异常，返回为boolean;
      * remove()//移除小于0就会报异常，返回为boolean;
      * offer(),没有异常只有boolean
-     * poll同上
+     * poll()同上
      */
     public static void arrayBlockingQueueJoyce() throws InterruptedException {
         BlockingQueue<Object> blockingQueue = new ArrayBlockingQueue<>(3);
@@ -341,7 +348,7 @@ public class StudyUtils {
         long endTime = System.currentTimeMillis();
         System.out.println("sum="+sum+"::"+(endTime-startTime));
     }
-    //forkJoin操作
+    //forkJoin操作(1.把大任务改成许多小任务，在数据比较多的情况下使用；2.工作窃取，双向进行，快的会帮助慢的继续执行，可能出现抢占资源)
     public static void forkJoinJoyce() throws ExecutionException, InterruptedException {
         long startTime = System.currentTimeMillis();
         ForkJoinPool forkJoinPool = new ForkJoinPool();
@@ -358,4 +365,135 @@ public class StudyUtils {
         long endTime = System.currentTimeMillis();
         System.out.println("sum="+sum+"::"+(endTime-startTime));
     }
+    //java的异步回调
+    //无结果
+    public static void futureJoyce() throws ExecutionException, InterruptedException {
+        CompletableFuture<Void> completableFuture=CompletableFuture.runAsync(() ->{
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName() + "async=>run");
+        });
+        CompletableFuture<Void> completableFuture2=CompletableFuture.runAsync(() ->{
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName() + "async=>run2");
+        });
+
+        completableFuture.get();
+        completableFuture2.get();
+    }
+    //有结果
+    public static void futureJoyce2() throws ExecutionException, InterruptedException {
+       CompletableFuture<Integer> completableFuture=CompletableFuture.supplyAsync(() ->{
+            System.out.println(Thread.currentThread().getName() + "supplyAsync=>run");
+            //int i = 0/0;
+            return 200;//返回的结果
+        });
+        completableFuture.whenComplete((t,u)->{
+            System.out.println("t=>"+t);//返回的结果信息
+            System.out.println("u=>"+u);//返回的出现的异常结果
+        }).exceptionally((e)->{
+            System.out.println(e.getMessage());//返回的出现的异常结果
+            return 500;}
+        ).get();
+    }
+    /**
+     * JMM的理解
+     * 8个步骤：
+     * lock（锁定）：作用于主内存的变量，它把一个变量标识为一条线程独占的状态；
+     * unlock（解锁）：作用于主内存的变量，它把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定；
+     * read（读取）：作用于主内存的变量，它把一个变量的值从主内存传输到线程的工作内存中，以便随后的load动作使用；
+     * load（载入）：作用于工作内存的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中；
+     * use（使用）：作用于工作内存的变量，它把工作内存中一个变量的值传递给执行引擎，每当虚拟机遇到一个需要使用变量的值的字节码指令时将会执行这个操作；
+     * assign（赋值）：作用于工作内存的变量，它把一个从执行引擎接收的值赋给工作内存的变量，每当虚拟机遇到一个给变量赋值的字节码指令时执行这个操作；
+     * store（存储）：作用于工作内存的变量，它把工作内存中一个变量的值传送到主内存中，以便随后的write操作使用；
+     * write（写入）：作用于主内存的变量，它把store操作从工作内存中得到的变量的值放入主内存的变量中；
+     */
+    private static   int num = 0;
+    public static void JMMDemo(){
+        //创建两个线程当num值为0是执行循环，在底部讲num修改为1，并且打印。打印了结果，但是编译器是一直运行的，所以内存是不可见的
+        new Thread(()->{
+            System.out.println(num);
+            while (num==0){
+                /* System.out.println(num);*/
+            } }).start();
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        num =1;
+        System.out.println(num);
+    }
+    //解决内存不可见性
+    private static volatile int num2 = 0;
+    public static void JMMDemo2(){
+        //同上
+        new Thread(()->{
+            System.out.println(num2);
+            while (num2==0){
+                /* System.out.println(num);*/
+            } }).start();
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        num2 =1;
+        System.out.println(num2);
+    }
+    /**
+     * volatile不保证原子性
+     */
+    public static void add1(){
+        num2++;
+    }
+    public static void volatileJoyce(){
+        for (int i = 0; i < 20; i++) {
+                new Thread(()->{
+                    for (int i1 = 0; i1 < 1000; i1++) {
+                        add1();
+                    }
+                }
+            ).start();
+        }
+        while (Thread.activeCount()>2){
+            Thread.yield();
+        }
+        System.out.println(num2);
+    }
+
+    /**
+     * 解决volatile不保证原子性问题
+     */
+    private static volatile AtomicInteger num3 = new AtomicInteger();
+    public static void add2(){
+        num3.getAndIncrement();
+    }
+    public static void volatileJoyce2(){
+        for (int i = 0; i < 20; i++) {
+            new Thread(()->{
+                for (int i1 = 0; i1 < 1000; i1++) {
+                    add2();
+                }
+            }
+            ).start();
+        }
+        while (Thread.activeCount()>2){
+            Thread.yield();
+        }
+        System.out.println(num3);
+    }
+    /**
+     * volatile禁止指令重排
+     * 计算机并非按照自己写的程序顺序去执行（但是又依赖性）
+     * 具体操作：加屏障
+     * 示例：单例模式
+     */
 }
