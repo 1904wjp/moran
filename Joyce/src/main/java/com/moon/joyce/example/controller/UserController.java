@@ -278,7 +278,7 @@ public class UserController extends BaseController {
     public String checkCode(String code){
         User user = new User();
         user.setStatusCode(code);
-        if (Constant.RESULT_ONE_SUCCESS_SQL_RESULT!=userService.getUserCount(user,Constant.USER_TYPE_UNIQUE_STATUS_CODE)){
+        if (!Constant.RESULT_ONE_SUCCESS_SQL_RESULT.equals(userService.getUserCount(user,Constant.USER_TYPE_UNIQUE_STATUS_CODE))){
             return Constant.REDIRECT+urlPrefix+"regist";
         }
         User dbUser = userService.getUser(user,Constant.USER_TYPE_UNIQUE_STATUS_CODE);
