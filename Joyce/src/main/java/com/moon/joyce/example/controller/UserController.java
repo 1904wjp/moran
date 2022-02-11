@@ -6,13 +6,12 @@ import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
 import com.moon.joyce.example.entity.ChatRecord;
+import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.entity.vo.UserChartVo;
 import com.moon.joyce.example.functionality.entity.Result;
-import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.entity.VerifyCode;
-import com.moon.joyce.example.functionality.server.WebSocket;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.ChatRecordService;
 import com.moon.joyce.example.service.UserService;
@@ -220,12 +219,7 @@ public class UserController extends BaseController {
         chatRecord.setUserBId(id);
         chatRecord.setContent(msg);
         boolean save = chatRecordService.save(chatRecord);
-        if (save){
-           /* webSocket.sendMessageTo(msg,id);*/
-            return ResultUtils.success("发送成功");
-        }
-
-        return ResultUtils.error("发送失败");
+        return ResultUtils.dataResult(save,"发送失败","发送成功");
     }
 
 
@@ -265,7 +259,7 @@ public class UserController extends BaseController {
         }
         //结果处理
         if (result){
-            if (null!=getSessionUser()){
+            if (Objects.nonNull(getSessionUser())){
                removeSessionUser();
             }
             setSession(Constant.SESSION_USER,user);

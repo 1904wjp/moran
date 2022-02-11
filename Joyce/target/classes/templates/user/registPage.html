@@ -1,0 +1,53 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>注册</title>
+</head>
+
+
+<div class="container">
+    <div class="row row-centered">
+        <div class="well col-md-6 col-centered">
+            <form class="form-horizontal center-block" role="form"  method="get">
+                <legend>用户注册</legend>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="username">用户名</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="username" type="text" name="username" placeholder="请输入用户名"/>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="password">密码</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" id="password" type="password"  name="password"  onchange="password_change(this.id)" placeholder="请输入密码"/>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="nickname">昵称</label>
+                    <div  class="col-sm-4 ">
+                        <input class="form-control" id="nickname" type="text" name="nickname" placeholder="请输入昵称"/>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="phone">手机号码</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" id="phone" type="text" name="phone"  placeholder="请输入手机号码" onchange="phoneRegFuc()" />
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="email">邮件</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" id="email" type="text"  name="email" placeholder="请输入邮件" onchange="emailRegFuc()"/>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="regist"> </label>
+                    <div class="col-sm-5">
+                        <input class="btn btn-default pull-left" id="regist" type="button" onclick="registFuc()" value="注册"/>
+                        <a class="btn btn-default pull-right" th:href="@{'/example/user/login'}">去登录</a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>

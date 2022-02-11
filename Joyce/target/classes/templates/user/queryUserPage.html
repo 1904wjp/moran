@@ -1,0 +1,108 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+  <title>用户基本信息</title>
+</head>
+
+<div class="container">
+  <div class="row row-centered">
+    <div class="modal fade" id="updatePasswordModal"  role="dialog" aria-labelledby="updatePasswordLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">
+              修改密码
+            </h4>
+          </div>
+          <form id="form_data">
+                  <input type="hidden" id="update_user_id" th:value="${user.id}">
+                <div style="margin-left: 22px;margin-top: 30px;">
+                  输入旧密码<input type="password" class="password" id='org_password' required="required" placeholder="请输入旧密码" autocomplete="off" onchange="password_change(this.id)" />
+                </div>
+                <div style="margin-left: 22px;margin-top: 10px;">
+                  输入新密码<input type="password" class="password" id='new_password1' required="required"  placeholder="请输入密码" autocomplete="off" onchange="password_change(this.id)"/>
+                </div>
+                <div style="margin-left: 10px;margin-top: 10px;">
+                  再次输入密码<input type="password" class="password" id='new_password2' required="required" placeholder="请再次输入密码" autocomplete="off" onchange="password_change(this.id)" />
+                </div>
+            <div class="modal-footer">
+              <button type="button"  onclick="password_update_verify()" class="btn btn-primary ">提交</button>
+              <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+            </div>
+          </form>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="forgetPasswordModal"  role="dialog" aria-labelledby="forgetPasswordLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="forgetModalLabel">
+              忘记密码
+            </h4>
+          </div>
+          <form id="forget_form_data">
+            <div style="margin-left: 22px;margin-top: 10px;">
+              输入绑定邮件<input type="text" class="password" id='forget_email' required="required"  placeholder="请输入绑定邮件" autocomplete="off" />
+            </div>
+            <div style="margin-left: 20%;margin-top: 1%;">
+              输入验证码<input type="text"  class="password" id='email_code' required="required" placeholder="请输入验证码" autocomplete="off" /> <input id="getEmailCode" type="button" onclick="getEmailCodeFuc()" value="获取验证码"/>
+            </div>
+            <div style="margin-left: 5%;margin-top: 10px;">
+              输入新密码<input type="password"  class="password" id='new_password' required="required"  placeholder="请输入新密码" autocomplete="off" onchange="password_change(this.id)"/>
+            </div>
+            <div class="modal-footer">
+              <button type="button"  onclick="forget_password_update_verifyFuc()" class="btn btn-primary ">提交</button>
+              <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+            </div>
+          </form>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+
+    <div class="well col-md-6 col-centered">
+      <img id="display_img" th:src="${user.fileUrl}" width="100px" height="100px" class="img-circle pull-right"/>
+      <form class="form-horizontal center-block" role="form"  method="get">
+        <legend>用户信息</legend>
+        <input name="id" id="update_password_id" type="hidden" th:value="${user.id}">
+        <div class="form-group ">
+          <label class="col-sm-2 control-label" for="username" >头像</label>
+        </div>
+        <div class="form-group ">
+          <label class="col-sm-2 control-label" for="username" >用户名</label>
+          <div  class="col-sm-4 ">
+            <input class="form-control" id="username" type="text" name="username" readonly="readonly" placeholder="请输入用户名" style="border:none;" th:value="${user.username}"/>
+          </div>
+        </div>
+         <div class="form-group ">
+              <label class="col-sm-2 control-label" for="password">密码</label>
+              <div class="col-sm-4">
+                  <input class="form-control" id="password" type="password"  name="password" readonly="readonly" placeholder="请输入密码" style="border:none;" value="*******"/>
+              </div>
+          </div>
+
+        <div class="form-group ">
+          <label class="col-sm-2 control-label" for="phone">手机号码</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="phone" type="text" name="phone" readonly="readonly" placeholder="请输入手机号码"  style="border:none;" th:value="${user.phone}"/>
+          </div>
+        </div>
+        <div class="form-group ">
+          <label class="col-sm-2 control-label" for="email">邮件</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="email" type="text"  name="email" readonly="readonly" placeholder="请输入邮件"  style="border:none;" th:value="${user.email}"/>
+          </div>
+        </div>
+        <div class="form-group ">
+          <label class="col-sm-2 control-label" for="select"> </label>
+          <div class="col-sm-5">
+            <input class="btn btn-default pull-left"  type="button" onclick="openModelFuc()" value="修改密码"/>
+            <input class="btn btn-default " style="margin: 0 9%" type="button" onclick="openForgetPasswordModelFuc()" value="忘记密码"/>
+            <a class="btn btn-default pull-right" onclick="back()">返回</a>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>

@@ -1,0 +1,166 @@
+
+#端口号
+server:
+  port: 9099
+  servlet:
+    session:
+      timeout: 86400s
+  tomcat:
+    max-http-form-post-size: -1
+  max-http-header-size: 80KB
+#app相关信息
+app:
+  domain: 192.168.1.11
+  urlValue: ${app.domain}:${server.port}
+  url: http://${app.urlValue}
+  name: Joyce
+  version: 1.10
+#数据库数据源相关配置
+spring:
+  aop:
+     proxy-target-class: true #true表示cglib代理
+  datasource:
+    url: jdbc:mysql://localhost:3306/springboot?useSSL=false
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    ###################以下为druid增加的配置###########################
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    # 初始化大小，最小，最大
+    druid:
+      initialSize: 5
+      minIdle: 5
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 600000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 600000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,log4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      # 合并多个DruidDataSource的监控数据
+      useGlobalDataSourceStat: true
+    ###############以上为配置druid添加的配置########################################
+
+  #静态资源路径配置
+  web:
+    resources:
+      static-locations: classpath:static/,file:${file.upload.path}
+  #thymeleaf的配置
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    cache: false
+
+  #热部署配置
+  devtools:
+    remote:
+      restart:
+        enabled: true
+    restart:
+      additional-paths: src/main
+
+  #邮件验证开启
+  mail:
+    host: smtp.qq.com
+    #发送者邮件
+    username: 1154517070@qq.com
+    # 生成的密匙
+    password: cbeilolivceihghd
+    default-encoding: UTF-8
+    from: 1154517070@qq.com
+    emailPassword: hj951206
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: false
+    static-path-pattern: /static/**
+  servlet:
+    multipart:
+      #最大的上传数据
+      max-file-size: 30MB
+# 接受参数json格式
+  jackson:
+    date-format: yyyy-MM-dd
+    time-zone: GMT+8
+#jpa配置
+#  jpa:
+#    database: mysql
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    open-in-view: false
+#mybatis配置
+mybatis:
+  #扫描包路径
+  type-aliases-package: com.moon.joyce.example.entity;com.moon.joyce.commons.utils.study.entity;com.moon.joyce.example.functionality.entity
+  #mapper文件地址
+  mapper-locations: com.moon.joyce.example.mapper
+  #配置
+  configuration:
+    #打开驼峰命名
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    ##这个不在控制台打印查询结果,但是在log4j中打印
+    ##log-impl: rg.apache.ibatis.logging.log4j2.Log4j2Impl
+#  config-location: classpath:mybatis/mybatis-config.xml
+
+#mybatis-plus配置
+mybatis-plus:
+  global-config:
+    db-config:
+      # 未删除
+      logic-not-delete-value: 0
+      # 已删除
+      logic-delete-value: 1
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.moon.joyce.example.entity
+  mapper-locations: classpath:mapper/*.xml
+
+#分页配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+
+#文件路径上传路径
+file:
+  config:
+    path: G:/${app.name}/files/config/
+  upload:
+    access: /img/photo/
+    relative: ${file.upload.access}**
+    path: G:/${app.name}/upload/images/
+
+#监听获得当前登录者
+context:
+  initializer:
+#    classes: com.moon.joyce.listeners.JoyceApplicationContextInitializer.java
+#超级管理员
+setting:
+  super_administrator: xdr
+
+###日志输出sql
+logging:
+  level:
+    com.moon.joyce.examp.mapper: debug
+  config: classpath:log4j2.xml
+  file:
+    path: D://${app:name}/
+    name: joyce.log

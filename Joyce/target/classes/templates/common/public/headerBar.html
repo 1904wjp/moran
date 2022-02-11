@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/static/bootstrap-3.4.1/dist/css/bootstrap.css}"/>
+<link rel="stylesheet" th:href="@{/static/bootstrap-3.4.1/dist/css/bootstrap-theme.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/common/public/headerBar.css}"/>
+
+<div th:fragment="bar" xmlns="http://www.w3.org/1999/html">
+    <input class="main_type" type="hidden" th:value="${session.session_user.status}"/>
+    <div id="app_bar" class="navbar navbar-default" style="z-index: 9999999999!important;" role="navigation">
+        <div class="navbar-header">
+           <a href="##" class="navbar-brand">Joyce</a>
+        </div>
+        <ul id="menu_bar" class="nav navbar-nav">
+        </ul>
+        <span id="user_info"  class="pull-right" style="margin-right: 3%">
+            <input id="session_user_id" type="hidden" th:value="${session.session_user.id}">
+          <span><img id="user_img" th:src="${session.session_user.fileUrl}" class="img-circle" onclick="dropdownBlock()"></span>
+            <span style="margin: 100%;line-height: 0%" th:text="${session.session_user.username}"></span>
+        <span><ul class="list-group" style="display: none; margin-right: 7%;">
+              <li> <a href="javascript:void(0)" data-toggle="modal" data-target="#queryModel"
+                      th:onclick="'queryUserFuc('+${session.session_user.id}+')'"> 详细信息</a> </li>
+              <li> <a href="javascript:void(0)" data-toggle="modal" data-target="#editModal"
+                      th:onclick="'editUserFuc('+${session.session_user.id}+',1)'"> 编辑信息</a></li>
+              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal"
+                     th:onclick="rmUser()">退出登录</a></li>
+              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#editModal"
+                     th:onclick="toAddSource()">添加背景</a></li>
+          </ul></span>
+        </span>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/user/user.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/common/public/headerBar.js}"></script>
+</html>
+
