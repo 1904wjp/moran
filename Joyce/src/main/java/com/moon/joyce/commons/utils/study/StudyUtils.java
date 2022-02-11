@@ -2,9 +2,12 @@ package com.moon.joyce.commons.utils.study;
 
 import com.moon.joyce.commons.utils.study.entity.ForkJoinDemo;
 import org.apache.commons.lang3.StringUtils;
+import sun.misc.Unsafe;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicStampedReference;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -25,8 +28,10 @@ public class StudyUtils {
         //futureJoyce();
         //futureJoyce2();
         //JMMDemo2();
-        volatileJoyce();
+        //volatileJoyce();
         //volatileJoyce2();
+        //casJoyce();
+        abaJoyce2();
     }
 
     /**
@@ -494,8 +499,83 @@ public class StudyUtils {
      * volatile禁止指令重排
      * 计算机并非按照自己写的程序顺序去执行（但是又依赖性）
      * 具体操作：加屏障
-     * 示例：单例模式
+     * 示例：单例模式(不安全，暴力反射)
      */
+
+    /**
+     * CAS的理解
+     * java无法直接操作内存，通过unsafe类来调用c++，间接操作内存
+     * compareAndSet(var1,var2)比较并且交换，如果是期望值var1，将当前调用对象设置成var2
+     * getAndAndInt()是一个自旋锁的方法：
+     *public final int getAndAddInt(Object obj, long offset, int delta) {
+     *     int v;
+     *     do {
+     *     	//通过对象和偏移量获取变量的值
+     *     	//由于volatile的修饰, 所有线程看到的v都是一样的
+     *         v= this.getIntVolatile(obj, offset);
+     *
+     * 	while中的compareAndSwapInt()方法尝试修改v的值,具体地, 该方法也会通过obj和offset获取变量的值
+     * 	如果这个值和v不一样, 说明其他线程修改了obj+offset地址处的值, 此时compareAndSwapInt()返回false, 继续循环
+     * 	如果这个值和v一样, 说明没有其他线程修改obj+offset地址处的值, 此时可以将obj+offset地址处的值改为v+delta, compareAndSwapInt()返回true, 退出循环
+     * 	Unsafe类中的compareAndSwapInt()方法是原子操作, 所以compareAndSwapInt()修改obj+offset地址处的值的时候不会被其他线程中断
+     *
+     *     } while(!this.compareAndSwapInt(obj, offset,v, v + delta));
+     *
+     *      return v;
+     */
+    public static void  casJoyce(){
+        AtomicInteger atomicInteger = new AtomicInteger();
+        boolean b = atomicInteger.compareAndSet(0, 1);
+        System.out.println(atomicInteger);
+    }
+    /**
+     * ABA问题
+     * 有两个线程和一块内存，a线程，b线程，内存c；c等于5，a线程把5修改成1，再把1修改成5，b把内存为5的情况下修改成20；
+     * 中间的被修改过，但是我并不知道，会出现一些问题
+     */
+    public static void abaJoyce(){
+        //类似内存c
+        AtomicInteger atomicInteger = new AtomicInteger(5);
+        //线程a
+        atomicInteger.compareAndSet(5,1);
+        System.out.println(atomicInteger.get());
+        atomicInteger.compareAndSet(1,5);
+        System.out.println(atomicInteger.get());
+        //线程b
+        atomicInteger.compareAndSet(5,20);
+        System.out.println(atomicInteger.get());
+    }
+    /**
+     * 解决ABA问题
+     * 加一个版本号变量
+     * AtomicStampedReference()
+     */
+    public static void abaJoyce2(){
+
+        AtomicStampedReference<Integer> asr = new AtomicStampedReference<>(200, 1);
+        //获取版本号
+        int version = asr.getStamp();
+        new Thread(
+                ()->{
+                    System.out.println("a=>"+asr.compareAndSet(5,2,version,version+1));
+                    System.out.println("a-v:"+asr.getStamp());
+                    },"a"
+        ).start();
+        new Thread(
+                ()->{
+                    //asr.getStamp()重新进内存获取当前版本号
+                    System.out.println("b=>"+asr.compareAndSet(2, 5, asr.getReference(), asr.getReference() + 1));
+                    System.out.println("b-v:"+asr.getStamp());
+                },"b"
+        ).start();
+        new Thread(
+                ()->{
+                    System.out.println("c=>"+asr.compareAndSet(5, 2, version, version + 1));
+                    System.out.println("c-v:"+asr.getStamp());
+                    },"c"
+        ).start();
+    }
+
 
 }
 

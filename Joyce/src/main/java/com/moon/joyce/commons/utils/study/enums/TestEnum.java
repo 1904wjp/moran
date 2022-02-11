@@ -1,11 +1,7 @@
-package com.moon.joyce.commons.utils.enums;
-
-import org.apache.commons.compress.utils.Lists;
+package com.moon.joyce.commons.utils.study.enums;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public enum TestEnum {
     TEST;
