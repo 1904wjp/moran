@@ -1,6 +1,6 @@
-package com.moon.joyce.commons.utils;
+package com.moon.joyce.commons.utils.study;
 
-import com.moon.joyce.commons.utils.entity.ForkJoinDemo;
+import com.moon.joyce.commons.utils.study.entity.ForkJoinDemo;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.concurrent.*;
@@ -496,4 +496,6 @@ public class StudyUtils {
      * 具体操作：加屏障
      * 示例：单例模式
      */
+
 }
+

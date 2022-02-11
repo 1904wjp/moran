@@ -332,7 +332,7 @@ public class UserController extends BaseController {
             //设置当前在线集合
             sessionUsers.add(dbUser);
             //检测是否存在当前登录人的相关配置
-            if (user.getStatus()==2){
+            if (!user.getStatus().equals(Constant.USER_TYPE_INVAILD_STATUS)){
                 Setting currentSetting = userServiceControllerDetailService.checkData(getSessionUser().getId());
                 if (Objects.nonNull(currentSetting)){
                     logger.info(username+"======>设置装配中");
@@ -458,7 +458,7 @@ public class UserController extends BaseController {
         }
         VerifyCode sessionVerifyCode= (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
         if (Objects.isNull(sessionVerifyCode)){
-            logger.info("sdadsa:"+user.getEmail());
+            logger.info("email=>"+user.getEmail());
             mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
             VerifyCode verifyCode = new VerifyCode();
             verifyCode.setCreateTime(new Date());

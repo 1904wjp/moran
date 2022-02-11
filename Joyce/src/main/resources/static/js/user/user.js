@@ -367,6 +367,7 @@ function updateUserFuc() {
         phone: $("#phone").val(),
         fileUrl: $("input[name='fileUrl']").val(),
         email: $("#email").val(),
+        status: $('#status').val(),
         nickname: $('#nickname').val()
     };
     var fdata = {

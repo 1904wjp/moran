@@ -8,27 +8,13 @@ import io.swagger.models.auth.In;
  * Joyce异常
  */
 public class JoyceException extends Exception{
-    /**
-     * 异常代码
-     */
-    private Integer exceptionCode;
+
     /**
      * 异常消息
      */
     private String exceptionMsg;
 
-    /**
-     * 异常类型
-     */
-    private String exceptionType;
-
-    public Integer getExceptionCode() {
-        return exceptionCode;
-    }
-
-    public void setExceptionCode(Integer exceptionCode) {
-        this.exceptionCode = exceptionCode;
-    }
+    private Throwable throwable;
 
     public String getExceptionMsg() {
         return exceptionMsg;
@@ -38,28 +24,24 @@ public class JoyceException extends Exception{
         this.exceptionMsg = exceptionMsg;
     }
 
-    public String getExceptionType() {
-        return exceptionType;
+
+    public Throwable getThrowable() {
+        return throwable;
     }
 
-    public void setExceptionType(String exceptionType) {
-        this.exceptionType = exceptionType;
+    public void setThrowable(Throwable throwable) {
+        this.throwable = throwable;
     }
 
     public JoyceException() {
     }
-    public JoyceException(String exceptionMsge) {
-        this.exceptionMsg = exceptionMsg;
+    public JoyceException(String exceptionMsg) {
+        super(exceptionMsg);
     }
-
-    public JoyceException(String exceptionMsg, String exceptionType) {
-        this.exceptionMsg = exceptionMsg;
-        this.exceptionType = exceptionType;
+    public JoyceException(Throwable throwable) {
+        super(throwable);
     }
-
-    public JoyceException(Integer exceptionCode, String exceptionMsg, String exceptionType) {
-        this.exceptionCode = exceptionCode;
-        this.exceptionMsg = exceptionMsg;
-        this.exceptionType = exceptionType;
+    public JoyceException(String exceptionMsg,Throwable throwable) {
+        super(exceptionMsg,throwable);
     }
 }

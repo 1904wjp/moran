@@ -15,25 +15,16 @@ public class JoyceExceptionUtils {
     private JoyceExceptionUtils() throws JoyceException {
         throw new JoyceException("工具类无法实例化");
     }
-    /**
-     * 异常方法
-     * @param code
-     * @param msg
-     * @param type
-     * @return
-     */
-    public static JoyceException exception(Integer code ,String msg, String type){
-        return new JoyceException(code,msg,type);
-    }
+
 
     /**
      * 异常方法
      * @param msg
-     * @param type
+     * @param throwable
      * @return
      */
-    public static JoyceException exception(String msg, String type){
-        return new JoyceException(Constant.ERROR_CODE,msg,type);
+    public static JoyceException exception( String msg,Throwable throwable){
+        return new JoyceException(msg,throwable);
     }
     /**
      * 异常方法
@@ -43,4 +34,5 @@ public class JoyceExceptionUtils {
     public static JoyceException exception(String msg){
         return new JoyceException(msg);
     }
+
 }

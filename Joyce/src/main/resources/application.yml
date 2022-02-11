@@ -108,7 +108,7 @@ spring:
 #mybatis配置
 mybatis:
   #扫描包路径
-  type-aliases-package: com.moon.joyce.example.entity;com.moon.joyce.commons.utils.entity;com.moon.joyce.example.functionality.entity
+  type-aliases-package: com.moon.joyce.example.entity;com.moon.joyce.commons.utils.study.entity;com.moon.joyce.example.functionality.entity
   #mapper文件地址
   mapper-locations: com.moon.joyce.example.mapper
   #配置
