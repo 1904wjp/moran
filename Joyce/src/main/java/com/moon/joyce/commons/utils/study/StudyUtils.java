@@ -575,7 +575,5 @@ public class StudyUtils {
                     },"c"
         ).start();
     }
-
-
 }
 

@@ -40,9 +40,19 @@ public class BaseController {
     public String appVersion;
     //上传文件路径
     @Value("${file.upload.path}")
-    public String filePath;
+    public  String filePath;
     @Value("${setting.super_administrator}")
     public String superAdministrator;
+
+    //私有命令
+    @Value("$(command.start)")
+    public  volatile static String c_start;
+    @Value("$(command.close)")
+    public volatile static String c_close;
+    @Value("$(command.init)")
+    public volatile static String c_init;
+    @Value("$(command.clear)")
+    public volatile static String c_clear;
     //sessionMap
     public List<User> sessionUsers = new ArrayList<>();
     @Autowired

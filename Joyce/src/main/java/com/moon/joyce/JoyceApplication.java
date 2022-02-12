@@ -40,7 +40,4 @@ public class JoyceApplication {
         SpringApplication.run(JoyceApplication.class, args);
         System.out.println("___________________________Joyce start successful___________________________");
     }
-
-
-
 }

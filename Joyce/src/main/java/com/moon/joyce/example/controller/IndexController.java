@@ -121,6 +121,7 @@ public class IndexController extends BaseController {
     @RequestMapping("/doMainInit")
     public Result doMainInit(@RequestParam("code")String code){
 
+
         User user = getSessionUser();
         //文件内容
         String filePathName = confPath + user.getUsername() + "_config.xml";
@@ -140,14 +141,15 @@ public class IndexController extends BaseController {
         String[] fileNames = {"/info.log","/warn.log","/error.log"};
         List<String> strings = new ArrayList<>();
         int index = (int)getSessionValue("index");
-        if (code.equals("start up")){
+
+        if (code.equals(c_start)){
             if (index==0){
                 setSession("index",1);
                 strings.add("Joyce has been started");
             }else {
                 strings.add("Joyce has been started,No need to open");
             }
-        }else if (code.equals("init Joyce")){
+        }else if (code.equals(c_init)){
             if (index==1){
                 for (String fileName : fileNames) {
                     List<String> list = FileUtils.readyLineFileConvertList(Constant.LOGGER_PATH + fileName);
@@ -160,7 +162,7 @@ public class IndexController extends BaseController {
                 strings.clear();
                 strings.add("Joyce no start");
             }
-        }else if (code.equals("shut down")){
+        }else if (code.equals(c_init)){
            if (index!=1){
                strings.clear();
                strings.add("Joyce no start");
@@ -168,7 +170,7 @@ public class IndexController extends BaseController {
                strings.clear();
                strings.add("Joyce has been close");
            }
-        }else if(code.equals("clear")){
+        }else if(code.equals(c_clear)){
             strings.clear();
             strings.add("########********###");
         }else if(code.equalsIgnoreCase("Terminate batch operation(y/n):y")){
