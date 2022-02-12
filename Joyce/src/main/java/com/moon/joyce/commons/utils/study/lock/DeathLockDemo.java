@@ -38,5 +38,5 @@ public class DeathLockDemo {
      }
  }
 }
-//命令：jps -l
+// 命令：jps -l
 // 使用jstack 进程进程号 找到死锁信息
