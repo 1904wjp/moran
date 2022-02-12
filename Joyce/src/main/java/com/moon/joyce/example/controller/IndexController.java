@@ -201,7 +201,7 @@ public class IndexController extends BaseController {
             MainSource mainSource = new MainSource(1l,dbSource, list);
             return ResultUtils.dataResult(true,mainSource);
         }
-        return ResultUtils.error("数据无配置");
+        return ResultUtils.error("主页背景默认配置");
     }
 
     /**

@@ -14,15 +14,21 @@ function initMainPictures() {
     }).done(function (data) {
         loading(false);
         if (data.rs) {
-            $('.intro__title').text(data.data.source.sourceName);
-            $('.intro__description__content').text(data.data.source.descContent);
-            $('.intro__image').attr("src", data.data.source.url);
-            let arrys;
-            for (let i = 0; i < (arrys =data.data.sources).length; i++) {
+            let res = data.data;
+            $('.intro__title').text(res.source.sourceName);
+            $('.intro__description__content').text(res.source.descContent);
+            $('.intro__image').attr("src", res.source.url);
+            let arrys = res.sources;
+            let start = 0;
+            let len = arrys.length;
+            if (len>=12){
+                start = len -12;
+            }
+            for (let i = start; i < len; i++) {
                 $('.items-wrap').append("<a href=\"#\" class=\"item\">\n" +
-                    "            <input type='hidden' value='" + data.data.sources[i].id + "'/>" +
-                    "            <img class=\"item__image\" src=\"" + data.data.sources[i].url + "\" alt=\"item01\"/>\n" +
-                    "            <h2 class=\"item__title\">data.data.sources[i].sourceName</h2>\n" +
+                    "            <input type='hidden' value='" + arrys[i].id + "'/>" +
+                    "            <img class=\"item__image\" src=\"" + arrys[i].url + "\" alt=\""+arrys[i].sourceName+"\"/>\n" +
+                    "            <h2 class=\"item__title\">arrys[i].sourceName</h2>\n" +
                     "        </a>");
             }
         } else {
@@ -30,7 +36,7 @@ function initMainPictures() {
         }
         ;
     }).fail(function () {
-        tips(false, ajaxFailMsg)
+        tips(false, ajaxFailMsg);
     });
 }
 

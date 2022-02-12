@@ -11,6 +11,8 @@ function saveSource(){
         url: $("#source_url").val(),
         sourceName: $("#sourceName").val(),
         sort: $("#sort").val(),
+        descContent: $('#descContent').val(),
+        applyStatus: $("#applyStatus option:selected").val()
     };
     let fData={
         url: $("#source_url").val(),

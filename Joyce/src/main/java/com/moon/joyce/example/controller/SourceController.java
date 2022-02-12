@@ -66,6 +66,13 @@ public class SourceController extends BaseController {
     @ResponseBody
     @PostMapping("/saveSource")
     public Result addSource(Source source){
+        System.out.println("====>"+source.toString());
+        if (source.getApplyStatus().equals(Constant.APPLY_STATUS)){
+            boolean b = retireApplyStatus();
+            if (!b){
+                return ResultUtils.error();
+            }
+        }
         Source source1 = new Source();
         source1.setSourceName(source.getSourceName());
         source1.setUserId(getSessionUserId());
@@ -100,17 +107,9 @@ public class SourceController extends BaseController {
         }
         source.setUpdateBy(getSessionUser().getUsername());
         source.setUpdateTime(new Date());
-        Source source1 = new Source();
-        source1.setDeleteFlag(Constant.UNDELETE_STATUS);
-        source1.setApplyStatus(Constant.APPLY_STATUS);
-        source1.setUserId(getSessionUserId());
-        Source one = sourceService.getOne(source1);
-        one.setApplyStatus(Constant.SPARE_STATUS);
-        if (Objects.nonNull(one)){
-            boolean rs = sourceService.saveOrUpdate(one);
-            if (!rs){
-                return ResultUtils.error("修改失败");
-            }
+        boolean b = retireApplyStatus();
+        if (!b){
+            return ResultUtils.error();
         }
         source.setApplyStatus(Constant.APPLY_STATUS);
         boolean rs = sourceService.saveOrUpdate(source);
@@ -131,5 +130,17 @@ public class SourceController extends BaseController {
         return ResultUtils.success("上传成功",filePath);
     }
 
+    public boolean retireApplyStatus(){
+        Source source1 = new Source();
+        source1.setDeleteFlag(Constant.UNDELETE_STATUS);
+        source1.setApplyStatus(Constant.APPLY_STATUS);
+        source1.setUserId(getSessionUserId());
+        Source one = sourceService.getOne(source1);
+        if (Objects.nonNull(one)){
+            one.setApplyStatus(Constant.SPARE_STATUS);
+            return sourceService.saveOrUpdate(one);
+        }
+        return  true;
+    }
 }
 
