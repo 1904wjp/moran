@@ -1,4 +1,4 @@
-package com.moon.joyce.commons.utils.study.single;
+package com.moon.joyce.commons.utils.study.juc.single;
 
 import com.moon.joyce.example.functionality.entity.JoyceException;
 

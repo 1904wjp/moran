@@ -1,4 +1,4 @@
-package com.moon.joyce.commons.utils.study.single;
+package com.moon.joyce.commons.utils.study.juc.single;
 
 import com.moon.joyce.commons.utils.JoyceExceptionUtils;
 import com.moon.joyce.example.functionality.entity.JoyceException;
@@ -7,7 +7,6 @@ import org.apache.commons.compress.utils.Lists;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @Author: XingDaoRong
