@@ -111,6 +111,7 @@ public class IndexController extends BaseController {
             }
         }
         userService.saveOrUpdate(sessionUser);
+
         return "main/main";}
 
     /**
@@ -120,7 +121,6 @@ public class IndexController extends BaseController {
     @ResponseBody
     @RequestMapping("/doMainInit")
     public Result doMainInit(@RequestParam("code")String code){
-
 
         User user = getSessionUser();
         //文件内容

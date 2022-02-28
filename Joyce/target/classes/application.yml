@@ -10,7 +10,7 @@ server:
   max-http-header-size: 80KB
 #app相关信息
 app:
-  domain: 192.168.1.11
+  domain: localhost
   urlValue: ${app.domain}:${server.port}
   url: http://${app.urlValue}
   name: Joyce
@@ -98,6 +98,19 @@ spring:
   jackson:
     date-format: yyyy-MM-dd
     time-zone: GMT+8
+  ###Redis配置
+  redis:
+    host: ${app.domain}
+    port: 6379
+    password:
+    timeout: 1800000
+    lettuce:
+      pool:
+        max-active: 8
+        min-idle: 0
+        max-wait: -1
+        max-idle: 8
+    database: 0
 #jpa配置
 #  jpa:
 #    database: mysql
@@ -164,3 +177,4 @@ logging:
   file:
     path: D://${app:name}/
     name: joyce.log
+

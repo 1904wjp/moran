@@ -2,13 +2,16 @@ package com.moon.joyce;
 
 import com.moon.joyce.commons.utils.DateUtils;
 import com.moon.joyce.commons.utils.FileUtils;
+import com.moon.joyce.commons.utils.RedisUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import redis.clients.jedis.Jedis;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
@@ -138,7 +141,23 @@ public class Test {
         }
     }
     public static void task03(){
-        Supplier<String> supplier = DateUtils.dateForMat();
-        System.out.println(supplier.get());
+
+        String code = "451dasd";
+        Jedis instance = RedisUtils.getInstance();
+        String currentCode = "current_code_user";
+        instance.setex(currentCode,10,code);
+        int i = 0;
+        while (i<5){
+            String user = RedisUtils.getVerifyCode(instance,currentCode, "333", 3, 60 * 20);
+            System.out.println(user);
+            i++;
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        instance.close();
     }
+
 }

@@ -81,7 +81,6 @@ public class DateUtils implements Serializable {
                     pattern = Constant.DATE_TIME_DAY;break;
             }
         }
-
         SimpleDateFormat dfm =  new SimpleDateFormat(pattern);
         return  dfm.format(date);
     }
@@ -188,8 +187,8 @@ public class DateUtils implements Serializable {
     public static String showDate(Date date){
         String  dateStr=dateForMat("sv",date);
         String year = dateStr.substring(0,4);
-        Long yearNum =Long.parseLong(year);
-        int month = Integer.parseInt(dateStr.substring(5,7));
+        long yearNum =Long.parseLong(year);
+        int month = Integer.parseInt(dateStr.substring(4,6));
         int day = Integer.parseInt(dateStr.substring(6,8));
         String hour = dateStr.substring(8,10);
         String minute = dateStr.substring(10,12);
@@ -229,4 +228,20 @@ public class DateUtils implements Serializable {
         return result;
     }
 
+    /**
+     * 字符串转时间
+     * @param dateStr
+     * @param pattern
+     * @return
+     */
+    public static Date strToDate(String dateStr,String pattern){
+        SimpleDateFormat dfm =  new SimpleDateFormat(pattern);
+        Date parse = null;
+        try {
+            parse = dfm.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return parse;
+    }
 }

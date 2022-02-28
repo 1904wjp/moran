@@ -1,14 +1,17 @@
 package com.moon.joyce.example.functionality.entity;
 
-import io.swagger.models.auth.In;
+
+
+import java.io.IOException;
 
 /**
  * @Author: XingDaoRong
  * @Date: 2021/12/11
  * Joyce异常
  */
-public class JoyceException extends Exception{
+public class JoyceException extends IOException {
 
+    private static final long serialVersionUID = 5460755684234005953L;
     /**
      * 异常消息
      */

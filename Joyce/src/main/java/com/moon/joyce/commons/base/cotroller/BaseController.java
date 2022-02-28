@@ -2,6 +2,7 @@ package com.moon.joyce.commons.base.cotroller;
 
 
 import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.commons.utils.RedisUtils;
 import com.moon.joyce.example.entity.DbBaseSetting;
 import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.entity.User;
@@ -12,9 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -57,6 +61,10 @@ public class BaseController {
     public List<User> sessionUsers = new ArrayList<>();
     @Autowired
     private DbBaseSettingService dbBaseSettingService;
+
+    //缓存
+    public static Jedis cache ;
+
     /**
      * 获得session
      * @return
@@ -139,7 +147,11 @@ public class BaseController {
      * @return
      */
     public Setting getCurrentSetting(){
-        return (Setting) getSession().getAttribute(getSessionUser().getId()+Constant.CURRENT_SETTING);
+        Setting setting = null;
+        if (Objects.nonNull(getSession().getAttribute(getSessionUser().getId()+Constant.CURRENT_SETTING))){
+            setting = (Setting) getSession().getAttribute(getSessionUser().getId()+Constant.CURRENT_SETTING);
+        }
+        return setting;
     }
 
     /**

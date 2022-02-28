@@ -11,7 +11,6 @@ import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.entity.vo.UserChartVo;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.entity.Setting;
-import com.moon.joyce.example.functionality.entity.VerifyCode;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.ChatRecordService;
 import com.moon.joyce.example.service.UserService;
@@ -442,15 +441,16 @@ public class UserController extends BaseController {
     @Transactional
     @RequestMapping("/getEmailCode")
     public Result getEmailCode(@RequestParam String email){
-        boolean result = false;
-        String mailCode = null;
         User user = new User();
         user.setEmail(email);
         User dbUser = userService.getUser(user, "");
         if (Objects.isNull(dbUser)){
             return ResultUtils.error(Constant.NULL_CODE);
         }
-        VerifyCode sessionVerifyCode= (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
+        String mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
+        cache = RedisUtils.getInstance();
+        return ResultUtils.dataResult(RedisUtils.setVerifyCode(cache, email, 60,mailCode),"验证码不可重复发送","验证码已发送，请查看");
+        /*VerifyCode sessionVerifyCode= (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
         if (Objects.isNull(sessionVerifyCode)){
             logger.info("email=>"+user.getEmail());
             mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
@@ -478,7 +478,7 @@ public class UserController extends BaseController {
         }else {
             //有效时间不能重复发送验证码
            return ResultUtils.error(Constant.ERROR_CODE,Constant.SEND_EMAIL_SEND_VAILD_TIME_MESSAGE);
-        }
+        }*/
     }
 
     /**
@@ -498,7 +498,12 @@ public class UserController extends BaseController {
         if (Objects.isNull(dbUser)){
             return ResultUtils.error("该邮件未注册");
         }
-        VerifyCode verifyCode = (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
+        int result = RedisUtils.compareCode(cache, emailCode, email, 3, 24 * 60 * 60);
+        if (result==-1){
+            return ResultUtils.error("请输入正确的验证码");
+        }
+        return ResultUtils.dataResult(result,"验证码已失效,请重新获取","校验成功");
+       /* VerifyCode verifyCode = (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
         boolean vaildTime = DateUtils.dateCompare(verifyCode.getCreateTime(), new Date(), verifyCode.getVaildTime());
         //判断验证码是否失效
         if (vaildTime){
@@ -514,7 +519,7 @@ public class UserController extends BaseController {
             boolean result = userService.updateById(dbUser);
             return ResultUtils.dataResult(result);
         }
-        return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);
+        return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);*/
     }
 
     /**
