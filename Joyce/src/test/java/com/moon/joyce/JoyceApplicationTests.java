@@ -21,12 +21,15 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JoyceApplication.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class JoyceApplicationTests {
-    @Autowired
-    private RedisTemplate redisTemplate;
+
     @Test
     public void contextLoads() {
-            redisTemplate.opsForValue().set("ok",12);
-            System.out.println(redisTemplate.opsForValue().get("ok"));
+        for (int i = 1; i < 10; i++) {
+            System.out.println();
+            for (int j=1; j<= i; j++){
+                System.out.print(i+" * "+j +" = "+i*j+"\t");
+            }
+        }
 
     }
 

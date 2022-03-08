@@ -40,9 +40,18 @@ public class UUServiceImpl extends ServiceImpl<UUMapper, UU> implements UUServic
     }
 
     @Override
-    public List<UU> getAllList(Long userId) {
-        return uuMapper.selectList(userId);
+    public UU getOne(UU uu) {
+        QueryWrapper<UU> wrapper = new QueryWrapper<>();
+        if (Objects.nonNull(uu.getUserAId())){
+            wrapper.eq("user_a_id",uu.getUserAId());
+        }
+        if (Objects.nonNull(uu.getUserBId())){
+            wrapper.eq("user_b_id",uu.getUserBId());
+        }
+        return baseMapper.selectOne(wrapper);
     }
+
+
 
 
 }

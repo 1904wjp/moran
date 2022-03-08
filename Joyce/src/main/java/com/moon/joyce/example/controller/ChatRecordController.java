@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.annotation.Resource;;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class ChatRecordController extends BaseController {
     @Autowired
     private ChatRecordService chatRecordService;
+    //redis缓存
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -50,7 +50,6 @@ public class ChatRecordController extends BaseController {
             redisTemplate.expire(uniqueList,1, TimeUnit.DAYS);
         }else{
             list = opsForList.range(uniqueList, 0, -1);
-            System.out.println("内存获取");
         }
         return ResultUtils.dataResult(!list.isEmpty(),list);
     }

@@ -1,0 +1,32 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>用户修改基本信息</title>
+</head>
+<div class="container">
+    <div class="row row-centered">
+        <div class="well col-md-6 col-centered">
+            <img id="display_img_resource" width="100px" height="100px" class="img-circle pull-right"/>
+            <form class="form-horizontal center-block" role="form"  method="get">
+                <legend>查找用户</legend>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">搜索好友</label>
+                    <div  class="col-sm-8 " style="margin-right: -9%; width: 25%;">
+                        <input class="form-control"  id="username" type="text" placeholder="请输入好友用户名"/>
+                    </div>
+                    <a class="btn btn-default pull-right"  onclick="searchFriendFuc()">查找</a>
+                </div>
+                <div class="form-group ">
+                    <div class="col-sm-6">
+                        <a class="btn btn-default pull-right"  onclick="back()">返回</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/user/addFriend.js}"></script>
+<script type="text/javascript" >
+        //回车添
+
+</script>

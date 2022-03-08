@@ -27,9 +27,7 @@ public interface UUService extends IService<UU> {
      */
     int sendArticleFriendApplication(UU uu);
 
-    /**
-     * 获取当前登录人所有的被申请列表
-     * @return
-     */
-    List<UU> getAllList(Long userId);
+
+
+    UU getOne(UU uu);
 }

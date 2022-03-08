@@ -106,17 +106,26 @@ function toAddSource(){
     toList("/example/source/sourcePage");
 }
 
+
+
+/**
+ * 添加好友
+ */
+function toAddFriend(){
+    toList("/example/uu/searchFriendPage");
+}
+
 /**
  *用户下拉菜单显示和隐藏
  */
-var index = 0;
+var flag = false;
 function dropdownBlock(){
-    if (index%2==0){
+    if (flag){
         $(".list-group").show();
     }else {
         $(".list-group").hide();
     }
-    ++index;
+    flag = -flag;
 }
 $("#user_info").hover(function(){
     $(".list-group").show();
