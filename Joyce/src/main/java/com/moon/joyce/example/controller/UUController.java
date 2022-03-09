@@ -8,6 +8,7 @@ import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.service.UUService;
 import com.moon.joyce.example.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -70,7 +69,12 @@ public class UUController extends BaseController {
         String  uniqueLista = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
         ListOperations<String, UU> operations = redisTemplate.opsForList();
         List<UU> list = operations.range(uniqueLista, 1, -1);
-        List<UU> uus = list.stream().filter(x -> getSessionUserId().equals(x.getUserBId())).distinct().collect(Collectors.toList());
+        List<UU> uus = list.stream().filter(
+                x -> getSessionUserId().equals(x.getUserBId())&&null!=x.getUserAId()).collect(
+                        Collectors.collectingAndThen(
+                        Collectors.toCollection(
+                                ()-> new TreeSet<>(Comparator.comparing(UU::getUserAId))
+                        ),ArrayList::new));
         return ResultUtils.success(uus);
     }
 
@@ -95,13 +99,16 @@ public class UUController extends BaseController {
             return ResultUtils.error("该用户已是你的好友");
         }
         //存入redis
+        uu.setUsernameA(getSessionUserName());
+        uu.setUserAId(getSessionUserId());
         uu.setCreateTime(new Date());
+        uu.setUserFileUrlA(getSessionUser().getFileUrl());
         uu.setUsernameB(userB.getUsername());
         uu.setDeleteFlag(Constant.UNDELETE_STATUS);
         uu.setResultStr("1");
         operations.rightPush(uniqueLista,uu);
         operations.rightPush(uniqueListb,uu);
-        logger.info(operations.range(uniqueLista,0,-1).toString());
+        logger.info("===============>",operations.range(uniqueLista,1,-1).toString());
         return ResultUtils.success("等待对方同意");
     }
 
@@ -112,24 +119,24 @@ public class UUController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/agreeFriend")
-    public Result agreeFriend(@RequestParam Long userAId,boolean isAgree){ ;
-        if (isAgree){
-            String agreeList = UU.uniqueAppend+"AGREELIST"+getSessionUserId();
+    public Result agreeFriend(@RequestParam("id") Long userAId,@RequestParam("type") Integer isAgree){ ;
+
+
             String  uniqueLista = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
             ListOperations<String, UU> operations = redisTemplate.opsForList();
             List<UU> uus = operations.range(uniqueLista, 1, -1);
             for (int i = 0; i < uus.size(); i++) {
                 UU tempUU = uus.get(i);
-                if (getSessionUserId().equals(tempUU.getUserBId())&&userAId.equals(tempUU.getUserAId())){
+                if (userAId.equals(tempUU.getUserAId())){
                     uus.remove(tempUU);
-                    tempUU.setResultStr("已同意");
+                    tempUU.setResultStr(isAgree.toString());
                     uus.add(tempUU);
                 }
             }
+            redisTemplate.delete(uniqueLista);
             operations.leftPushAll(uniqueLista,uus);
-            return ResultUtils.success("添加成功");
-        }
-        return ResultUtils.error("已拒绝");
+            logger.info("====>",operations.leftPushAll(uniqueLista,uus),operations.range(uniqueLista, 0, -1).toString());
+            return ResultUtils.dataResult(isAgree==0,"已拒绝","添加成功");
     }
 
 }

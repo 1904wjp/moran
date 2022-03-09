@@ -26,12 +26,8 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender mailSender;
     @Value("${spring.mail.from}")
     private String from;
-    /**
-     * 发送HTML邮件
-     * @param to 收件者
-     * @param subject 邮件主题
-     * @param content 文本内容
-     */
+
+
     @Override
     public void sendHtmlMail(EmailData emailData) {
         MimeMessage message = mailSender.createMimeMessage();

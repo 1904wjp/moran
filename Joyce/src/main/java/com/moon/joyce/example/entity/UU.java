@@ -57,4 +57,11 @@ public class UU extends BaseEntity {
      */
     @TableField(exist = false)
     private String resultStr ;
+
+    /**
+     * 用户图像
+     */
+    @TableField(exist = false)
+    private String userFileUrlA ;
+
 }
