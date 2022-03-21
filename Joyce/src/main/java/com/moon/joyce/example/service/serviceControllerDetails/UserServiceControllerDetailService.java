@@ -27,9 +27,17 @@ public interface UserServiceControllerDetailService {
      */
     Setting checkData(Long userId);
 
-    //注册基础数据检测
+    /**
+     * 注册基础数据检测
+     * @param user
+     * @return
+     */
     Result checkRegistData(User user);
 
-    //用户状态数据检测
+    /**
+     * 用户状态数据检测
+     * @param user
+     * @return
+     */
     Result checkStatusData(User user);
 }

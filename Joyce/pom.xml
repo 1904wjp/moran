@@ -78,11 +78,6 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
-        <!-- web开发包：包含Tomcat和Springmvc -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
         <!--thymeleaf启动器坐标-->
         <dependency>

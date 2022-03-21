@@ -38,7 +38,7 @@ public class ChatRecordController extends BaseController {
     @ResponseBody
     @GetMapping("/getAllRecord")
     public Result getAllRecord(@RequestParam Long userBId){
-        List list;
+        /*List list;
         String uniqueValue = ChatRecord.uniqueAppend + userBId + getSessionUserId() + "value";
         String uniqueList = ChatRecord.uniqueAppend + userBId + getSessionUserId() + "list";
         ListOperations opsForList = redisTemplate.opsForList();
@@ -50,7 +50,8 @@ public class ChatRecordController extends BaseController {
             redisTemplate.expire(uniqueList,1, TimeUnit.DAYS);
         }else{
             list = opsForList.range(uniqueList, 0, -1);
-        }
+        }*/
+        List<ChatRecord> list = chatRecordService.getAll(new ChatRecord(getSessionUser().getId(), userBId));
         return ResultUtils.dataResult(!list.isEmpty(),list);
     }
 }
