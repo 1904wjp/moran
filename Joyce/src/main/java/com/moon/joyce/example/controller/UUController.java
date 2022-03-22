@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -137,6 +138,14 @@ public class UUController extends BaseController {
             operations.leftPushAll(uniqueLista,uus);
             logger.info("====>",operations.leftPushAll(uniqueLista,uus),operations.range(uniqueLista, 0, -1).toString());
             return ResultUtils.dataResult(isAgree==0,"已拒绝","添加成功");
+    }
+
+    @RequestMapping("/webrtc/{id}.html")
+    public ModelAndView socketChartPage(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("user/webrtc.html");
+        modelAndView.addObject("id",id);
+        return modelAndView;
     }
 
 }
