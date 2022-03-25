@@ -51,8 +51,8 @@
                 var newArr = [];
                 if (res) {
                     //获取到各个省份的数据
+                    res = JSON.parse(res);
                     var province = res.areaTree[0].children;
-                    console.log(province);
                     for (var i = 0; i < province.length; i++) {
                         /*let  bgc =  getbgColor(province[i].total.confirm);*/
                         var json={};
