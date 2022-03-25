@@ -53,15 +53,15 @@ $(function () {
         url: "/example/covid/map",
         name: "疫情数据",
         childs: []
-    },{
+    },/*{
         id: 7,
         parentId: 0,
         val: "dayTask",
         url: "/example/dayTask/dayTaskListPage",
         name: "每日看板",
         childs: []
-    }, {
-        id: 8,
+    },*/ {
+        id: 7,
         parentId: 0,
         val: "au",
         url: "/aboutUs",
