@@ -106,4 +106,9 @@ public class BaseEntity implements Serializable {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return Integer.parseInt(String.valueOf(this.id % 16));
+    }
 }

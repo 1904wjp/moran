@@ -111,6 +111,15 @@ spring:
         max-wait: -1
         max-idle: 8
     database: 0
+  banner:
+    charset: utf-8
+    location: classpath:banner.txt
+    image:
+      location: ali.gif
+      width: 76
+      height:
+      margin: 2
+      invert: false
 #jpa配置
 #  jpa:
 #    database: mysql

@@ -306,6 +306,7 @@ public class UserController extends BaseController {
         user.setUsername(username);
         user.setPassword(MD5Utils.getMD5Str(password));
         logger.info(username+"======>登录中");
+        user.setId(2l);
         User dbUser = userService.getUser(user, Constant.USER_TYPE_LOGIN);
         user.setStatus(dbUser.getStatus());
         if (Objects.nonNull(dbUser)){
