@@ -85,7 +85,7 @@ function deleteIdFuc(id) {
             
         }).done(function (data) {
             if (data.rs) {
-               tips(rs,data.msg)
+               tips(data.rs,data.msg)
                 toList('/example/user/userList');
             }else {
                 tips(data.rs,data.msg)
@@ -136,7 +136,7 @@ function recoverUserFuc(id) {
             data: data,
         }).done(function (data) {
             if (data.rs) {
-               tips(rs,data.msg)
+               tips(data.rs,data.msg)
                 toList('/example/user/userList');
             }else {
                 toastr.error(data.msg)
@@ -322,7 +322,7 @@ function password_update_verify() {
                 tips(data.rs,data.msg);
                 if (data.rs) {
                     $("#updatePasswordModal").modal('hide');
-                   tips(rs,data.msg)
+                   tips(data.rs,data.msg)
                     toList("/example/user/login");
                 }
             }).fail(function () {
