@@ -9,7 +9,7 @@ import java.io.IOException;
  * @Date: 2021/12/11
  * Joyce异常
  */
-public class JoyceException extends IOException {
+public class JoyceException extends RuntimeException {
 
     private static final long serialVersionUID = 5460755684234005953L;
     /**

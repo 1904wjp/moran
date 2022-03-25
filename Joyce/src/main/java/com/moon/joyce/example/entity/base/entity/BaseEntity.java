@@ -99,5 +99,11 @@ public class BaseEntity implements Serializable {
         this.params = params;
     }
 
-
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BaseEntity){
+            return this.id.equals(((BaseEntity) obj).id);
+        }
+        return false;
+    }
 }

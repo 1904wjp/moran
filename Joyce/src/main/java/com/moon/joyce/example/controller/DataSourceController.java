@@ -37,8 +37,7 @@ public class DataSourceController extends BaseController {
      * 页面路径前缀
      */
     private final String pagePrefix = "tools/createCode/";
-    @Autowired
-    private DataSourceService dataSourceService;
+
     /**
      * url的路径前缀
      */
