@@ -1,10 +1,7 @@
 package com.moon.joyce;
 
-import com.moon.joyce.commons.utils.DateUtils;
 import com.moon.joyce.commons.utils.FileUtils;
-import com.moon.joyce.commons.utils.JoyceExceptionUtils;
 import com.moon.joyce.commons.utils.RedisUtils;
-import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -13,10 +10,8 @@ import redis.clients.jedis.Jedis;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 /**
  * @Author: XingDaoRong
@@ -24,23 +19,111 @@ import java.util.function.Supplier;
  */
 public class Test {
     public static void main(String[] args) {
-            addHeap();
+        for (int i = 0; i < merge().length; i++) {
+            System.out.println(Arrays.toString(merge()[i]));
+        }
     }
 
     /**
      * 死循环
+     * @return
      */
-    public static void addHeap()  {
-       List<Date> dates = new ArrayList<>();
+    public static int[][] addHeap()  {
+        int[][] intervals = {{1,3},{2,6},{8,10},{15,18},{7,9}};
+        int couti = 0;
+        int count = 0;
+        if (intervals.length<=1){
+            return intervals;
+        }
+        //排序
+       for (int i = 0; i < intervals.length-1; i++) {
+            if(intervals[i][1]>intervals[i+1][1]){
+                int temp [] = intervals[i];
+                intervals[i]=intervals[i+1];
+                intervals[i+1] = temp;
+            }
+        }
+
+        for (int i = 0; i < intervals.length-1; i++) {
+            if (intervals[i][1]>=intervals[i+1][0]){
+                count++;
+            }
+        }
+
+        int[][] merge =   new int[intervals.length-count][2];
+        for (int i = 0; i < intervals.length-1; i++) {
+            if (intervals[i][1]>=intervals[i+1][0]){
+                merge[couti] = getMaxAndMinValue(intervals[i][0],intervals[i][1],intervals[i + 1][0],intervals[i + 1][1]);
+                i++;
+            }else{
+                merge[couti] = new int[]{intervals[i][0], intervals[i][1]};
+            }
+            if(intervals[intervals.length-2][1]<intervals[intervals.length-1][0]){
+                merge[intervals.length-count-1] = new int[]{intervals[intervals.length-1][0], intervals[intervals.length-1][1]};
+            };
+            couti++;
+        }
+        return merge;
+    }
+    public static int[] getMaxAndMinValue(int var1,int var2,int var3,int var4){
+         int[] arry= { var1, var2, var3, var4};
+         int max = var1;
+         int min = var1;
+        for (int i = 0; i < arry.length; i++) {
+            if (arry[i]>max){
+                max = arry[i];
+            }
+            if (arry[i]<min){
+                min = arry[i];
+            }
+        }
+        return new int[]{min,max};
+    }
+
+   public static  int[][] merge(){
+       int[][] intervals = {{4,5},{2,4},{4,6},{3,4},{0,0},{1,1},{3,5},{2,2}};
+       if (intervals.length<=1){
+           return intervals;
+       }
+
+       //排序
        while (true){
-           dates.add(new Date());
-           try {
-               Thread.sleep(5);
-           } catch (InterruptedException e) {
-               e.printStackTrace();
+           int tempi = 0;
+       for (int i = 0; i < intervals.length-1; i++) {
+           if(intervals[i][1]>intervals[i+1][1]){
+               tempi ++;
+               int temp [] = intervals[i];
+               intervals[i]=intervals[i+1];
+               intervals[i+1] = temp;
            }
        }
-    }
+       if (tempi==0){
+           break;
+       }
+       }
+
+        for (int i = 0; i < intervals.length-1; i++) {
+           if (intervals[i][1]>=intervals[i+1][0]){
+           }
+       }
+       while (true){
+           int tempCount = 0;
+           for (int i = 0; i < intervals.length-1; i++) {
+           if (intervals[i][1]>=intervals[i+1][0]){
+                tempCount = tempCount+1;
+               intervals[i]= getMaxAndMinValue(intervals[i][0],intervals[i][1],intervals[i + 1][0],intervals[i + 1][1]);
+               System.arraycopy(intervals, i + 1 + 1, intervals, i + 1, intervals.length - 1 - (i + 1));
+               intervals = rm(intervals, intervals.length - 1);
+            }
+           }
+
+           if (tempCount==0){
+               break;
+           }
+       }
+
+       return intervals;
+   }
 
     /**
      * 数组删除
@@ -74,7 +157,14 @@ public class Test {
         return newObjs;
     }
 
-
+    public static int[][]  rm(int[][] arrays,int index){
+        int[][] ints = new int[arrays.length - 1][];
+        for (int i = 0; i < arrays.length; i++) {
+            if (index==i) continue;
+            ints[i] = arrays[i];
+        }
+        return ints;
+    }
     public static void getContext() {
         File file = new File("E:\\我的绝色美女房客");
         if (!file.exists()) {
