@@ -11,9 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class SpinLock {
     public static void main(String[] args) {
         MyLock lock = new MyLock();
-        new Thread(
-                ()->{
-                    lock.myLock();
+        new Thread(()->{ lock.myLock();
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e) {
@@ -23,9 +21,7 @@ public class SpinLock {
                     }
                 },"t1"
         ).start();
-        new Thread(
-                ()->{
-                    lock.myLock();
+        new Thread(()->{ lock.myLock();
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e) {
