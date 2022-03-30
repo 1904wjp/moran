@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @Author: XingDaoRong
  * @Date: 2022/2/12
+ * 死锁
  */
 public class DeathLockDemo {
     public static void main(String[] args) {

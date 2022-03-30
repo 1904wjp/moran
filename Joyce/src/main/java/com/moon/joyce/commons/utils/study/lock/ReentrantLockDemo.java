@@ -6,6 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @Author: XingDaoRong
  * @Date: 2022/2/12
+ * 可重入锁
  */
 //lock
 public class ReentrantLockDemo {

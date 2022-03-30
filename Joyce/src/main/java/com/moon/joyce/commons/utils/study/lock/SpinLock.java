@@ -6,8 +6,9 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @Author: XingDaoRong
  * @Date: 2022/2/11
+ * 自旋锁
  */
-public class SinLock {
+public class SpinLock {
     public static void main(String[] args) {
         MyLock lock = new MyLock();
         new Thread(

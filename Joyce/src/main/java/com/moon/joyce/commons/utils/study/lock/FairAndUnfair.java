@@ -5,6 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @Author: XingDaoRong
  * @Date: 2022/2/11
+ * 公平锁和非公平锁
  */
 public class FairAndUnfair {
     /**
