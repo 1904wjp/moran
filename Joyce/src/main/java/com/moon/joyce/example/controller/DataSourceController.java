@@ -2,7 +2,7 @@ package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.DbBaseSetting;
 import com.moon.joyce.example.entity.PackageInfo;
@@ -82,10 +82,10 @@ public class DataSourceController extends BaseController {
             dbBaseSetting.setCreateBy(getSessionUser().getUsername());
             dbBaseSetting.setCreateTime(new Date());
             if (dbBaseSettingService.getCount(dbBaseSetting, Constant.DATA_TYPE_UNIQUE_NAME) != 0) {
-                return ResultUtils.error(Constant.CHINESE_SELECT_EXIST_MESSAGE + "(数据名称重复，修改名称)");
+                return R.error(Constant.CHINESE_SELECT_EXIST_MESSAGE + "(数据名称重复，修改名称)");
             }
             if (dbBaseSettingService.getCount(dbBaseSetting, Constant.DATA_TYPE_UNIQUE) != 0) {
-                return ResultUtils.error(Constant.CHINESE_SELECT_EXIST_MESSAGE + "(数据称重复，请查看数据修改后提交)");
+                return R.error(Constant.CHINESE_SELECT_EXIST_MESSAGE + "(数据称重复，请查看数据修改后提交)");
             }
         } else {
             dbBaseSetting.setUpdateBy(getSessionUser().getUsername());
@@ -93,13 +93,13 @@ public class DataSourceController extends BaseController {
         }
         boolean testDatasource = dbBaseSettingService.switchDataSource(dbBaseSetting, Constant.TEST_DATASOURCE);
         if (!testDatasource) {
-            return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE, "数据源填写有误，请核对数据源填写是否正确");
+            return R.error(Constant.ERROR_FILL_ERROR_CODE, "数据源填写有误，请核对数据源填写是否正确");
         }
         boolean saveOrUpdate = dbBaseSettingService.saveOrUpdate(dbBaseSetting);
         if (saveOrUpdate) {
-            return ResultUtils.success("数据源保存成功", dbBaseSetting);
+            return R.success("数据源保存成功", dbBaseSetting);
         }
-        return ResultUtils.error("数据源保存失败");
+        return R.error("数据源保存失败");
     }
 
     /**
@@ -111,7 +111,7 @@ public class DataSourceController extends BaseController {
     @RequestMapping("/getDb")
     public Result getDbBaseSetting(@RequestParam(value = "id") Long id) {
         DbBaseSetting dbBaseSetting = dbBaseSettingService.getById(id);
-        return ResultUtils.dataResult(Objects.nonNull(dbBaseSetting),Constant.NULL_CODE,dbBaseSetting);
+        return R.dataResult(Objects.nonNull(dbBaseSetting),Constant.NULL_CODE,dbBaseSetting);
     }
 
     /**
@@ -127,11 +127,11 @@ public class DataSourceController extends BaseController {
         if (Objects.nonNull(dbBaseSetting)){
             boolean b = StringsUtils.listIsContainsStr(String.valueOf(dbBaseSetting.getId()), list);
             if (b){
-                return ResultUtils.error(dbBaseSetting.getDataSourceName()+"正在使用，无法删除");
+                return R.error(dbBaseSetting.getDataSourceName()+"正在使用，无法删除");
             }
         }
         boolean del = dbBaseSettingService.removeByIds(list);
-        return ResultUtils.dataResult(del);
+        return R.dataResult(del);
     }
 
     /**
@@ -145,7 +145,7 @@ public class DataSourceController extends BaseController {
         DbBaseSetting dbBaseSettingDto = dbBaseSettingService.getById(id);
         int retire = dbBaseSettingService.updateRetire(getSessionUser().getId());
         if (retire == 0) {
-            return ResultUtils.error("设置失败");
+            return R.error("设置失败");
         }
         dbBaseSettingDto.setUserId(getSessionUser().getId());
         dbBaseSettingDto.setDataSourceName(dbBaseSettingDto.getDataSourceName());
@@ -155,9 +155,9 @@ public class DataSourceController extends BaseController {
         if (dbBaseSettingService.saveOrUpdate(dbBaseSettingDto)) {
             setSession(getSessionUser().getId()+Constant.CURRENT_SETTING,new Setting(dbBaseSettingDto,getCurrentSetting().getPackageInfo()));
             logger.info(dbBaseSettingDto.getDataSourceName()+"已被设置成主要数据源！！！！");
-            return ResultUtils.success("数据源切换成功");
+            return R.success("数据源切换成功");
         }
-        return ResultUtils.error("数据源切换失败");
+        return R.error("数据源切换失败");
     }
 
     /**
@@ -193,7 +193,7 @@ public class DataSourceController extends BaseController {
             aPackageInfo.setUpdateBy(getSessionUser().getUsername());
         }
         boolean saveOrUpdate = packageInfoService.saveOrUpdate(aPackageInfo);
-        return ResultUtils.dataResult(saveOrUpdate,"数据包保存失败","数据包保存成功");
+        return R.dataResult(saveOrUpdate,"数据包保存失败","数据包保存成功");
     }
 
     /**
@@ -205,18 +205,18 @@ public class DataSourceController extends BaseController {
     @RequestMapping("/deletePg")
     public Result delPg(@RequestParam(value = "ids") String ids) {
         if (StringUtils.isBlank(ids)){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
         List<String> list = StringsUtils.StrToList(ids);
             PackageInfo packageInfo = getCurrentSetting().getPackageInfo();
             if (Objects.nonNull(packageInfo)){
                 boolean b = StringsUtils.listIsContainsStr(String.valueOf(packageInfo.getId()), list);
                 if (b){
-                    return ResultUtils.error(packageInfo.getPackageName()+"正在使用，无法删除");
+                    return R.error(packageInfo.getPackageName()+"正在使用，无法删除");
                 }
             }
         boolean del = packageInfoService.removeByIds(list);
-        return ResultUtils.dataResult(del,"数据包删除失败","数据包删除成功");
+        return R.dataResult(del,"数据包删除失败","数据包删除成功");
     }
 
     /**
@@ -228,7 +228,7 @@ public class DataSourceController extends BaseController {
     @RequestMapping("/getPg")
     public Result getPg(@RequestParam(value = "id") Long id) {
         PackageInfo packageInfo = packageInfoService.getById(id);
-        return ResultUtils.dataResult(Objects.nonNull(packageInfo),Constant.NULL_CODE,packageInfo);
+        return R.dataResult(Objects.nonNull(packageInfo),Constant.NULL_CODE,packageInfo);
     }
 
     /**
@@ -245,15 +245,15 @@ public class DataSourceController extends BaseController {
         aPackageInfo.setUpdateTime(new Date());
         int retire = packageInfoService.updateRetire(getSessionUser().getId());
         if (retire == 0) {
-            return ResultUtils.error();
+            return R.error();
         }
         aPackageInfo.setApplyStatus(Constant.APPLY_STATUS);
         boolean update = packageInfoService.saveOrUpdate(aPackageInfo);
         if (update) {
             setSession(getSessionUser().getId()+Constant.CURRENT_SETTING,new Setting(getCurrentSetting().getDbBaseSetting(),aPackageInfo));
-            return ResultUtils.success("数据包设置应用成功");
+            return R.success("数据包设置应用成功");
         }
-        return ResultUtils.error("数据包设置应用成功");
+        return R.error("数据包设置应用成功");
     }
 
     /**

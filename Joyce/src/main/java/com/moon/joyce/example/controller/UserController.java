@@ -201,7 +201,7 @@ public class UserController extends BaseController {
                 }
             }
         }
-        return ResultUtils.success(userChartVos);
+        return R.success(userChartVos);
     }
 
     /**
@@ -219,7 +219,7 @@ public class UserController extends BaseController {
         chatRecord.setUserBId(id);
         chatRecord.setContent(msg);
         boolean save = chatRecordService.save(chatRecord);
-        return ResultUtils.dataResult(save,"发送失败","发送成功");
+        return R.dataResult(save,"发送失败","发送成功");
     }
 
 
@@ -263,9 +263,9 @@ public class UserController extends BaseController {
                removeSessionUser();
             }
             setSession(Constant.SESSION_USER,user);
-            return ResultUtils.success();
+            return R.success();
         }
-            return  ResultUtils.error(Constant.ERROR_CODE,false);
+            return  R.error(Constant.ERROR_CODE,false);
     }
 
     /**
@@ -310,7 +310,7 @@ public class UserController extends BaseController {
         if (Objects.nonNull(dbUser)){
             user.setStatus(dbUser.getStatus());
             if(!user.getPassword().equals(dbUser.getPassword())){
-              return ResultUtils.error(Constant.CHINESE_PASSWORD_ERROR_MESSAGE);
+              return R.error(Constant.CHINESE_PASSWORD_ERROR_MESSAGE);
             }
             //头像为空则为默认值
             if (StringUtils.isEmpty(dbUser.getFileUrl())){
@@ -335,9 +335,9 @@ public class UserController extends BaseController {
             }
             logger.info(username+"======>登录成功");
             setSession("index",0);
-            return ResultUtils.success(Constant.RESULT_SUCCESS_MSG,user.getStatus());
+            return success(Constant.RESULT_SUCCESS_MSG,user.getStatus());
         }
-        return ResultUtils.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
+        return R.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
     }
 
     /**
@@ -364,14 +364,14 @@ public class UserController extends BaseController {
     @RequestMapping("/deleteUser")
     public Result deleteUser(@RequestParam String ids){
         if (StringUtils.isBlank(ids)){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
         List<String> list = StringsUtils.StrToList(ids);
         if (StringsUtils.listIsContainsStr(getSessionUser().getId().toString(),list)){
-            return ResultUtils.error(getSessionUser().getUsername()+"正在使用，无法操作");
+            return R.error(getSessionUser().getUsername()+"正在使用，无法操作");
         }
         boolean del = userService.removeByIds(list);
-        return ResultUtils.dataResult(del,Constant.ERROR_CODE);
+        return R.dataResult(del,Constant.ERROR_CODE);
     }
 
     /**
@@ -383,18 +383,18 @@ public class UserController extends BaseController {
     @RequestMapping("/freezeUser")
     public Result freezeUser(@RequestParam String ids){
         if (StringUtils.isBlank(ids)){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
         if (ids.equals(getSessionUser().getId().toString())){
-            return ResultUtils.error(getSessionUser().getUsername()+"正在使用，无法操作");
+            return R.error(getSessionUser().getUsername()+"正在使用，无法操作");
         }
         User dbUser = userService.getById(Long.valueOf(ids));
         if (Objects.isNull(dbUser)){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
         dbUser.setStatus(Constant.USER_TYPE_FROZEN_STATUS);
         boolean update = userService.updateById(dbUser);
-        return ResultUtils.dataResult(update,Constant.ERROR_CODE);
+        return R.dataResult(update,Constant.ERROR_CODE);
     }
 
     /**
@@ -406,15 +406,15 @@ public class UserController extends BaseController {
     @RequestMapping("/recoverUser")
     public Result recoverUser(@RequestParam String ids){
         if (StringUtils.isBlank(ids)){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
         User dbUser = userService.getById(Long.valueOf(ids));
         if (Objects.isNull(dbUser)){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
         dbUser.setStatus(Constant.USER_TYPE_VAILD_STATUS);
         boolean update = userService.updateById(dbUser);
-        return ResultUtils.dataResult(update,Constant.ERROR_CODE);
+        return R.dataResult(update,Constant.ERROR_CODE);
     }
 
     /**
@@ -431,7 +431,7 @@ public class UserController extends BaseController {
         if (!result.getRs()){
             return result;
         }
-        return ResultUtils.success(dbUser);
+        return R.success(dbUser);
     }
 
     /**
@@ -446,11 +446,11 @@ public class UserController extends BaseController {
         user.setEmail(email);
         User dbUser = userService.getUser(user, "");
         if (Objects.isNull(dbUser)){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
         String mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
         cache = RedisUtils.getInstance();
-        return ResultUtils.dataResult(RedisUtils.setVerifyCode(cache, email, 60,mailCode),"验证码不可重复发送","验证码已发送，请查看");
+        return R.dataResult(RedisUtils.setVerifyCode(cache, email, 60,mailCode),"验证码不可重复发送","验证码已发送，请查看");
         /*VerifyCode sessionVerifyCode= (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
         if (Objects.isNull(sessionVerifyCode)){
             logger.info("email=>"+user.getEmail());
@@ -460,7 +460,7 @@ public class UserController extends BaseController {
             verifyCode.setVerifyCodeValue(mailCode);
             verifyCode.setVaildTime(6*10000L);
             setSession(Constant.SESSION_VERIFY_CODE+dbUser.getId(),verifyCode);
-            return  ResultUtils.success(Constant.SEND_EMAIL_SEND_SUCCESS_MESSAGE);
+            return  R.success(Constant.SEND_EMAIL_SEND_SUCCESS_MESSAGE);
         }else {
             //是否超过验证码有效时间
             result = DateUtils.dateCompare(sessionVerifyCode.getCreateTime(), new Date(), sessionVerifyCode.getVaildTime());
@@ -475,10 +475,10 @@ public class UserController extends BaseController {
             verifyCode.setVerifyCodeValue(mailCode);
             verifyCode.setVaildTime(6*10000L);
             getSession().setAttribute(Constant.SESSION_VERIFY_CODE+dbUser.getId(),verifyCode);
-           return ResultUtils.success(Constant.SEND_EMAIL_SEND_SUCCESS_MESSAGE);
+           return R.success(Constant.SEND_EMAIL_SEND_SUCCESS_MESSAGE);
         }else {
             //有效时间不能重复发送验证码
-           return ResultUtils.error(Constant.ERROR_CODE,Constant.SEND_EMAIL_SEND_VAILD_TIME_MESSAGE);
+           return R.error(Constant.ERROR_CODE,Constant.SEND_EMAIL_SEND_VAILD_TIME_MESSAGE);
         }*/
     }
 
@@ -497,30 +497,30 @@ public class UserController extends BaseController {
         user.setEmail(email);
         User dbUser = userService.getUser(user, "");
         if (Objects.isNull(dbUser)){
-            return ResultUtils.error("该邮件未注册");
+            return R.error("该邮件未注册");
         }
         int result = RedisUtils.compareCode(cache, emailCode, email, 3, 24 * 60 * 60);
         if (result==-1){
-            return ResultUtils.error("请输入正确的验证码");
+            return R.error("请输入正确的验证码");
         }
-        return ResultUtils.dataResult(result,"验证码已失效,请重新获取","校验成功");
+        return R.dataResult(result,"验证码已失效,请重新获取","校验成功");
        /* VerifyCode verifyCode = (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
         boolean vaildTime = DateUtils.dateCompare(verifyCode.getCreateTime(), new Date(), verifyCode.getVaildTime());
         //判断验证码是否失效
         if (vaildTime){
-            return ResultUtils.error("验证码已失效");
+            return R.error("验证码已失效");
         }
         if (StringUtils.isBlank(emailCode)){
-            return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);
+            return R.error(Constant.ERROR_FILL_ERROR_CODE);
         }
         //判断填入数据是否正确
         if (verifyCode.getVerifyCodeValue().equals(emailCode)){
             getSession().removeAttribute(Constant.SESSION_VERIFY_CODE+dbUser);
             dbUser.setPassword(newPassword);
             boolean result = userService.updateById(dbUser);
-            return ResultUtils.dataResult(result);
+            return R.dataResult(result);
         }
-        return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);*/
+        return R.error(Constant.ERROR_FILL_ERROR_CODE);*/
     }
 
     /**
@@ -536,23 +536,23 @@ public class UserController extends BaseController {
     public Result updatePassword(@RequestParam("password") String password,@RequestParam("newPassword") String newPassword,@RequestParam("userId")Long id ){
       /*  User user = (User) request.getSession().getAttribute(Constant.SESSION_USER);*/
         if (StringUtils.isBlank(password.trim())){
-            return ResultUtils.error(Constant.CHINESE_BLANK_MESSAGE);
+            return R.error(Constant.CHINESE_BLANK_MESSAGE);
         }
         if (StringUtils.isBlank(newPassword.trim())){
-            return ResultUtils.error(Constant.CHINESE_BLANK_MESSAGE);
+            return R.error(Constant.CHINESE_BLANK_MESSAGE);
         }
         User user = userService.getById(id);
         if (!(user.getPassword().equals(MD5Utils.getMD5Str(password)))){
-            return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);
+            return R.error(Constant.ERROR_FILL_ERROR_CODE);
         }
         user.setPassword(MD5Utils.getMD5Str(newPassword));
         boolean updateById = userService.updateById(user);
         if (updateById){
             userService.updateById(user);
             removeSessionUser();
-            return ResultUtils.success();
+            return R.success();
         }
-        return ResultUtils.error(Constant.ERROR_CODE);
+        return R.error(Constant.ERROR_CODE);
     }
 
     /**
@@ -565,7 +565,7 @@ public class UserController extends BaseController {
     @PostMapping("/upload")
     public Result uploadImg(@RequestParam("file") MultipartFile file){
         String filePath = fileService.uploadImg(file);
-        return ResultUtils.success("上传成功",filePath);
+        return R.success("上传成功",filePath);
     }
 
     /**
@@ -577,7 +577,7 @@ public class UserController extends BaseController {
         //移除会话数据存在的用户
         removeCurrentSetting();
         removeSessionUser();
-        return ResultUtils.success();
+        return R.success();
     }
 
     /**
@@ -590,10 +590,10 @@ public class UserController extends BaseController {
         user.setUsername(username);
         User dbUser = userService.getUser(user, "");
         if (Objects.isNull(dbUser)){
-            return ResultUtils.error(Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
+            return R.error(Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
         }
         dbUser.setPassword("000000");
-        return ResultUtils.success(dbUser);
+        return R.success(dbUser);
     }
 
 }

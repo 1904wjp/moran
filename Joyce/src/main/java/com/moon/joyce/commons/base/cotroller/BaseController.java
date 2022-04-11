@@ -2,6 +2,7 @@ package com.moon.joyce.commons.base.cotroller;
 
 
 import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.RedisUtils;
 import com.moon.joyce.example.entity.DbBaseSetting;
 import com.moon.joyce.example.entity.UU;
@@ -30,7 +31,7 @@ import java.util.*;
  * @desc 基本controller
  */
 @Controller
-public class BaseController {
+public class BaseController extends R {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     //app链接
     @Value("${app.url}")

@@ -4,7 +4,7 @@ package com.moon.joyce.example.controller;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.DateUtils;
-import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.DayTask;
 import com.moon.joyce.example.entity.Project;
 import com.moon.joyce.example.entity.User;
@@ -90,17 +90,17 @@ public class DayTaskController extends BaseController {
             dayTask.setDeleteFlag(0);
         }else {
             if (!getSessionUser().getId().equals(dayTask.getUserId())){
-                return ResultUtils.error("非本人无法修改");
+                return R.error("非本人无法修改");
             }
            if (Objects.isNull(dayTask.getUpdateBy())){
                dayTask.setUpdateBy(getSessionUser().getUsername());
                dayTask.setUpdateTime(new Date());
            }else {
-               return ResultUtils.error("该数据只允许修改一次");
+               return R.error("该数据只允许修改一次");
            }
         }
         boolean update = dayTaskService.saveOrUpdate(dayTask);
-        return ResultUtils.dataResult(update);
+        return R.dataResult(update);
     }
 
     /**
@@ -112,7 +112,7 @@ public class DayTaskController extends BaseController {
     @GetMapping("/getTasks")
     public Result getTasks(@RequestParam Long id){
         DayTask dayTask = dayTaskService.getById(id);
-        return ResultUtils.success(Objects.isNull(dayTask),Constant.NULL_CODE);
+        return R.success(Objects.isNull(dayTask),Constant.NULL_CODE);
     }
 
     /**
@@ -124,9 +124,9 @@ public class DayTaskController extends BaseController {
         DayTask dayTask = dayTaskService.getLastData(getSessionUser().getId());
         if (Objects.nonNull(dayTask)){
             boolean rs = DateUtils.dateCompare(new Date(), dayTask.getEndTimes(), 0l, "yyyy-MM-dd");
-            return ResultUtils.dataResult(rs,dayTask);
+            return R.dataResult(rs,dayTask);
         }
-        return ResultUtils.error();
+        return R.error();
     }
 
     /**
@@ -159,7 +159,7 @@ public class DayTaskController extends BaseController {
     @PostMapping("/importExcel")
     public Result importExcel(@RequestParam String path){
         String str = dayTaskService.importDayTaskData(path);
-        return ResultUtils.dataResult(Objects.isNull(str),Constant.ERROR_CODE,"操作失败","操作成功",str);
+        return R.dataResult(Objects.isNull(str),Constant.ERROR_CODE,"操作失败","操作成功",str);
     }
 }
 

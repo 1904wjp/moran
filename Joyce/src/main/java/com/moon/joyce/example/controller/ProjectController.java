@@ -3,7 +3,7 @@ package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.Project;
 import com.moon.joyce.example.entity.User;
@@ -85,7 +85,7 @@ public class ProjectController extends BaseController {
              project.setUpdateTime(new Date());
         }
         boolean result = projectService.saveOrUpdate(project);
-        return ResultUtils.dataResult(result);
+        return R.dataResult(result);
     }
     /**
      * 获取项目信息
@@ -97,9 +97,9 @@ public class ProjectController extends BaseController {
     public Result getprojects(@RequestParam Long id){
         Project project = projectService.getById(id);
         if (Objects.isNull(project)){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
-        return ResultUtils.dataResult(Objects.isNull(project),Constant.NULL_CODE,project);
+        return R.dataResult(Objects.isNull(project),Constant.NULL_CODE,project);
     }
     /**
      * 删除项目信息
@@ -111,7 +111,7 @@ public class ProjectController extends BaseController {
     public Result delProjects(@RequestParam String ids) {
         List<String> list = StringsUtils.StrToList(ids);
         boolean result = projectService.removeByIds(list);
-        return ResultUtils.dataResult(result, "删除失败", "删除成功");
+        return R.dataResult(result, "删除失败", "删除成功");
     }
 
 }

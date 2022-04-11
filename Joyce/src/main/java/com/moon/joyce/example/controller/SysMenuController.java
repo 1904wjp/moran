@@ -3,7 +3,7 @@ package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.TreeUtils;
 import com.moon.joyce.example.entity.SysMenu;
 import com.moon.joyce.example.entity.vo.PageVo;
@@ -69,9 +69,9 @@ public class SysMenuController extends BaseController {
         }
         List<SysMenuVo> menuVos = TreeUtils.toTree(sysMenuVos);
         if (menuVos.isEmpty()){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
-        return ResultUtils.success(menuVos);
+        return R.success(menuVos);
     }
 
     /**
@@ -113,9 +113,9 @@ public class SysMenuController extends BaseController {
     public Result addMenu(@RequestParam("id")String id){
         SysMenu sysMenu = sysMenuService.getById(Long.valueOf(id));
         if (Objects.isNull(sysMenu)&&!id.equals("-1")){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
-        return ResultUtils.success();
+        return R.success();
     }
 
     /**
@@ -144,9 +144,9 @@ public class SysMenuController extends BaseController {
     public Result doDeleteMenu(@RequestParam("id") Long id ){
        int delResult =  sysMenuService.deleteMenuById(id);
        if (delResult!=0){
-           return ResultUtils.success();
+           return R.success();
        }
-        return ResultUtils.error();
+        return R.error();
     }
 
     /**
@@ -158,9 +158,9 @@ public class SysMenuController extends BaseController {
     public Result doQueryMenu(@RequestParam("id") Long id ){
         SysMenu dbMenu = sysMenuService.getById(id);
         if (Objects.nonNull(dbMenu)){
-            return ResultUtils.success();
+            return R.success();
         }
-        return ResultUtils.error();
+        return R.error();
     }
 
     /**
@@ -172,9 +172,9 @@ public class SysMenuController extends BaseController {
     public Result doSaveMenu(SysMenu sysMenu ){
         boolean result = sysMenuService.saveOrUpdate(sysMenu);
         if (result){
-            return ResultUtils.success();
+            return R.success();
         }
-        return ResultUtils.error();
+        return R.error();
     }
 
     /**
@@ -191,7 +191,7 @@ public class SysMenuController extends BaseController {
             dbSysMenu= new SysMenu();
             dbSysMenu.setMenuUrl(Constant.VIDEO_DEFAULT_NAME);
         }
-        return ResultUtils.success(dbSysMenu);
+        return R.success(dbSysMenu);
     }
 }
 

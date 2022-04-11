@@ -4,7 +4,7 @@ import com.moon.joyce.commons.base.cotroller.BaseController;
 
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.FileUtils;
-import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.entity.vo.MainSource;
@@ -183,28 +183,9 @@ public class IndexController extends BaseController {
             strings.clear();
             strings.add("The command was not found");
         }
-        return ResultUtils.success(strings);}
+        return R.success(strings);}
 
-    /**
-     * 主页配置
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping("/getSourceImage")
-    public Result doProjectMainPage(){
-        Source source = new Source();
-        source.setDeleteFlag(Constant.UNDELETE_STATUS);
-        source.setApplyStatus(Constant.APPLY_STATUS);
-        source.setUserId(getSessionUserId());
-        Source dbSource = sourceService.getOne(source);
-        source.setApplyStatus(Constant.SPARE_STATUS);
-        List<Source> list = sourceService.getList(source);
-        if (Objects.nonNull(dbSource)&&!list.isEmpty()){
-            MainSource mainSource = new MainSource(1l,dbSource, list);
-            return ResultUtils.dataResult(true,mainSource);
-        }
-        return ResultUtils.error("主页背景默认配置");
-    }
+
 
     /**
      * 关于我们
@@ -220,7 +201,7 @@ public class IndexController extends BaseController {
         list.add(form);
         list.add(vx);
         list.add(zfb);
-        return ResultUtils.dataResult(!list.isEmpty(),Constant.NULL_CODE,list);
+        return R.dataResult(!list.isEmpty(),Constant.NULL_CODE,list);
     }
 
     /**
@@ -233,7 +214,7 @@ public class IndexController extends BaseController {
         User sessionUser = getSessionUser();
         sessionUser.setStatus(Constant.START_STATUS);
         boolean rs = userService.saveOrUpdate(sessionUser);
-        return ResultUtils.dataResult(rs,"Joyce初始化失败","Joyce初始化成功");
+        return R.dataResult(rs,"Joyce初始化失败","Joyce初始化成功");
     }
 
 }

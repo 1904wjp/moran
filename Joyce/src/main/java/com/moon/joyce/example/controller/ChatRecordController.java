@@ -2,7 +2,7 @@ package com.moon.joyce.example.controller;
 
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
-import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.ChatRecord;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.service.ChatRecordService;
@@ -52,7 +52,7 @@ public class ChatRecordController extends BaseController {
             list = opsForList.range(uniqueList, 0, -1);
         }*/
         List<ChatRecord> list = chatRecordService.getAll(new ChatRecord(getSessionUser().getId(), userBId));
-        return ResultUtils.dataResult(!list.isEmpty(),list);
+        return R.dataResult(!list.isEmpty(),list);
     }
 }
 

@@ -3,8 +3,9 @@ package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.Source;
+import com.moon.joyce.example.entity.vo.MainSource;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.service.FileService;
@@ -70,7 +71,7 @@ public class SourceController extends BaseController {
         if (source.getApplyStatus().equals(Constant.APPLY_STATUS)){
             boolean b = retireApplyStatus();
             if (!b){
-                return ResultUtils.error();
+                return R.error();
             }
         }
         Source source1 = new Source();
@@ -78,7 +79,7 @@ public class SourceController extends BaseController {
         source1.setUserId(getSessionUserId());
         Source one = sourceService.getOne(source1);
         if (Objects.nonNull(one)){
-            return ResultUtils.error("资源名已存在，请修改资源名重新上传");
+            return R.error("资源名已存在，请修改资源名重新上传");
         }
         if (Objects.isNull(source.getId())){
             source.setCreateBy(getSessionUser().getUsername());
@@ -91,7 +92,7 @@ public class SourceController extends BaseController {
             source.setUpdateTime(new Date());
         }
         boolean rs = sourceService.saveOrUpdate(source);
-        return ResultUtils.dataResult(rs);
+        return R.dataResult(rs);
     }
 
     /**
@@ -103,17 +104,17 @@ public class SourceController extends BaseController {
     public Result addSource(@RequestParam("id") Long id){
         Source source = sourceService.getById(id);
         if (Objects.isNull(source)){
-            return ResultUtils.error(Constant.NULL_CODE);
+            return R.error(Constant.NULL_CODE);
         }
         source.setUpdateBy(getSessionUser().getUsername());
         source.setUpdateTime(new Date());
         boolean b = retireApplyStatus();
         if (!b){
-            return ResultUtils.error();
+            return R.error();
         }
         source.setApplyStatus(Constant.APPLY_STATUS);
         boolean rs = sourceService.saveOrUpdate(source);
-        return ResultUtils.dataResult(rs,"修改失败","修改成功",source);
+        return R.dataResult(rs,"修改失败","修改成功",source);
     }
 
 
@@ -127,7 +128,7 @@ public class SourceController extends BaseController {
     @RequestMapping("/uploadSource")
     public Result uploadSource(@RequestParam(value = "file", required = true) MultipartFile file){
         String filePath = fileService.uploadImg(file);
-        return ResultUtils.success("上传成功",filePath);
+        return R.success("上传成功",filePath);
     }
 
     public boolean retireApplyStatus(){
@@ -141,6 +142,27 @@ public class SourceController extends BaseController {
             return sourceService.saveOrUpdate(one);
         }
         return  true;
+    }
+
+    /**
+     * 主页配置
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getSourceImage")
+    public Result doProjectMainPage(){
+        Source source = new Source();
+        source.setDeleteFlag(Constant.UNDELETE_STATUS);
+        source.setApplyStatus(Constant.APPLY_STATUS);
+        source.setUserId(getSessionUserId());
+        Source dbSource = sourceService.getOne(source);
+        source.setApplyStatus(Constant.SPARE_STATUS);
+        List<Source> list = sourceService.getList(source);
+        if (Objects.nonNull(dbSource)&&!list.isEmpty()){
+            MainSource mainSource = new MainSource(1L,dbSource, list);
+            return R.dataResult(true,mainSource);
+        }
+        return R.error("主页背景默认配置");
     }
 }
 

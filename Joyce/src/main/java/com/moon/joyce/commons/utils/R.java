@@ -12,14 +12,9 @@ import java.util.Objects;
 /**
  * @author Xing Dao Rong
  * @date 2021/9/3 9:06
- * @desc Result工具类
+ * @desc Result工具
  */
-public class ResultUtils implements Serializable {
-    private static final long serialVersionUID = -5357414979443374259L;
-    private ResultUtils() throws JoyceException {
-        throw JoyceExceptionUtils.exception("工具类无法实例化");
-    }
-
+public class R  {
     /**
      * 返回结果
      * @param rsi
@@ -27,9 +22,9 @@ public class ResultUtils implements Serializable {
      */
     public static Result dataResult(int rsi){
         if (rsi!=0){
-            return ResultUtils.success();
+            return R.success();
         }
-        return ResultUtils.error();
+        return R.error();
     }
     /**
      * 返回结果
@@ -50,9 +45,9 @@ public class ResultUtils implements Serializable {
      */
     public static Result dataResult(int rsi,Object data){
        if (rsi!=0){
-           return ResultUtils.success(data);
+           return R.success(data);
        }
-        return ResultUtils.error();
+        return R.error();
     }
 
 
@@ -395,31 +390,31 @@ public class ResultUtils implements Serializable {
             /**
              *错误
             */
-            if (Constant.ERROR_CODE==code){
+            if (Constant.ERROR_CODE.equals(code)){
                 msg=Constant.RESULT_ERROR_MSG;
             }
             /**
              *空值
              */
-            if (Constant.NULL_CODE==code){
+            if (Constant.NULL_CODE.equals(code)){
                 msg=Constant.RESULT_NULL_MSG;
             }
             /**
              *未激活
              */
-            if (Constant.INACTIVE_CODE==code){
+            if (Constant.INACTIVE_CODE.equals(code)){
                 msg=Constant.CHINESE_INACTIVE_MESSAGE;
             }
             /**
              *冻结
              */
-            if (Constant.FROZEN_CODE==code){
+            if (Constant.FROZEN_CODE.equals(code)){
                 msg=Constant.CHINESE_FROZEN_MESSAGE;
             }
             /**
              * 信息不匹配
              */
-            if (Constant.ERROR_FILL_ERROR_CODE==code){
+            if (Constant.ERROR_FILL_ERROR_CODE.equals(code)){
                 msg=Constant.RESULT_FILL_ERROR_MSG;
             }
         return msg;

@@ -3,7 +3,7 @@ package com.moon.joyce.example.controller;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.FileUtils;
-import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.commons.utils.WebUtils;
 import com.moon.joyce.example.functionality.entity.Column;
@@ -55,7 +55,7 @@ public class ColumnsController extends BaseController {
         //创建当前session中的应用数据源
         startupDatasource();
         if (StringUtils.isBlank(tableName) || StringUtils.isBlank(dbName)) {
-            return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);
+            return R.error(Constant.ERROR_FILL_ERROR_CODE);
         }
         /* Column table = columnsService.getColumn.js(tableName,dbName);*/
         List<Column> dbListColumn = new ArrayList<>();
@@ -71,7 +71,7 @@ public class ColumnsController extends BaseController {
             tableName = dbListColumn.get(i).getTableName();
             List<Column> columns = columnsService.getColumns(tableName, dbName);
             if (Objects.isNull(columns) || columns.isEmpty()) {
-                return ResultUtils.error("该表无数据或者不存在");
+                return R.error("该表无数据或者不存在");
             }
             logger.info("size:" + columns.size());
             List<Column> columns1 = new ArrayList();
@@ -88,7 +88,7 @@ public class ColumnsController extends BaseController {
             }
             //调用文件创建工具类
             if (Objects.isNull(getCurrentSetting().getPackageInfo())) {
-                return ResultUtils.error("数据对应的包还未配置，请先配置相关的包");
+                return R.error("数据对应的包还未配置，请先配置相关的包");
             }
             WebUtils.createWeb(columns1, type, getCurrentSetting().getPackageInfo());
             //创建对应类的文件名称存入session
@@ -104,7 +104,7 @@ public class ColumnsController extends BaseController {
             logger.info("创建：" + columns1.get(0).getTableName());
             shutdownDatasource();
         }
-        return ResultUtils.success();
+        return R.success();
     }
 
     /**
@@ -144,9 +144,9 @@ public class ColumnsController extends BaseController {
         List<Column> tables = columnsService.selectAllTables(databaseName);
         shutdownDatasource();
         if (tables.isEmpty()) {
-            return ResultUtils.error("该数据库无数据或者连接有误");
+            return R.error("该数据库无数据或者连接有误");
         }
-        return ResultUtils.success(tables);
+        return R.success(tables);
     }
 
 }

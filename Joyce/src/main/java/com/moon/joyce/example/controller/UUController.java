@@ -2,7 +2,7 @@ package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.Result;
@@ -76,7 +76,7 @@ public class UUController extends BaseController {
                         Collectors.toCollection(
                                 ()-> new TreeSet<>(Comparator.comparing(UU::getUserAId))
                         ),ArrayList::new));
-        return ResultUtils.success(uus);
+        return R.success(uus);
     }
 
     /**
@@ -92,12 +92,12 @@ public class UUController extends BaseController {
         UU one = uuService.getOne(uu);
         User userB = userService.getById(uu.getUserBId());
         if (Objects.isNull(userB)){
-            return ResultUtils.error(Constant.NULL_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
+            return R.error(Constant.NULL_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
         }
         String  uniqueListb = UU.uniqueAppend+"MSGlIST"+uu.getUserBId();
         ListOperations<String, UU> operations = redisTemplate.opsForList();
         if (Objects.nonNull(one)){
-            return ResultUtils.error("该用户已是你的好友");
+            return R.error("该用户已是你的好友");
         }
         //存入redis
         uu.setUsernameA(getSessionUserName());
@@ -110,7 +110,7 @@ public class UUController extends BaseController {
         operations.rightPush(uniqueLista,uu);
         operations.rightPush(uniqueListb,uu);
         logger.info("===============>",operations.range(uniqueLista,1,-1).toString());
-        return ResultUtils.success("等待对方同意");
+        return R.success("等待对方同意");
     }
 
     /**
@@ -137,7 +137,7 @@ public class UUController extends BaseController {
             redisTemplate.delete(uniqueLista);
             operations.leftPushAll(uniqueLista,uus);
             logger.info("====>",operations.leftPushAll(uniqueLista,uus),operations.range(uniqueLista, 0, -1).toString());
-            return ResultUtils.dataResult(isAgree==0,"已拒绝","添加成功");
+            return R.dataResult(isAgree==0,"已拒绝","添加成功");
     }
 
     @RequestMapping("/webrtc/{id}.html")

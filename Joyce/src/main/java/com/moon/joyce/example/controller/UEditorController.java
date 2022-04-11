@@ -2,7 +2,7 @@ package com.moon.joyce.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
-import com.moon.joyce.commons.utils.ResultUtils;
+import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.Article;
 import com.moon.joyce.example.entity.dto.Page;
@@ -94,7 +94,7 @@ public class UEditorController extends BaseController {
            article.setUpdateTime(new Date());
        }
        boolean update = uEditorService.saveOrUpdate(article);
-       return ResultUtils.dataResult(update);
+       return R.dataResult(update);
    }
 
     /**
@@ -157,6 +157,6 @@ public class UEditorController extends BaseController {
     public Result delArticle(@RequestParam String ids){
         List<String> list = StringsUtils.StrToList(ids);
         boolean del = uEditorService.removeByIds(list);
-        return ResultUtils.dataResult(del,"删除失败","删除成功");
+        return R.dataResult(del,"删除失败","删除成功");
     }
 }

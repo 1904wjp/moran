@@ -8,12 +8,15 @@ $().ready(function () {
  */
 function initMainPictures() {
     $.ajax({
-        url: '/getSourceImage',
+        url: '/example/source/getSourceImage',
         type: 'GET',
         dataType: 'json',
     }).done(function (data) {
         loading(false);
         if (data.rs) {
+            if (data.data.length==0){
+                tips(false, "该用户未设置图片");
+            }
             let res = data.data;
             $('.intro__title').text(res.source.sourceName);
             $('.intro__description__content').text(res.source.descContent);

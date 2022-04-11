@@ -164,11 +164,12 @@ pagehelper:
 #文件路径上传路径
 file:
   config:
-    path: D:/${app.name}/files/config/
+    prefix : E
+    path: ${file.config.prefix}:/${app.name}/files/config/
   upload:
     access: /img/photo/
     relative: ${file.upload.access}**
-    path: D:/${app.name}/upload/images/
+    path: ${file.config.prefix}:/${app.name}/upload/images/
 
 #监听获得当前登录者
 context:
