@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Xing Dao Rong
@@ -39,6 +41,7 @@ public class BaseEntity implements Serializable {
 
     @TableField(exist = false)
     private Map<String,String> params;
+
 
     public Long getId() {
         return id;
@@ -94,5 +97,18 @@ public class BaseEntity implements Serializable {
 
     public void setParams(Map<String, String> params) {
         this.params = params;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BaseEntity){
+            return this.id.equals(((BaseEntity) obj).id);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.parseInt(String.valueOf(this.id % 16));
     }
 }

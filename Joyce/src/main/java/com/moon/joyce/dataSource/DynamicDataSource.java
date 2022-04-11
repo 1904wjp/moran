@@ -279,13 +279,13 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
             boolean result = this.createDataSource(datasourceId, driveClass, url, username, password, databaseType);
             if(!result) {
                 log.error("数据源"+datasourceId+"配置正确，但是创建失败");
-             throw JoyceExceptionUtils.exception("数据源"+datasourceId+"配置正确，但是创建失败", Constant.EXCEPTION_DATASOURCE);
+             throw JoyceExceptionUtils.exception("数据源"+datasourceId+"配置正确，但是创建失败");
             }else {
                 return true;
             }
         } else {
                 log.error("数据源配置有错误");
-            throw JoyceExceptionUtils.exception("数据源配置有错误", Constant.EXCEPTION_DATASOURCE);
+            throw JoyceExceptionUtils.exception("数据源配置有错误");
         }
 
     }

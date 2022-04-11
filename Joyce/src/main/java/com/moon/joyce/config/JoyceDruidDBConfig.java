@@ -70,26 +70,19 @@ public class JoyceDruidDBConfig {
         DruidDataSource dataSource = new DruidDataSource();
         //基础连接信息
         dataSource.setUrl(dbUrl);
-        data.add(dataSource.getUrl());
         dataSource.setUsername(username);
-        data.add(dataSource.getUsername());
         dataSource.setPassword(password);
         /*data.add(dataSource.getPassword());*/
-        data.add("*******");
         dataSource.setDriverClassName(driverClassName);
-        data.add(dataSource.getDriverClassName());
         //连接池信息
         dataSource.setInitialSize(initialSize);
-        data.add(String.valueOf(dataSource.getInitialSize()));
         dataSource.setMinIdle(minIdle);
-        data.add(String.valueOf(dataSource.getMinIdle()));
         dataSource.setMaxActive(maxActive);
-        data.add(String.valueOf(dataSource.getMaxActive()));
         dataSource.setMaxWait(maxWait);
-        data.add(String.valueOf(dataSource.getMaxWait()));
+        //data.add(String.valueOf(dataSource.getMaxWait()));
         //是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭
         dataSource.setMaxPoolPreparedStatementPerConnectionSize(20);
-        data.add(String.valueOf(dataSource.getMaxPoolPreparedStatementPerConnectionSize()));
+        //data.add(String.valueOf(dataSource.getMaxPoolPreparedStatementPerConnectionSize()));
         //  datasource.setConnectionProperties("oracle.net.CONNECT_TIMEOUT=6000;oracle.jdbc.ReadTimeout=60000");//对于耗时长的查询sql，会受限于ReadTimeout的控制，单位毫秒
         //对于耗时长的查询sql，会受限于ReadTimeout的控制，单位毫秒
         dataSource.setConnectionProperties("druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000");
@@ -114,6 +107,14 @@ public class JoyceDruidDBConfig {
         dataSource.setRemoveAbandonedTimeout(3600);
         //移除泄露连接发生是是否记录日志
         dataSource.setLogAbandoned(true);
+        data.add("数据url:"+dbUrl);
+        data.add("用户名:"+username);
+        data.add("密码:*******");
+        data.add("驱动:"+driverClassName);
+        data.add("初始容量:"+initialSize);
+        data.add("最小连接数:"+minIdle);
+        data.add("最大连接数:"+maxActive);
+        data.add("最大等待时间:"+maxWait+"毫秒");
         logger.info(StringsUtils.appendStr("\n数据源配置:{\n",data,"}",";\n"));
         return dataSource;
     }

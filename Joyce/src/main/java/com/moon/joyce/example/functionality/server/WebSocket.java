@@ -48,7 +48,6 @@ public class WebSocket {
      */
     @OnOpen
     public void onOpen(Session session,@PathParam("id") Long id){
-        
         this.session = session;
         this.id = id;
         map.put(id,session);
@@ -178,5 +177,7 @@ public class WebSocket {
   /*  public  synchronized Map<Long, WebSocket>  getOnlineUsers(){
        return clients;
     }*/
+
+
 
 }

@@ -10,7 +10,7 @@ server:
   max-http-header-size: 80KB
 #app相关信息
 app:
-  domain: 192.168.1.11
+  domain: localhost
   urlValue: ${app.domain}:${server.port}
   url: http://${app.urlValue}
   name: Joyce
@@ -98,6 +98,28 @@ spring:
   jackson:
     date-format: yyyy-MM-dd
     time-zone: GMT+8
+  ###Redis配置
+  redis:
+    host: ${app.domain}
+    port: 6379
+    password:
+    timeout: 1800000
+    lettuce:
+      pool:
+        max-active: 8
+        min-idle: 0
+        max-wait: -1
+        max-idle: 8
+    database: 0
+  banner:
+    charset: utf-8
+    location: classpath:banner.txt
+    image:
+      location: ali.gif
+      width: 76
+      height:
+      margin: 2
+      invert: false
 #jpa配置
 #  jpa:
 #    database: mysql
@@ -108,7 +130,7 @@ spring:
 #mybatis配置
 mybatis:
   #扫描包路径
-  type-aliases-package: com.moon.joyce.example.entity;com.moon.joyce.commons.utils.entity;com.moon.joyce.example.functionality.entity
+  type-aliases-package: com.moon.joyce.example.entity;com.moon.joyce.commons.utils.study.entity;com.moon.joyce.example.functionality.entity
   #mapper文件地址
   mapper-locations: com.moon.joyce.example.mapper
   #配置
@@ -164,3 +186,4 @@ logging:
   file:
     path: D://${app:name}/
     name: joyce.log
+

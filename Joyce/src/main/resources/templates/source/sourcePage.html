@@ -14,14 +14,24 @@
                     </div>
                 </div>
                 <input name="id" id="id" type="hidden">
+
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="sourceName" >资源名称</label>
                     <div  class="col-sm-4 ">
                         <input class="form-control" id="sourceName" type="text" name="sourceName" placeholder="请输入资源名称" />
                     </div>
                 </div>
-                    <input type="hidden" id="source_url"  name="source_url" >
+
+
+                <input type="hidden" id="source_url"  name="source_url" >
                 <div style="text-align: center;width: 300px;position: absolute; top: 0; font-size:16px; color: #413F43">
+                </div>
+
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="descContent">描述</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" id="descContent" type="text"  name="descContent"  placeholder="" />
+                    </div>
                 </div>
 
                 <div class="form-group ">
@@ -30,6 +40,18 @@
                         <input class="form-control" id="sort" type="number"  name="sort" min="1" placeholder="" />
                     </div>
                 </div>
+
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="applyStatus" >资源名称</label>
+                    <div  class="col-sm-4 ">
+                        <select id="applyStatus" name="applyStatus" class="form-control">
+                            <option value="1">主页应用</option>
+                            <option value="2">主页备用</option>
+                            <option value="3" selected="selected">背景应用</option>
+                        </select>
+                    </div>
+                 </div>
+
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="select"> </label>
                     <div class="col-sm-4">

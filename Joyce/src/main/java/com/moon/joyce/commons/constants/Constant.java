@@ -318,4 +318,6 @@ public class Constant {
      */
     //日志文件夹路径
     public static final String LOGGER_PATH = "G://Joyce/joyce.log";
+
+    public static final String UNKNOW = "====================>";
 }

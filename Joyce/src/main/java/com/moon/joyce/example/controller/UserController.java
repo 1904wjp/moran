@@ -6,13 +6,11 @@ import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
 import com.moon.joyce.example.entity.ChatRecord;
+import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.entity.vo.UserChartVo;
 import com.moon.joyce.example.functionality.entity.Result;
-import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.Setting;
-import com.moon.joyce.example.functionality.entity.VerifyCode;
-import com.moon.joyce.example.functionality.server.WebSocket;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.ChatRecordService;
 import com.moon.joyce.example.service.UserService;
@@ -23,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -220,12 +219,7 @@ public class UserController extends BaseController {
         chatRecord.setUserBId(id);
         chatRecord.setContent(msg);
         boolean save = chatRecordService.save(chatRecord);
-        if (save){
-           /* webSocket.sendMessageTo(msg,id);*/
-            return ResultUtils.success("发送成功");
-        }
-
-        return ResultUtils.error("发送失败");
+        return ResultUtils.dataResult(save,"发送失败","发送成功");
     }
 
 
@@ -265,7 +259,7 @@ public class UserController extends BaseController {
         }
         //结果处理
         if (result){
-            if (null!=getSessionUser()){
+            if (Objects.nonNull(getSessionUser())){
                removeSessionUser();
             }
             setSession(Constant.SESSION_USER,user);
@@ -284,7 +278,7 @@ public class UserController extends BaseController {
     public String checkCode(String code){
         User user = new User();
         user.setStatusCode(code);
-        if (Constant.RESULT_ONE_SUCCESS_SQL_RESULT!=userService.getUserCount(user,Constant.USER_TYPE_UNIQUE_STATUS_CODE)){
+        if (!Constant.RESULT_ONE_SUCCESS_SQL_RESULT.equals(userService.getUserCount(user,Constant.USER_TYPE_UNIQUE_STATUS_CODE))){
             return Constant.REDIRECT+urlPrefix+"regist";
         }
         User dbUser = userService.getUser(user,Constant.USER_TYPE_UNIQUE_STATUS_CODE);
@@ -332,7 +326,7 @@ public class UserController extends BaseController {
             //设置当前在线集合
             sessionUsers.add(dbUser);
             //检测是否存在当前登录人的相关配置
-            if (user.getStatus()==2){
+            if (!user.getStatus().equals(Constant.USER_TYPE_INVAILD_STATUS)){
                 Setting currentSetting = userServiceControllerDetailService.checkData(getSessionUser().getId());
                 if (Objects.nonNull(currentSetting)){
                     logger.info(username+"======>设置装配中");
@@ -448,17 +442,18 @@ public class UserController extends BaseController {
     @Transactional
     @RequestMapping("/getEmailCode")
     public Result getEmailCode(@RequestParam String email){
-        boolean result = false;
-        String mailCode = null;
         User user = new User();
         user.setEmail(email);
         User dbUser = userService.getUser(user, "");
         if (Objects.isNull(dbUser)){
             return ResultUtils.error(Constant.NULL_CODE);
         }
-        VerifyCode sessionVerifyCode= (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
+        String mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
+        cache = RedisUtils.getInstance();
+        return ResultUtils.dataResult(RedisUtils.setVerifyCode(cache, email, 60,mailCode),"验证码不可重复发送","验证码已发送，请查看");
+        /*VerifyCode sessionVerifyCode= (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
         if (Objects.isNull(sessionVerifyCode)){
-            logger.info("sdadsa:"+user.getEmail());
+            logger.info("email=>"+user.getEmail());
             mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
             VerifyCode verifyCode = new VerifyCode();
             verifyCode.setCreateTime(new Date());
@@ -484,7 +479,7 @@ public class UserController extends BaseController {
         }else {
             //有效时间不能重复发送验证码
            return ResultUtils.error(Constant.ERROR_CODE,Constant.SEND_EMAIL_SEND_VAILD_TIME_MESSAGE);
-        }
+        }*/
     }
 
     /**
@@ -504,7 +499,12 @@ public class UserController extends BaseController {
         if (Objects.isNull(dbUser)){
             return ResultUtils.error("该邮件未注册");
         }
-        VerifyCode verifyCode = (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
+        int result = RedisUtils.compareCode(cache, emailCode, email, 3, 24 * 60 * 60);
+        if (result==-1){
+            return ResultUtils.error("请输入正确的验证码");
+        }
+        return ResultUtils.dataResult(result,"验证码已失效,请重新获取","校验成功");
+       /* VerifyCode verifyCode = (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
         boolean vaildTime = DateUtils.dateCompare(verifyCode.getCreateTime(), new Date(), verifyCode.getVaildTime());
         //判断验证码是否失效
         if (vaildTime){
@@ -520,7 +520,7 @@ public class UserController extends BaseController {
             boolean result = userService.updateById(dbUser);
             return ResultUtils.dataResult(result);
         }
-        return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);
+        return ResultUtils.error(Constant.ERROR_FILL_ERROR_CODE);*/
     }
 
     /**
@@ -580,6 +580,21 @@ public class UserController extends BaseController {
         return ResultUtils.success();
     }
 
+    /**
+     * 根据用户名查找用户
+     */
+    @ResponseBody
+    @GetMapping("/searchUserByUsername")
+    public Result searchUserByUsername(@RequestParam String username){
+        User user = new User();
+        user.setUsername(username);
+        User dbUser = userService.getUser(user, "");
+        if (Objects.isNull(dbUser)){
+            return ResultUtils.error(Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
+        }
+        dbUser.setPassword("000000");
+        return ResultUtils.success(dbUser);
+    }
 
 }
 

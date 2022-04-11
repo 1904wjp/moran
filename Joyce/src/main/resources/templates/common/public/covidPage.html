@@ -48,10 +48,10 @@
                 //  console.log(data.data)
                 var select = $('#select').val();
                 var res = data.data || "";
-                res = JSON.parse(res);
                 var newArr = [];
                 if (res) {
                     //获取到各个省份的数据
+                    res = JSON.parse(res);
                     var province = res.areaTree[0].children;
                     for (var i = 0; i < province.length; i++) {
                         /*let  bgc =  getbgColor(province[i].total.confirm);*/

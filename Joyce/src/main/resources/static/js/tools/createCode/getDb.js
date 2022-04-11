@@ -50,7 +50,7 @@ function saveDataSource(){
                 $(".addDb").show();
                 loading(false);
                 if (data.rs) {
-                    tips(rs,data.msg)
+                    tips(data.rs,data.msg)
                     toList("/example/db/dbPage");
                 }else {
                     tips(data.rs,data.msg);
@@ -109,7 +109,7 @@ function deleteSource(id){
 
     }).done(function (data) {
         if (data.rs){
-           tips(rs,data.msg)
+           tips(data.rs,data.msg)
             toList("/example/db/dbPage");
         }else {
             tips(data.rs,data.msg)
@@ -207,7 +207,7 @@ function deleteDbById(id){
             data: data,
         }).done(function (data) {
             if (data.rs) {
-               tips(rs,data.msg)
+               tips(data.rs,data.msg)
                 toList('/example/db/dbPage');
             } else {
                 tips(data.rs,data.msg)
@@ -244,7 +244,7 @@ function editDataSource(id){
             $('#tempCode').val(data.data.tempCode);
             $('#databaseType').val(data.data.databaseType);
             $('#url').val(data.data.url);
-           tips(rs,data.msg)
+           tips(data.rs,data.msg)
         }else {
             tips(data.rs,data.msg)
         }
@@ -271,7 +271,7 @@ function deleteDbIds(){
 
                 }).done(function (data) {
                     if (data.rs) {
-                       tips(rs,data.msg)
+                       tips(data.rs,data.msg)
                         toList('/example/db/dbPage');
                     } else {
                         tips(data.rs,data.msg)
@@ -376,7 +376,7 @@ function editPackage(id){
             $('#id').val(data.data.id);
             $('#packageName').val(data.data.packageName);
             $('#packageValue').val(data.data.packageValue);
-           tips(rs,data.msg)
+           tips(data.rs,data.msg)
         }else {
             tips(data.rs,data.msg)
         }
@@ -408,7 +408,7 @@ function savePackage(){
 
             }).done(function (data) {
                 if (data.rs) {
-                   tips(rs,data.msg)
+                   tips(data.rs,data.msg)
                     toList("/example/db/packagePage");
                 }else {
                     tips(data.rs,data.msg)
@@ -441,7 +441,7 @@ function applyPackage(id){
 
     }).done(function (data) {
         if (data.rs){
-           tips(rs,data.msg)
+           tips(data.rs,data.msg)
             toList('/example/db/packagePage');
         }else {
             tips(data.rs,data.msg)
@@ -471,7 +471,7 @@ function deletePackage(id){
             data: data,
         }).done(function (data) {
             if (data.rs) {
-               tips(rs,data.msg)
+               tips(data.rs,data.msg)
                 toList("/example/db/packagePage");
             } else {
                 tips(data.rs,data.msg)
@@ -512,7 +512,7 @@ function deletePackages(){
 
             }).done(function (data) {
                 if (data.rs) {
-                   tips(rs,data.msg)
+                   tips(data.rs,data.msg)
                     toList('/example/db/packagePage');
                 } else {
                     tips(data.rs,data.msg)

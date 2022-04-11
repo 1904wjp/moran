@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moon.joyce.example.entity.dto.Page;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 /**
@@ -18,6 +21,9 @@ import com.moon.joyce.example.entity.dto.Page;
 @Table(name = "user_type")
 @org.hibernate.annotations.Table(appliesTo = "user_type",comment = "角色表")*/
 @TableName("user_type")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserType extends Page {
     private static final long serialVersionUID = 1573373319724501081L;
     /**

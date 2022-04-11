@@ -2,10 +2,17 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.commons.utils.DateUtils;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import redis.clients.jedis.Jedis;
+
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author: XingDaoRong
@@ -68,4 +75,105 @@ public class ChatRecord extends BaseEntity {
      */
     @TableField(exist = false)
     private String createTimeValue;
+
+    /**
+     * redis聊天记录公用标识
+     */
+    @TableField(exist = false)
+    public static String uniqueAppend = "chatRecord:";
+
+    public ChatRecord(Long userAId, Long userBId) {
+        this.userAId = userAId;
+        this.userBId = userBId;
+    }
+
+    /**
+     * 将对象存入redis中
+     * @param jedis 当前redis对象
+     * @param chatRecord 聊天对象
+     * @param uniqueAppend 唯一标识
+     */
+    @Deprecated
+    public static void jPut(Jedis jedis , ChatRecord chatRecord ,String uniqueAppend){
+        Map<String,String> redisMap = new HashMap<>();
+        redisMap.put("id",chatRecord.getId().toString());
+        redisMap.put("createBy",chatRecord.getCreateBy());
+        redisMap.put("createTime",chatRecord.getCreateTime().toString());
+        redisMap.put("updateBy",chatRecord.getUpdateBy());
+        redisMap.put("updateTime",chatRecord.getUpdateTime().toString());
+        redisMap.put("deleteFlag",chatRecord.getDeleteFlag().toString());
+        redisMap.put("userAId",chatRecord.getUserAId().toString());
+        redisMap.put("userBId",chatRecord.getUserBId().toString());
+        redisMap.put("userAName",chatRecord.getUserAName());
+        redisMap.put("userBName",chatRecord.getUserBName());
+        redisMap.put("aFileUrl",chatRecord.getAFileUrl());
+        redisMap.put("bFileUrl",chatRecord.getBFileUrl());
+        redisMap.put("aNickname",chatRecord.getANickname());
+        redisMap.put("bNickname",chatRecord.getBNickname());
+        redisMap.put("createTimeValue",chatRecord.getCreateTimeValue());
+        jedis.hset(uniqueAppend,redisMap);
+    }
+
+    /**
+     * 将对象获取出来
+     * @param jedis
+     * @param uniqueAppend
+     * @return
+     */
+    @Deprecated
+    public static   ChatRecord jGet(Jedis jedis ,String uniqueAppend){
+        Map<String, String> map = jedis.hgetAll(uniqueAppend);
+        if (map.isEmpty()){
+            return  null;
+        }
+        ChatRecord chatRecord = new ChatRecord();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if (entry.getKey().equals("id")){
+                chatRecord.setId(Long.valueOf(entry.getValue()));
+            }
+            if (entry.getKey().equals("createBy")){
+                chatRecord.setCreateBy(entry.getValue());
+            }
+            if (entry.getKey().equals("createTime")){
+                chatRecord.setCreateTime(DateUtils.strToDate(entry.getValue(), Constant.DATE_TIME_SECOND));
+            }
+            if (entry.getKey().equals("updateBy")){
+                chatRecord.setUpdateBy(entry.getValue());
+            }
+            if (entry.getKey().equals("updateTime")){
+                chatRecord.setUpdateTime(DateUtils.strToDate(entry.getValue(), Constant.DATE_TIME_SECOND));
+            }
+            if (entry.getKey().equals("id")){
+                chatRecord.setId(Long.valueOf(entry.getValue()));
+            }
+            if (entry.getKey().equals("userAId")){
+                chatRecord.setUserAId(Long.valueOf(entry.getValue()));
+            }
+            if (entry.getKey().equals("userBId")){
+                chatRecord.setUserAId(Long.valueOf(entry.getValue()));
+            }
+            if (entry.getKey().equals("userAName")){
+                chatRecord.setUserAName(entry.getValue());
+            }
+            if (entry.getKey().equals("userBName")){
+                chatRecord.setUserBName(entry.getValue());
+            }
+            if (entry.getKey().equals("aFileUrl")){
+                chatRecord.setAFileUrl(entry.getValue());
+            }
+            if (entry.getKey().equals("bFileUrl")){
+                chatRecord.setBFileUrl(entry.getValue());
+            }
+            if (entry.getKey().equals("aNickname")){
+                chatRecord.setANickname(entry.getValue());
+            }
+            if (entry.getKey().equals("bNickname")){
+                chatRecord.setBNickname(entry.getValue());
+            }
+            if (entry.getKey().equals("createTimeValue")){
+                chatRecord.setCreateTimeValue(entry.getValue());
+            }
+        }
+        return chatRecord;
+    }
 }

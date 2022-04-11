@@ -174,13 +174,11 @@ public class StringsUtils  implements Serializable {
         if (strs.isEmpty()){
             return prefixBuilder.append(suffix).toString();
         }
-        int count =0;
         for (int i = 0; i < strs.size(); i++) {
-            ++count;
             if (StringUtils.isNoneEmpty(strs.get(i))){
                 prefixBuilder.append(strs.get(i));
             }
-            if (StringUtils.isNoneEmpty(g)&&count!=strs.size()){
+            if (StringUtils.isNoneEmpty(g)&&i!=strs.size()-1){
                 prefixBuilder.append(g);
             }
         }

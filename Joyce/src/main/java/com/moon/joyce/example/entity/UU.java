@@ -21,7 +21,7 @@ public class UU extends BaseEntity {
     /**
      * 用户id
      */
-    @TableField("usera_id")
+    @TableField("user_a_id")
     private Long userAId;
     /**
      * 另一个用户id
@@ -31,7 +31,7 @@ public class UU extends BaseEntity {
     /**
      * 另一个用户id
      */
-    @TableField("userb_id")
+    @TableField("user_b_id")
     private Long userBId;
     /**
      * 另一个用户名
@@ -45,5 +45,23 @@ public class UU extends BaseEntity {
     /**
      * 添加好友时的一段话，最多60字
      */
-    private String desc;
+    @TableField("friend_desc")
+    private String friendDesc;
+    /**
+     * 唯一标识
+     */
+    @TableField(exist = false)
+    public static String uniqueAppend = "uu:";
+    /**
+     * 加好友结果
+     */
+    @TableField(exist = false)
+    private String resultStr ;
+
+    /**
+     * 用户图像
+     */
+    @TableField(exist = false)
+    private String userFileUrlA ;
+
 }

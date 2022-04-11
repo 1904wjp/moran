@@ -1,12 +1,5 @@
 $(document).ready(function () {
     getUserTabler();
-    /*  $("#fakeloader").fakeLoader({
-          timeToHide:1200, //关闭的时间
-          zIndex:999, // Default zIndex
-          spinner:"spinner1",//加载主题（内置7种动画）: 'spinner1', 'spinner2', 'spinner3', 'spinner4', 'spinner5', 'spinner6', 'spinner7'
-          bgColor:"#2ecc71", //Hex, RGB or RGBA colors
-          imagePath:"/static/img/userImg/file0default0name.png"
-      });*/
 });
 
 
@@ -92,7 +85,7 @@ function deleteIdFuc(id) {
             
         }).done(function (data) {
             if (data.rs) {
-               tips(rs,data.msg)
+               tips(data.rs,data.msg)
                 toList('/example/user/userList');
             }else {
                 tips(data.rs,data.msg)
@@ -143,7 +136,7 @@ function recoverUserFuc(id) {
             data: data,
         }).done(function (data) {
             if (data.rs) {
-               tips(rs,data.msg)
+               tips(data.rs,data.msg)
                 toList('/example/user/userList');
             }else {
                 toastr.error(data.msg)
@@ -223,7 +216,6 @@ function queryUserFuc(id) {
         }
     }).fail(function () {
             tips(false,data.msg)
-
     });
 }
 
@@ -330,7 +322,7 @@ function password_update_verify() {
                 tips(data.rs,data.msg);
                 if (data.rs) {
                     $("#updatePasswordModal").modal('hide');
-                   tips(rs,data.msg)
+                   tips(data.rs,data.msg)
                     toList("/example/user/login");
                 }
             }).fail(function () {
@@ -367,6 +359,7 @@ function updateUserFuc() {
         phone: $("#phone").val(),
         fileUrl: $("input[name='fileUrl']").val(),
         email: $("#email").val(),
+        status: $('#status').val(),
         nickname: $('#nickname').val()
     };
     var fdata = {
@@ -419,3 +412,24 @@ function rmUser() {
         });
     });
 }
+//查找好友
+function searchFriendFuc() {
+
+    var data = {
+        "username": $('#username').val()
+    };
+    $.ajax({
+        url: '/example/user/searchUserByUsername',
+        type: 'GET',
+        dataType: 'json',
+        data: data,
+    }).done(function (data) {
+        if (data.rs){
+            toList('/example/user/queryUser/'+data.data.id);
+        }
+        tips(data.rs,data.msg);
+    }).fail(function () {
+        tips(false,data.msg)
+    });
+}
+

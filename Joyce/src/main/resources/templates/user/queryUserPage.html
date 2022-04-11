@@ -1,7 +1,9 @@
 <head class="paneBar" th:replace="/common/public/header::header(~{::title})">
   <title>用户基本信息</title>
 </head>
-
+<div class="log">
+  <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
 <div class="container">
   <div class="row row-centered">
     <div class="modal fade" id="updatePasswordModal"  role="dialog" aria-labelledby="updatePasswordLabel" aria-hidden="true">
@@ -72,13 +74,7 @@
             <input class="form-control" id="username" type="text" name="username" readonly="readonly" placeholder="请输入用户名" style="border:none;" th:value="${user.username}"/>
           </div>
         </div>
-         <div class="form-group ">
-              <label class="col-sm-2 control-label" for="password">密码</label>
-              <div class="col-sm-4">
-                  <input class="form-control" id="password" type="password"  name="password" readonly="readonly" placeholder="请输入密码" style="border:none;" value="*******"/>
-              </div>
-          </div>
-
+        <input class="form-control" id="password" type="hidden"   name="password" readonly="readonly" placeholder="请输入密码" style="border:none;" value=""/>
         <div class="form-group ">
           <label class="col-sm-2 control-label" for="phone">手机号码</label>
           <div class="col-sm-4">
@@ -94,8 +90,9 @@
         <div class="form-group ">
           <label class="col-sm-2 control-label" for="select"> </label>
           <div class="col-sm-5">
-            <input class="btn btn-default pull-left"  type="button" onclick="openModelFuc()" value="修改密码"/>
-            <input class="btn btn-default " style="margin: 0 9%" type="button" onclick="openForgetPasswordModelFuc()" value="忘记密码"/>
+            <input id="addFriend" class="btn btn-default pull-left"  type="button" onclick="addFriendFuc()" value="添加好友"/>
+            <input id="update" class="btn btn-default pull-left"  type="button" onclick="openModelFuc()" value="修改密码"/>
+            <input id="forget" class="btn btn-default " style="margin: 0 9%" type="button" onclick="openForgetPasswordModelFuc()" value="忘记密码"/>
             <a class="btn btn-default pull-right" onclick="back()">返回</a>
           </div>
         </div>
@@ -106,3 +103,17 @@
 </div>
 
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/user/addFriend.js}"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    if(getSessionUserId()==$('#update_password_id').val()){
+      $('#addFriend').hide();
+      $('#update').show();
+      $('#forget').show();
+    }else {
+      $('#addFriend').show();
+      $('#update').hide();
+      $('#forget').hide();
+    }
+  });
+</script>

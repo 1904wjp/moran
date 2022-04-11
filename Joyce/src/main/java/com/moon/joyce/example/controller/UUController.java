@@ -1,15 +1,24 @@
 package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
+import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.ResultUtils;
 import com.moon.joyce.example.entity.UU;
+import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.service.UUService;
+import com.moon.joyce.example.service.UserService;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -20,57 +29,123 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/example/uu")
 public class UUController extends BaseController {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
     private UUService uuService;
+    @Autowired
+    private UserService userService;
+    //redis缓存
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    private final String  pagePrefix = "user/";
+    /**
+     * 申请好友列表页面
+     * @param
+     * @return
+     */
+    @RequestMapping("/addFriendListPage")
+    public String applyFriendListPage(){
+        return pagePrefix+"/addFriendListPage";
+    }
+
+    /**
+     * 添加好友页面好友页面
+     * @param
+     * @return
+     */
+    @RequestMapping("/searchFriendPage")
+    public String searchFriendPage(){
+        return pagePrefix+"/searchFriendPage";
+    }
+
+    /**
+     * 申请好友列表
+     * @param
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/applyFriendList")
+    public Result applyFriendList(){
+        String  uniqueLista = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
+        ListOperations<String, UU> operations = redisTemplate.opsForList();
+        List<UU> list = operations.range(uniqueLista, 1, -1);
+        List<UU> uus = list.stream().filter(
+                x -> getSessionUserId().equals(x.getUserBId())&&null!=x.getUserAId()).collect(
+                        Collectors.collectingAndThen(
+                        Collectors.toCollection(
+                                ()-> new TreeSet<>(Comparator.comparing(UU::getUserAId))
+                        ),ArrayList::new));
+        return ResultUtils.success(uus);
+    }
+
     /**
      * 发送添加好友请求
      * @param uu
      * @return
      */
-    @RequestMapping("/addFriend")
-    public Result addArticleFriend(UU uu){
+    @ResponseBody
+    @PostMapping("/addFriend")
+    public Result addFriend(UU uu){
+        String  uniqueLista = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
         uu.setUserAId(getSessionUser().getUserTypeId());
-        int result = uuService.sendArticleFriendApplication(uu);
-        if (result==-1){
-            return ResultUtils.error("已是您的好友");
+        UU one = uuService.getOne(uu);
+        User userB = userService.getById(uu.getUserBId());
+        if (Objects.isNull(userB)){
+            return ResultUtils.error(Constant.NULL_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
         }
-        if (result==1){
-            return ResultUtils.success("已发送好友请求");
+        String  uniqueListb = UU.uniqueAppend+"MSGlIST"+uu.getUserBId();
+        ListOperations<String, UU> operations = redisTemplate.opsForList();
+        if (Objects.nonNull(one)){
+            return ResultUtils.error("该用户已是你的好友");
         }
-        return ResultUtils.error();
-    }
-
-
-    /**
-     * 好友申请列表
-     */
-    @RequestMapping("/addFriendList")
-    public Result addFriendList(){
-        List<UU> list = uuService.getAllList(getSessionUser().getId());
-        List<UU> uuList = list.stream().filter(uu ->
-                !uu.getType().equals("1")
-                        && !uu.getType().equals("2")
-                        && !uu.getType().equals("3")
-                        && !uu.getType().equals("4")
-                        && !uu.getType().equals("5")
-                        && !uu.getType().equals("6")
-        ).collect(Collectors.toList());
-        return ResultUtils.success(uuList);
+        //存入redis
+        uu.setUsernameA(getSessionUserName());
+        uu.setUserAId(getSessionUserId());
+        uu.setCreateTime(new Date());
+        uu.setUserFileUrlA(getSessionUser().getFileUrl());
+        uu.setUsernameB(userB.getUsername());
+        uu.setDeleteFlag(Constant.UNDELETE_STATUS);
+        uu.setResultStr("1");
+        operations.rightPush(uniqueLista,uu);
+        operations.rightPush(uniqueListb,uu);
+        logger.info("===============>",operations.range(uniqueLista,1,-1).toString());
+        return ResultUtils.success("等待对方同意");
     }
 
     /**
-     * 同意好友
-     * @param id
+     * 是否同意好友
+     * @param isAgree
      * @return
      */
+    @ResponseBody
     @RequestMapping("/agreeFriend")
-    public Result agreeFriend(@RequestParam Long id,boolean isAgree){
-        UU dbUu = uuService.getById(id);
-        if (isAgree){
-            dbUu.setType("1");
-            boolean result = uuService.updateById(dbUu);
-            return ResultUtils.dataResult(result,"异常失败","对方已是您的好友");
-        }
-        return ResultUtils.error("已拒绝");
+    public Result agreeFriend(@RequestParam("id") Long userAId,@RequestParam("type") Integer isAgree){ ;
+
+
+            String  uniqueLista = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
+            ListOperations<String, UU> operations = redisTemplate.opsForList();
+            List<UU> uus = operations.range(uniqueLista, 1, -1);
+            for (int i = 0; i < uus.size(); i++) {
+                UU tempUU = uus.get(i);
+                if (userAId.equals(tempUU.getUserAId())){
+                    uus.remove(tempUU);
+                    tempUU.setResultStr(isAgree.toString());
+                    uus.add(tempUU);
+                }
+            }
+            redisTemplate.delete(uniqueLista);
+            operations.leftPushAll(uniqueLista,uus);
+            logger.info("====>",operations.leftPushAll(uniqueLista,uus),operations.range(uniqueLista, 0, -1).toString());
+            return ResultUtils.dataResult(isAgree==0,"已拒绝","添加成功");
+    }
+
+    @RequestMapping("/webrtc/{id}.html")
+    public ModelAndView socketChartPage(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("user/webrtc.html");
+        modelAndView.addObject("id",id);
+        return modelAndView;
     }
 
 }

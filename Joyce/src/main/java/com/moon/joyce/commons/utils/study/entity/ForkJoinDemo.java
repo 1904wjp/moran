@@ -1,4 +1,4 @@
-package com.moon.joyce.commons.utils.entity;
+package com.moon.joyce.commons.utils.study.entity;
 
 import java.util.concurrent.RecursiveTask;
 

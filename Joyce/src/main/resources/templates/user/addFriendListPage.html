@@ -1,0 +1,18 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>用户修改基本信息</title>
+</head>
+<div class="container">
+    <div class="row row-centered">
+        <div class="well col-md-6 col-centered">
+            <ul id="applyFriendList" class="list-group"></ul>
+        </div>
+    </div>
+</div>
+
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/user/addFriend.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function (){
+        getApplicationFriendFuc();
+    });
+</script>

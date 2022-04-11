@@ -82,7 +82,7 @@ function saveArticleFuc() {
             }).done(function (data) {
                 if (data.rs) {
                     $('#add_article_info').modal('hide');
-                   tips(rs,data.msg)
+                   tips(data.rs,data.msg);
                     toList("/example/uedit/uEditorListPage");
                 } else {
                     tips(data.rs,data.msg)
@@ -118,7 +118,7 @@ function deleteArticleFuc() {
 
         }).done(function (data) {
             if (data.rs) {
-               tips(rs,data.msg)
+               tips(data.rs,data.msg)
                 articleSearch();
             } else {
                 tips(data.rs,data.msg)
