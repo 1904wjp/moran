@@ -156,7 +156,7 @@ public class StringsUtils  implements Serializable {
                 return var2[i];
             }
         }
-        return null;
+        return "String";
     }
 
     /**

@@ -4,6 +4,7 @@ import com.moon.joyce.commons.base.cotroller.BaseController;
 
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.FileUtils;
+import com.moon.joyce.commons.utils.ListsUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.entity.User;
@@ -152,8 +153,8 @@ public class IndexController extends BaseController {
         }else if (code.equals(c_init)){
             if (index==1){
                 for (String fileName : fileNames) {
-                    List<String> list = FileUtils.readyLineFileConvertList(Constant.LOGGER_PATH + fileName);
-                    FileUtils.addList(strings, list);
+                    List<String> list = ListsUtils.readyLineFileConvertList(Constant.LOGGER_PATH + fileName);
+                    ListsUtils.addList(strings, list);
                 }
                 strings.add(filePathName+" has been loaded");
                 user.setStatus(Constant.START_STATUS);
