@@ -61,3 +61,9 @@
 </div>
 
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript">
+    $('#password').keyup(function(event){
+        if(event.keyCode ==13){
+            loginFuc();
+        }});
+</script>

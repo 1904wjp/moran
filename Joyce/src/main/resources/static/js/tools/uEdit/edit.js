@@ -83,7 +83,7 @@ function saveArticleFuc() {
                 if (data.rs) {
                     $('#add_article_info').modal('hide');
                    tips(data.rs,data.msg);
-                    toList("/example/uedit/uEditorListPage");
+                   /* toList("/example/uedit/uEditorListPage");*/
                 } else {
                     tips(data.rs,data.msg)
                 }
