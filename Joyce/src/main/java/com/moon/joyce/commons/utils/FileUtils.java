@@ -19,7 +19,9 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -65,8 +67,6 @@ public class FileUtils implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(path);
-        System.out.println("/static/1"+ access + now + "/" + fileName);
         //将请求文件的相对路径返回
         return "/static/1" + access +now + "/" + fileName;
     }
@@ -573,6 +573,98 @@ public class FileUtils implements Serializable {
         return bufferedReader;
     }
 
+    /**
+     * 上传视频（临时文件）
+     * @param req
+     * @param resp
+     * @param fileUploadTempDir
+     * @return
+     */
+   public static int uploadVideo(HttpServletRequest req, HttpServletResponse resp,String fileUploadTempDir,String fileUploadDir){
+       resp.addHeader("Access-Control-Allow-Origin", "*");
+       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
+// 获得文件分片数据
+       MultipartFile file = multipartRequest.getFile("data");
+// 分片第几片
+       int index = Integer.parseInt(multipartRequest.getParameter("index"));
+// 总片数
+       int total = Integer.parseInt(multipartRequest.getParameter("total"));
+// 获取文件名
+       String fileName = multipartRequest.getParameter("name");
+       String name = fileName.substring(0, fileName.lastIndexOf("."));
 
+       String uuid = multipartRequest.getParameter("uuid");
+       File uploadFile = new File(fileUploadTempDir + "/" + uuid, uuid + name + index + ".tem");
+       if (!uploadFile.getParentFile().exists()) {
+           uploadFile.getParentFile().mkdirs();
+       }
+       try {
+           if (index<total){
+               // 上传的文件分片名称
+               file.transferTo(uploadFile);
+               return 201;
+           }else {
+               file.transferTo(uploadFile);
+               return 200;
+           }
+       } catch (IOException e) {
+           e.printStackTrace();
+           return 500;
+       }
+   }
+
+    /**
+     * 合并临时文件
+     * @param fileUploadTempDir
+     * @param fileUploadDir
+     * @param uuid
+     * @param newFileName
+     * @return
+     */
+   public static int mergeTempFile(String fileUploadTempDir,String fileUploadDir,String uuid, String newFileName){
+       int code = 500;
+       try {
+           File dirFile = new File(fileUploadTempDir + "/" + uuid);
+           if (!dirFile.exists()) {
+               throw new JoyceException("文件不存在！");
+           }
+//分片上传的文件已经位于同一个文件夹下，方便寻找和遍历(当文件数大于十的时候记得排序用冒泡排序确保顺序是正确的)
+           String[] fileNames = dirFile.list();
+// 创建空的合并文件
+           File file = new File(fileUploadDir);
+           if (!file.exists()){
+               file.mkdirs();
+           }
+           File targetFile = new File(fileUploadDir, newFileName);
+           RandomAccessFile writeFile = new RandomAccessFile(targetFile, "rw");
+           int position = 0;
+           for (String fileName : fileNames) {
+               File sourceFile = new File(fileUploadTempDir + "/" + uuid, fileName);
+               RandomAccessFile readFile = new RandomAccessFile(sourceFile, "rw");
+               int chunksize = 1024 * 3;
+               byte[] buf = new byte[chunksize];
+               writeFile.seek(position);
+               int byteCount = 0;
+               while ((byteCount = readFile.read(buf)) != -1) {
+                   if (byteCount != chunksize) {
+                       byte[] tempBytes = new byte[byteCount];
+                       System.arraycopy(buf, 0, tempBytes, 0, byteCount);
+                       buf = tempBytes;
+                   }
+                   writeFile.write(buf);
+                   position = position + byteCount;
+               }
+               readFile.close();
+               org.apache.commons.io.FileUtils.deleteQuietly(sourceFile);//删除缓存的临时文件
+           }
+           writeFile.close();
+           code= 200;
+       } catch (IOException e) {
+           e.printStackTrace();
+           code= 500;
+       }
+       return code;
+
+   }
 }
 

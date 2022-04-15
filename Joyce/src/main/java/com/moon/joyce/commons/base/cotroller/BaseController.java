@@ -52,13 +52,13 @@ public class BaseController extends R {
 
     //私有命令
     @Value("$(command.start)")
-    public  volatile static String c_start;
+    public   String c_start;
     @Value("$(command.close)")
-    public volatile static String c_close;
+    public  String c_close;
     @Value("$(command.init)")
-    public volatile static String c_init;
+    public  String c_init;
     @Value("$(command.clear)")
-    public volatile static String c_clear;
+    public  String c_clear;
     //sessionMap
     public List<User> sessionUsers = new ArrayList<>();
     @Autowired

@@ -9,7 +9,11 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.moon.joyce.commons.utils.R;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.example.entity.SysMenu;
@@ -31,6 +35,7 @@ import java.util.*;
  */
 @Service
 public class FileServiceImpl implements FileService {
+    private Logger logger =  LoggerFactory.getLogger(this.getClass());
     @Value("${file.upload.path}")
     private String sysPath;
 /*    @Value("${file.upload.relative}")
@@ -39,18 +44,25 @@ public class FileServiceImpl implements FileService {
     private String access;
     @Value("${file.config.path}")
     private String confPath;
+    @Value("${file.temp}")
+    private  String fileUploadTempDir;
+    @Value("${file.upload.path}")
+    private  String fileUploadDir ;
     @Autowired
     private SysMenuMapper sysMenuMapper;
     @Resource
     private ResourceLoader resourceLoader;
     @Override
     public String uploadImg(MultipartFile file) {
-       return   FileUtils.fileUpLoad(file,sysPath,access);
+        String path = FileUtils.fileUpLoad(file, sysPath, access);
+        logger.info("文件:{}正在上传,访问路径为：{}",sysPath+file,path);
+        return   path;
     }
 
     @Override
     public Map <String, List<PageComponent>> readJoyceConfig(String username) {
         String filePathName = confPath + username + "_config.xml";
+        logger.info("正在读取{}文件",filePathName);
         Map<String, List<PageComponent>> map = FileUtils.readXmlConfig(filePathName);
         return map;
     }
@@ -65,6 +77,7 @@ public class FileServiceImpl implements FileService {
         }
         //初始化配置文件
         if (null == map) {
+            logger.info("文件：{}，初始化配置开始", filePathName);
             Map<String, List<PageComponent>> initMap = new HashMap<>();
             QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
             wrapper.isNotNull("menu_url");
@@ -87,7 +100,9 @@ public class FileServiceImpl implements FileService {
             }
             initMap.put("init_page_config", pageComponents);
             FileUtils.writeConfigXml(filePathName,initMap);
+            logger.info("文件：{}初始化配置结束",filePathName);
         }else {
+            logger.info("已有配置，无需初始化配置");
             FileUtils.writeConfigXml(filePathName,map);
         }
     }
@@ -123,7 +138,7 @@ public class FileServiceImpl implements FileService {
                 }
                 File file = new File(System.getProperty("user.dir") + "\\Joyce\\target\\classes\\templates\\" + serverFilename);
                 if (file.exists()){
-                    System.out.println("下载完成:"+filename);
+                    logger.info("文件：{}下载完成:",filename);
                     file.delete();
                 }
                 // 召唤jvm的垃圾回收器
@@ -133,5 +148,18 @@ public class FileServiceImpl implements FileService {
             }
         }
     }
+
+    @Override
+    public int uploadVideo(HttpServletRequest res, HttpServletResponse resp) {
+        logger.info("目录:{}正在存入新文件",fileUploadDir);
+        return com.moon.joyce.commons.utils.FileUtils.uploadVideo(res, resp, fileUploadTempDir,fileUploadDir);
+
+    }
+
+    @Override
+    public int mergeTempFile( String uuid, String name) {
+       return FileUtils.mergeTempFile(fileUploadTempDir, fileUploadDir, uuid, name);
+    }
+
 
 }

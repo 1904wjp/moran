@@ -1,4 +1,3 @@
-
 /**
  * 密码框触发器
  * @param id
@@ -15,9 +14,9 @@ function password_change(id) {
  * @param url
  */
 function toList(url) {
-    setTimeout(function (){
-            $(location).attr('href', url);
-        }, 1000);
+    setTimeout(function () {
+        $(location).attr('href', url);
+    }, 1000);
 }
 
 
@@ -48,8 +47,8 @@ function backGroundSetting(url) {
     document.body.style.backgroundAttachment = "fixed";
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundImage = "URL(" + url + ")";
-  /*  document.body.style.opacity = 0.4;
-    document.body.style.filter = 'alpha(opacity=' + 80 + ')';*/
+    /*  document.body.style.opacity = 0.4;
+      document.body.style.filter = 'alpha(opacity=' + 80 + ')';*/
 }
 
 /**
@@ -60,7 +59,7 @@ function backGroundSetting(url) {
  * @param columns
  */
 function tables(tabObj, url, queryObj, columns) {
-    tabObj.css("background","white");
+    tabObj.css("background", "white");
     tabObj.bootstrapTable({
         method: 'get', // 服务器数据的请求方式 get or post
         url: url, // 服务器数据的加载地址
@@ -112,7 +111,7 @@ function getIds(obj) {
     var ids = "";
     var rows = obj.bootstrapTable('getSelections');
     if (rows.length == 0) {
-       /* alert("至少选中一项");*/
+        /* alert("至少选中一项");*/
         toastr.warning('至少选中一项');
     } else {
         $(rows).each(function () {
@@ -132,6 +131,7 @@ function getIds(obj) {
  */
 // 处理上传
 function uploadFile(file, restUrl, img, objUrl, size) {
+    addLoadingModal("请稍后...正在上传资源");
     if (file.val() == '') {
         return;
     }
@@ -139,15 +139,15 @@ function uploadFile(file, restUrl, img, objUrl, size) {
     formData.append('file', file[0].files[0]);
     //设置图片类型
     if (!/.(gif|jpg|jpeg|png|gif|jpg|png)$/.test(file.val())) {
-        tips(false,"图片类型不符合要求");
+        tips(false, "图片类型不符合要求");
         return;
     }
-    if (isBlank(size)){
-        size=20;
+    if (isBlank(size)) {
+        size = 20;
     }
     //设置图片大小
-    if (file[0].size.toFixed(2) >= (size  * 1024 * 1024)) {
-        tips(false,"上传图片小于" + size + "MB");
+    if (file[0].size.toFixed(2) >= (size * 1024 * 1024)) {
+        tips(false, "上传图片小于" + size + "MB");
         return;
     }
     $.ajax({
@@ -159,15 +159,14 @@ function uploadFile(file, restUrl, img, objUrl, size) {
         // jQuery不要去处理发送的数据
         processData: false,
         success: function (data) {
-            tips(data.rs,data.msg);
+            tips(data.rs, data.msg);
             if (data.rs) {
                 img.attr("src", data.data);
                 $("input[name=" + objUrl + "]").val(data.data);
             }
-
-
         }
     });
+    loading(false);
 }
 
 
@@ -406,7 +405,7 @@ function inputColumns() {
         "dbName": $('#dbName').val()
     }
 
-    if(vailDate(data)){
+    if (vailDate(data)) {
         Ewin.confirm({message: "确认要提交数据？"}).on(function (e) {
             if (!e) {
                 return;
@@ -422,12 +421,12 @@ function inputColumns() {
                 loading(false);
                 if (data.rs) {
                     $('#download').show();
-                   tips(data.rs,data.msg)
-                }else {
-                    tips(data.rs,data.msg)
+                    tips(data.rs, data.msg)
+                } else {
+                    tips(data.rs, data.msg)
                 }
             }).fail(function () {
-                tips(false,data.msg)
+                tips(false, data.msg)
             });
         });
     }
@@ -459,13 +458,14 @@ var formatDate = function (date) {
 /**
  * 返回上一页
  */
-function back(){
+function back() {
     history.back(-1);
 }
+
 /**
  * 返回上一页展示新页面
  */
-function backNew(){
+function backNew() {
     history.go(-1);
 }
 
@@ -473,16 +473,16 @@ function backNew(){
  * 获取当前登录人id
  * @returns {*|jQuery}
  */
-function getSessionUserId(){
-    return  $('#session_user_id').val();
+function getSessionUserId() {
+    return $('#session_user_id').val();
 }
 
 /**
  * 回到目标底部
  * @param obj
  */
-function toBut(obj){
-    if(obj.scrollHeight > obj.clientHeight) {
+function toBut(obj) {
+    if (obj.scrollHeight > obj.clientHeight) {
         obj.scrollTop = obj.scrollHeight;
     }
 }
@@ -492,9 +492,10 @@ function toBut(obj){
  * @param obj
  * @param msg
  */
-function addLoadingModal(msg){
-    if (isBlank(msg)){
-        msg="正在加载...请稍等！"
+function addLoadingModal(msg) {
+    $('body').append('<div id="loading"></div>');
+    if (isBlank(msg)) {
+        msg = "正在加载...请稍等！"
     }
     $('#loadingModal').remove();
     $("#loading").append(
@@ -503,26 +504,30 @@ function addLoadingModal(msg){
         "<div class=\"progress progress-striped active\" style=\"margin-bottom: 0;\">\n" +
         "<div class=\"progress-bar\" style=\"width: 100%;\"></div>\n" +
         "</div>\n" +
-        "<h5 style=\"color:black\"> <strong>"+msg+"</strong> </h5>\n" +
+        "<h5 style=\"color:black\"> <strong>" + msg + "</strong> </h5>\n" +
         "</div>\n" +
         "</div>"
     )
-   loading(true);
+    loading(true);
 }
 
 /**
  * 弹窗开启和关闭
  * @param bool
  */
-function loading(bool){
-    if (bool){
+function loading(bool) {
+    if (bool) {
         $("#loadingModal").modal('show');
-    }else {
+    } else {
         $("#loadingModal").modal('hide');
     }
 }
 
-//转换中文字符串
+/**
+ * 转换中文字符串
+ * @param str
+ * @returns {string}
+ */
 function toUtf8(str) {
     var out, i, len, c;
     out = "";
@@ -543,7 +548,12 @@ function toUtf8(str) {
     return out;
 }
 
-//生成二维码
+/**
+ * 生成二维码
+ * @param txt
+ * @param width
+ * @param height
+ */
 function outputQRCod(txt, width, height) {
     //先清空
     $(".qrcode").empty();
@@ -557,59 +567,164 @@ function outputQRCod(txt, width, height) {
         text: str
     });
 }
-//生成二维码
+
+/**
+ * 生成二维码
+ * @param array
+ * @param width
+ * @param height
+ */
 function outputQRCod2(array, width, height) {
-     var a = ["联系我们","微信打赏","支付宝打赏"]
+    var a = ["联系我们", "微信打赏", "支付宝打赏"]
     //Jquery 循环map的用法
-       for (var i=0;i<array.length;i++){
-           var key = "qrcode"+i;
-           $("#qrcode").append(
-               "<div class='card col-md-3' style=''>" +
-               "<label style='font-size: 50px'>"+a[i]+"</label>" +
-               "<div class='"+key+"  card-body'></div>"+
-           "</div>");
-           //先清空
-           var obj = "."+key;
-           $(obj).empty();
-           //中文格式转换
-           var str = toUtf8(array[i]);
-           //生成二维码
-           $(obj).qrcode({
-               render: "canvas",//canvas和table两种渲染方式
-               width: width,
-               height: height,
-               text: str
-           });
-       }
+    for (var i = 0; i < array.length; i++) {
+        var key = "qrcode" + i;
+        $("#qrcode").append(
+            "<div class='card col-md-3' style=''>" +
+            "<label style='font-size: 50px'>" + a[i] + "</label>" +
+            "<div class='" + key + "  card-body'></div>" +
+            "</div>");
+        //先清空
+        var obj = "." + key;
+        $(obj).empty();
+        //中文格式转换
+        var str = toUtf8(array[i]);
+        //生成二维码
+        $(obj).qrcode({
+            render: "canvas",//canvas和table两种渲染方式
+            width: width,
+            height: height,
+            text: str
+        });
+    }
 }
 
 /**
- * 正则表达谁
+ * 正则表达
  * @param reg
  * @param msg
  */
-function checkFill(str,reg,msg){
-    if(!reg.test(str)){
-        tips(false,msg);
+function checkFill(str, reg, msg) {
+    if (!reg.test(str)) {
+        tips(false, msg);
+        return;
+    }
+}
+
+function getInitL2D() {
+    $(body).append("<div class=\"waifu\" id=\"waifu\">\n" +
+        "    <div class=\"waifu-tips\" style=\"opacity: 1;\"></div>\n" +
+        "    <canvas id=\"live2d\" width=\"280\" height=\"250\" class=\"live2d\"></canvas>\n" +
+        "    <div class=\"waifu-tool\">\n" +
+        "        <span class=\"fui-home\"></span>\n" +
+        "        <span class=\"fui-chat\"></span>\n" +
+        "        <span class=\"fui-eye\"></span>\n" +
+        "        <span class=\"fui-user\"></span>\n" +
+        "        <span class=\"fui-photo\"></span>\n" +
+        "        <span class=\"fui-info-circle\"></span>\n" +
+        "        <span class=\"fui-cross\"></span>\n" +
+        "    </div>\n" +
+        "</div>");
+}
+
+/**
+ * 执行分片上传
+ * @param file
+ * @param i
+ * @param uuid
+ */
+function uploadVideoFile(file, i, uuid,url,mergeUrl) {
+    addLoadingModal("请稍后...正在上传");
+    var count = 0;
+    var name = file.name, //文件名
+        size = file.size, //总大小shardSize = 2 * 1024 * 1024,
+        shardSize = 10 * 1024 * 1024, //以2MB为一个分片,每个分片的大小
+        shardCount = Math.ceil(size / shardSize); //总片数
+    if (i >= shardCount) {
         return;
     }
 
-    /**
-     *
-      */
-function getInitL2D(){
-        $(body).append("<div class=\"waifu\" id=\"waifu\">\n" +
-            "    <div class=\"waifu-tips\" style=\"opacity: 1;\"></div>\n" +
-            "    <canvas id=\"live2d\" width=\"280\" height=\"250\" class=\"live2d\"></canvas>\n" +
-            "    <div class=\"waifu-tool\">\n" +
-            "        <span class=\"fui-home\"></span>\n" +
-            "        <span class=\"fui-chat\"></span>\n" +
-            "        <span class=\"fui-eye\"></span>\n" +
-            "        <span class=\"fui-user\"></span>\n" +
-            "        <span class=\"fui-photo\"></span>\n" +
-            "        <span class=\"fui-info-circle\"></span>\n" +
-            "        <span class=\"fui-cross\"></span>\n" +
-            "    </div>\n" +
-            "</div>");
+//判断uuid是否存在
+   /* if (uuid == undefined || uuid == null) {
+        uuid = guid();
+    }*/
+//console.log(size,i+1,shardSize); //文件总大小，第一次，分片大小//
+    var start = i * shardSize;
+    var end = start + shardSize;
+    var packet = file.slice(start, end); //将文件进行切片
+    /* 构建form表单进行提交 */
+    var form = new FormData();
+    form.append("uuid", uuid);// 前端生成uuid作为标识符传个后台每个文件都是一个uuid防止文件串了
+    form.append("data", packet); //slice方法用于切出文件的一部分
+    form.append("name", name);
+    form.append("totalSize", size);
+    form.append("total", shardCount); //总片数
+    form.append("index", i + 1); //当前是第几片
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: form,
+//timeout:"10000", //超时10秒
+        async: true, //异步
+        dataType: "json",
+        processData: false, //很重要，告诉jquery不要对form进行处理
+        contentType: false, //很重要，指定为false才能形成正确的Content-Ty
+    }).done(function (data) {
+        console.log("data:",data);
+        /* 表示上一块文件上传成功，继续下一次 */
+        if (data.code === 201) {
+            form = '';
+            i++;
+            uploadVideoFile(file, i, uuid,url,mergeUrl);
+            tips(null,data.msg);
+        } else if (data.code === 500) {
+            count++;
+            form = '';
+            /* 失败后，每2秒继续传一次分片文件 */
+            var setIntervalFuc =  setInterval(function () {
+                uploadVideoFile(file, i, uuid,url,mergeUrl)
+            }, 2000);
+            //达到一定错误数量停止
+            if (count===10){
+                loading(false);
+                tips(data.rs,data.msg);
+            }
+        } else if(data.code === 200) {
+            mergeVideo(uuid,name,mergeUrl);
+        }
+    });
+
 }
+
+/**
+ * 视频解析
+ * @param uuid
+ * @param fileName
+ */
+function mergeVideo(uuid, fileName,mergeurl) {
+    $.ajax({
+        url: mergeurl,
+        type: "GET",
+        data: {uuid: uuid, newFileName: fileName},
+//timeout:"10000", //超时10秒
+        async: true, //异步
+        dataType:"json",
+        success: function (data) {
+            loading(false);
+            tips(data.rs,data.msg)
+        }
+    })
+}
+
+
+/**
+ * 获取uuid
+ * @returns {string}
+ */
+function guid() {
+    return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0,
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }

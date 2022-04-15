@@ -2,12 +2,13 @@
  * 上传资源
  */
 function uploadSource(){
-    uploadFile($('#source_file'),"/example/source/uploadSource",$("#display_img_resource"),"source_url");
+    uploadFile($('#pic_source_file'),"/example/source/uploadSource",$("#display_img_resource"),"source_url");
 }
 //保存资源
 function saveSource(){
     var data={
         id:$("#id").val(),
+        type:$("#type").val(),
         url: $("#source_url").val(),
         sourceName: $("#sourceName").val(),
         sort: $("#sort").val(),

@@ -304,5 +304,10 @@ public class Test {
         }
         instance.close();
     }
-
+    @org.junit.Test
+    public void test0101(){
+        for (int i = 2; i < 10; i++) {
+            System.out.println("INSERT INTO `cix_model_register` VALUES ("+i+", "+(i+1)+", 'fasdas`'"+i+", 'dasdasdsa', '1', 'da\\'s\\'da\\'s\\'d', 'dadasda', NULL, NULL, 0, NULL, NULL, NULL, NULL);");
+        }
+    }
 }

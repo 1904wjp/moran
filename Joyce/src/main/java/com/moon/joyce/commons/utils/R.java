@@ -7,6 +7,7 @@ import com.moon.joyce.example.functionality.entity.Result;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -15,6 +16,7 @@ import java.util.Objects;
  * @desc Result工具
  */
 public class R  {
+
     /**
      * 返回结果
      * @param rsi

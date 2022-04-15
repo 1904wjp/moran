@@ -1,62 +1,71 @@
 <head class="paneBar" th:replace="/common/public/header::header(~{::title})">
-    <title>用户修改基本信息</title>
+    <title>资源上传</title>
 </head>
 <div class="container">
     <div class="row row-centered">
         <div class="well col-md-6 col-centered">
             <img id="display_img_resource" width="100px" height="100px" class="img-circle pull-right"/>
-            <form class="form-horizontal center-block" role="form"  method="get">
+            <form class="form-horizontal center-block" role="form" method="get">
                 <legend>资源上传</legend>
-                <div class="form-group ">
-                    <label class="col-sm-2 control-label" for="source_file" >资源上传</label>
-                    <div  class="col-sm-4 " style="margin-right: -9%; width: 15%;">
-                        <input class="form-control"  id="source_file" type="file" onchange="uploadSource()"/>
+                <div class="form-group " >
+                    <div class="col-sm-4 " style="margin-right: -9%; width: 15%;">
+                        <span><input type="button" id="uploadPicSourceBtn" style="background-color: blue" value="图片上传" onclick="selectSource(1)"/></span>
+                        <span><input type="button" id="uploadVidSourceBtn" style="background-color: yellow" value="视频上传" onclick="selectSource(2)"/></span>
+                    </div>
+                </div>
+                <div class="form-group "  id="picture">
+                    <label class="col-sm-2 control-label" for="pic_source_file">图片资源上传</label>
+                    <div class="col-sm-4 " style="margin-right: -9%; width: 15%;">
+                        <input class="form-control" id="pic_source_file" type="file" onchange="uploadSource()"/>
+                    </div>
+                </div>
+                <div class="form-group " id="video">
+                    <label class="col-sm-2 control-label" for="pic_source_file">视频资源上传</label>
+                    <div class="col-sm-4 " style="margin-right: -9%; width: 15%;">
+                        <input class="form-control" id="slice" type="file"/>
                     </div>
                 </div>
                 <input name="id" id="id" type="hidden">
+                <input id="type" type="hidden">
 
-                <div class="form-group ">
-                    <label class="col-sm-2 control-label" for="sourceName" >资源名称</label>
-                    <div  class="col-sm-4 ">
-                        <input class="form-control" id="sourceName" type="text" name="sourceName" placeholder="请输入资源名称" />
-                    </div>
-                </div>
-
-
-                <input type="hidden" id="source_url"  name="source_url" >
+                <input type="hidden" id="source_url" name="source_url">
                 <div style="text-align: center;width: 300px;position: absolute; top: 0; font-size:16px; color: #413F43">
                 </div>
-
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label"  for="sourceName">资源名称</label>
+                    <div class="col-sm-4 ">
+                        <input class="form-control" id="sourceName" type="text" name="sourceName"/>
+                    </div>
+                </div>
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="descContent">描述</label>
                     <div class="col-sm-4">
-                        <input class="form-control" id="descContent" type="text"  name="descContent"  placeholder="" />
+                        <input class="form-control" id="descContent" type="text" name="descContent" placeholder=""/>
                     </div>
                 </div>
-
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="sort">排序</label>
-                   <div class="col-sm-4">
-                        <input class="form-control" id="sort" type="number"  name="sort" min="1" placeholder="" />
+                    <div class="col-sm-4">
+                        <input class="form-control" id="sort" type="number" name="sort" min="1" placeholder=""/>
                     </div>
                 </div>
 
-                <div class="form-group ">
-                    <label class="col-sm-2 control-label" for="applyStatus" >资源名称</label>
-                    <div  class="col-sm-4 ">
+                <div class="form-group " id="sourceStatus">
+                    <label class="col-sm-2 control-label" for="applyStatus">资源应用</label>
+                    <div class="col-sm-4 ">
                         <select id="applyStatus" name="applyStatus" class="form-control">
                             <option value="1">主页应用</option>
                             <option value="2">主页备用</option>
                             <option value="3" selected="selected">背景应用</option>
                         </select>
                     </div>
-                 </div>
+                </div>
 
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="select"> </label>
                     <div class="col-sm-4">
-                        <input class="btn btn-default pull-left"  type="button" onclick="saveSource()" value="确认添加"/>
-                        <a class="btn btn-default pull-right"  onclick="back()">返回</a>
+                        <input class="btn btn-default pull-left" type="button" onclick="saveSource(0)" value="确认添加"/>
+                        <a class="btn btn-default pull-right" onclick="back()">返回</a>
                     </div>
                 </div>
             </form>
@@ -67,3 +76,30 @@
 <script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
 <script type="text/javascript" th:src="@{/static/js/source/source.js}"></script>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript">
+    $().ready(function () {
+        $('#video').hide();
+        $("#uploadPicSourceBtn").css("background-color", "red");
+    });
+    $("#slice").change(function (event) {
+        var file = $("#slice")[0].files[0];
+        uploadVideoFile(file,0,guid(),"/example/source/uploadVideoSource","/example/source/mergeVideoSource");
+    });
+    function selectSource(type){
+        if (type==1){
+            $('#video').hide();
+            $('#picture').show();
+            $('#type').val(1);
+            $("#uploadPicSourceBtn").css("background-color", "red");
+            $("#uploadVidSourceBtn").css("background-color", "yellow");
+        }
+        if (type==2){
+            $('#picture').hide();
+            $('#video').show();
+            $('#sourceStatus').hide();
+            $('#type').val(2);
+            $("#uploadPicSourceBtn").css("background-color", "blue");
+            $("#uploadVidSourceBtn").css("background-color", "red");
+        }
+    }
+</script>

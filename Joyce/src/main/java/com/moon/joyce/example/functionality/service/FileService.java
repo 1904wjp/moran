@@ -43,4 +43,20 @@ public interface FileService {
      * @param request
      */
     void downloadFile(HttpServletResponse response, HttpServletRequest request,String filename,String serverFilename);
+
+    /**
+     * 上传视频分段
+     * @param res
+     * @param resp
+     * @return
+     */
+    int uploadVideo(HttpServletRequest res,HttpServletResponse resp);
+
+    /**
+     * 视频解析
+     * @param uuid
+     * @param name
+     * @return
+     */
+    int mergeTempFile(String uuid,String name);
 }
