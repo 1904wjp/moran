@@ -634,6 +634,11 @@ function getInitL2D() {
  * @param uuid
  */
 function uploadVideoFile(file, i, uuid,url,mergeUrl) {
+    var fileType= file.name.substr(file.name.indexOf("\.")).toLowerCase();
+    if (fileType!="mp4"){
+        tips("","格式必须为mp4");
+        return;
+    }
     addLoadingModal("请稍后...正在上传");
     var count = 0;
     var name = file.name, //文件名

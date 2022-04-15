@@ -621,8 +621,8 @@ public class FileUtils implements Serializable {
      * @param newFileName
      * @return
      */
-   public static int mergeTempFile(String fileUploadTempDir,String fileUploadDir,String uuid, String newFileName){
-       int code = 500;
+   public static String mergeTempFile(String fileUploadTempDir,String fileUploadDir,String uuid, String newFileName){
+       String path = null;
        try {
            File dirFile = new File(fileUploadTempDir + "/" + uuid);
            if (!dirFile.exists()) {
@@ -658,12 +658,12 @@ public class FileUtils implements Serializable {
                org.apache.commons.io.FileUtils.deleteQuietly(sourceFile);//删除缓存的临时文件
            }
            writeFile.close();
-           code= 200;
+           path= targetFile.getPath();
        } catch (IOException e) {
            e.printStackTrace();
-           code= 500;
+
        }
-       return code;
+       return path;
 
    }
 }

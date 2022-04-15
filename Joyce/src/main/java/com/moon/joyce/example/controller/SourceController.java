@@ -209,8 +209,8 @@ public class SourceController extends BaseController {
     @ResponseBody
     @GetMapping("/mergeVideoSource")
     public Result mergeVideo( String uuid, String newFileName){
-        int code = fileService.mergeTempFile(uuid, newFileName);
-       return R.dataResult(code==200,"视频解析失败","视频解析成功");
+        String path = fileService.mergeTempFile(uuid, newFileName);
+        return R.dataResult(path!=null,"视频解析失败","视频解析成功",path);
     }
     /**
      * 冒泡排序
