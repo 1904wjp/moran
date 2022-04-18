@@ -1,17 +1,19 @@
 package com.moon.joyce;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.RedisUtils;
+import com.moon.joyce.example.entity.Source;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import redis.clients.jedis.Jedis;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * @Author: XingDaoRong

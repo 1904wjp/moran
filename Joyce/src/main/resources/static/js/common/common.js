@@ -724,8 +724,6 @@ function mergeVideo(uuid, fileName,mergeurl) {
                 //清楚上一个添加的
                 $("#src_video").empty();
                 appendVideo($("#src_video"),"index_v",data.data);
-
-
             }
             tips(data.rs,data.msg)
         }

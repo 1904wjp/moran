@@ -78,35 +78,4 @@
 <script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
 <script type="text/javascript" th:src="@{/static/js/source/source.js}"></script>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
-<script type="text/javascript">
-    $().ready(function () {
-        $('#video').hide();
-        $("#uploadPicSourceBtn").css("background-color", "red");
-    });
-    $("#slice").change(function (event) {
-        var file = $("#slice")[0].files[0];
-        uploadVideoFile(file,0,guid(),"/example/source/uploadVideoSource","/example/source/mergeVideoSource");
-    });
-    function selectSource(type){
-        if (type==1){
-            $('#video').hide();
-            $('#picture').show();
-            $('#type').val(1);
-            $("#uploadPicSourceBtn").css("background-color", "red");
-            $('#src_video').hide();
-            $('#display_img_resource').show();
-            $("#uploadVidSourceBtn").css("background-color", "yellow");
-            $('#sourceStatus').show();
-        }
-        if (type==2){
-            $('#picture').hide();
-            $('#video').show();
-            $('#sourceStatus').hide();
-            $('#type').val(2);
-            $('#display_img_resource').hide();
-            $('#src_video').show()
-            $("#uploadPicSourceBtn").css("background-color", "blue");
-            $("#uploadVidSourceBtn").css("background-color", "red");
-        }
-    }
-</script>
+
