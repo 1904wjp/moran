@@ -616,12 +616,12 @@ public class FileUtils implements Serializable {
     /**
      * 合并临时文件
      * @param fileUploadTempDir
-     * @param fileUploadDir
+     * @param access
      * @param uuid
      * @param newFileName
      * @return
      */
-   public static String mergeTempFile(String fileUploadTempDir,String fileUploadDir,String uuid, String newFileName){
+   public static String mergeTempFile(String fileUploadTempDir,String sysPath,String access,String uuid, String newFileName){
        String path = null;
        try {
            File dirFile = new File(fileUploadTempDir + "/" + uuid);
@@ -631,11 +631,19 @@ public class FileUtils implements Serializable {
 //分片上传的文件已经位于同一个文件夹下，方便寻找和遍历(当文件数大于十的时候记得排序用冒泡排序确保顺序是正确的)
            String[] fileNames = dirFile.list();
 // 创建空的合并文件
-           File file = new File(fileUploadDir);
+         /*  File file = new File(sysPath);
            if (!file.exists()){
                file.mkdirs();
            }
-           File targetFile = new File(fileUploadDir, newFileName);
+*/
+           String createFileName = UUIDUtils.getUUID(6)  + "_" + StringsUtils.substringFileName(newFileName);
+           //文件保存路径
+           String now = DateUtils.dateForMat("dv", new Date());
+           String filePath = sysPath +"2"+access + now;
+           File targetFile = new File(filePath, createFileName);
+           if (!targetFile.getParentFile().exists()){
+               targetFile.getParentFile().mkdirs();
+           }
            RandomAccessFile writeFile = new RandomAccessFile(targetFile, "rw");
            int position = 0;
            for (String fileName : fileNames) {
@@ -655,16 +663,15 @@ public class FileUtils implements Serializable {
                    position = position + byteCount;
                }
                readFile.close();
-               org.apache.commons.io.FileUtils.deleteQuietly(sourceFile);//删除缓存的临时文件
+               //删除缓存的临时文件
+               org.apache.commons.io.FileUtils.deleteQuietly(sourceFile);
            }
            writeFile.close();
-           path= targetFile.getPath();
+           path= "/static/2" + access +now + "/" + createFileName;
        } catch (IOException e) {
            e.printStackTrace();
-
        }
        return path;
-
    }
 }
 

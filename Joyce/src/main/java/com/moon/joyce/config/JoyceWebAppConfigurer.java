@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.security.sasl.SaslServer;
+
 /**
  * @author Xing Dao Rong
  * @date 2021/9/3 17:44
@@ -27,5 +29,6 @@ public class JoyceWebAppConfigurer implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
        registry.addResourceHandler(fileRelativePath).
                addResourceLocations("file:/"+filePath);
+              /* addResourceLocations("file:"+ System.getProperty(".dir") +"/"+filePath);*/
     }
 }

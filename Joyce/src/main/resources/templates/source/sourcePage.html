@@ -1,10 +1,12 @@
 <head class="paneBar" th:replace="/common/public/header::header(~{::title})">
     <title>资源上传</title>
 </head>
+<link  rel="stylesheet" th:href="@{/static/css/source/source.css}"/>
 <div class="container">
     <div class="row row-centered">
         <div class="well col-md-6 col-centered">
             <img id="display_img_resource" width="100px" height="100px" class="img-circle pull-right"/>
+            <div id="src_video" class="pull-right" style="width: 100px;height: 100px" ></div>
             <form class="form-horizontal center-block" role="form" method="get">
                 <legend>资源上传</legend>
                 <div class="form-group " >
@@ -91,13 +93,18 @@
             $('#picture').show();
             $('#type').val(1);
             $("#uploadPicSourceBtn").css("background-color", "red");
+            $('#src_video').hide();
+            $('#display_img_resource').show();
             $("#uploadVidSourceBtn").css("background-color", "yellow");
+            $('#sourceStatus').show();
         }
         if (type==2){
             $('#picture').hide();
             $('#video').show();
             $('#sourceStatus').hide();
             $('#type').val(2);
+            $('#display_img_resource').hide();
+            $('#src_video').show()
             $("#uploadPicSourceBtn").css("background-color", "blue");
             $("#uploadVidSourceBtn").css("background-color", "red");
         }

@@ -158,7 +158,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String mergeTempFile( String uuid, String name) {
-       return FileUtils.mergeTempFile(fileUploadTempDir, fileUploadDir, uuid, name);
+       return FileUtils.mergeTempFile(fileUploadTempDir, sysPath,access, uuid, name);
     }
 
 

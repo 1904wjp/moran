@@ -32,6 +32,15 @@ function saveSource(){
             data: data,
         }).done(function (data) {
             tips(data.rs,data.msg);
+            if (data.rs){
+                $("#id").val(''),
+                $("#type").val(''),
+                $("#source_url").val(''),
+                $("#sourceName").val(''),
+                $("#sort").val(''),
+                $('#descContent').val(''),
+                $("#applyStatus option:selected").val('')
+            }
         }).fail(function () {
             tips(false,ajaxFailMsg);
         });

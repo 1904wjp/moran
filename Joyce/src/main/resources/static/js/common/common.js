@@ -131,15 +131,16 @@ function getIds(obj) {
  */
 // 处理上传
 function uploadFile(file, restUrl, img, objUrl, size) {
-    addLoadingModal("请稍后...正在上传资源");
+
     if (file.val() == '') {
+        tips("", "图片不能为空");
         return;
     }
     var formData = new FormData();
     formData.append('file', file[0].files[0]);
     //设置图片类型
     if (!/.(gif|jpg|jpeg|png|gif|jpg|png)$/.test(file.val())) {
-        tips(false, "图片类型不符合要求");
+        tips("", "图片类型不符合要求");
         return;
     }
     if (isBlank(size)) {
@@ -150,6 +151,7 @@ function uploadFile(file, restUrl, img, objUrl, size) {
         tips(false, "上传图片小于" + size + "MB");
         return;
     }
+    addLoadingModal("请稍后...正在上传资源");
     $.ajax({
         url: restUrl,
         type: "POST",
@@ -177,7 +179,7 @@ function uploadFile(file, restUrl, img, objUrl, size) {
  * @param src
  */
 function appendVideo(divObject, videoId, src) {
-    var video = $("<video id=\"" + videoId + "\" autoplay=\"autoplay\" loop=\"loop\" muted=\"muted\"><source src=\"" + src + "\"></video>")
+    var video = $("<video id=\"" + videoId + "\" class='append_video' autoplay=\"autoplay\" loop=\"loop\" muted=\"muted\"><source src=\"" + src + "\"></video>");
     divObject.append(video);
     divObject[0].play();
 }
@@ -635,7 +637,8 @@ function getInitL2D() {
  */
 function uploadVideoFile(file, i, uuid,url,mergeUrl) {
     var fileType= file.name.substr(file.name.indexOf("\.")).toLowerCase();
-    if (fileType!="mp4"){
+    console.log("ft",fileType);
+    if (fileType!=".mp4"){
         tips("","格式必须为mp4");
         return;
     }
@@ -716,6 +719,14 @@ function mergeVideo(uuid, fileName,mergeurl) {
         dataType:"json",
         success: function (data) {
             loading(false);
+            if (notNull(data)){
+                $("#source_url").val(data.data);
+                //清楚上一个添加的
+                $("#src_video").empty();
+                appendVideo($("#src_video"),"index_v",data.data);
+
+
+            }
             tips(data.rs,data.msg)
         }
     })
