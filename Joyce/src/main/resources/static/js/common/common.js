@@ -694,10 +694,12 @@ function uploadVideoFile(file, i, uuid,url,mergeUrl) {
             }, 2000);
             //达到一定错误数量停止
             if (count===10){
+                clearInterval(setIntervalFuc);
                 loading(false);
                 tips(data.rs,data.msg);
             }
         } else if(data.code === 200) {
+            tips(data.rs,data.msg);
             mergeVideo(uuid,name,mergeUrl);
         }
     });
