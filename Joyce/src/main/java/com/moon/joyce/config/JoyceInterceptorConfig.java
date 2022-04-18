@@ -53,7 +53,7 @@ public class JoyceInterceptorConfig implements WebMvcConfigurer, ErrorPageRegist
                 "/**/*.map",
                 "/**/*.eot",
                 "/**/*.svg",
-                "/example/sysMenu/getIndexVideo",
+                "/example/source/getIndexVideo",
                 "/static/video/indexVideo/video0default0name.mp4"
         );
     }

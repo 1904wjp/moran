@@ -9,13 +9,12 @@ function indexLoadBackGround(){
     $("#index_content").hide();
     $("#index_content").fadeIn(5000);
     $.ajax({
-        url: '/example/sysMenu/getIndexVideo',
+        url: '/example/source/getIndexVideo',
         type: 'GET',
         dataType: 'json',
     }).done(function (data) {
-        console.log("sss:"+JSON.stringify(data.data));
         if (data.rs){
-          appendVideo($("#index_video"),"index_v",data.data.menuUrl);
+          appendVideo($("#index_video"),"index_v",data.data.url);
         }else {
             tips(data.rs,data.msg);
         }

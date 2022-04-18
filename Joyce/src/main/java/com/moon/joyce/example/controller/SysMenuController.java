@@ -177,21 +177,6 @@ public class SysMenuController extends BaseController {
         return R.error();
     }
 
-    /**
-     *获取封面视频
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping("/getIndexVideo")
-    public Result getIndexVideo(){
-        SysMenu sysMenu = new SysMenu();
-        sysMenu.setMenuType("1");
-        SysMenu dbSysMenu = sysMenuService.getOne(sysMenu);
-        if (Objects.isNull(dbSysMenu)||StringUtils.isBlank(dbSysMenu.getMenuUrl())){
-            dbSysMenu= new SysMenu();
-            dbSysMenu.setMenuUrl(Constant.VIDEO_DEFAULT_NAME);
-        }
-        return R.success(dbSysMenu);
-    }
+
 }
 

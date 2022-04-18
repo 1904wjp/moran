@@ -7,6 +7,7 @@ import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.ListsUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.Source;
+import com.moon.joyce.example.entity.SysMenu;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.entity.vo.MainSource;
 import com.moon.joyce.example.functionality.entity.PageComponent;
@@ -217,6 +218,7 @@ public class IndexController extends BaseController {
         boolean rs = userService.saveOrUpdate(sessionUser);
         return R.dataResult(rs,"Joyce初始化失败","Joyce初始化成功");
     }
+
 
 }
 

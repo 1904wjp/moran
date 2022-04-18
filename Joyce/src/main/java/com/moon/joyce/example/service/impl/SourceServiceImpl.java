@@ -1,21 +1,17 @@
 package com.moon.joyce.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.mapper.SourceMapper;
 import com.moon.joyce.example.service.SourceService;
-import joyce.example.entity.UserType;
-import joyce.example.mapper.UserTypeMapper;
-import joyce.example.service.UserTypeService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * <p>
@@ -52,6 +48,9 @@ public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> impleme
         }
         if (Objects.nonNull(source.getUserId())){
             wrapper.eq("user_id",source.getUserId());
+        }
+        if (Objects.nonNull(source.getType())){
+            wrapper.eq("type",source.getType());
         }
         return baseMapper.selectOne(wrapper);
     }

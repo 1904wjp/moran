@@ -11,21 +11,17 @@ import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.SourceService;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.*;
 
 /**
@@ -212,10 +208,25 @@ public class SourceController extends BaseController {
         String path = fileService.mergeTempFile(uuid, newFileName);
         return R.dataResult(path!=null,"视频解析失败","视频解析成功",path);
     }
-    /**
-     * 冒泡排序
-     */
 
+    /**
+     *获取封面视频
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getIndexVideo")
+    public Result getIndexVideo(){
+        Source source = new Source();
+        source.setApplyStatus(1);
+        source.setType("2");
+        source.setDeleteFlag(0);
+        Source dbSource = sourceService.getOne(source);
+        if (Objects.isNull(dbSource)|| StringUtils.isBlank(dbSource.getUrl())){
+            source.setUrl(Constant.VIDEO_DEFAULT_NAME);
+            return success(source);
+        }
+        return R.success(dbSource);
+    }
 
 }
 
