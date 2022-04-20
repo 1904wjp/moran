@@ -58,6 +58,7 @@ function articleOpFormatter(value, row, index) {
  * 保存文章
  */
 function saveArticleFuc() {
+    $('#add_article_info').modal('hide');
     let resData = {
         "id": $('#article_id').val(),
         "title": $('#in_title').val(),
@@ -81,7 +82,6 @@ function saveArticleFuc() {
                 data: resData
             }).done(function (data) {
                 if (data.rs) {
-                    $('#add_article_info').modal('hide');
                    tips(data.rs,data.msg);
                    /* toList("/example/uedit/uEditorListPage");*/
                 } else {
