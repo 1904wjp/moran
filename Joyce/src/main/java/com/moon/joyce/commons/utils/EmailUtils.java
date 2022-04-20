@@ -65,8 +65,6 @@ public class EmailUtils implements Serializable {
             Transport.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
-        } finally {
-            System.out.println("操作结束！！！！！！！！！！！！！！！！！！！！！！！");
         }
         return code;
     }

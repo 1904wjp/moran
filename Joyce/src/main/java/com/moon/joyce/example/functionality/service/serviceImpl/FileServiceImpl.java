@@ -82,7 +82,6 @@ public class FileServiceImpl implements FileService {
             QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
             wrapper.isNotNull("menu_url");
             List<SysMenu> sysMenus = sysMenuMapper.selectList(wrapper);
-            System.out.println(sysMenus.toString());
             ArrayList<PageComponent> pageComponents = new ArrayList<>();
             for (SysMenu sysMenu : sysMenus) {
                 Map<String, String> params = new HashMap<>();

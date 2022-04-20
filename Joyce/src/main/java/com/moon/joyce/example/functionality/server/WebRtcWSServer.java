@@ -66,30 +66,22 @@ public class WebRtcWSServer {
             ObjectMapper mapper = new ObjectMapper();
             mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
             //JSON字符串转 HashMap
             HashMap hashMap = mapper.readValue(message, HashMap.class);
-
             //消息类型
             String type = (String) hashMap.get("type");
-
             //to user
             String toUser = (String) hashMap.get("toUser");
             Session toUserSession = sessionMap.get(toUser);
             String fromUser = (String) hashMap.get("fromUser");
-
             //msg
             String msg = (String) hashMap.get("msg");
-
             //sdp
             String sdp = (String) hashMap.get("sdp");
-
             //ice
             Map iceCandidate  = (Map) hashMap.get("iceCandidate");
-
             HashMap<String, Object> map = new HashMap<>();
             map.put("type",type);
-
             //呼叫的用户不在线
             if(toUserSession == null){
                 toUserSession = session;
@@ -100,43 +92,36 @@ public class WebRtcWSServer {
                 send(toUserSession,mapper.writeValueAsString(map));
                 return;
             }
-
             //对方挂断
             if ("hangup".equals(type)) {
                 map.put("fromUser",fromUser);
                 map.put("msg","对方挂断！");
             }
-
             //视频通话请求
             if ("call_start".equals(type)) {
                 map.put("fromUser",fromUser);
                 map.put("msg","1");
             }
-
             //视频通话请求回应
             if ("call_back".equals(type)) {
                 map.put("fromUser",toUser);
                 map.put("msg",msg);
             }
-
             //offer
             if ("offer".equals(type)) {
                 map.put("fromUser",toUser);
                 map.put("sdp",sdp);
             }
-
             //answer
             if ("answer".equals(type)) {
                 map.put("fromUser",toUser);
                 map.put("sdp",sdp);
             }
-
             //ice
             if ("_ice".equals(type)) {
                 map.put("fromUser",toUser);
                 map.put("iceCandidate",iceCandidate);
             }
-
             send(toUserSession,mapper.writeValueAsString(map));
         }catch(Exception e){
             e.printStackTrace();
@@ -149,7 +134,6 @@ public class WebRtcWSServer {
     private void send(Session session, String message) {
         try {
             System.out.println(message);
-
             session.getBasicRemote().sendText(message);
         } catch (Exception e) {
             e.printStackTrace();

@@ -31,7 +31,6 @@ import java.util.Scanner;
 // 2、全局配置
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-//System.out.println(projectPath);
         gc.setOutputDir(projectPath + "/src/main/java/com/moon");
         gc.setAuthor("Joyce");
         gc.setOpen(false); //生成后是否打开资源管理器

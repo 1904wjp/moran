@@ -39,7 +39,6 @@ public class MailServiceImpl implements MailService {
             helper.setSubject(emailData.getSubject());
             helper.setText(emailData.getContext(),true);
             mailSender.send(message);
-            System.out.println("发送了。。。。。。。。。。。。。。。。");
             logger.info("email已发送");
         } catch (MessagingException e) {
             e.printStackTrace();
