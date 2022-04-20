@@ -3,14 +3,17 @@ package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.R;
+import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.entity.vo.MainSource;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.SourceService;
-import org.apache.commons.io.FileUtils;
+import com.moon.joyce.example.service.serviceControllerDetails.SourceServiceControllerDetailService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +25,9 @@ import org.springframework.web.multipart.MultipartFile;;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -39,11 +44,14 @@ public class SourceController extends BaseController {
      * 页面路径前缀
      */
     private final String pagePrefix = "source/";
+    @Value("${file.upload.path}")
+    private String filePath;
     @Autowired
     private SourceService sourceService;
     @Autowired
     private FileService fileService;
-
+    @Autowired
+    private SourceServiceControllerDetailService sourceServiceControllerDetailService;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 资源页面
@@ -77,25 +85,20 @@ public class SourceController extends BaseController {
     @ResponseBody
     @PostMapping("/saveSource")
     public Result addSource(Source source) {
-        System.out.println("====>" + source.toString());
+        if (!sourceServiceControllerDetailService.check(source)) {
+            return error("该资源名已被使用");
+        }
         if (source.getApplyStatus().equals(Constant.APPLY_STATUS)) {
-            boolean b = retireApplyStatus();
+            boolean b = sourceServiceControllerDetailService.retireApplyStatus(source.getType(),getSessionUserId());
             if (!b) {
                 return R.error();
             }
-        }
-        Source source1 = new Source();
-        source1.setSourceName(source.getSourceName());
-        source1.setUserId(getSessionUserId());
-        Source one = sourceService.getOne(source1);
-        if (Objects.nonNull(one)) {
-            return R.error("资源名已存在，请修改资源名重新上传");
         }
         if (Objects.isNull(source.getId())) {
             source.setCreateBy(getSessionUser().getUsername());
             source.setUserId(getSessionUser().getId());
             source.setCreateTime(new Date());
-            source.setDeleteFlag(0);
+            source.setDeleteFlag(Constant.UNDELETE_STATUS);
         } else {
             source.setUpdateBy(getSessionUser().getUsername());
             source.setUserId(getSessionUser().getId());
@@ -119,7 +122,7 @@ public class SourceController extends BaseController {
         }
         source.setUpdateBy(getSessionUser().getUsername());
         source.setUpdateTime(new Date());
-        boolean b = retireApplyStatus();
+        boolean b = sourceServiceControllerDetailService.retireApplyStatus(source.getType(),getSessionUserId());
         if (!b) {
             return R.error();
         }
@@ -142,18 +145,7 @@ public class SourceController extends BaseController {
         return R.success("上传成功", filePath);
     }
 
-    public boolean retireApplyStatus() {
-        Source source1 = new Source();
-        source1.setDeleteFlag(Constant.UNDELETE_STATUS);
-        source1.setApplyStatus(Constant.APPLY_STATUS);
-        source1.setUserId(getSessionUserId());
-        Source one = sourceService.getOne(source1);
-        if (Objects.nonNull(one)) {
-            one.setApplyStatus(Constant.SPARE_STATUS);
-            return sourceService.saveOrUpdate(one);
-        }
-        return true;
-    }
+
 
     /**
      * 主页配置

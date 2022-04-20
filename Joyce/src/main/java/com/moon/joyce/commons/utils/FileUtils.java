@@ -39,7 +39,7 @@ public class FileUtils implements Serializable {
     private FileUtils() throws JoyceException {
         throw JoyceExceptionUtils.exception("工具类无法实例化");
     }
-
+    public static List<File> fileList =new ArrayList<>();
     /**
      * 文件上传工具类
      *
@@ -672,6 +672,25 @@ public class FileUtils implements Serializable {
            e.printStackTrace();
        }
        return path;
+   }
+
+    /**
+     * 通过目录获取文件集合
+     * @param path
+     * @return
+     */
+   public static   List<File> getFilesByMkdirPath(String path){
+       File file = new File(path);
+       if (file.isDirectory()){
+           File[] files = file.listFiles();
+           for (File f : files) {
+               getFilesByMkdirPath(f.getPath());
+           }
+       }
+       if (file.isFile()){
+           fileList.add(file);
+       }
+       return fileList;
    }
 }
 

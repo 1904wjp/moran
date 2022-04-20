@@ -3,27 +3,35 @@ package com.moon.joyce;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.RedisUtils;
+import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.Source;
+import com.moon.joyce.example.service.SourceService;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import redis.clients.jedis.Jedis;
 
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @Author: XingDaoRong
  * @Date: 2021/12/17
  */
 public class Test {
+    @Autowired
+    private SourceService sourceService;
+    @Value("${file.upload.path}")
+    String filePath;
     public static void main(String[] args) {
-        for (int i = 0; i < merge().length; i++) {
-            System.out.println(Arrays.toString(merge()[i]));
-        }
+
+
     }
 
     /**
@@ -312,4 +320,5 @@ public class Test {
             System.out.println("INSERT INTO `cix_model_register` VALUES ("+i+", "+(i+1)+", 'fasdas`'"+i+", 'dasdasdsa', '1', 'da\\'s\\'da\\'s\\'d', 'dadasda', NULL, NULL, 0, NULL, NULL, NULL, NULL);");
         }
     }
+
 }
