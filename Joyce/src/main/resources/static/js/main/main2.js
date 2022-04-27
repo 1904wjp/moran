@@ -62,11 +62,6 @@ $(".items-wrap").on('click', '.item', function () {
         }).done(function (data) {
             loading(false);
             if (data.rs) {
-                /*.trigger--active .icon--cross {
-	opacity: 1;
-	-webkit-transform: scale3d(1, 1, 1);
-	transform: scale3d(1, 1, 1);
-}*/
                 $('.intro__title').text(data.data.sourceName);
                 $('.intro__description__content').text(data.data.descContent);
                 $('.intro__image').attr("src", data.data.url);

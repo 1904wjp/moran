@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @Author: XingDaoRong
  * @Date: 2021/12/17
  */
-public class Test {
+public class Joyce {
     @Autowired
     private SourceService sourceService;
     @Value("${file.upload.path}")
@@ -156,8 +156,9 @@ public class Test {
         while (count != 0) {
             for (int j = 0; j < objects.length - 1; j++) {
                 if (objects[j] == object) {
-                    if (objects.length - 1 - j >= 0)
+                    if (objects.length - 1 - j >= 0) {
                         System.arraycopy(objects, j + 1, objects, j, objects.length - 1 - j);
+                    }
                 }
             }
             count--;
@@ -170,7 +171,9 @@ public class Test {
     public static int[][]  rm(int[][] arrays,int index){
         int[][] ints = new int[arrays.length - 1][];
         for (int i = 0; i < arrays.length; i++) {
-            if (index==i) continue;
+            if (index==i) {
+                continue;
+            }
             ints[i] = arrays[i];
         }
         return ints;
@@ -316,9 +319,15 @@ public class Test {
     }
     @org.junit.Test
     public void test0101(){
-        for (int i = 2; i < 10; i++) {
-            System.out.println("INSERT INTO `cix_model_register` VALUES ("+i+", "+(i+1)+", 'fasdas`'"+i+", 'dasdasdsa', '1', 'da\\'s\\'da\\'s\\'d', 'dadasda', NULL, NULL, 0, NULL, NULL, NULL, NULL);");
-        }
+        print(-5);
     }
-
+    public static void  print(int num){
+        //打印32位2进制方法，负数第32位为1，范围（-(2^-31)~(2^(31)-1)）
+        //负数需要取反+1
+        String sum="";
+        for(int i=31;i>=0;i--){
+            sum = sum + (((num&(1<<i))==0)?0:1);
+        }
+        System.out.println(sum);
+    }
 }

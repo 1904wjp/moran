@@ -6,7 +6,6 @@ import com.moon.joyce.example.functionality.entity.JoyceException;
 import com.moon.joyce.example.functionality.entity.PageComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -216,6 +215,9 @@ public class FileUtils implements Serializable {
         File file = new File(path);
         if (file.exists()){
             file.delete();
+        }
+        if (!(file.getParentFile()).exists()){
+            file.getParentFile().mkdirs();
         }
         FileWriter fw = null;
         try {

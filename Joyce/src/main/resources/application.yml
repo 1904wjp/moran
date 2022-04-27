@@ -163,7 +163,7 @@ pagehelper:
 
 #文件路径上传路径
 file:
-  prefix : E
+  prefix : D
   temp: ${file.prefix}:/${app.name}/temp
   config:
     path: ${file.prefix}:/${app.name}/files/config/
@@ -175,10 +175,10 @@ file:
 #监听获得当前登录者
 context:
   initializer:
-#    classes: com.moon.joyce.listeners.JoyceApplicationContextInitializer.java
+###    classes: com.moon.joyce.listeners.RequestListener.java
 #超级管理员
 setting:
-  super_administrator: xdr
+  super_administrator: xd
 
 ###日志输出sql
 logging:

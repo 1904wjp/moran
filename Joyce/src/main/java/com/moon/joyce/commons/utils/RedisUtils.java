@@ -12,7 +12,7 @@ import java.util.Objects;
 public class RedisUtils {
     private RedisUtils(){};
     static Jedis  jedis = null;
-    private static String redisPassword;
+    public static   String redisPassword;
     //Jedis实例化
     public static Jedis getInstance(){
         if (Objects.isNull(jedis)){

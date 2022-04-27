@@ -181,7 +181,7 @@ function uploadFile(file, restUrl, img, objUrl, size) {
 function appendVideo(divObject, videoId, src) {
     var video = $("<video id=\"" + videoId + "\" class='append_video' autoplay=\"autoplay\" loop=\"loop\" muted=\"muted\"><source src=\"" + src + "\"></video>");
     divObject.append(video);
-    divObject[0].play();
+    /*divObject[0].play();*/
 }
 
 /**
