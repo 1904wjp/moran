@@ -14,11 +14,18 @@
                s.url,
                s.sort,
                s.user_id,
-               u.username
+               u.username,
+               s2.url AS vUrl
              FROM springboot.source s
              LEFT JOIN springboot.user u
              ON s.user_id = u.id
+             LEFT JOIN springboot.source s2
+             ON s.v_id = s2.id
              WHERE s.delete_flag = 0
+               AND s.type != '2'
+            <if test="type!=null">
+                AND s.type = #{type}
+            </if>
             <if test="userId!=null">
                 AND s.user_id = #{userId}
             </if>

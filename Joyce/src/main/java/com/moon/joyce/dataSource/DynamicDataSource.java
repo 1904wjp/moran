@@ -49,7 +49,6 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     public void setTargetDataSources(Map<Object, Object> targetDataSources) {
         super.setTargetDataSources(targetDataSources);
         this.dynamicTargetDataSources = targetDataSources;
-
     }
 
     // 创建数据源
@@ -58,9 +57,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
             try { // 排除连接不上的错误
                 Class.forName(driveClass);
                 DriverManager.getConnection(url, username, password);// 相当于连接数据库
-
             } catch (Exception e) {
-
                 return false;
             }
 //            HikariDataSource druidDataSource = new HikariDataSource();
@@ -259,7 +256,6 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         } else {
             createDataSource(dataSource);
         }
-
     }
 
     /**
@@ -287,7 +283,6 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
                 log.error("数据源配置有错误");
             throw JoyceExceptionUtils.exception("数据源配置有错误");
         }
-
     }
 
 }

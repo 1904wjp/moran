@@ -10,6 +10,10 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.Java2DFrameConverter;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -20,11 +24,15 @@ import org.dom4j.io.XMLWriter;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -38,6 +46,8 @@ public class FileUtils implements Serializable {
     private FileUtils() throws JoyceException {
         throw JoyceExceptionUtils.exception("工具类无法实例化");
     }
+    //新建文件
+    private  static File newFile;
     public static List<File> fileList =new ArrayList<>();
     /**
      * 文件上传工具类
@@ -50,7 +60,7 @@ public class FileUtils implements Serializable {
             return null;
         }
         //uuid生成的唯一前缀 + 上传文件名 构成唯一的新文件名
-        String fileName = UUIDUtils.getUUID(6)  + "_" + StringsUtils.substringFileName(file.getOriginalFilename());
+        String fileName = UUIDUtils.getUUID(6)  + "_" + StringsUtils.substringFileName(Objects.requireNonNull(file.getOriginalFilename()));
         //文件保存路径
         String now = DateUtils.dateForMat("dv", new Date());
         String path = sysPath +"1"+access + now;
@@ -67,7 +77,7 @@ public class FileUtils implements Serializable {
             e.printStackTrace();
         }
         //将请求文件的相对路径返回
-        return "/static/1" + access +now + "/" + fileName;
+        return StringUtils.isNoneBlank(fileName) ? "/static/1" + access +now + "/" + fileName : null;
     }
 
     /**
@@ -76,7 +86,7 @@ public class FileUtils implements Serializable {
      * @return
      */
     public static Map<String, List<PageComponent>> readXmlConfig(String filePathName) {
-        File file = new File(filePathName);
+        File file = createFile(filePathName);
         if (!file.exists()) {
             return null;
         }
@@ -212,7 +222,7 @@ public class FileUtils implements Serializable {
      * @param text
      */
     public static void writeFile(String path,String text){
-        File file = new File(path);
+        File file = createFile(path);
         if (file.exists()){
             file.delete();
         }
@@ -230,7 +240,7 @@ public class FileUtils implements Serializable {
     }
 
     public static void doCompress(String srcFile, String zipFile) throws IOException {
-        doCompress(new File(srcFile), new File(zipFile));
+        doCompress(createFile(srcFile), createFile(zipFile));
     }
 
     /**
@@ -251,7 +261,7 @@ public class FileUtils implements Serializable {
     }
 
     public static void doCompress(String filelName, ZipOutputStream out) throws IOException{
-        File file = new File(filelName);
+        File file = createFile(filelName);
         doCompress(file, out);
         if (file.exists()){
             file.delete();
@@ -307,7 +317,7 @@ public class FileUtils implements Serializable {
      */
     public static boolean delAllFile(String path) {
         boolean flag = false;
-        File file = new File(path);
+        File file = createFile(path);
         if (!file.exists()) {
             return flag;
         }
@@ -321,9 +331,9 @@ public class FileUtils implements Serializable {
         File temp = null;
         for (int i = 0; i < tempList.length; i++) {
             if (path.endsWith(File.separator)) {
-                temp = new File(path + tempList[i]);
+                temp = createFile(path + tempList[i]);
             } else {
-                temp = new File(path + File.separator + tempList[i]);
+                temp = createFile(path + File.separator + tempList[i]);
             }
 
             if (temp.isFile()) {
@@ -344,7 +354,7 @@ public class FileUtils implements Serializable {
      * @return
      */
     public static boolean fileIsExists(String filePath){
-        File file = new File(filePath);
+        File file = createFile(filePath);
         if (file.exists()){
             return true;
         }
@@ -623,21 +633,21 @@ public class FileUtils implements Serializable {
      * @param newFileName
      * @return
      */
-   public static String mergeTempFile(String fileUploadTempDir,String sysPath,String access,String uuid, String newFileName){
-       String path = null;
+
+    public static String vrp = "videoRealPath";
+    public static String vap = "videoAccessPath";
+    public static String vn = "videoName";
+    public static String vp = "videoPicturePath";
+   public static Map<String,Object> mergeTempFile(String fileUploadTempDir,String sysPath,String access,String uuid, String newFileName){
+
+       Map<String, Object> map = new HashMap<>();
        try {
-           File dirFile = new File(fileUploadTempDir + "/" + uuid);
+           File dirFile = createFile(fileUploadTempDir + "/" + uuid);
            if (!dirFile.exists()) {
                throw new JoyceException("文件不存在！");
            }
-//分片上传的文件已经位于同一个文件夹下，方便寻找和遍历(当文件数大于十的时候记得排序用冒泡排序确保顺序是正确的)
+            //分片上传的文件已经位于同一个文件夹下，方便寻找和遍历(当文件数大于十的时候记得排序用冒泡排序确保顺序是正确的)
            String[] fileNames = dirFile.list();
-// 创建空的合并文件
-         /*  File file = new File(sysPath);
-           if (!file.exists()){
-               file.mkdirs();
-           }
-*/
            String createFileName = UUIDUtils.getUUID(6)  + "_" + StringsUtils.substringFileName(newFileName);
            //文件保存路径
            String now = DateUtils.dateForMat("dv", new Date());
@@ -669,12 +679,53 @@ public class FileUtils implements Serializable {
                org.apache.commons.io.FileUtils.deleteQuietly(sourceFile);
            }
            writeFile.close();
-           path= "/static/2" + access +now + "/" + createFileName;
+           String path= "/static/2" + access +now + "/" + createFileName;
+           map.put(vrp,targetFile.getPath());
+           map.put(vap,path);
+           map.put(vn,newFileName);
        } catch (IOException e) {
            e.printStackTrace();
        }
-       return path;
+       return map;
    }
+
+    /**
+     * 截取视频文件某一帧
+     * @param videoRealPath
+     * @param pictureRealPath
+     * @return
+     */
+    public static File  captureVideoFrames(String videoRealPath,String pictureRealPath) throws IOException {
+        File videoFile = createFile(videoRealPath);
+        File pictureFile = createFile(pictureRealPath);
+        FFmpegFrameGrabber ff = new FFmpegFrameGrabber(videoFile);
+        ff.start();
+        int length = ff.getLengthInAudioFrames();
+        int i =0;
+        Frame f = null;
+        while (i < length){
+            f = ff.grabFrame();
+            if ((i > 21) && (Objects.nonNull(f.image))){
+                break;
+            }
+            i++;
+        }
+        int owidth = f.imageWidth ;
+        int oheight = f.imageHeight ;
+        // 对截取的帧进行等比例缩放
+        int width = 800;
+        int height = (int) (((double) width / owidth) * oheight);
+        Java2DFrameConverter converter =new Java2DFrameConverter();
+        BufferedImage fecthedImage =converter.getBufferedImage(f);
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        bi.getGraphics().drawImage(fecthedImage.getScaledInstance(width, height, Image.SCALE_SMOOTH),
+                0, 0, null);
+        //ff.flush();
+        ImageIO.write(bi, "jpg", pictureFile);
+        ff.stop();
+        return pictureFile;
+    }
+
 
     /**
      * 通过目录获取文件集合
@@ -682,10 +733,11 @@ public class FileUtils implements Serializable {
      * @return
      */
    public static   List<File> getFilesByMkdirPath(String path){
-       File file = new File(path);
+       File file = createFile(path);
        if (file.isDirectory()){
            File[] files = file.listFiles();
            for (File f : files) {
+               if (Objects.nonNull(f)) continue;
                getFilesByMkdirPath(f.getPath());
            }
        }
@@ -694,5 +746,38 @@ public class FileUtils implements Serializable {
        }
        return fileList;
    }
+
+    /**
+     * 创建文件
+     * @param path
+     * @param bool 是否使用懒汉模式
+     * @return
+     */
+   public static File createFile(String path,boolean bool){
+       if (!bool){
+           newFile = new File(path);
+       }
+       if (Objects.isNull(newFile)&&bool){
+           synchronized (newFile){
+               if (Objects.isNull(newFile)){
+                   newFile = new File(path);
+               }
+           }
+       }
+       if (!newFile.getParentFile().exists()){
+           newFile.mkdirs();
+       }
+       return newFile;
+   }
+
+    /**
+     * 创建文件
+     * @param path
+     * @return
+     */
+    public static File createFile(String path){
+        return createFile(path, false);
+    }
+
 }
 

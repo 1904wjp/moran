@@ -58,5 +58,5 @@ public interface FileService {
      * @param name
      * @return
      */
-    String mergeTempFile(String uuid,String name);
+    Map<String,Object> mergeTempFile(String uuid,String name);
 }

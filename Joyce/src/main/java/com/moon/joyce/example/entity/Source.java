@@ -24,7 +24,7 @@ public class Source  extends Page {
     @TableField("source_name")
     private String sourceName;
     /**
-     * 类型[0.图片；1.音频；2.视频]
+     * 类型[0.图片；1.音频；2.视频 3.视频封面]
      */
     private String type;
     /**
@@ -55,4 +55,15 @@ public class Source  extends Page {
      */
     @TableField("desc_content")
     private String descContent;
+    /**
+     * 绑定视频id
+     */
+    @TableField("v_id")
+    private Long vId;
+    /**
+     * 视频url
+     */
+    @TableField(exist = false)
+    private String vUrl;
+
 }

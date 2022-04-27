@@ -14,7 +14,8 @@ import java.util.Objects;
  */
 public class WebUtils {
 
-    private static String mainPackage ="E:\\Program Files\\project\\data_center\\dc-modules\\modules-system\\src\\main";
+    private static String mainPackage =" C:\\Users\\WJP\\Desktop\\createCode";
+    //private static String mainPackage ="E:\\Program Files\\project\\data_center\\dc-modules\\modules-system\\src\\main";
     private static String packagePre = mainPackage+"\\java\\com\\wr\\source";
     private static String packageResource = mainPackage+"\\resources";
     private static  String otherpack  = System.getProperty("user.dir")+"\\Joyce\\target\\classes\\templates\\files\\";

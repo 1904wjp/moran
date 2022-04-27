@@ -1,16 +1,9 @@
 
 
 $().ready(function () {
-    $('#video').hide();
     $("#uploadPicSourceBtn").css("background-color", "red");
 });
 /**
- * 上传资源
- */
-$("#slice").change(function (event) {
-    var file = $("#slice")[0].files[0];
-    uploadVideoFile(file,0,guid(),"/example/source/uploadVideoSource","/example/source/mergeVideoSource");
-});
 
 /**
  * 选择上传类型
@@ -18,22 +11,14 @@ $("#slice").change(function (event) {
  */
 function selectSource(type){
     if (type==1){
-        $('#video').hide();
-        $('#picture').show();
         $('#type').val(1);
         $("#uploadPicSourceBtn").css("background-color", "red");
-        $('#src_video').hide();
-        $('#display_img_resource').show();
         $("#uploadVidSourceBtn").css("background-color", "yellow");
         $('#sourceStatus').show();
     }
     if (type==2){
-        $('#picture').hide();
-        $('#video').show();
         $('#sourceStatus').hide();
-        $('#type').val(2);
-        $('#display_img_resource').hide();
-        $('#src_video').show()
+        $('#type').val(3);
         $("#uploadPicSourceBtn").css("background-color", "blue");
         $("#uploadVidSourceBtn").css("background-color", "red");
     }
@@ -42,7 +27,15 @@ function selectSource(type){
  * 上传资源
  */
 function uploadSource(){
-    uploadFile($('#pic_source_file'),"/example/source/uploadSource",$("#display_img_resource"),"source_url");
+     var def = $('#type').val();
+
+    if(def==='1'){
+        uploadFile($('#pic_source_file'),"/example/source/uploadSource",$("#display_img_resource"),"source_url");
+    }
+    if (def==='3'){
+        var file = $("#pic_source_file")[0].files[0];
+        uploadVideoFile(file,0,guid(),"/example/source/uploadVideoSource","/example/source/mergeVideoSource", $("#display_img_resource"));
+    }
 }
 
 //保存资源
@@ -53,6 +46,7 @@ function saveSource(){
         url: $("#source_url").val(),
         sourceName: $("#sourceName").val(),
         sort: $("#sort").val(),
+        vUrl: $("#vUrl").val(),
         descContent: $('#descContent').val(),
         applyStatus: $("#applyStatus option:selected").val()
     };

@@ -22,6 +22,7 @@ import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.mapper.SysMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
@@ -156,8 +157,22 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public String mergeTempFile( String uuid, String name) {
-       return FileUtils.mergeTempFile(fileUploadTempDir, sysPath,access, uuid, name);
+    public Map<String, Object> mergeTempFile(String uuid, String name) {
+        Map<String, Object> map = FileUtils.mergeTempFile(fileUploadTempDir, sysPath, access, uuid, name);
+        String realPath = map.get(FileUtils.vrp).toString();
+        try {
+            File picFile = FileUtils.captureVideoFrames(realPath, fileUploadTempDir + "/" + uuid+".jpg");
+            FileInputStream fileInput = new FileInputStream(picFile);
+            MultipartFile toMultipartFile = new MockMultipartFile("file",picFile.getName(),"application/json;charset=UTF-8", IOUtils.toByteArray(fileInput));
+            toMultipartFile.getInputStream();
+            fileInput.close();
+            String picPath = FileUtils.fileUpLoad(toMultipartFile, sysPath, access);
+            picFile.delete();
+            map.put(FileUtils.vp,picPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 
 

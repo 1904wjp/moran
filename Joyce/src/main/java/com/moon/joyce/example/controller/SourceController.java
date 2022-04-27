@@ -94,11 +94,27 @@ public class SourceController extends BaseController {
                 return R.error();
             }
         }
+
         if (Objects.isNull(source.getId())) {
             source.setCreateBy(getSessionUser().getUsername());
             source.setUserId(getSessionUser().getId());
             source.setCreateTime(new Date());
             source.setDeleteFlag(Constant.UNDELETE_STATUS);
+            if (StringUtils.isNoneBlank(source.getVUrl())){
+                Source tempSource = new Source();
+                tempSource.setSourceName("v_"+source.getSourceName());
+                tempSource.setUrl(source.getVUrl());
+                tempSource.setType("2");
+                tempSource.setCreateBy(getSessionUser().getUsername());
+                tempSource.setUserId(getSessionUser().getId());
+                tempSource.setCreateTime(new Date());
+                tempSource.setDeleteFlag(Constant.UNDELETE_STATUS);
+                boolean b = sourceService.saveOrUpdate(tempSource);
+                if (b){
+                    source.setType("3");
+                    source.setVId(tempSource.getId());
+                }
+            }
         } else {
             source.setUpdateBy(getSessionUser().getUsername());
             source.setUserId(getSessionUser().getId());
@@ -189,7 +205,7 @@ public class SourceController extends BaseController {
     }
 
     /**
-     *
+     * 解析视频
      * @param uuid
      * @param newFileName
      * @return
@@ -197,8 +213,9 @@ public class SourceController extends BaseController {
     @ResponseBody
     @GetMapping("/mergeVideoSource")
     public Result mergeVideo( String uuid, String newFileName){
-        String path = fileService.mergeTempFile(uuid, newFileName);
-        return R.dataResult(path!=null,"视频解析失败","视频解析成功",path);
+        Map<String, Object> map = fileService.mergeTempFile(uuid, newFileName);
+        map.remove(FileUtils.vrp);
+        return R.dataResult(Objects.nonNull(map),"视频解析失败","视频解析成功",map);
     }
 
     /**
@@ -219,6 +236,8 @@ public class SourceController extends BaseController {
         }
         return R.success(dbSource);
     }
+
+
 
 }
 
