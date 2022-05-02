@@ -1,3 +1,14 @@
 .append_video{
     width: 120%;
 }
+.fixed-table-container {
+    position: relative;
+    clear: both;
+    /*border: 1px solid #ddd;*/
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px
+}
+#sourceTable {
+    border: 0px;
+}

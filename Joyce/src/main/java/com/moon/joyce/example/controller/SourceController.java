@@ -62,6 +62,15 @@ public class SourceController extends BaseController {
     public String addSourcePage() {
         return pagePrefix + "sourcePage";
     }
+    /**
+     * 资源列表页面
+     *
+     * @return
+     */
+    @RequestMapping("/sourceListPage")
+    public String sourceListPage() {
+        return pagePrefix + "sourceListPage";
+    }
 
     /**
      * 获取资源列表

@@ -741,3 +741,14 @@ function guid() {
         return v.toString(16);
     });
 }
+
+
+class Modal {
+    static show(obj) {
+        obj.modal('show');
+    }
+    static hide(obj) {
+        obj.modal('hide');
+    }
+
+}

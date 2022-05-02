@@ -1,9 +1,11 @@
 $(document).ready(function () {
-    getUserTabler();
+    getUserTables();
 });
 
-
-function getUserTabler() {
+/**
+ * 获取用户
+ */
+function getUserTables() {
     var obj = $('#userTable');
     var url = '/example/user/userListData';
     var queryObj = $('#query-form');

@@ -3,7 +3,7 @@
 </head>
 <link  rel="stylesheet" th:href="@{/static/css/source/source.css}"/>
 <div class="container">
-    <div class="row row-centered">
+    <div id="addSource"  class="row row-centered">
         <div class="well col-md-6 col-centered">
             <img id="display_img_resource" width="100px" height="100px" class="img-circle pull-right"/>
             <div id="src_video" class="pull-right" style="width: 100px;height: 100px" ></div>
@@ -69,6 +69,7 @@
                     <div class="col-sm-4">
                         <input class="btn btn-default pull-left" type="button" onclick="saveSource(0)" value="确认添加"/>
                         <a class="btn btn-default pull-right" onclick="back()">返回</a>
+                        <a class="btn btn-default " onclick="sourceList()">列表</a>
                     </div>
                 </div>
             </form>

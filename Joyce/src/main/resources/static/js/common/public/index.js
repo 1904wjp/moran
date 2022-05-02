@@ -14,7 +14,7 @@ function indexLoadBackGround(){
         dataType: 'json',
     }).done(function (data) {
         if (data.rs){
-          appendVideo($("#index_video"),"index_v",data.data.url);
+        //  appendVideo($("#index_video"),"index_v",data.data.url);
         }else {
             tips(data.rs,data.msg);
         }

@@ -8,11 +8,13 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author Xing Dao Rong
@@ -47,6 +49,18 @@ public class StringsUtils  implements Serializable {
         }
         return  false;
     }
+
+
+    //两个集合的和集or差集
+    public static List<String> differOrIntersList(List<String> list1,List<String> list2,boolean flag){
+        List<String> l1 = list1.size() >= list2.size() ? list1:list2;
+        List<String> l2 = l1==list1 ? list2:list1;
+        if (flag){
+           return l1.stream().filter(itme -> !l2.contains(itme)).collect(Collectors.toList());
+        }
+          return  l1.stream().filter(l2::contains).collect(Collectors.toList());
+    }
+
 
     /**
      * 下划线转转驼峰

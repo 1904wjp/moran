@@ -13,6 +13,7 @@
                s.type,
                s.url,
                s.sort,
+               s.v_id,
                s.user_id,
                u.username,
                s2.url AS vUrl
@@ -38,7 +39,7 @@
             <if test="url!=null and url!=''">
                 AND s.url LIKE CONCAT('%',#{url},'%')
             </if>
-             ORDER BY s.sort ,s.id
+            ORDER BY s.sort,s.update_time,s.id DESC
             <if test="offset!=null and  pageNumber!=null  and pageNumber!=0 ">
                 LIMIT #{offset}, #{pageNumber}
             </if>
