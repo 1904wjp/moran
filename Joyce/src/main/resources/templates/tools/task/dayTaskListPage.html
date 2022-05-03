@@ -19,33 +19,33 @@
                         </div>
                         <div class="pull-right" id="query-form"  style="padding-bottom:10px;">
 
-                             <div class="col-md-3"  style="width:14%;margin-right:5px;">
+                           <!--  <div class="col-md-3"  style="width:14%;margin-right:5px;">
                                  <label>姓名:</label>
                                  <select id="userId"  name="userId" >
                                      <option value="0">请选择</option>
                                      <option th:each="user:${users}"
                                              th:value="${user.id}" th:text="${user.nickname}"></option>
                                  </select>
-                             </div>
+                             </div>-->
 
-                            <div class="col-md-3"  style="width:18%;margin-right:5px;">
+                          <!--  <div class="col-md-3"  style="width:18%;margin-right:5px;">
                                 <label>所属项目:</label>
                                 <select id="projectId"  name="projectId">
                                     <option value="0">请选择</option>
                                     <option th:each="project:${projects}" th:value="${project.id}"
                                             th:text="${project.projectName }"></option>
                                 </select>
-                            </div>
+                            </div>-->
                             <div class="col-md-3"  style="margin-right:5px;">
                                 <label>创建日期:</label>
-                                <input id="startTime" name="startTime" placeholder='创建日期开始' type="date" v-model="startTime" class="form-control">
-                                <input id="endTime" name="endTime" placeholder='创建日期结束' type="date"  v-model="endTime" class="form-control">
+                                <input id="startTime" name="startTime" placeholder='创建日期开始' type="datetime-local" v-model="startTime" class="form-control">
+                                <input id="endTime" name="endTime" placeholder='创建日期结束' type="datetime-local"  v-model="endTime" class="form-control">
                             </div>
 
                             <div class="col-md-3"  style="margin-right:5px;">
                                 <label>结束日期:</label>
-                                <input id="startTime2" name="startTime2" placeholder='结束日期开始' type="date" v-model="startTime2" class="form-control">
-                                <input id="endTime2" name="endTime2" placeholder='结束日期结束' type="date"  v-model="endTime2" class="form-control">
+                                <input id="startTime2" name="startTime2" placeholder='结束日期开始' type="datetime-local" v-model="startTime2" class="form-control">
+                                <input id="endTime2" name="endTime2" placeholder='结束日期结束' type="datetime-local"  v-model="endTime2" class="form-control">
                             </div>
 
                             <div class="btn-group">
@@ -73,7 +73,7 @@
         <form class="form-horizontal center-block" role="form"  method="get">
             <legend>任务添加</legend>
             <input id="addId" type="hidden"/>
-            <div class="form-group ">
+            <!--<div class="form-group ">
                 <label class="col-sm-2 control-label" for="addTodayTask">今日任务</label>
                 <div  class="col-sm-4 ">
                     <input class="form-control" id="addTodayTask"  style="width: 50%" type="text" name="addTodayTask" placeholder=""/>
@@ -84,14 +84,30 @@
                 <div class="col-sm-4">
                     <input class="form-control" id="addFinalyTask"  style="width: 50%" type="text"  name="addFinalyTask"  onchange="password_change(this.id)" placeholder=""/>
                 </div>
+            </div>-->
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="addStartTimes">开始时间</label>
+                <div class="col-sm-4">
+                    <input class="form-control"  style="width: 50%" id="addStartTimes" type="datetime-local" name="addEndTimes"  />
+                </div>
             </div>
             <div class="form-group ">
                 <label class="col-sm-2 control-label" for="addEndTimes">结束时间</label>
                 <div class="col-sm-4">
-                    <input class="form-control"  style="width: 50%" id="addEndTimes" type="date" name="addEndTimes"  placeholder="请输入手机号码"/>
+                    <input class="form-control"  style="width: 50%" id="addEndTimes" type="datetime-local" name="addEndTimes"  />
                 </div>
             </div>
             <div class="form-group ">
+                <label class="col-sm-2 control-label" for="isWorkDay">是否为加班日</label>
+                <div class="col-sm-4">
+                    <select id="isWorkDay"  style="width: 50%">
+                        <option value = " ">请选择</option>
+                        <option value = "0">是</option>
+                        <option value = "1">否</option>
+                    </select>
+                </div>
+            </div>
+           <!-- <div class="form-group ">
                 <label class="col-sm-2 control-label" for="addProjectId">所属项目</label>
                 <div class="col-sm-4">
                     <select id="addProjectId"  style="width: 50%">
@@ -100,11 +116,11 @@
                                 th:text="${project.projectName }"></option>
                     </select>
                 </div>
-            </div>
+            </div>-->
             <div class="form-group ">
                 <label class="col-sm-2 control-label" for="regist"> </label>
                 <div class="col-sm-5">
-                    <input class="btn btn-default pull-left" id="regist" type="button" onclick="saveDayTask()" value="确定"/>
+                    <input class="btn btn-default pull-left"  type="button" onclick="saveDayTask()" value="确定"/>
                     <a class="btn btn-default pull-right" onclick="cancel()">取消</a>
                 </div>
             </div>

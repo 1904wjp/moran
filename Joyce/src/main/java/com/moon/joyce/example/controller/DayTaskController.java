@@ -21,6 +21,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +69,15 @@ public class DayTaskController extends BaseController {
     @ResponseBody
     @RequestMapping("/getList")
     public PageVo getDayTasks(DayTask dayTask){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
         List<DayTask> list = dayTaskService.getList(dayTask);
+        list.forEach(dt-> {
+            try {
+                dt.setDateValue(sdf.parse(DateUtils.dateForMat("@p:yyyy-MM",dt.getCreateTime())));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        });
         setSession(getSessionUser().getUsername()+"excel",list);
         int total = dayTaskService.getCount(dayTask);
         return new PageVo(list,total);
@@ -81,8 +91,9 @@ public class DayTaskController extends BaseController {
     @ResponseBody
     @PostMapping("/saveTasks")
     public Result saveTasks(DayTask dayTask){
+
         dayTask.setUserId(getSessionUser().getId());
-        dayTask.setProjectName(projectService.getById(dayTask.getProjectId()).getProjectName());
+       // dayTask.setProjectName(projectService.getById(dayTask.getProjectId()).getProjectName());
         if (Objects.isNull(dayTask.getId())){
             dayTask.setCreateBy(getSessionUser().getUsername());
             dayTask.setCreateTime(new Date());
@@ -98,6 +109,11 @@ public class DayTaskController extends BaseController {
            }else {
                return R.error("该数据只允许修改一次");
            }
+        }
+        try {
+            dayTask.setTime(getTime(dayTask));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         boolean update = dayTaskService.saveOrUpdate(dayTask);
         return R.dataResult(update);
@@ -146,8 +162,8 @@ public class DayTaskController extends BaseController {
     @GetMapping("/exportTasksByManySheet")
     public void exportTasksByManySheet(HttpServletResponse response){
         List<DayTask> list= (List<DayTask>) getSessionValue(getSessionUser().getUsername() + "excel");
-        Map<String, List<DayTask>> map = list.stream().collect(Collectors.groupingBy(DayTask::getNickname));
-         dayTaskService.exportTableByManySheet(map,response);
+        Map<Date, List<DayTask>> map = list.stream().collect(Collectors.groupingBy(DayTask::getDateValue));
+        dayTaskService.exportTableByManySheet(map,response);
     }
 
     /**
@@ -160,6 +176,36 @@ public class DayTaskController extends BaseController {
     public Result importExcel(@RequestParam String path){
         String str = dayTaskService.importDayTaskData(path);
         return R.dataResult(Objects.isNull(str),Constant.ERROR_CODE,"操作失败","操作成功",str);
+    }
+
+    /**
+     * 获取加班时常
+     * @param dayTask
+     * @return
+     * @throws ParseException
+     */
+    private String getTime(DayTask dayTask ) throws ParseException {
+        String start = "09";
+        String end = "18";
+        String end8 = "20";
+        String time = "0";
+        String fd = "yyyy_MM_dd:HH";
+        SimpleDateFormat sdf = new SimpleDateFormat(fd);
+        if (DateUtils.getSDateValue(dayTask.getStartTimes(),sdf.parse(start),fd)<=0){
+            if (DateUtils.getSDateValue(dayTask.getStartTimes(),sdf.parse(end),fd)>=0&&DateUtils.getSDateValue(dayTask.getEndTime(),sdf.parse(end8),"HH")<0){
+                if ("0".equals(dayTask.getIsWorkDay())){
+                    time = "1天";
+                }
+            }
+            if (DateUtils.getSDateValue(dayTask.getEndTimes(),sdf.parse(end),fd)>=0&&DateUtils.getSDateValue(dayTask.getEndTime(),sdf.parse(end8),"HH")>=0){
+                if ("0".equals(dayTask.getIsWorkDay())){
+                    time = (DateUtils.getSDateValue(dayTask.getEndTimes(), dayTask.getCreateTime(), fd) - 2) +"h";
+                }else {
+                    time = (DateUtils.getSDateValue(dayTask.getEndTimes(), dayTask.getCreateTime(), fd) - 10) +"h";
+                }
+            }
+        }
+        return time;
     }
 }
 

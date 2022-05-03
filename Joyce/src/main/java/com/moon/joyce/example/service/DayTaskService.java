@@ -2,9 +2,9 @@ package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.moon.joyce.example.entity.DayTask;
-import joyce.example.entity.UserType;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +47,7 @@ public interface DayTaskService extends IService<DayTask> {
      * @param response
      * @return
      */
-    void exportTableByManySheet(Map<String, List<DayTask>> map, HttpServletResponse response);
+    void exportTableByManySheet(Map<Date, List<DayTask>> map, HttpServletResponse response);
     /**
      * 导入excel表（分组）
      * @param path

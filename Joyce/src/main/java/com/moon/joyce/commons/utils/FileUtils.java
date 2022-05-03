@@ -434,7 +434,7 @@ public class FileUtils implements Serializable {
      * @param columnList 每列的标题名
      * @param map 对应名字导出的数据
      */
-    public static void exporExcel2(HttpServletResponse response, String fileName, List<String> columnList,Map<String,List<List<String>>> map ) {
+    public static void exporExcel2(HttpServletResponse response, String fileName, List<String> columnList, Map<Date, List<List<String>>> map ) {
         //声明输出流
         OutputStream os = null;
         //设置响应头
@@ -444,8 +444,8 @@ public class FileUtils implements Serializable {
             os = response.getOutputStream();
             //内存中保留1000条数据，以免内存溢出，其余写入硬盘
             SXSSFWorkbook wb = new SXSSFWorkbook(1000);
-            for (Map.Entry<String, List<List<String>>> entry : map.entrySet()) {
-                String sheetName = entry.getKey();
+            for (Map.Entry<Date, List<List<String>>> entry : map.entrySet()) {
+                String sheetName = entry.getKey().toString();
                 List<List<String>> dataList = entry.getValue();
                 //获取该工作区的第一个sheet
                 Sheet sheet1 = wb.createSheet(sheetName);

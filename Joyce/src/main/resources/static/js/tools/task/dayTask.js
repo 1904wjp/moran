@@ -19,28 +19,24 @@ function getDayTaskTable(){
                 return index + 1;
             }
         }, {
-            field: 'createTime',
-            title: '创建时间',
-            sortables: true
-        }, {
-            field: 'todayTask',
-            title: '今日任务',
+            field: 'startTimes',
+            title: '开始时间',
             sortables: true
         }, {
             field: 'endTimes',
             title: '结束时间',
             sortables: true,
         }, {
-            field: 'finalyTask',
-            title: '最终任务',
+            field: 'time',
+            title: '加班时常',
             sortables: true,
         },{
-            field: 'projectName',
-            title: '项目名称',
+            field: 'createTime',
+            title: '创建时间',
             sortables: true,
         },{
             field: 'nickname',
-            title: '姓名',
+            title: '加班人',
             sortables: true
         }, {
             title: '操作',
@@ -64,7 +60,7 @@ function addDayTask(){
     $("#tables").hide();
     $("#add_dayTask").show();
     $('#addEndTimes').val('');
-    $('#addFinalyTask').val('');
+    $('#addStartTimes').val('');
     $('#addTodayTask').val('');
     $('#addProjectId').val('');
     $.ajax({
@@ -73,10 +69,13 @@ function addDayTask(){
         dataType: 'json',
     }).done(function (data) {
         if (data.rs) {
-            $('#addEndTimes').val(data.data.endTimes);
-            $('#addFinalyTask').val(data.data.finalyTask);
-            $('#addTodayTask').val(data.data.todayTask);
-            $('#addProjectId').val(data.data.projectId);
+            var date = new Date();
+            date.setHours(9,0,0);
+            console.log("1=",date)
+            $('#addStartTimes').val(date);
+            date.setHours(18,0,0);
+            console.log("2=",date)
+            $('#addEndTimes').val(date);
         }
     });
 }
@@ -107,10 +106,9 @@ function editDayTask(id){
     }).done(function (data) {
         if (data.rs) {
             $('#addId').val(data.data.id);
-            $('#addEndTimes').val(data.data.endTimes);
-            $('#addFinalyTask').val(data.data.finalyTask);
-            $('#addTodayTask').val(data.data.todayTask);
-            $('#addProjectId').val(data.data.projectId);
+            $('#addEndTimes').val(data.data.endTime);
+            $('#addStartTimes').val(data.data.startTime);
+            $('#time').val(data.data.time);
         }
     });
 }
@@ -122,10 +120,9 @@ function saveDayTask(){
    /* var date = formatDate($('#addEndTimes').val());*/
     let data = {
      id:$('#addId').val(),
+     startTimes: $('#addStartTimes').val(),
      endTimes: $('#addEndTimes').val(),
-     finalyTask:$('#addFinalyTask').val(),
-     todayTask:$('#addTodayTask').val(),
-     projectId:$('#addProjectId').val()
+     isWorkDay:$('#isWorkDay').val()
     };
     console.log(JSON.stringify(data));
     $.ajax({

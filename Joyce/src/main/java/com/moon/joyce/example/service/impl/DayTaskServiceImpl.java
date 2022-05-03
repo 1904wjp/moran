@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -59,13 +59,13 @@ public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> impl
     }
 
     @Override
-    public void exportTableByManySheet(Map<String, List<DayTask>> map, HttpServletResponse response) {
-        List<String> titleList = Arrays.asList("序号","姓名","创建时间","今日任务","最终任务","完成时间","所属项目");
-        Map<String, List<List<String>>> hashMap = new HashMap<>();
-        for (Map.Entry<String, List<DayTask>> entry : map.entrySet()) {
+    public void exportTableByManySheet(Map<Date, List<DayTask>> map, HttpServletResponse response) {
+        List<String> titleList = Arrays.asList("序号","创建时间","完成时间","加班时常");
+        Map<Date, List<List<String>>> hashMap = new HashMap<>();
+        for (Map.Entry<Date, List<DayTask>> entry : map.entrySet()) {
             hashMap.put(entry.getKey(),getExportTableDataList(entry.getValue()));
         }
-        FileUtils.exporExcel2(response,"每日看板.xlsx",titleList,hashMap);
+        FileUtils.exporExcel2(response,"加班表.xlsx",titleList,hashMap);
 
     }
 
@@ -119,15 +119,19 @@ public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> impl
      * @return
      */
     private static List<List<String>> getExportTableDataList(List<DayTask> list){
+
+
+        /*序号","创建时间","完成时间","加班时常"*/
         List<List<String>> dataList = new ArrayList(list.size());
         for (DayTask dayTask : list) {
             List<String> dayTaskFlies = new ArrayList<>();
-            dayTaskFlies.add(dayTask.getNickname());
-            dayTaskFlies.add(DateUtils.dateForMat("d",dayTask.getCreateTime()));
-            dayTaskFlies.add(dayTask.getTodayTask());
-            dayTaskFlies.add(dayTask.getFinalyTask());
+            //dayTaskFlies.add(dayTask.getNickname());
+            dayTaskFlies.add(DateUtils.dateForMat("d",dayTask.getStartTime()));
+            //dayTaskFlies.add(dayTask.getTodayTask());
+            //dayTaskFlies.add(dayTask.getFinalyTask());
             dayTaskFlies.add(DateUtils.dateForMat("d",dayTask.getEndTimes()));
-            dayTaskFlies.add(dayTask.getProjectName());
+            dayTaskFlies.add(dayTask.getTime());
+            //dayTaskFlies.add(dayTask.getProjectName());
             dataList.add(dayTaskFlies);
         }
         return dataList;

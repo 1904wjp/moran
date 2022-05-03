@@ -160,6 +160,27 @@ public class DateUtils implements Serializable {
     }
 
     /**
+     * 时间相减
+     * @param var1
+     * @param var2
+     * @return
+     */
+    public static Long getSDateValue( Date var1,Date var2,String var3) {
+        assert var1!=null;
+        assert var2!=null;
+        SimpleDateFormat dfm = new SimpleDateFormat(var3);
+        Long dateTime1 = null;
+        Long dateTime2 = null;
+        try {
+            dateTime1 = dfm.parse(dfm.format(var1)).getTime();
+            dateTime2 = dfm.parse(dfm.format(var2)).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return   dateTime2-dateTime1;
+    }
+
+    /**
      * 时间的比较
      * @param var1
      * @param var2
@@ -228,20 +249,5 @@ public class DateUtils implements Serializable {
         return result;
     }
 
-    /**
-     * 字符串转时间
-     * @param dateStr
-     * @param pattern
-     * @return
-     */
-    public static Date strToDate(String dateStr,String pattern){
-        SimpleDateFormat dfm =  new SimpleDateFormat(pattern);
-        Date parse = null;
-        try {
-            parse = dfm.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return parse;
-    }
+
 }

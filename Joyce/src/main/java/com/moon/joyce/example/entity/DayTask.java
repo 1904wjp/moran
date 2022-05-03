@@ -53,7 +53,13 @@ public class DayTask extends Page {
      */
     @TableField("user_id")
     private Long userId;
-
+    /**
+     * 上班时间
+     */
+    @TableField("start_times")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat( pattern="yyyy-MM-dd")
+    private Date startTimes;
     /**
      * 结束时间
      */
@@ -90,4 +96,21 @@ public class DayTask extends Page {
     @JsonFormat( pattern="yyyy-MM-dd")
     private Date endTime2;
 
+    /**
+     * 加班年月
+     */
+    @TableField(exist = false)
+    @DateTimeFormat(pattern="yyyy-MM")
+    @JsonFormat( pattern="yyyy-MM")
+    private Date dateValue;
+
+    /**
+     * 加班时常
+     */
+    private String time;
+    /**
+     * 是否为工作日0:是1否
+     */
+    @TableField(exist = false)
+    private String isWorkDay;
 }
