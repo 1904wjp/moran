@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.RedisUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
+import com.moon.joyce.commons.utils.UUIDUtils;
 import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.service.SourceService;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import redis.clients.jedis.Jedis;
@@ -300,27 +302,30 @@ public class Joyce {
 
     public static void task03() {
 
-        String code = "451dasd";
+        String code = StringsUtils.randNumber(6);
         Jedis instance = RedisUtils.getInstance();
-        String currentCode = "current_code_user";
-        instance.setex(currentCode, 10, code);
+        String currentCode = "current_code_user1";
         int i = 0;
-        while (i < 5) {
-            String user = RedisUtils.getVerifyCode(instance, currentCode, "333", 3, 60 * 20);
-            System.out.println(user);
+        while (i < 100) {
+            String rs = RedisUtils.getVerifyCode(instance, code, currentCode, 10, 5);
+            System.out.println("====>"+rs);
+            if ("0".equals(rs)){
+               System.out.println("规定时间内只能获取100次");
+            }
+            if ("-1".equals(rs)||"-2".equals(rs)){
+                rs = RedisUtils.getVerifyCode(instance, code, currentCode, 10, 5);
+            }
+            System.out.println(rs);
             i++;
             try {
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         instance.close();
     }
-    @org.junit.Test
-    public void test0101(){
-        print(-5);
-    }
+
     public static void  print(int num){
         //打印32位2进制方法，负数第32位为1，范围（-(2^-31)~(2^(31)-1)）
         //负数需要取反+1
@@ -329,5 +334,32 @@ public class Joyce {
             sum = sum + (((num&(1<<i))==0)?0:1);
         }
         System.out.println(sum);
+    }
+
+
+    public static void  test112(int num){
+        int month =  num*12;
+        int fee = 0;
+        if(month>5){
+            fee = 5*9+(month-5)*29;
+        }
+        System.out.println(fee-270);
+    }
+
+    public static void  test113(int num){
+        int month =  num*12;
+        int fee = (month-1)*19;
+        System.out.println(fee-40);
+    }
+
+    public static  void test114(){
+        int[] arr1 = {1,2,3,4,5,6};
+        int[] arr2 = {8,9,10,11,6};
+        System.arraycopy(arr1,1,arr2,2,2);
+        System.out.println(Arrays.toString(arr2));
+    }
+    @org.junit.Test
+    public void test0101(){
+        task03();
     }
 }

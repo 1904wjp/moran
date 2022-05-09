@@ -191,8 +191,7 @@ public class DayTaskController extends BaseController {
         String time = "0";
         String fd = "yyyy_MM_dd:HH";
         SimpleDateFormat sdf = new SimpleDateFormat(fd);
-        if (DateUtils.getSDateValue(dayTask.getStartTimes(),sdf.parse(start),fd)<=0){
-            if (DateUtils.getSDateValue(dayTask.getStartTimes(),sdf.parse(end),fd)>=0&&DateUtils.getSDateValue(dayTask.getEndTime(),sdf.parse(end8),"HH")<0){
+            if (DateUtils.getSDateValue(dayTask.getEndTimes(),sdf.parse(end),fd)>=0&&DateUtils.getSDateValue(dayTask.getEndTime(),sdf.parse(end8),"HH")<0){
                 if ("0".equals(dayTask.getIsWorkDay())){
                     time = "1天";
                 }
@@ -204,7 +203,6 @@ public class DayTaskController extends BaseController {
                     time = (DateUtils.getSDateValue(dayTask.getEndTimes(), dayTask.getCreateTime(), fd) - 10) +"h";
                 }
             }
-        }
         return time;
     }
 }

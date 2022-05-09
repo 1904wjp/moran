@@ -96,7 +96,7 @@ public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> impl
                 dayTask.setStartTime(StringsUtils.StringToDate(FileUtils.getCellValueOfTrim(row.getCell(1))));
                 dayTask.setTodayTask(FileUtils.getCellValueOfTrim(row.getCell(2)));
                 dayTask.setEndTimes(StringsUtils.StringToDate(FileUtils.getCellValueOfTrim(row.getCell(3))));
-                dayTask.setFinalyTask(FileUtils.getCellValueOfTrim(row.getCell(4)));
+                dayTask.setFinallyTask(FileUtils.getCellValueOfTrim(row.getCell(4)));
                 dayTasks.add(dayTask);
             }
         }

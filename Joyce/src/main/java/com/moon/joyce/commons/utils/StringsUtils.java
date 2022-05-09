@@ -239,5 +239,18 @@ public class StringsUtils  implements Serializable {
         return  parse;
     }
 
+    /**
+     * 随机获取数字字符串
+     * @param len
+     * @return
+     */
+    public static String randNumber(int len){
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            int rs = (int)(Math.random()*9);
+            builder.append(rs);
+        }
+        return builder.toString();
+    }
 
 }

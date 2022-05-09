@@ -29,6 +29,7 @@ public class UUIDUtils implements Serializable {
      * @return
      */
     public static String getUUID(int len){
-        return UUID.randomUUID().toString().replace("-","").length()>=len ? UUID.randomUUID().toString().replace("-","").substring(len):UUID.randomUUID().toString().replace("-","");
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        return uuid.length()>=len ? uuid.substring(0,len-1): uuid;
     }
 }

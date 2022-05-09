@@ -31,8 +31,8 @@ public class DayTask extends Page {
     /**
      * 最终任务
      */
-    @TableField("finaly_task")
-    private String finalyTask;
+    @TableField("finally_task")
+    private String finallyTask;
     /**
      * 项目id
      */

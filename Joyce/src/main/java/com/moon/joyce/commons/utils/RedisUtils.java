@@ -59,20 +59,29 @@ public class RedisUtils {
 
     /**
      *
+     * @param jedis 缓存对象
      * @param code 验证码
      * @param uniqueAppend 唯一拼接
      * @param maxCount 最大次数
+     * @param time 过期时间（单位秒）
      * @return
+     * 获取验证码
      */
     public static String getVerifyCode(Jedis jedis,String code, String uniqueAppend, int maxCount, long time){
         //查看当前的验证码是否超过次数
         int result = inputNumberByTime(jedis, time, uniqueAppend, maxCount);
+        String currentCount = uniqueAppend;
+        //若无超出规定范围次数
         if (result==1){
-              if (jedis.ttl(code)==-1||jedis.ttl(code)==-2){
+              //查询次数是否过期，如果过期，验证码将会失效
+              if (jedis.ttl(currentCount)==-1||jedis.ttl(currentCount)==-2){
+                  System.out.println("该验证码已经失效");
+                  jedis.del(currentCount);
                   jedis.close();
-                  return "-1";
+                  return jedis.ttl(currentCount).toString();
               }else {
-                  code =  jedis.get(code);
+                  //如果没有失效，直接返回验证码
+                  System.out.println("剩余时间"+jedis.ttl(currentCount));
                   return code;
               }
         }
@@ -88,15 +97,18 @@ public class RedisUtils {
      * @return
      */
     private static int inputNumberByTime(Jedis jedis,long time,String uniqueAppend,int maxCount){
-        String currentCount = "current_count_"+uniqueAppend;
-        String countStr = jedis.get(uniqueAppend);
-        if (Objects.isNull(countStr)){
+        String currentCount = uniqueAppend;
+        //检测剩余次数是否为空，若为空则创建redis缓存，将次数标记为1
+        if (Objects.isNull(jedis.get(currentCount))){
+            System.out.println("设置原本过期的时间"+time);
             jedis.setex(currentCount,time,"1");
             return 1;
+        //检测剩余次数是否小于规定次数，若为真，则将次数加1
         }else if(Integer.parseInt(jedis.get(currentCount))<maxCount){
             jedis.incr(currentCount);
             return 1;
         }else {
+            //次数超出规定范围，直接关闭，返回0
             jedis.close();
             return 0;
         }
