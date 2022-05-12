@@ -1,6 +1,7 @@
 package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.example.entity.Project;
 import joyce.example.entity.UserType;
 import org.springframework.security.access.method.P;
@@ -12,6 +13,7 @@ import java.util.List;
  * @author Joyce
  * @since 2021-09-25
  */
+
 public interface ProjectService extends IService<Project> {
     /**
      * 获取项目集合

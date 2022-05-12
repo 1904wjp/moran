@@ -1,6 +1,7 @@
 package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.example.entity.Source;
 import joyce.example.entity.UserType;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @since 2021-09-25
  * 资源服务接口
  */
+
 public interface SourceService extends IService<Source> {
     /**
      * 获取所有资源列表

@@ -6,15 +6,20 @@ import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.ChatRecord;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.service.ChatRecordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.ListUtils;
 
 
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -24,12 +29,12 @@ import java.util.concurrent.TimeUnit;
 @Controller
 @RequestMapping("/example/chatRecord")
 public class ChatRecordController extends BaseController {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private ChatRecordService chatRecordService;
     //redis缓存
     @Autowired
-    private RedisTemplate redisTemplate;
-
+    private RedisTemplate<String,Object> redisTemplate;
     /**
      * 获取所有用户的聊天记录
      * @param userBId
@@ -51,8 +56,33 @@ public class ChatRecordController extends BaseController {
         }else{
             list = opsForList.range(uniqueList, 0, -1);
         }*/
-        List<ChatRecord> list = chatRecordService.getAll(new ChatRecord(getSessionUser().getId(), userBId));
-        return R.dataResult(!list.isEmpty(),list);
+        String r_chatRecords = "chatRecords"+getSessionUserId()+userBId;
+        String r_chatRecords_list = "chatRecordsList"+getSessionUserId()+userBId;
+        List<ChatRecord> chatRecords = (List<ChatRecord>)redisTemplate.opsForValue().get(addChatRecords);
+
+        if (redisTemplate.opsForValue().getOperations().getExpire(r_chatRecords_list)>0&&Objects.nonNull(redisTemplate.opsForValue().get(r_chatRecords_list))&&(Objects.isNull(chatRecords) || chatRecords.isEmpty())){
+            return success(redisTemplate.opsForValue().get(r_chatRecords_list));
+        }
+
+        List<ChatRecord> rChatRecords = (List<ChatRecord>)redisTemplate.opsForValue().get(r_chatRecords);
+        if (Objects.isNull(chatRecords)||rChatRecords.isEmpty()){
+            rChatRecords=chatRecordService.getAll(new ChatRecord(getSessionUser().getId(), userBId));
+            redisTemplate.opsForValue().set(r_chatRecords,rChatRecords,24, TimeUnit.HOURS);
+        }
+
+        if (Objects.nonNull(chatRecords)&&!chatRecords.isEmpty()){
+            List<ChatRecord> finalRChatRecords = rChatRecords;
+            chatRecords = chatRecords.stream().filter(x -> !ListUtils.contains(finalRChatRecords, x) && (
+                    (x.getUserAId().equals(getSessionUserId()) && (x.getUserBId().equals(userBId))) || (
+                            (x.getUserAId().equals(userBId)) && (x.getUserBId().equals(getSessionUserId())))
+            )).collect(Collectors.toList());
+            for (ChatRecord chatRecord : chatRecords) {
+                  rChatRecords.add(chatRecord);
+            }
+            redisTemplate.opsForValue().set(r_chatRecords_list,rChatRecords);
+        }
+
+        return R.dataResult(!rChatRecords.isEmpty(),rChatRecords);
     }
 }
 

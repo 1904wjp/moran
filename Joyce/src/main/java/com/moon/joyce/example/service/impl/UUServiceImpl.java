@@ -2,9 +2,11 @@ package com.moon.joyce.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.mapper.UUMapper;
+import com.moon.joyce.example.service.CommonService;
 import com.moon.joyce.example.service.UUService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,8 @@ import java.util.Objects;
  *  用户与用户关系的服务实现类
  */
 @Service
-public class UUServiceImpl extends ServiceImpl<UUMapper, UU> implements UUService {
+@RedisValueComponet("UUService")
+public class UUServiceImpl extends ServiceImpl<UUMapper, UU> implements UUService , CommonService {
     @Autowired
     private UUMapper uuMapper;
     @Override

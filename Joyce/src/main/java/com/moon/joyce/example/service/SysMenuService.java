@@ -1,6 +1,7 @@
 package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.example.entity.SysMenu;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @author Joyce
  * @since 2021-10-08
  */
+
 public interface SysMenuService extends IService<SysMenu> {
     /**
      * 获取所有菜单数据的列表

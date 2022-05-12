@@ -105,6 +105,9 @@ $('#search').keydown(function (e){
 
 $("#friends").on('click', '.friend', sendInfo);
 
+/**
+ * 发送消息
+ */
 function sendInfo(){
     $('#to').val($(this).find("input").val());
     let data = {
@@ -120,7 +123,7 @@ function sendInfo(){
         dataType: 'json',
         data:data,
     }).done(function (data) {
-        console.log(JSON.stringify(data.data))
+
         let html =
             '<div class="close">' +
             '<div class="cy"></div>' +
@@ -144,6 +147,7 @@ function sendInfo(){
         dataType: 'json',
         data:data2,
     }).done(function (data) {
+        console.log(JSON.stringify(data.data))
         let chatHtml ="";
         for (let i = 0; i < data.data.length; i++) {
             let date =  "<label>"+data.data[i].createTimeValue+"</label>" ;

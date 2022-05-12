@@ -1,13 +1,12 @@
 package com.moon.joyce.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.commons.utils.DateUtils;
 import com.moon.joyce.example.entity.ChatRecord;
 import com.moon.joyce.example.mapper.ChatRecordMapper;
 import com.moon.joyce.example.service.ChatRecordService;
-import joyce.example.entity.UserType;
-import joyce.example.mapper.UserTypeMapper;
-import joyce.example.service.UserTypeService;
+import com.moon.joyce.example.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,8 @@ import java.util.Objects;
  * @since 2021-09-25
  */
 @Service
-public class ChatRecordServiceImpl extends ServiceImpl<ChatRecordMapper, ChatRecord> implements ChatRecordService {
+@RedisValueComponet("ChatRecordService")
+public class ChatRecordServiceImpl extends ServiceImpl<ChatRecordMapper, ChatRecord> implements ChatRecordService , CommonService {
     @Autowired
     private ChatRecordMapper chatRecordMapper;
     @Override

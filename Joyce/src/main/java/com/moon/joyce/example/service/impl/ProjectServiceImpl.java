@@ -2,8 +2,10 @@ package com.moon.joyce.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.example.entity.Project;
 import com.moon.joyce.example.mapper.ProjectMapper;
+import com.moon.joyce.example.service.CommonService;
 import com.moon.joyce.example.service.ProjectService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,8 @@ import java.util.List;
  * @since 2021-09-25
  */
 @Service
-public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> implements ProjectService {
+@RedisValueComponet("ProjectService")
+public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> implements ProjectService , CommonService {
     @Autowired
     private ProjectMapper projectMapper;
     @Override

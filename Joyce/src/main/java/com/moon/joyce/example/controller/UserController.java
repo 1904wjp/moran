@@ -19,14 +19,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Joyce
@@ -44,6 +45,14 @@ public class UserController extends BaseController {
     private UserService userService;
     @Autowired
     private ChatRecordService chatRecordService;
+    //redis缓存
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
+
+    public RedisTemplate<String, Object> getRedisTemplate() {
+        return redisTemplate;
+    }
+
     /**
      * 页面路径前缀
      */
@@ -201,7 +210,7 @@ public class UserController extends BaseController {
                 }
             }
         }
-        return R.success(userChartVos);
+        return success(userChartVos);
     }
 
     /**
@@ -218,8 +227,36 @@ public class UserController extends BaseController {
         chatRecord.setUserAId(getSessionUser().getId());
         chatRecord.setUserBId(id);
         chatRecord.setContent(msg);
-        boolean save = chatRecordService.save(chatRecord);
-        return R.dataResult(save,"发送失败","发送成功");
+        chatRecord.setCreateTimeValue(DateUtils.showDate(new Date()));
+        chatRecord.setAFileUrl(getSessionUser().getFileUrl());
+        User bUser = userService.getById(id);
+        chatRecord.setBFileUrl(bUser.getFileUrl());
+        chatRecord.setANickname(getSessionUser().getNickname());
+        chatRecord.setBNickname(bUser.getNickname());
+        chatRecord.setUserAName(getSessionUserName());
+        chatRecord.setUserBName(bUser.getUsername());
+
+        Object obj = redisTemplate.opsForValue().get(addChatRecords);
+        List<ChatRecord> chatRecords =  new ArrayList<>();
+        if (Objects.isNull(obj) || !redisTemplate.hasKey(addChatRecords)){
+            redisTemplate.opsForValue().set(addChatRecords,chatRecords,24, TimeUnit.DAYS);
+        }else if (redisTemplate.opsForValue().getOperations().getExpire(addChatRecords)<1){
+            logger.info("==========>正在存入数据"+redisTemplate.opsForValue().getOperations().getExpire(addChatRecords));
+            boolean rs = true;
+            if (!chatRecords.isEmpty()){
+                rs = chatRecordService.saveBatch(chatRecords);
+            }
+            if (!rs){
+                return error("信息保存异常");
+            }
+            redisTemplate.delete(addChatRecords);
+            redisTemplate.opsForValue().set(addChatRecords,chatRecords,24, TimeUnit.DAYS);
+        }else {
+            chatRecords = (List<ChatRecord>) obj;
+        }
+        chatRecords.add(chatRecord);
+        redisTemplate.opsForValue().set(addChatRecords,chatRecords);
+        return dataResult(true,"发送失败","发送成功");
     }
 
 
@@ -263,9 +300,9 @@ public class UserController extends BaseController {
                removeSessionUser();
             }
             setSession(Constant.SESSION_USER,user);
-            return R.success();
+            return success();
         }
-            return  R.error(Constant.ERROR_CODE,false);
+            return  error(Constant.ERROR_CODE,false);
     }
 
     /**
@@ -310,7 +347,7 @@ public class UserController extends BaseController {
         if (Objects.nonNull(dbUser)){
             user.setStatus(dbUser.getStatus());
             if(!user.getPassword().equals(dbUser.getPassword())){
-              return R.error(Constant.CHINESE_PASSWORD_ERROR_MESSAGE);
+              return error(Constant.CHINESE_PASSWORD_ERROR_MESSAGE);
             }
             //头像为空则为默认值
             if (StringUtils.isEmpty(dbUser.getFileUrl())){
@@ -337,7 +374,7 @@ public class UserController extends BaseController {
             setSession("index",0);
             return success(Constant.RESULT_SUCCESS_MSG,user.getStatus());
         }
-        return R.error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
+        return error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
     }
 
     /**
@@ -364,14 +401,14 @@ public class UserController extends BaseController {
     @RequestMapping("/deleteUser")
     public Result deleteUser(@RequestParam String ids){
         if (StringUtils.isBlank(ids)){
-            return R.error(Constant.NULL_CODE);
+            return error(Constant.NULL_CODE);
         }
         List<String> list = StringsUtils.StrToList(ids);
         if (StringsUtils.listIsContainsStr(getSessionUser().getId().toString(),list)){
-            return R.error(getSessionUser().getUsername()+"正在使用，无法操作");
+            return error(getSessionUser().getUsername()+"正在使用，无法操作");
         }
         boolean del = userService.removeByIds(list);
-        return R.dataResult(del,Constant.ERROR_CODE);
+        return dataResult(del,Constant.ERROR_CODE);
     }
 
     /**
@@ -383,18 +420,18 @@ public class UserController extends BaseController {
     @RequestMapping("/freezeUser")
     public Result freezeUser(@RequestParam String ids){
         if (StringUtils.isBlank(ids)){
-            return R.error(Constant.NULL_CODE);
+            return error(Constant.NULL_CODE);
         }
         if (ids.equals(getSessionUser().getId().toString())){
-            return R.error(getSessionUser().getUsername()+"正在使用，无法操作");
+            return error(getSessionUser().getUsername()+"正在使用，无法操作");
         }
         User dbUser = userService.getById(Long.valueOf(ids));
         if (Objects.isNull(dbUser)){
-            return R.error(Constant.NULL_CODE);
+            return error(Constant.NULL_CODE);
         }
         dbUser.setStatus(Constant.USER_TYPE_FROZEN_STATUS);
         boolean update = userService.updateById(dbUser);
-        return R.dataResult(update,Constant.ERROR_CODE);
+        return dataResult(update,Constant.ERROR_CODE);
     }
 
     /**
@@ -406,15 +443,15 @@ public class UserController extends BaseController {
     @RequestMapping("/recoverUser")
     public Result recoverUser(@RequestParam String ids){
         if (StringUtils.isBlank(ids)){
-            return R.error(Constant.NULL_CODE);
+            return error(Constant.NULL_CODE);
         }
         User dbUser = userService.getById(Long.valueOf(ids));
         if (Objects.isNull(dbUser)){
-            return R.error(Constant.NULL_CODE);
+            return error(Constant.NULL_CODE);
         }
         dbUser.setStatus(Constant.USER_TYPE_VAILD_STATUS);
         boolean update = userService.updateById(dbUser);
-        return R.dataResult(update,Constant.ERROR_CODE);
+        return dataResult(update,Constant.ERROR_CODE);
     }
 
     /**
@@ -431,7 +468,7 @@ public class UserController extends BaseController {
         if (!result.getRs()){
             return result;
         }
-        return R.success(dbUser);
+        return success(dbUser);
     }
 
     /**
@@ -446,40 +483,11 @@ public class UserController extends BaseController {
         user.setEmail(email);
         User dbUser = userService.getUser(user, "");
         if (Objects.isNull(dbUser)){
-            return R.error(Constant.NULL_CODE);
+            return error(Constant.NULL_CODE);
         }
         String mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
         cache = RedisUtils.getInstance();
-        return R.dataResult(RedisUtils.setVerifyCode(cache, email, 60,mailCode),"验证码不可重复发送","验证码已发送，请查看");
-        /*VerifyCode sessionVerifyCode= (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
-        if (Objects.isNull(sessionVerifyCode)){
-            logger.info("email=>"+user.getEmail());
-            mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
-            VerifyCode verifyCode = new VerifyCode();
-            verifyCode.setCreateTime(new Date());
-            verifyCode.setVerifyCodeValue(mailCode);
-            verifyCode.setVaildTime(6*10000L);
-            setSession(Constant.SESSION_VERIFY_CODE+dbUser.getId(),verifyCode);
-            return  R.success(Constant.SEND_EMAIL_SEND_SUCCESS_MESSAGE);
-        }else {
-            //是否超过验证码有效时间
-            result = DateUtils.dateCompare(sessionVerifyCode.getCreateTime(), new Date(), sessionVerifyCode.getVaildTime());
-        }
-        if (result){
-            //超过了有效时间，移除之前的验证码，可重新发送验证码
-            removeSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
-            getSession().removeAttribute(Constant.SESSION_VERIFY_CODE+dbUser.getId());
-            mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
-            VerifyCode verifyCode = new VerifyCode();
-            verifyCode.setCreateTime(new Date());
-            verifyCode.setVerifyCodeValue(mailCode);
-            verifyCode.setVaildTime(6*10000L);
-            getSession().setAttribute(Constant.SESSION_VERIFY_CODE+dbUser.getId(),verifyCode);
-           return R.success(Constant.SEND_EMAIL_SEND_SUCCESS_MESSAGE);
-        }else {
-            //有效时间不能重复发送验证码
-           return R.error(Constant.ERROR_CODE,Constant.SEND_EMAIL_SEND_VAILD_TIME_MESSAGE);
-        }*/
+        return dataResult(RedisUtils.setVerifyCode(cache, email, 60,mailCode),"验证码不可重复发送","验证码已发送，请查看");
     }
 
     /**
@@ -497,30 +505,13 @@ public class UserController extends BaseController {
         user.setEmail(email);
         User dbUser = userService.getUser(user, "");
         if (Objects.isNull(dbUser)){
-            return R.error("该邮件未注册");
+            return error("该邮件未注册");
         }
         int result = RedisUtils.compareCode(cache, emailCode, email, 3, 24 * 60 * 60);
         if (result==-1){
-            return R.error("请输入正确的验证码");
+            return error("请输入正确的验证码");
         }
-        return R.dataResult(result,"验证码已失效,请重新获取","校验成功");
-       /* VerifyCode verifyCode = (VerifyCode) getSessionValue(Constant.SESSION_VERIFY_CODE+dbUser.getId());
-        boolean vaildTime = DateUtils.dateCompare(verifyCode.getCreateTime(), new Date(), verifyCode.getVaildTime());
-        //判断验证码是否失效
-        if (vaildTime){
-            return R.error("验证码已失效");
-        }
-        if (StringUtils.isBlank(emailCode)){
-            return R.error(Constant.ERROR_FILL_ERROR_CODE);
-        }
-        //判断填入数据是否正确
-        if (verifyCode.getVerifyCodeValue().equals(emailCode)){
-            getSession().removeAttribute(Constant.SESSION_VERIFY_CODE+dbUser);
-            dbUser.setPassword(newPassword);
-            boolean result = userService.updateById(dbUser);
-            return R.dataResult(result);
-        }
-        return R.error(Constant.ERROR_FILL_ERROR_CODE);*/
+        return dataResult(result,"验证码已失效,请重新获取","校验成功");
     }
 
     /**
@@ -536,23 +527,23 @@ public class UserController extends BaseController {
     public Result updatePassword(@RequestParam("password") String password,@RequestParam("newPassword") String newPassword,@RequestParam("userId")Long id ){
       /*  User user = (User) request.getSession().getAttribute(Constant.SESSION_USER);*/
         if (StringUtils.isBlank(password.trim())){
-            return R.error(Constant.CHINESE_BLANK_MESSAGE);
+            return error(Constant.CHINESE_BLANK_MESSAGE);
         }
         if (StringUtils.isBlank(newPassword.trim())){
-            return R.error(Constant.CHINESE_BLANK_MESSAGE);
+            return error(Constant.CHINESE_BLANK_MESSAGE);
         }
         User user = userService.getById(id);
         if (!(user.getPassword().equals(MD5Utils.getMD5Str(password)))){
-            return R.error(Constant.ERROR_FILL_ERROR_CODE);
+            return error(Constant.ERROR_FILL_ERROR_CODE);
         }
         user.setPassword(MD5Utils.getMD5Str(newPassword));
         boolean updateById = userService.updateById(user);
         if (updateById){
             userService.updateById(user);
             removeSessionUser();
-            return R.success();
+            return success();
         }
-        return R.error(Constant.ERROR_CODE);
+        return error(Constant.ERROR_CODE);
     }
 
     /**
@@ -565,7 +556,7 @@ public class UserController extends BaseController {
     @PostMapping("/upload")
     public Result uploadImg(@RequestParam("file") MultipartFile file){
         String filePath = fileService.uploadImg(file);
-        return R.success("上传成功",filePath);
+        return success("上传成功",filePath);
     }
 
     /**
@@ -577,7 +568,7 @@ public class UserController extends BaseController {
         //移除会话数据存在的用户
         removeCurrentSetting();
         removeSessionUser();
-        return R.success();
+        return success();
     }
 
     /**
@@ -590,10 +581,10 @@ public class UserController extends BaseController {
         user.setUsername(username);
         User dbUser = userService.getUser(user, "");
         if (Objects.isNull(dbUser)){
-            return R.error(Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
+            return error(Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
         }
         dbUser.setPassword("000000");
-        return R.success(dbUser);
+        return success(dbUser);
     }
 
 }

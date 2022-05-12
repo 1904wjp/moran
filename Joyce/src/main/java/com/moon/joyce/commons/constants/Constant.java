@@ -320,4 +320,8 @@ public class Constant {
     public static final String LOGGER_PATH = "G://Joyce/joyce.log";
 
     public static final String UNKNOW = "====================>";
+    /**
+     * redis总和map
+     */
+    public static final String redisMap = "redisMap";
 }

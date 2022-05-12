@@ -1,6 +1,7 @@
 package com.moon.joyce.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.commons.utils.DateUtils;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
@@ -8,6 +9,7 @@ import com.moon.joyce.example.entity.DayTask;
 import com.moon.joyce.example.entity.Project;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.mapper.DayTaskMapper;
+import com.moon.joyce.example.service.CommonService;
 import com.moon.joyce.example.service.DayTaskService;
 import com.moon.joyce.example.service.ProjectService;
 import com.moon.joyce.example.service.UserService;
@@ -29,7 +31,8 @@ import java.util.*;
  * @since 2021-09-25
  */
 @Service
-public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> implements DayTaskService {
+@RedisValueComponet("DayTaskService")
+public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> implements DayTaskService , CommonService {
     @Autowired
     private DayTaskMapper dayTaskMapper;
     @Autowired

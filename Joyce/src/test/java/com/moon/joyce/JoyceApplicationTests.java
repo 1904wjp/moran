@@ -2,13 +2,6 @@ package com.moon.joyce;
 
 
 
-import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.commons.utils.StringsUtils;
-import com.moon.joyce.example.functionality.entity.Column;
-import com.moon.joyce.example.entity.DbBaseSetting;
-import com.moon.joyce.example.functionality.service.ColumnsService;
-import com.moon.joyce.example.functionality.service.DbBaseSettingService;
-import com.moon.joyce.example.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

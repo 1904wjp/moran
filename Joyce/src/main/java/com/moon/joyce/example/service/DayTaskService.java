@@ -1,6 +1,7 @@
 package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.example.entity.DayTask;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import java.util.Map;
  * @author Joyce
  * @since 2021-09-25
  */
+
 public interface DayTaskService extends IService<DayTask> {
     /**
      * 获取每日看板集合

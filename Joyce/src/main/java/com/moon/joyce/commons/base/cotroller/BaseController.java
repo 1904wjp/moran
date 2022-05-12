@@ -66,7 +66,10 @@ public class BaseController extends R {
 
     //缓存
     public static Jedis cache ;
+    //缓存的聊天记录
+    public static String addChatRecords = "add_chatRecord";
 
+    public static Map<String,Object> redisMap = new HashMap<>();
     /**
      * 获得session
      * @return

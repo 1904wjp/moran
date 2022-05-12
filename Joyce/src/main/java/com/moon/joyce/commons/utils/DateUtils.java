@@ -144,19 +144,7 @@ public class DateUtils implements Serializable {
      * @return
      */
     public static boolean dateCompare( Date var1,Date var2,Long number) {
-        assert var1!=null;
-        assert var2!=null;
-        assert number!=null;
-        SimpleDateFormat dfm = new SimpleDateFormat(Constant.DATE_TIME_SECOND);
-        Long dateTime1 = null;
-        Long dateTime2 = null;
-        try {
-            dateTime1 = dfm.parse(dfm.format(var1)).getTime();
-            dateTime2 = dfm.parse(dfm.format(var2)).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-       return   (dateTime2-dateTime1)>number;
+       return   getSDateValue(var1,var2,Constant.DATE_TIME_SECOND)>number;
     }
 
     /**
@@ -166,8 +154,6 @@ public class DateUtils implements Serializable {
      * @return
      */
     public static Long getSDateValue( Date var1,Date var2,String var3) {
-        assert var1!=null;
-        assert var2!=null;
         SimpleDateFormat dfm = new SimpleDateFormat(var3);
         Long dateTime1 = null;
         Long dateTime2 = null;
@@ -177,6 +163,7 @@ public class DateUtils implements Serializable {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        System.out.println("返回的值为毫秒,转小时:"+((dateTime2-dateTime1)/(double)(60*1000*60))+"h");
         return   dateTime2-dateTime1;
     }
 
@@ -188,16 +175,18 @@ public class DateUtils implements Serializable {
      * @return
      */
     public static boolean dateCompare( Date var1,Date var2,Long number,String pattern) {
-        SimpleDateFormat dfm = new SimpleDateFormat(pattern);
-        Long dateTime1 = null;
-        Long dateTime2 = null;
-        try {
-            dateTime1 = dfm.parse(dfm.format(var1)).getTime();
-            dateTime2 = dfm.parse(dfm.format(var2)).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return   (dateTime2-dateTime1)>number;
+        return   dateCompare(var1,var2,pattern)>number;
+    }
+
+
+    /**
+     * 时间的比较
+     * @param var1
+     * @param var2
+     * @return
+     */
+    public static Long dateCompare( Date var1,Date var2,String pattern) {
+        return   getSDateValue(var1,var2,pattern);
     }
 
     /**
@@ -248,6 +237,7 @@ public class DateUtils implements Serializable {
         }
         return result;
     }
+
 
 
 }

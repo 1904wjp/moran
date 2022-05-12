@@ -2,8 +2,10 @@ package com.moon.joyce.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.example.entity.SysMenu;
 import com.moon.joyce.example.mapper.SysMenuMapper;
+import com.moon.joyce.example.service.CommonService;
 import com.moon.joyce.example.service.SysMenuService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,8 @@ import java.util.Objects;
  * @since 2021-10-08
  */
 @Service
-public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> implements SysMenuService {
+@RedisValueComponet("SysMenuService")
+public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> implements SysMenuService , CommonService {
 
     @Override
     public List<SysMenu> getMenus(SysMenu menu) {

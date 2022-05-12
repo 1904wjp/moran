@@ -2,8 +2,10 @@ package com.moon.joyce.example.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.mapper.SourceMapper;
+import com.moon.joyce.example.service.CommonService;
 import com.moon.joyce.example.service.SourceService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,8 @@ import java.util.Optional;
  * 资源服务实现类
  */
 @Service
-public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> implements SourceService {
+@RedisValueComponet("SourceService")
+public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> implements SourceService , CommonService {
     @Autowired
     private SourceMapper sourceMapper;
     @Override

@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.mapper.UserMapper;
+import com.moon.joyce.example.service.CommonService;
 import com.moon.joyce.example.service.UserService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +27,8 @@ import java.util.Objects;
  * @since 2021-09-01
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+@RedisValueComponet("UserService")
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService , CommonService {
     @Autowired
     private UserMapper userMapper;
     @Override

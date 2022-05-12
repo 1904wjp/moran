@@ -1,16 +1,28 @@
 package com.moon.joyce.commons.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
 
+import javax.annotation.Resource;
 import java.util.Objects;
 
 /**
  * @Author: XingDaoRong
  * @Date: 2022/2/25
  */
+@Component
 public class RedisUtils {
-    private RedisUtils(){};
+    @Autowired
+    private static RedisTemplate<String,Object> redisTemplate;
+
+    public  Object get(String key){
+        return key==null?null:redisTemplate.opsForValue().get(key);
+    }
+
+    public RedisUtils(){};
     static Jedis  jedis = null;
     public static   String redisPassword;
     //Jedis实例化

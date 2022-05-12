@@ -1,6 +1,7 @@
 package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.example.entity.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.Map;
  * @author Joyce
  * @since 2021-09-01
  */
+
 public interface UserService extends IService<User> {
     /**
      * 根据条件查询user

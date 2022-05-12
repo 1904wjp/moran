@@ -1,4 +1,4 @@
-package joyce.example.mapper;
+package com.moon.joyce.example.mapper;
 
 import joyce.example.entity.UserType;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
