@@ -14,6 +14,16 @@ function addDataSource(){
     $(".dbs").hide();
 }
 
+function cancelDb(){
+    $('.addDb').hide();
+    $('.dbs').show();
+}
+
+
+function cancelPackage(){
+    $('.addPg').hide();
+    $('.pgs').show();
+}
 
 /**
  * 保存数据源信息

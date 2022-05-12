@@ -36,19 +36,20 @@
                    <legend>用户登录</legend>
                    <div class="form-group ">
                        <label class="col-sm-2 control-label" for="username">用户名</label>
-                       <div  class="col-sm-4 ">
+                       <div  class="col-sm-8 ">
                            <input class="form-control" id="username" type="text" name="username" placeholder="请输入用户名"   required="required"/>
                        </div>
                    </div>
                    <div class="form-group ">
                        <label class="col-sm-2 control-label" for="password">密码</label>
-                       <div class="col-sm-4">
+                       <div class="col-sm-8">
                            <input class="form-control" id="password" type="password"  name="password" onchange="password_change(this.id)" placeholder="请输入密码" required="required"/>
+                           <input type="checkbox" id="remember" checked>记住我
                        </div>
                    </div>
                    <div class="form-group ">
                        <label class="col-sm-2 control-label" for="login"> </label>
-                       <div class="col-sm-5 loginBtns">
+                       <div class="col-sm-8  loginBtns">
                            <input class="btn btn-default pull-left" id="login" type="button" onclick="loginFuc()" value="登录"/>
                            <a href="javascript:void(0)"  style="margin: 0 12%;" onclick="openForgetPasswordModelFuc()">忘记密码</a>
                            <a class="btn btn-default pull-right" th:href="@{'/example/user/regist'}">去注册</a>
@@ -62,8 +63,59 @@
 
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
 <script type="text/javascript">
+    $(document).ready(function () {
+        var strName = localStorage.getItem('keyName');
+        var strPass = localStorage.getItem('keyPass');
+        if(strName){
+            $('#username').val(strName);
+        }
+        if(strPass){
+            $('#password').val(strPass);
+        }
+    })
     $('#password').keyup(function(event){
         if(event.keyCode ==13){
             loginFuc();
         }});
+
+    /**
+     * 用户登录
+     */
+    function loginFuc() {
+        var strName = $('#username').val();
+        var strPass = $('#password').val();
+        localStorage.setItem('keyName',strName);
+        var data = {
+            //获取输入框用户名
+            "username": $("#username").val(),
+            //获取输入框密码
+            "password": $("#password").val()
+        };
+
+        if (vailDate(data)) {
+            addLoadingModal("正在登录...请稍后");
+            $.ajax({
+                url: '/example/user/doLogin',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+
+            }).done(function (data) {
+                loading(false);
+                if (data.rs) {
+                    if($('#remember').is(':checked')){
+                        localStorage.setItem('keyPass',strPass);
+                    }else{
+                        localStorage.removeItem('keyPass');
+                    }
+                    toList("/main");
+                }else {
+                    tips(data.rs,data.msg);
+                }
+            }).fail(function () {
+                tips(false,ajaxFailMsg);
+            });
+        }
+    }
+
 </script>

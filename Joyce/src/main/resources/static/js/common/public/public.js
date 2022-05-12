@@ -35,37 +35,6 @@ function loadBackGround() {
 
 var ajaxFailMsg = "系统开了个小差，请稍后再试！！！";
 
-/**
- * 用户登录
- */
-function loginFuc() {
-    var data = {
-        //获取输入框用户名
-        "username": $("#username").val(),
-        //获取输入框密码
-        "password": $("#password").val()
-    };
-
-    if (vailDate(data)) {
-        addLoadingModal("正在登录...请稍后");
-        $.ajax({
-            url: '/example/user/doLogin',
-            type: 'POST',
-            dataType: 'json',
-            data: data,
-
-        }).done(function (data) {
-            loading(false);
-            if (data.rs) {
-                toList("/main");
-            }else {
-                tips(data.rs,data.msg);
-            }
-        }).fail(function () {
-            tips(false,ajaxFailMsg);
-        });
-    }
-}
 
 /**
  * 用户注册

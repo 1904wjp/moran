@@ -1,18 +1,14 @@
 package com.moon.joyce.interceptor;
 
 
-import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.example.entity.DbBaseSetting;
+import com.moon.joyce.commons.constants.Constant;;
 import com.moon.joyce.example.entity.User;
-import com.moon.joyce.example.functionality.entity.Setting;
-import com.moon.joyce.example.functionality.service.DbBaseSettingService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Objects;
 
 /**
  * @author Xing Dao Rong

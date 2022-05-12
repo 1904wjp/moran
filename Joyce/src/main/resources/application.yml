@@ -163,7 +163,7 @@ pagehelper:
 
 #文件路径上传路径
 file:
-  prefix :  E
+  prefix :  D
   temp: ${file.prefix}:/${app.name}/temp
   config:
     path: ${file.prefix}:/${app.name}/files/config/

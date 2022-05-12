@@ -31,3 +31,10 @@ function getTablesByDatabaseName(){
             tips(false,data.msg)
         });
 }
+/**
+ * 下载文件
+ */
+function downloadWebFile() {
+    toList("/example/columns/downloadWebFile");
+    $('#download').hide();
+}

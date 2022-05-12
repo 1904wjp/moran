@@ -13,24 +13,24 @@
                 <input class="form-control" id="id" type="hidden" name="id" />
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="dataSourceName">数据源名称</label>
-                    <div  class="col-sm-4 ">
+                    <div  class="col-sm-8 ">
                         <input class="form-control" id="dataSourceName" type="text" name="dataSourceName" placeholder="请输入数据库名称"   required="required"/>
                     </div>
                 </div>
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="domain">域名</label>
-                    <div  class="col-sm-2 ">
+                    <div  class="col-sm-5 ">
                         <input class="form-control" id="domain" type="text" name="domain" placeholder="请输入域名(如:121.0.0.1)"   required="required"/>
                     </div>
-                    <label class="col-sm-1 control-label" for="port">端口号</label>
-                    <div  class="col-sm-1 " style="width: 10%">
+                    <label class="col-sm-2 control-label" for="port">端口号</label>
+                    <div  class="col-sm-2" >
                         <input  class="form-control" id="port" type="text" name="port" placeholder="请输入端口号"  value="3306" required="required"/>
                     </div>
                 </div>
 
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="url">url</label>
-                    <div  class="col-sm-4 ">
+                    <div  class="col-sm-8 ">
                         <input class="form-control" id="url" type="text" name="url" placeholder="请输入url"   required="required"/>
                     </div>
                 </div>
@@ -42,32 +42,33 @@
                 </div>
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="password">密码</label>
-                    <div  class="col-sm-4 ">
+                    <div  class="col-sm-8 ">
                         <input class="form-control" id="password" type="password" name="password" placeholder="请输入密码"   required="required"/>
                     </div>
                 </div>
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="driverName">驱动包地址</label>
-                    <div  class="col-sm-4 ">
+                    <div  class="col-sm-8 ">
                         <input class="form-control" id="driverName" type="text" name="driverName" placeholder="请输入驱动包(如:com.mysql.cj.jdbc.Driver)"    required="required"/>
                     </div>
                 </div>
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="tempCode">数据库描述信息</label>
-                    <div  class="col-sm-4 ">
+                    <div  class="col-sm-8 ">
                         <input class="form-control" id="tempCode" type="text" name="tempCode" placeholder="请输入数据库描述信息"   required="required"/>
                     </div>
                 </div>
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="databaseType">数据库类型</label>
-                    <div  class="col-sm-4 ">
+                    <div  class="col-sm-8 ">
                         <input class="form-control" id="databaseType" type="text" name="databaseType" placeholder="请输入数据库类型(如：mysql)"  required="required"/>
                     </div>
                 </div>
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for=""> </label>
-                    <div class="col-sm-5">
+                    <div class="col-sm-8">
                         <input class="btn btn-default pull-left"  type="button" onclick="saveDataSource()" value="保存"/>
+                        <input class="btn btn-default pull-right"  type="button" onclick="cancelDb()" value="取消"/>
                        <!-- <input class="btn btn-default pull-right"  type="button" onclick="applyDataSource()" value="设为应用数据源"/>-->
                     </div>
                 </div>
@@ -77,9 +78,6 @@
 </div>
 
 <div  class="container-fluid dbs" style="width: 90%;margin-top:5%;margin-left: -3%">
-    <!--<div style="margin-top: 6%;height: 100%;" class="col-md-1 nav">
-        <div  th:replace="/menu/menu::meau_left"></div>
-    </div>-->
     <div class="col-md-11 content">
         <div class="content-body">
             <div id="user_list_div">
@@ -137,7 +135,6 @@
     </div>
 </div>
 <input class="title"  type="hidden" value="db">
-<head class="panelBar" th:replace="/common/public/footer::footer">
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
 
-</head>
 

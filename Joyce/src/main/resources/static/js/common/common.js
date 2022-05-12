@@ -435,13 +435,7 @@ function inputColumns() {
 
 }
 
-/**
- * 下载文件
- */
-function downloadWebFile() {
-    toList("/example/columns/downloadWebFile");
-    $('#download').hide();
-}
+
 
 /**
  * 时间格式转化
@@ -485,7 +479,7 @@ function getSessionUserId() {
  */
 function toBut(obj) {
     if (obj.scrollHeight > obj.clientHeight) {
-        obj.scrollTop = obj.scrollHeight;
+        obj.scrollTop = obj.scrollHeight+10;
     }
 }
 
