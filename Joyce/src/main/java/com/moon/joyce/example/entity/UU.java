@@ -53,7 +53,7 @@ public class UU extends BaseEntity {
     @TableField(exist = false)
     public static String uniqueAppend = "uu:";
     /**
-     * 加好友结果
+     * 加好友结果("1:拒绝，0：同意 2:未处理")
      */
     @TableField(exist = false)
     private String resultStr ;
@@ -63,5 +63,17 @@ public class UU extends BaseEntity {
      */
     @TableField(exist = false)
     private String userFileUrlA ;
+
+    /**
+     * 用户图像
+     */
+    @TableField(exist = false)
+    private String userFileUrlB ;
+
+    /**
+     * 是否是发送者(0:是 1：否)
+     */
+    @TableField(exist = false)
+    private String isSendMan ;
 
 }

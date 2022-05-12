@@ -57,7 +57,7 @@ public class UserController extends BaseController {
      * 页面路径前缀
      */
     private final String  pagePrefix = "user/";
-    private final String  commonPagePrefix = "common/error/";
+
 
     /**
      * url的路径前缀
@@ -236,11 +236,11 @@ public class UserController extends BaseController {
         chatRecord.setUserAName(getSessionUserName());
         chatRecord.setUserBName(bUser.getUsername());
 
-        Object obj = redisTemplate.opsForValue().get(addChatRecords);
+        Object obj = getRedisValueOperation().get(addChatRecords);
         List<ChatRecord> chatRecords =  new ArrayList<>();
         if (Objects.isNull(obj) || !redisTemplate.hasKey(addChatRecords)){
-            redisTemplate.opsForValue().set(addChatRecords,chatRecords,24, TimeUnit.DAYS);
-        }else if (redisTemplate.opsForValue().getOperations().getExpire(addChatRecords)<1){
+            getRedisValueOperation().set(addChatRecords,chatRecords,24, TimeUnit.DAYS);
+        }else if (getExpireTime(addChatRecords)<1){
             logger.info("==========>正在存入数据"+redisTemplate.opsForValue().getOperations().getExpire(addChatRecords));
             boolean rs = true;
             if (!chatRecords.isEmpty()){
@@ -250,7 +250,7 @@ public class UserController extends BaseController {
                 return error("信息保存异常");
             }
             redisTemplate.delete(addChatRecords);
-            redisTemplate.opsForValue().set(addChatRecords,chatRecords,24, TimeUnit.DAYS);
+            getRedisValueOperation().set(addChatRecords,chatRecords,24, TimeUnit.DAYS);
         }else {
             chatRecords = (List<ChatRecord>) obj;
         }
@@ -372,6 +372,7 @@ public class UserController extends BaseController {
             }
             logger.info(username+"======>登录成功");
             setSession("index",0);
+            redisTemplate.opsForValue().set(Constant.SESSION_USER,sessionUsers);
             return success(Constant.RESULT_SUCCESS_MSG,user.getStatus());
         }
         return error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);

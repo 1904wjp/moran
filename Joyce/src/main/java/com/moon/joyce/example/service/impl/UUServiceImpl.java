@@ -54,7 +54,10 @@ public class UUServiceImpl extends ServiceImpl<UUMapper, UU> implements UUServic
         return baseMapper.selectOne(wrapper);
     }
 
-
+    @Override
+    public List<UU> getFriend(Long id1, Long id2) {
+        return uuMapper.getFriend(id1,id2);
+    }
 
 
 }

@@ -16,18 +16,35 @@
     </select>
     <select id="selectList" resultType="com.moon.joyce.example.entity.UU" parameterType="java.lang.Long">
         SELECT
-            u.id,
-            u.type,
-            u.delete_flag,
-            u.create_time,
-            u.user_a_id,
-            us.username AS usernameB
-            FROM springboot.u_u u
-            LEFT JOIN springboot.user us
-            ON  u.user_b_id = us.id
-            WHERE u.delete_flag =0
-            <if test="userId">
-                u.user_a_id = #{userId}
-            </if>
+        u.id,
+        u.type,
+        u.delete_flag,
+        u.create_time,
+        u.user_a_id,
+        us.username AS usernameB
+        FROM springboot.u_u u
+        LEFT JOIN springboot.user us
+        ON u.user_b_id = us.id
+        WHERE u.delete_flag =0
+        <if test="userId">
+            u.user_a_id = #{userId}
+        </if>
+    </select>
+    <select id="getFriend" resultType="com.moon.joyce.example.entity.UU">
+        SELECT *
+        FROM springboot.u_u u
+        WHERE u.delete_flag = 0
+          AND (
+                (u.user_a_id = #{id1}
+                    AND
+                 u.user_b_id = #{id2}
+                    )
+                OR (
+                    (u.user_a_id = #{id2}
+                        AND
+                     u.user_b_id = #{id1}
+                        )
+                    )
+            )
     </select>
 </mapper>

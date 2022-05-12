@@ -28,4 +28,12 @@ public interface UUMapper extends BaseMapper<UU> {
       * @return
       */
      List<UU> selectList(Long userId);
+
+     /**
+      * 获取搜友好友
+      * @param id1
+      * @param id2
+      * @return
+      */
+     List<UU> getFriend(@Param("id1") Long id1,@Param("id2") Long id2);
 }

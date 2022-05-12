@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -32,6 +33,8 @@ import java.util.*;
  */
 @Controller
 public class BaseController extends R {
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     //app链接
     @Value("${app.url}")
@@ -186,8 +189,27 @@ public class BaseController extends R {
                 return dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.CREATE_DATASOURCE);
             }
         }
-        logger.info("当前数据源:" + getCurrentSetting().getDbBaseSetting().getDataSourceName());
+        logger.info("当前数据源:" + Objects.requireNonNull(getCurrentSetting()).getDbBaseSetting().getDataSourceName());
         return false;
     }
 
+    /**
+     * 获取redis操作对象
+     * @return
+     */
+    public   ValueOperations<String, Object>  getRedisValueOperation(){
+        return redisTemplate.opsForValue();
+    }
+
+    /**
+     * 获取redis对象过期时间
+     * @param k
+     * @return
+     */
+    public long getExpireTime(String k){
+        if (Objects.isNull(k)||Objects.isNull(getRedisValueOperation().get(k))){
+            return -3;
+        }
+        return getRedisValueOperation().getOperations().getExpire(k);
+    }
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.ListUtils;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -43,35 +44,28 @@ public class ChatRecordController extends BaseController {
     @ResponseBody
     @GetMapping("/getAllRecord")
     public Result getAllRecord(@RequestParam Long userBId){
-        /*List list;
-        String uniqueValue = ChatRecord.uniqueAppend + userBId + getSessionUserId() + "value";
-        String uniqueList = ChatRecord.uniqueAppend + userBId + getSessionUserId() + "list";
-        ListOperations opsForList = redisTemplate.opsForList();
-        if (Objects.isNull(redisTemplate.boundValueOps(uniqueValue).get())){
-            redisTemplate.boundValueOps(uniqueValue).set(uniqueValue);
-            redisTemplate.boundValueOps(uniqueValue).expire(1,TimeUnit.DAYS);
-            list = chatRecordService.getAll(new ChatRecord(getSessionUser().getId(),userBId));
-            opsForList.rightPushAll(uniqueList,list);
-            redisTemplate.expire(uniqueList,1, TimeUnit.DAYS);
-        }else{
-            list = opsForList.range(uniqueList, 0, -1);
-        }*/
+
         String r_chatRecords = "chatRecords"+getSessionUserId()+userBId;
         String r_chatRecords_list = "chatRecordsList"+getSessionUserId()+userBId;
         List<ChatRecord> chatRecords = (List<ChatRecord>)redisTemplate.opsForValue().get(addChatRecords);
 
-        if (redisTemplate.opsForValue().getOperations().getExpire(r_chatRecords_list)>0&&Objects.nonNull(redisTemplate.opsForValue().get(r_chatRecords_list))&&(Objects.isNull(chatRecords) || chatRecords.isEmpty())){
+        if (redisTemplate.opsForValue().getOperations().getExpire(r_chatRecords_list)>0
+                && Objects.nonNull(redisTemplate.opsForValue().get(r_chatRecords_list))
+                && (Objects.isNull(chatRecords) || chatRecords.isEmpty())){
             return success(redisTemplate.opsForValue().get(r_chatRecords_list));
         }
 
         List<ChatRecord> rChatRecords = (List<ChatRecord>)redisTemplate.opsForValue().get(r_chatRecords);
-        if (Objects.isNull(chatRecords)||rChatRecords.isEmpty()){
+        if (Objects.isNull(rChatRecords)){
             rChatRecords=chatRecordService.getAll(new ChatRecord(getSessionUser().getId(), userBId));
             redisTemplate.opsForValue().set(r_chatRecords,rChatRecords,24, TimeUnit.HOURS);
+            if (rChatRecords.isEmpty()){
+                return success(rChatRecords);
+            }
         }
 
-        if (Objects.nonNull(chatRecords)&&!chatRecords.isEmpty()){
-            List<ChatRecord> finalRChatRecords = rChatRecords;
+        if (Objects.nonNull(chatRecords)){
+            List<ChatRecord> finalRChatRecords =  (List<ChatRecord>)redisTemplate.opsForValue().get(r_chatRecords);
             chatRecords = chatRecords.stream().filter(x -> !ListUtils.contains(finalRChatRecords, x) && (
                     (x.getUserAId().equals(getSessionUserId()) && (x.getUserBId().equals(userBId))) || (
                             (x.getUserAId().equals(userBId)) && (x.getUserBId().equals(getSessionUserId())))
@@ -79,7 +73,7 @@ public class ChatRecordController extends BaseController {
             for (ChatRecord chatRecord : chatRecords) {
                   rChatRecords.add(chatRecord);
             }
-            redisTemplate.opsForValue().set(r_chatRecords_list,rChatRecords);
+            getRedisValueOperation().set(r_chatRecords_list,rChatRecords);
         }
 
         return R.dataResult(!rChatRecords.isEmpty(),rChatRecords);

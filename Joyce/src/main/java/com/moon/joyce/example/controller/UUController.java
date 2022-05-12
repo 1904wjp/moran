@@ -1,24 +1,21 @@
 package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
-import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.service.UUService;
 import com.moon.joyce.example.service.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -36,7 +33,7 @@ public class UUController extends BaseController {
     private UserService userService;
     //redis缓存
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String,Object> redisTemplate;
 
     private final String  pagePrefix = "user/";
     /**
@@ -67,15 +64,29 @@ public class UUController extends BaseController {
     @ResponseBody
     @GetMapping("/applyFriendList")
     public Result applyFriendList(){
-        String  uniqueLista = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
-        ListOperations<String, UU> operations = redisTemplate.opsForList();
-        List<UU> list = operations.range(uniqueLista, 1, -1);
-        List<UU> uus = list.stream().filter(
-                x -> getSessionUserId().equals(x.getUserBId())&&null!=x.getUserAId()).collect(
-                        Collectors.collectingAndThen(
-                        Collectors.toCollection(
-                                ()-> new TreeSet<>(Comparator.comparing(UU::getUserAId))
-                        ),ArrayList::new));
+        String  uniqueList = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
+        String  uniqueListSend = UU.uniqueAppend+"MSGlIST_SEND"+getSessionUserId();
+        List<UU> sendList = (List<UU>) redisTemplate.opsForValue().get(uniqueListSend);
+        List<UU> uus = (List<UU>) getRedisValueOperation().get(uniqueList);
+        if (Objects.nonNull(sendList)&&Objects.nonNull(uus)){
+            uus.addAll(sendList);
+        }
+        if (Objects.nonNull(sendList) && Objects.isNull(uus)){
+            uus = sendList;
+        }
+
+        if (Objects.isNull(uus) && Objects.isNull(sendList)){
+           return error("暂无信息");
+        }
+
+        if (getExpireTime(uniqueList)<1){
+            List<UU> collect = uus.stream().filter(x -> x.getResultStr().equals("0") && x.getIsSendMan().equals("1")).collect(Collectors.toList());
+            boolean rs = uuService.saveBatch(collect);
+            if (!rs){
+                error("好友关系数据保存异常");
+            }
+            redisTemplate.delete(uniqueList);
+        }
         return R.success(uus);
     }
 
@@ -87,29 +98,40 @@ public class UUController extends BaseController {
     @ResponseBody
     @PostMapping("/addFriend")
     public Result addFriend(UU uu){
-        String  uniqueLista = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
-        uu.setUserAId(getSessionUser().getUserTypeId());
-        UU one = uuService.getOne(uu);
-        User userB = userService.getById(uu.getUserBId());
-        if (Objects.isNull(userB)){
-            return R.error(Constant.NULL_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
-        }
-        String  uniqueListb = UU.uniqueAppend+"MSGlIST"+uu.getUserBId();
-        ListOperations<String, UU> operations = redisTemplate.opsForList();
-        if (Objects.nonNull(one)){
-            return R.error("该用户已是你的好友");
-        }
-        //存入redis
-        uu.setUsernameA(getSessionUserName());
+        String  uniqueList = UU.uniqueAppend+"MSGlIST"+uu.getUserBId();
+        String  uniqueList2 = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
+        String  uniqueListSend = UU.uniqueAppend+"MSGlIST_SEND"+getSessionUserId();
+        User dbBUser = userService.getById(uu.getUserBId());
         uu.setUserAId(getSessionUserId());
-        uu.setCreateTime(new Date());
+        uu.setResultStr("2");
+        uu.setUsernameA(getSessionUser().getNickname());
         uu.setUserFileUrlA(getSessionUser().getFileUrl());
-        uu.setUsernameB(userB.getUsername());
-        uu.setDeleteFlag(Constant.UNDELETE_STATUS);
-        uu.setResultStr("1");
-        operations.rightPush(uniqueLista,uu);
-        operations.rightPush(uniqueListb,uu);
-        logger.info("===============>",operations.range(uniqueLista,1,-1).toString());
+        uu.setCreateTime(new Date());
+        uu.setUsernameB(dbBUser.getNickname());
+        uu.setUserFileUrlB(dbBUser.getFileUrl());
+        uu.setDeleteFlag(0);
+        uu.setType("1");
+        
+        List<UU> list = (List<UU>)getRedisValueOperation().get(uniqueList);
+        List<UU> list2 = (List<UU>)getRedisValueOperation().get(uniqueList2);
+        List<UU> sendList = (List<UU>)getRedisValueOperation().get(uniqueListSend);
+        List<UU> l1 = new ArrayList<>();
+        if (Objects.nonNull(list)){
+           l1 = list.stream().filter(x -> x.getUserAId().equals(getSessionUserId()) && x.getUserBId().equals(uu.getUserBId()) && x.getResultStr().equals("0")).collect(Collectors.toList());
+        }
+
+        if (Objects.nonNull(list2)){
+             l1.addAll(list2.stream().filter(x -> x.getUserAId().equals(getSessionUserId()) && x.getUserBId().equals(uu.getUserBId()) && x.getResultStr().equals("0")).collect(Collectors.toList()));
+        }
+
+        List<UU> dbUus = uuService.getFriend(getSessionUserId(),uu.getUserBId());
+        if (Objects.nonNull(dbUus)&&!dbUus.isEmpty()&&!l1.isEmpty()){
+            return success("该用户已是你的好友");
+        }
+        uu.setIsSendMan("1");
+        sendAddFriendMessage(uniqueList,list,uu);
+        uu.setIsSendMan("0");
+        sendAddFriendMessage(uniqueListSend,sendList,uu);
         return R.success("等待对方同意");
     }
 
@@ -121,23 +143,32 @@ public class UUController extends BaseController {
     @ResponseBody
     @RequestMapping("/agreeFriend")
     public Result agreeFriend(@RequestParam("id") Long userAId,@RequestParam("type") Integer isAgree){ ;
-
-
-            String  uniqueLista = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
-            ListOperations<String, UU> operations = redisTemplate.opsForList();
-            List<UU> uus = operations.range(uniqueLista, 1, -1);
-            for (int i = 0; i < uus.size(); i++) {
-                UU tempUU = uus.get(i);
-                if (userAId.equals(tempUU.getUserAId())){
-                    uus.remove(tempUU);
-                    tempUU.setResultStr(isAgree.toString());
-                    uus.add(tempUU);
+          String  uniqueList = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
+          String  uniqueListSend = UU.uniqueAppend+"MSGlIST_SEND"+getSessionUserId();
+        List<UU> uus = (List<UU>) getRedisValueOperation().get(uniqueList);
+        List<UU> uuList = uus.stream().filter(x ->
+                x.getUserAId().equals(userAId)
+                        && x.getUserBId().equals(getSessionUserId())).collect(Collectors.toList());
+        UU uu = uuList.get(0);
+        uus.remove(uu);
+        uu.setResultStr(isAgree.toString());
+        uus.add(uu);
+        long expireTime = getExpireTime(uniqueList);
+        if (expireTime<1){
+            expireTime = 60*60*24*30;
+        }
+        getRedisValueOperation().set(uniqueList,uus,expireTime,TimeUnit.SECONDS);
+        List<UU> sendList = (List<UU>)redisTemplate.opsForValue().get(uniqueListSend);
+        if (Objects.nonNull(sendList)){
+            for (int i = 0; i < sendList.size(); i++) {
+                if (sendList.get(i).getUserAId().equals(uu.getUserAId())&&sendList.get(i).getUserBId().equals(uu.getUserBId())){
+                    sendList.remove(sendList.get(i));
+                    uu.setIsSendMan("0");
+                    sendList.add(uu);
                 }
             }
-            redisTemplate.delete(uniqueLista);
-            operations.leftPushAll(uniqueLista,uus);
-            logger.info("====>",operations.leftPushAll(uniqueLista,uus),operations.range(uniqueLista, 0, -1).toString());
-            return R.dataResult(isAgree==0,"已拒绝","添加成功");
+        }
+        return R.dataResult(isAgree==0,"已拒绝","添加成功");
     }
 
     @RequestMapping("/webrtc/{id}.html")
@@ -146,6 +177,31 @@ public class UUController extends BaseController {
         modelAndView.setViewName("user/webrtc.html");
         modelAndView.addObject("id",id);
         return modelAndView;
+    }
+    
+    
+    
+    private void sendAddFriendMessage(String listStr,List<UU> list,UU uu){
+        List<UU> friendApplys = new ArrayList<>();
+        long expireTime = getExpireTime(listStr);
+        if (Objects.isNull(list)){
+            friendApplys.add(uu);
+            logger.info("建立好友申请列表");
+            redisTemplate.opsForValue().set(listStr,friendApplys,30, TimeUnit.DAYS);
+        }
+            friendApplys =(List<UU>) redisTemplate.opsForValue().get(listStr);
+
+        List<UU> uus = friendApplys.stream().filter(x ->
+                x.getUserAId().equals(getSessionUserId())
+                        && x.getUserBId().equals(uu.getUserBId())
+                        && x.getResultStr().equals(uu.getResultStr())).collect(Collectors.toList());
+        if (uus.isEmpty()){
+            friendApplys.add(uu);
+        }
+        if (expireTime<1){
+            expireTime = 60*60*24*30;
+        }
+        getRedisValueOperation().set(listStr,friendApplys,expireTime,TimeUnit.SECONDS);
     }
 
 }

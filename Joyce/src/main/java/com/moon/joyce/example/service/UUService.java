@@ -36,4 +36,12 @@ public interface UUService extends IService<UU> {
      * @return
      */
     UU getOne(UU uu);
+
+    /**
+     * 获取好友集合
+     * @param id1
+     * @param id2
+     * @return
+     */
+    List<UU> getFriend(Long id1,Long id2);
 }

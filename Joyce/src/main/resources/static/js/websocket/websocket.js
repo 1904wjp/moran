@@ -17,7 +17,7 @@ function initListFuc(){
             for (let i = 0; i < data.data.length; i++) {
                 html =html+  "<div  class=\"friend\">" +
                     "<input type='hidden' value=\""+data.data[i].id+"\"/>"+
-                    "<img  src=\""+data.data[i].fileUrl+"\">" +
+                    "<img class='friend_list_url' style='width: 9%' src=\""+data.data[i].fileUrl+"\">" +
                     "<p>" +
                     "<strong class=\"nickname\">"+data.data[i].nickname+"</strong>" +
                     "<br/>"+
