@@ -9,10 +9,12 @@ import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.mapper.UserMapper;
 import com.moon.joyce.example.service.CommonService;
+import com.moon.joyce.example.service.UUService;
 import com.moon.joyce.example.service.UserService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,10 @@ import java.util.Objects;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService , CommonService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UUService uuService;
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
     @Override
     public int getUserCount(User user, String type) {
         QueryWrapper wrapper = new QueryWrapper();
@@ -163,6 +169,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<User> getUserList(User user) {
         return userMapper.getUsers(user);
+    }
+
+    @Override
+    public List<User> getAllFriends(Long userId) {
+        List<Long> list = uuService.getList(null, userId);
+        if (!list.isEmpty()){
+            QueryWrapper<User> wrapper = new QueryWrapper<>();
+            wrapper.in("id",list);
+            return baseMapper.selectList(wrapper);
+        }
+        return null;
+    }
+
+    @Override
+    public List<User> getAllFriendsByIds(List<Long> list) {
+
+        if (!list.isEmpty()){
+            QueryWrapper<User> wrapper = new QueryWrapper<>();
+            wrapper.in("id",list);
+            return baseMapper.selectList(wrapper);
+        }
+        return null;
     }
 
     @Override

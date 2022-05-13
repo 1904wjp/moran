@@ -51,15 +51,7 @@ public class StringsUtils  implements Serializable {
     }
 
 
-    //两个集合的和集or差集
-    public static List<String> differOrIntersList(List<String> list1,List<String> list2,boolean flag){
-        List<String> l1 = list1.size() >= list2.size() ? list1:list2;
-        List<String> l2 = l1==list1 ? list2:list1;
-        if (flag){
-           return l1.stream().filter(itme -> !l2.contains(itme)).collect(Collectors.toList());
-        }
-          return  l1.stream().filter(l2::contains).collect(Collectors.toList());
-    }
+
 
 
     /**

@@ -6,6 +6,7 @@ import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
 import com.moon.joyce.example.entity.ChatRecord;
+import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.entity.vo.UserChartVo;
@@ -13,11 +14,14 @@ import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.ChatRecordService;
+import com.moon.joyce.example.service.UUService;
 import com.moon.joyce.example.service.UserService;
 import com.moon.joyce.example.service.serviceControllerDetails.UserServiceControllerDetailService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -28,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Joyce
@@ -48,10 +53,6 @@ public class UserController extends BaseController {
     //redis缓存
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
-
-    public RedisTemplate<String, Object> getRedisTemplate() {
-        return redisTemplate;
-    }
 
     /**
      * 页面路径前缀
@@ -177,38 +178,53 @@ public class UserController extends BaseController {
     /**************************************************************************************************************************************************************************************************************/
     /**********逻辑判断**********/
 
+
     /**
      * 好友
      */
     @ResponseBody
     @GetMapping("/sessionUsers")
     public Result getSessionUsers(@RequestParam String nickname) {
-        User user = new User();
-        user.setNickname(nickname);
-        List<User> userList = userService.getUserList(user);
-        List<UserChartVo> userChartVos = new ArrayList<>();
-        for (int i = 0; i < userList.size(); i++) {
-            boolean flag = false;
-            for (int i1 = 0; i1 < sessionUsers.size(); i1++) {
-                if (userList.get(i).getUsername().equals(sessionUsers.get(i1).getUsername())){
-                    flag = true;
+        String cacheFriends = UUController.uniqueListSum;
+        List<UU> uus = (List<UU>) redisTemplate.opsForValue().get(cacheFriends);
+        List<Long> longs = new ArrayList<>();
+        if (Objects.nonNull(uus)){
+            List<UU> collect = uus.stream().filter(x -> x.getResultStr().equals("0")
+                    && Integer.parseInt(x.getType())<5
+                    && (x.getUserAId().equals(getSessionUserId()) || x.getUserBId().equals(getSessionUserId()))).collect(Collectors.toList());
+            for (UU uu : collect) {
+                if (uu.getUserBId().equals(getSessionUserId())){
+                    longs.add(uu.getUserAId());
                 }
-                if (i1==sessionUsers.size()-1){
-                    UserChartVo userChartVo = new UserChartVo();
-                    userChartVo.setId(userList.get(i).getId());
-                    userChartVo.setNickname(userList.get(i).getNickname());
-                    userChartVo.setUsername(userList.get(i).getUsername());
-                    userChartVo.setAddress(userList.get(i).getAddress());
-                    userChartVo.setFileUrl(userList.get(i).getFileUrl());
-                    userChartVo.setEmail(userList.get(i).getEmail());
-                    if (flag){
-                        userChartVo.setChartStatus(1);
-                    }else {
-                        userChartVo.setChartStatus(0);
-                    }
-                    userChartVos.add(userChartVo);
+                if (uu.getUserAId().equals(getSessionUserId())){
+                    longs.add(uu.getUserBId());
                 }
             }
+        }
+        List<User> allFriends1 = userService.getAllFriends(getSessionUserId());
+
+        List<Long> collect = new ArrayList<>();
+        if (Objects.nonNull(allFriends1)){
+            collect =allFriends1.stream().map(User::getId).collect(Collectors.toList());
+        }
+        collect.addAll(longs);
+        List<Long> collect1 = collect.stream().distinct().collect(Collectors.toList());
+        List<User> allFriends = userService.getAllFriendsByIds(collect1);
+        Set<Long> sessionUserIdSet = ((List<User>) redisTemplate.opsForValue().get(Constant.SESSION_USER)).stream().map(User::getId).collect(Collectors.toSet());
+        List<UserChartVo> userChartVos = new ArrayList<>();
+        Set<Long> set = new HashSet<>();
+        for (User allFriend : allFriends) {
+            UserChartVo userChartVo = new UserChartVo();
+            BeanUtils.copyProperties(allFriend,userChartVo,"password");
+            userChartVo.setChartStatus(1);
+            if (Objects.nonNull(sessionUserIdSet)&&sessionUserIdSet.contains(userChartVo.getId())&&!set.contains(userChartVo.getId())){
+                userChartVo.setChartStatus(0);
+            }
+            userChartVos.add(userChartVo);
+        }
+
+        if (StringUtils.isNoneBlank(nickname)){
+            userChartVos = userChartVos.stream().filter(x->x.getNickname().equals(nickname)).collect(Collectors.toList());
         }
         return success(userChartVos);
     }
@@ -372,7 +388,7 @@ public class UserController extends BaseController {
             }
             logger.info(username+"======>登录成功");
             setSession("index",0);
-            redisTemplate.opsForValue().set(Constant.SESSION_USER,sessionUsers);
+            redisTemplate.opsForValue().set(Constant.SESSION_USER,sessionUsers,24, TimeUnit.HOURS);
             return success(Constant.RESULT_SUCCESS_MSG,user.getStatus());
         }
         return error(Constant.ERROR_CODE,Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
@@ -541,6 +557,8 @@ public class UserController extends BaseController {
         boolean updateById = userService.updateById(user);
         if (updateById){
             userService.updateById(user);
+            sessionUsers.remove(getSessionUser());
+            redisTemplate.opsForValue().set(Constant.SESSION_USER,sessionUsers,24, TimeUnit.HOURS);
             removeSessionUser();
             return success();
         }
@@ -569,6 +587,8 @@ public class UserController extends BaseController {
         //移除会话数据存在的用户
         removeCurrentSetting();
         removeSessionUser();
+        sessionUsers.remove(getSessionUser());
+        redisTemplate.opsForValue().set(Constant.SESSION_USER,sessionUsers,24, TimeUnit.HOURS);
         return success();
     }
 

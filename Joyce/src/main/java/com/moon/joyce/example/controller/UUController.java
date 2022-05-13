@@ -34,7 +34,8 @@ public class UUController extends BaseController {
     //redis缓存
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
-
+    //总的请求储存
+    public static String  uniqueListSum = UU.uniqueAppend+"MSGlIST_SUM";
     private final String  pagePrefix = "user/";
     /**
      * 申请好友列表页面
@@ -64,30 +65,48 @@ public class UUController extends BaseController {
     @ResponseBody
     @GetMapping("/applyFriendList")
     public Result applyFriendList(){
-        String  uniqueList = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
+        //发起请求存储返回请求人列表
         String  uniqueListSend = UU.uniqueAppend+"MSGlIST_SEND"+getSessionUserId();
+        //被申请好友接收的存储列表
+        String  uniqueList = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
         List<UU> sendList = (List<UU>) redisTemplate.opsForValue().get(uniqueListSend);
         List<UU> uus = (List<UU>) getRedisValueOperation().get(uniqueList);
-        if (Objects.nonNull(sendList)&&Objects.nonNull(uus)){
-            uus.addAll(sendList);
+        if (Objects.isNull(uus)){
+            if (getExpireTime(uniqueList)<1){
+                List<UU> collect = uus.stream().filter(x -> x.getResultStr().equals("0") && x.getIsSendMan().equals("1")).collect(Collectors.toList());
+                boolean rs = uuService.saveBatch(collect);
+                if (!rs){
+                   return error("好友关系数据保存异常");
+                }
+                redisTemplate.delete(uniqueList);
+            }
         }
-        if (Objects.nonNull(sendList) && Objects.isNull(uus)){
-            uus = sendList;
+        if (Objects.isNull(sendList) && Objects.nonNull(uus)){
+            sendList = uus;
         }
 
-        if (Objects.isNull(uus) && Objects.isNull(sendList)){
+        if ((Objects.isNull(uus) && Objects.isNull(sendList))||(uus.isEmpty() && sendList.isEmpty())){
            return error("暂无信息");
         }
 
-        if (getExpireTime(uniqueList)<1){
-            List<UU> collect = uus.stream().filter(x -> x.getResultStr().equals("0") && x.getIsSendMan().equals("1")).collect(Collectors.toList());
-            boolean rs = uuService.saveBatch(collect);
-            if (!rs){
-                error("好友关系数据保存异常");
+        if (Objects.nonNull(uus) && Objects.nonNull(sendList)){
+            for (UU value : uus) {
+                int flag = 0;
+                for (UU uu : sendList) {
+                    if (uu.getUserAId().equals(value.getUserAId())
+                            && uu.getUserBId().equals(value.getUserBId())) {
+                        flag = 1;
+                        break;
+                    }
+                }
+                if (flag == 0) {
+                    sendList.add(value);
+                }
             }
-            redisTemplate.delete(uniqueList);
         }
-        return R.success(uus);
+        redisTemplate.opsForValue().set(uniqueListSum,sendList,30,TimeUnit.DAYS);
+        redisTemplate.opsForValue().set(uniqueListSend,sendList,30,TimeUnit.DAYS);
+        return R.success(sendList);
     }
 
     /**
@@ -168,6 +187,7 @@ public class UUController extends BaseController {
                 }
             }
         }
+        redisTemplate.opsForValue().set(uniqueListSend,sendList,expireTime,TimeUnit.SECONDS);
         return R.dataResult(isAgree==0,"已拒绝","添加成功");
     }
 

@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserChartVo extends User {
     private static final long serialVersionUID = -3740559224522564353L;
     /**
-     * 好友状态
+     * 好友状态("在线：0 不在线：1")
      */
     private Integer chartStatus;
 }

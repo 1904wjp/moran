@@ -13,6 +13,7 @@ function initListFuc(){
         dataType: 'json',
         data:data,
     }).done(function (data) {
+        console.log("....",data.data);
         let html='';
             for (let i = 0; i < data.data.length; i++) {
                 html =html+  "<div  class=\"friend\">" +
@@ -23,10 +24,10 @@ function initListFuc(){
                     "<br/>"+
                     "<span>"+data.data[i].email+"</span>"+
                     "</p>";
-                    if (data.data[i].chartStatus===1){
+                    if (data.data[i].chartStatus===0){
                       html = html+"<div class=\"status available\"></div></div>";
                     }
-                    if (data.data[i].chartStatus===0) {
+                    if (data.data[i].chartStatus===1) {
                         html = html+"<div class=\"status inactive\"></div></div>";
                     }
             }

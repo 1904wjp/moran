@@ -38,6 +38,13 @@ public interface UserService extends IService<User> {
      */
     List<User> getUserList(User user);
 
+    /**
+     * 查询好友
+     * @param userId
+     * @return
+     */
+    List<User> getAllFriends(Long userId);
+
 
 
     /**
@@ -56,5 +63,12 @@ public interface UserService extends IService<User> {
      */
     @Transactional
     int updateUser(User dbUser,User user,String type);
+
+    /**
+     * 批量查询用户信息
+     * @param list
+     * @return
+     */
+    List<User> getAllFriendsByIds(List<Long> list);
 
 }
