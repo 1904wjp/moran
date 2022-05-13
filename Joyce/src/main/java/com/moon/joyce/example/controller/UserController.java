@@ -213,15 +213,17 @@ public class UserController extends BaseController {
         Set<Long> sessionUserIdSet = ((List<User>) redisTemplate.opsForValue().get(Constant.SESSION_USER)).stream().map(User::getId).collect(Collectors.toSet());
         List<UserChartVo> userChartVos = new ArrayList<>();
         Set<Long> set = new HashSet<>();
-        for (User allFriend : allFriends) {
-            UserChartVo userChartVo = new UserChartVo();
-            BeanUtils.copyProperties(allFriend,userChartVo,"password");
-            userChartVo.setChartStatus(1);
-            if (Objects.nonNull(sessionUserIdSet)&&sessionUserIdSet.contains(userChartVo.getId())&&!set.contains(userChartVo.getId())){
-                userChartVo.setChartStatus(0);
-            }
-            userChartVos.add(userChartVo);
-        }
+       if (Objects.nonNull(allFriends)){
+           for (User allFriend : allFriends) {
+               UserChartVo userChartVo = new UserChartVo();
+               BeanUtils.copyProperties(allFriend,userChartVo,"password");
+               userChartVo.setChartStatus(1);
+               if (Objects.nonNull(sessionUserIdSet)&&sessionUserIdSet.contains(userChartVo.getId())&&!set.contains(userChartVo.getId())){
+                   userChartVo.setChartStatus(0);
+               }
+               userChartVos.add(userChartVo);
+           }
+       }
 
         if (StringUtils.isNoneBlank(nickname)){
             userChartVos = userChartVos.stream().filter(x->x.getNickname().equals(nickname)).collect(Collectors.toList());
