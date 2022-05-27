@@ -4,10 +4,12 @@ import com.moon.joyce.example.functionality.entity.Column;
 import com.moon.joyce.example.functionality.service.ColumnsService;
 import com.moon.joyce.example.mapper.ColumnsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @Author: XingDaoRong
@@ -15,6 +17,8 @@ import java.util.Objects;
  */
 @Service
 public class ColumnsServiceImpl implements ColumnsService {
+   @Autowired
+   private JdbcTemplate jdbcTemplate;
    @Autowired
    private ColumnsMapper columnsMapper;
     @Override
@@ -28,7 +32,7 @@ public class ColumnsServiceImpl implements ColumnsService {
     }
 
     @Override
-    public Column getColumn(String tableName, String dbName) {
+    public Column getTable(String tableName, String dbName) {
         return columnsMapper.getOne(tableName, dbName);
     }
 
@@ -36,4 +40,14 @@ public class ColumnsServiceImpl implements ColumnsService {
     public List<Column> selectAllTables(String databaseName) {
         return columnsMapper.getAllTables(databaseName);
     }
+
+    @Override
+    public void execute(Set<String> set) {
+        for (String sql : set) {
+            System.out.println("+++++++++++>"+sql);
+            jdbcTemplate.execute(sql);
+        }
+    }
+
+
 }

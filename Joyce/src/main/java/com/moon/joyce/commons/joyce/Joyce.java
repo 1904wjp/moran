@@ -1,27 +1,22 @@
-package com.moon.joyce;
+package com.moon.joyce.commons.joyce;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.moon.joyce.commons.constants.Constant;
+
+import com.moon.joyce.commons.factory.entity.ColumnEntity;
 import com.moon.joyce.commons.utils.*;
-import com.moon.joyce.example.entity.Source;
+import com.moon.joyce.example.functionality.service.serviceImpl.AutoCreateTableFactory;
 import com.moon.joyce.example.service.SourceService;
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import redis.clients.jedis.Jedis;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 /**
  * @Author: XingDaoRong
  * @Date: 2021/12/17
@@ -31,10 +26,7 @@ public class Joyce {
     private SourceService sourceService;
     @Value("${file.upload.path}")
     String filePath;
-    public static void main(String[] args) {
 
-
-    }
 
     /**
      * 死循环
@@ -360,5 +352,11 @@ public class Joyce {
     }
     @org.junit.Test
     public void test0101() throws ParseException {
+        AutoCreateTableFactory autoCreateTableFactory = new AutoCreateTableFactory();
+        try {
+            autoCreateTableFactory.readDefConfig();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

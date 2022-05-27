@@ -15,6 +15,7 @@ public interface ColumnsMapper {
      */
     List<Column> getColumns(@Param("tableName") String tableName, @Param("dbName") String dbName);
 
+
     /**
      * 查询详细表信息
      * @param tableName

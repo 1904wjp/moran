@@ -1,4 +1,6 @@
-
+auto:
+  entity:
+    package: com.moon.joyce.example.entity
 #端口号
 server:
   port: 9099

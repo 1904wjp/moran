@@ -2,7 +2,9 @@ package com.moon.joyce.example.functionality.service;
 
 import com.moon.joyce.example.functionality.entity.Column;
 
+
 import java.util.List;
+import java.util.Set;
 
 public interface ColumnsService {
     /**
@@ -19,7 +21,7 @@ public interface ColumnsService {
      * @param dbName
      * @return
      */
-    Column getColumn(String tableName, String dbName);
+    Column getTable(String tableName, String dbName);
 
     /**
      * 根据数据库名称查询所有的表名
@@ -27,4 +29,10 @@ public interface ColumnsService {
      * @return
      */
     List<Column> selectAllTables(String databaseName);
+
+    /**
+     * 自动创建表sql
+     * @param set
+     */
+    void execute(Set<String> set);
 }
