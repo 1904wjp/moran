@@ -11,6 +11,7 @@ import com.moon.joyce.example.functionality.entity.JoyceException;
 
 import com.moon.joyce.example.functionality.service.ColumnsService;
 import com.moon.joyce.example.functionality.service.TableFactory;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,9 +54,15 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 获取工厂实例
+     * @param ps
      * @return
+     * @throws ClassNotFoundException
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
      */
-    public  AutoCreateTableFactory newInstance() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public  AutoCreateTableFactory init(String ps) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (Objects.isNull(autoCreateTableFactory)){
             autoCreateTableFactory = new AutoCreateTableFactory();
         }
@@ -67,24 +74,24 @@ public class AutoCreateTableFactory implements TableFactory {
             defMap = new HashMap<>();
             try {
                 //读取配置
-                newInstance().readDefConfig();
+                init(ps).readDefConfig();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             //扫描包
-            newInstance().scannerPackage();
+            init(ps).scannerPackage(ps);
             //填充属性
-            newInstance().fillSqls();
+            init(ps).fillSqls();
         }
         return autoCreateTableFactory;
     }
 
     /**
      * 扫描指定文件
-     * @return
+     * @param packagePath
+     * @throws ClassNotFoundException
      */
-    private void scannerPackage() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        String  packagePath = "com.moon.joyce.example.entity";
+    private void scannerPackage(String packagePath) throws ClassNotFoundException{
         String[] packages;
         if (packagePath.contains(";")){
             packages = StringUtils.split(packagePath, ";");
@@ -161,7 +168,7 @@ public class AutoCreateTableFactory implements TableFactory {
                     //属性注解获取并且填充
                     Field[] fields = getFields(loadClass);
                     //储存属性的容器
-                    List<ColumnEntity> list = new CopyOnWriteArrayList();
+                    List<ColumnEntity> list = new ArrayList<>();
                     List<Field> idsField = new ArrayList<>();
                     for (Field field : fields) {
                         //检测上是否有无关数据库的属性字段注解
@@ -184,18 +191,8 @@ public class AutoCreateTableFactory implements TableFactory {
                     //检测是否有ids注解是否存在
                     boolean rs = isHaveIds(fields);
                     if (rs){
-                        Set<String> keySet = checkKey(fields);
-                        for (Field field : idsField) {
-                            ColumnEntity columnEntity = createColumnByIdsAn(field);
-                            if (Objects.nonNull(columnEntity)){
-                                if (keySet.contains(columnEntity.getName())){
-                                    columnEntity.setComment("主键");
-                                    columnEntity.setKey(true);
-                                    columnEntity.setNotNull(true);
-                                }
-                                list.add(columnEntity);
-                            }
-                        }
+                      List<ColumnEntity> tableEntityList =getTableEntitySuperList(fields,idsField);
+                      list.addAll(tableEntityList);
                     }
                     map.put(tableEntity,list);
                 }
@@ -204,6 +201,29 @@ public class AutoCreateTableFactory implements TableFactory {
                 fillMap(file,classLoader);
             }
         }
+    }
+
+    /**
+     * 获取父类属性实体类集合
+     * @param fields
+     * @param idsField
+     * @return
+     */
+    private List<ColumnEntity> getTableEntitySuperList(Field[] fields,List<Field> idsField) {
+        ColumnEntity[] columnEntities = {};
+        Set<String> keySet = checkKey(fields);
+        for (Field field : idsField) {
+            ColumnEntity columnEntity = createColumnByIdsAn(field);
+            if (Objects.nonNull(columnEntity)){
+                if (keySet.contains(columnEntity.getName())){
+                    columnEntity.setComment("主键");
+                    columnEntity.setKey(true);
+                    columnEntity.setNotNull(true);
+                }
+                 columnEntities = ColumnEntity.ArrayAdd(columnEntities, columnEntity);
+            }
+        }
+        return Arrays.asList(columnEntities);
     }
 
     /**
@@ -321,16 +341,23 @@ public class AutoCreateTableFactory implements TableFactory {
      * @return
      */
     private ColumnEntity createColumnByIdsAn(Field field){
-        ColumnEntity columnEntity = null;
+        ColumnEntity newColumnEntity = new ColumnEntity();
         String name = StringsUtils.toUnderScoreCase(field.getName());
         String type = field.getType().toString();
         type = type.substring(type.lastIndexOf(".") + 1);
         boolean rs = defMap.containsKey(type);
         if (rs){
-            columnEntity = defMap.get(type);
+            ColumnEntity columnEntity = defMap.get(type);
             columnEntity.setName(name);
+            try {
+                newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            return null;
         }
-        return columnEntity;
+        return newColumnEntity;
     }
 
     /**
@@ -352,7 +379,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * 读取默认配置
      * @throws IOException
      */
-    public   void readDefConfig() throws IOException {
+    private  void readDefConfig() throws IOException {
         Properties properties = new Properties();
         InputStream in = null;
         lock.lock();
@@ -453,7 +480,7 @@ public class AutoCreateTableFactory implements TableFactory {
                     columnEntity.setComment(comments.get(type.getKey()).toString());
                 }
             }
-            defMap.put(type.getKey(),columnEntity);
+            defMap.put(type.getKey().trim(),columnEntity);
         }
     }
 
@@ -653,15 +680,20 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 获取执行sql集合
+     * @param ps
      * @return
      */
     @Override
-    public Set<String> getSqls(){
+    public Set<String> getSqls(String ps){
+        if (StringUtils.isBlank(ps)){
+            throw new JoyceException("扫描包路径格式不合法");
+        }
         try {
-            newInstance();
+            init(ps);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        sqls.forEach(x->logger.info("生成sql:------->"+x));
         return sqls;
     }
 }

@@ -2,6 +2,10 @@ package com.moon.joyce.commons.factory.entity;
 
 import com.moon.joyce.commons.factory.enums.Type;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author: Joyce
  * @autograph: Logic is justice
@@ -117,6 +121,28 @@ public class ColumnEntity{
         isNotNull = notNull;
     }
 
+    /**
+     * 元素添加
+     * @param columnEntities
+     * @param columnEntity
+     * @return
+     */
+    private static Integer currentIndex = 0;
+    private static Integer size = 0;
+    public static ColumnEntity[] ArrayAdd(ColumnEntity[] columnEntities, ColumnEntity columnEntity){
+        ColumnEntity[] newColumnEntitys =  new ColumnEntity[columnEntities.length+1];
+        if (newColumnEntitys.length>currentIndex){
+            System.arraycopy(columnEntities,0,newColumnEntitys,0,columnEntities.length);
+            newColumnEntitys[columnEntities.length] = columnEntity;
+            currentIndex = columnEntities.length;
+            size = newColumnEntitys.length;
+        }
+        return newColumnEntitys;
+    }
+
+    public static Integer size(){
+        return size;
+    }
     @Override
     public String toString() {
         return "ColumnEntity{" +

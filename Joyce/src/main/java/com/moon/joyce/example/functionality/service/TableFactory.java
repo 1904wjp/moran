@@ -19,5 +19,5 @@ public interface TableFactory {
      * 获取sql
      * @return
      */
-    Set<String> getSqls();
+    Set<String> getSqls(String ps);
 }

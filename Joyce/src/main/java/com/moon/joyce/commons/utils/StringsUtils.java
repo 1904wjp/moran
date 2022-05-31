@@ -59,6 +59,9 @@ public class StringsUtils  implements Serializable {
         if (str == null) {
             return null;
         }
+        if (!str.contains("_")){
+            return str;
+        }
         StringBuilder sb = new StringBuilder();
         // 前置字符是否大写
         boolean preCharIsUpperCase = true;
