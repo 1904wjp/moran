@@ -2,6 +2,9 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.Ids;
+import com.moon.joyce.commons.annotation.NotExist;
+import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,16 +19,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("u_u")
+@Table(name = "u_u")
 public class UU extends BaseEntity {
     private static final long serialVersionUID = -6234658347872749729L;
     /**
      * 用户id
      */
+    @Ids
     @TableField("user_a_id")
     private Long userAId;
     /**
      * 另一个用户id
      */
+    @NotExist
     @TableField(exist = false)
     private String usernameA;
     /**
@@ -36,6 +42,7 @@ public class UU extends BaseEntity {
     /**
      * 另一个用户名
      */
+    @NotExist
     @TableField(exist = false)
     private String usernameB;
     /**
@@ -50,29 +57,34 @@ public class UU extends BaseEntity {
     /**
      * 唯一标识
      */
+    @NotExist
     @TableField(exist = false)
     public static String uniqueAppend = "uu:";
     /**
      * 加好友结果("1:拒绝，0：同意 2:未处理")
      */
+    @NotExist
     @TableField(exist = false)
     private String resultStr ;
 
     /**
      * 用户图像
      */
+    @NotExist
     @TableField(exist = false)
     private String userFileUrlA ;
 
     /**
      * 用户图像
      */
+    @NotExist
     @TableField(exist = false)
     private String userFileUrlB ;
 
     /**
      * 是否是发送者(0:是 1：否)
      */
+    @NotExist
     @TableField(exist = false)
     private String isSendMan ;
 

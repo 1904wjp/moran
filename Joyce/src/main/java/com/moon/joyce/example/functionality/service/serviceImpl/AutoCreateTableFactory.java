@@ -45,7 +45,7 @@ public class AutoCreateTableFactory implements TableFactory {
     private  ReentrantLock lock = new ReentrantLock();
     private static Map<TableEntity, List<ColumnEntity>> map = null;
     private static Set<String> set = null;
-    private static Set<String> sqls = null;
+    private static List<String> sqls = null;
     private static AutoCreateTableFactory autoCreateTableFactory = null;
     private static Map<String,ColumnEntity> defMap = null;
     @Autowired
@@ -70,7 +70,7 @@ public class AutoCreateTableFactory implements TableFactory {
             //初始化
             map =  new ConcurrentHashMap<>();
             set = new HashSet<>();
-            sqls = new HashSet<>();
+            sqls = new ArrayList<>();
             defMap = new HashMap<>();
             try {
                 //读取配置
@@ -191,10 +191,23 @@ public class AutoCreateTableFactory implements TableFactory {
                     //检测是否有ids注解是否存在
                     boolean rs = isHaveIds(fields);
                     if (rs){
-                      List<ColumnEntity> tableEntityList =getTableEntitySuperList(fields,idsField);
+                      List<ColumnEntity> tableEntityList = getTableEntitySuperList(fields,idsField);
                       list.addAll(tableEntityList);
                     }
-                    map.put(tableEntity,list);
+                    List<ColumnEntity> newList = new ArrayList<>();
+                    for (ColumnEntity columnEntity : list) {
+                        if (Objects.isNull(columnEntity)){
+                            continue;
+                        }
+                        ColumnEntity newColumnEntity = null;
+                        try {
+                            newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        newList.add(newColumnEntity);
+                    }
+                    map.put(tableEntity,newList);
                 }
             }
             if (file.isDirectory()){
@@ -235,7 +248,10 @@ public class AutoCreateTableFactory implements TableFactory {
         Set<String> keyList = new HashSet<>();
         String[] keys = new String[0];
         for (Field field : fields) {
-            keys = field.getAnnotation(Ids.class).name();
+            Ids ids = field.getAnnotation(Ids.class);
+            if (Objects.nonNull(ids)){
+                keys = ids.name();
+            }
             if (keys.length!=0){
                 break;
             }
@@ -309,7 +325,11 @@ public class AutoCreateTableFactory implements TableFactory {
         for (Field f1 : fs1) {
             for (Field f2 : fs2) {
                 if (f1.getName().equals(f2.getName())&&f1.getType().equals(f2.getType())){
-                    fields.add(f1.getName());
+                    String type = f1.getType().toString();
+                    type = type.substring(type.lastIndexOf(".") + 1);
+                    if (defMap.containsKey(type)){
+                        fields.add(f1.getName());
+                    }
                 }
             }
         }
@@ -441,12 +461,12 @@ public class AutoCreateTableFactory implements TableFactory {
         }
 
         for (Map.Entry<String, Object> type : types.entrySet()) {
-            ColumnEntity columnEntity = new ColumnEntity();
 
+            ColumnEntity columnEntity = new ColumnEntity();
             columnEntity.setType(type.getValue().toString());
             columnEntity.setLength(Long.valueOf(lengths.get(type.getKey()).toString()));
-
             columnEntity.setAuto(false);
+
             if (!autos.isEmpty()){
                 if (Objects.nonNull(autos.get(type.getKey()))){
                     columnEntity.setAuto(Boolean.valueOf(autos.get(type.getKey()).toString()));
@@ -569,10 +589,16 @@ public class AutoCreateTableFactory implements TableFactory {
         sb.append(tableEntity.getName())
                 .append("(");
         for (int i = 0; i < columnEntities.size(); i++) {
+            if (Objects.isNull(columnEntities.get(i))){
+                continue;
+            }
+            if (Objects.isNull(columnEntities.get(i).getName())){
+             continue;
+            }
             ColumnEntity column = columnEntities.get(i);
             if (Objects.isNull(column)){continue;}
             sb.append("`")
-                    .append(column.getName())
+                    .append(StringsUtils.camelToUnderline(column.getName()))
                     .append("` ")
                     .append(column.getType())
                     .append("(")
@@ -596,16 +622,17 @@ public class AutoCreateTableFactory implements TableFactory {
                         .append(column.getComment())
                         .append("'");
             }
-            if (i!=(columnEntities.size()-1)){
-                sb.append(",");
-            }
+             sb.append(",");
+
         }
-        sb.append(")ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci");
+        StringBuilder newSb = new StringBuilder();
+        newSb.append( sb.substring(0, sb.length()-1));
+        newSb.append(")ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci");
         if (Objects.nonNull(tableEntity.getContent())){
-            sb.append(" COMMENT = '").append(tableEntity.getContent()).append("'");
+            newSb.append(" COMMENT = '").append(tableEntity.getContent()).append("'");
         }
-        sb.append(" ROW_FORMAT = Dynamic");
-        return  sb.toString();
+        newSb.append(" ROW_FORMAT = Dynamic");
+        return  newSb.toString();
     }
 
     /**
@@ -684,7 +711,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @return
      */
     @Override
-    public Set<String> getSqls(String ps){
+    public List<String> getSqls(String ps){
         if (StringUtils.isBlank(ps)){
             throw new JoyceException("扫描包路径格式不合法");
         }
@@ -693,6 +720,7 @@ public class AutoCreateTableFactory implements TableFactory {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        logger.info("map:"+map.toString());
         sqls.forEach(x->logger.info("生成sql:------->"+x));
         return sqls;
     }

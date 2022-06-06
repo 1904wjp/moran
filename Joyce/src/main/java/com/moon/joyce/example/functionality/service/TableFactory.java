@@ -1,5 +1,6 @@
 package com.moon.joyce.example.functionality.service;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,5 +20,5 @@ public interface TableFactory {
      * 获取sql
      * @return
      */
-    Set<String> getSqls(String ps);
+    List<String> getSqls(String ps);
 }

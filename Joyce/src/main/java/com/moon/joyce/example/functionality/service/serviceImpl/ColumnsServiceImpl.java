@@ -42,8 +42,8 @@ public class ColumnsServiceImpl implements ColumnsService {
     }
 
     @Override
-    public void execute(Set<String> set) {
-        for (String sql : set) {
+    public void execute(List<String> sqls) {
+        for (String sql : sqls) {
             jdbcTemplate.execute(sql);
         }
     }

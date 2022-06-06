@@ -34,5 +34,5 @@ public interface ColumnsService {
      * 自动创建表sql
      * @param set
      */
-    void execute(Set<String> set);
+    void execute(List<String> set);
 }

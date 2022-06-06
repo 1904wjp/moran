@@ -9,6 +9,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,7 +29,7 @@ public class AutoCreateTableRunner implements ApplicationRunner {
     private TableFactory tableFactory;
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        Set<String> sqls = tableFactory.getSqls(ps);
+        List<String> sqls = tableFactory.getSqls(ps);
         try {
             columnsService.execute(sqls);
         } catch (Exception e) {
