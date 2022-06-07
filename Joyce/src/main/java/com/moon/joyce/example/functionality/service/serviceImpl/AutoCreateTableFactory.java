@@ -101,7 +101,11 @@ public class AutoCreateTableFactory implements TableFactory {
         //检测文件是否有包含关系
         checkIsParentFile(packages);
         for (String aPackage : packages) {
-            scanner(aPackage);
+            try {
+                scanner(aPackage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -133,7 +137,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param entityClassPackage
      * @throws ClassNotFoundException
      */
-    private void scanner(String entityClassPackage) throws ClassNotFoundException {
+    private void scanner(String entityClassPackage) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         File dir = getFile(entityClassPackage);
         ClassLoader classLoader = getClassLoader();
         fillMap(dir,classLoader);
@@ -145,7 +149,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param classLoader
      * @throws ClassNotFoundException
      */
-    private  void fillMap(File dir,ClassLoader classLoader) throws ClassNotFoundException {
+    private  void fillMap(File dir,ClassLoader classLoader) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         File[] files = dir.listFiles();
         for (File file : files) {
             if (file.isFile()){
@@ -199,12 +203,7 @@ public class AutoCreateTableFactory implements TableFactory {
                         if (Objects.isNull(columnEntity)){
                             continue;
                         }
-                        ColumnEntity newColumnEntity = null;
-                        try {
-                            newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        ColumnEntity newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
                         newList.add(newColumnEntity);
                     }
                     map.put(tableEntity,newList);
@@ -222,7 +221,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param idsField
      * @return
      */
-    private List<ColumnEntity> getTableEntitySuperList(Field[] fields,List<Field> idsField) {
+    private List<ColumnEntity> getTableEntitySuperList(Field[] fields,List<Field> idsField) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         ColumnEntity[] columnEntities = {};
         Set<String> keySet = checkKey(fields);
         for (Field field : idsField) {
@@ -274,12 +273,12 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param loadClass
      * @return
      */
-    private Field[] getFields(Class<?> loadClass){
+    private Field[] getFields(Class<?> loadClass) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         Field[] fields = loadClass.getDeclaredFields();
         Class<?> superclass = loadClass.getSuperclass();
         if (Objects.nonNull(superclass)){
             Field[] superclassFields = superclass.getDeclaredFields();
-            return addFields(fields,superclassFields,loadClass);
+            return addFields(fields,superclassFields);
         }
         return fields;
     }
@@ -290,28 +289,24 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param fs2
      * @return
      */
-    private Field[] addFields(Field[] fs1,Field[] fs2,Class<?> loadClass){
+    int i = 0;
+    private Field[] addFields(Field[] fs1,Field[] fs2)  {
         if (Objects.isNull(fs1)||fs1.length==0){
             return fs2;
         }
         if (Objects.isNull(fs2)||fs2.length==0){
             return fs1;
         }
-        int len = fs1.length+fs2.length;
-        Field[] fs = new Field[len];
-        List<String> repeatNames = checkField(fs1, fs2);
-        if (!repeatNames.isEmpty()){
-            throw new JoyceException("无法操作重复属性:"+loadClass.toString()+repeatNames);
-        }
-        for (int i = 0; i < fs.length; i++) {
-            if (i< fs1.length){
-                fs[i] = fs1[i];
+        Field[] fields = new Field[fs1.length + fs2.length];
+        int index = 0;
+        for (int i = 0; i < fields.length; i++) {
+            if (i < fs1.length){
+                fields[i] = fs1[i];
             }else {
-                int i1 = i - fs1.length;
-                fs[i] = fs2[i1++];
+                fields[i] = fs2[index++];
             }
         }
-        return fs;
+        return fields;
     }
 
     /**
@@ -320,11 +315,11 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param fs2
      * @return
      */
-    private List<String> checkField(Field[] fs1, Field[] fs2) {
+   /* private List<String> checkField(Field[] fs1, Field[] fs2) {
         List<String> fields = new ArrayList<>();
         for (Field f1 : fs1) {
             for (Field f2 : fs2) {
-                if (f1.getName().equals(f2.getName())&&f1.getType().equals(f2.getType())){
+                if (f1.getName().equals(f2.getName()) && f1.getType().equals(f2.getType())){
                     String type = f1.getType().toString();
                     type = type.substring(type.lastIndexOf(".") + 1);
                     if (defMap.containsKey(type)){
@@ -335,7 +330,7 @@ public class AutoCreateTableFactory implements TableFactory {
         }
         return fields;
     }
-
+*/
     /**
      * 根据column注解创建实体类
      * @param columnEntity
@@ -360,14 +355,15 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param field
      * @return
      */
-    private ColumnEntity createColumnByIdsAn(Field field){
+    private ColumnEntity createColumnByIdsAn(Field field) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         ColumnEntity newColumnEntity = new ColumnEntity();
         String name = StringsUtils.toUnderScoreCase(field.getName());
         String type = field.getType().toString();
         type = type.substring(type.lastIndexOf(".") + 1);
         boolean rs = defMap.containsKey(type);
+  //  logger.info("-------->{}====>{}---->{}",type,rs,defMap.keySet().toString());
         if (rs){
-            ColumnEntity columnEntity = defMap.get(type);
+            ColumnEntity columnEntity = (ColumnEntity) BeanUtils.cloneBean(defMap.get(type));
             columnEntity.setName(name);
             try {
                 newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
@@ -721,7 +717,7 @@ public class AutoCreateTableFactory implements TableFactory {
             e.printStackTrace();
         }
         logger.info("map:"+map.toString());
-        sqls.forEach(x->logger.info("生成sql:------->"+x));
+        sqls.forEach(sql->logger.info("生成sql:------->"+sql));
         return sqls;
     }
 }
