@@ -25,6 +25,8 @@ import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author Xing Dao Rong
@@ -63,7 +65,7 @@ public class BaseController extends R {
     @Value("$(command.clear)")
     public  String c_clear;
     //sessionMap
-    public List<User> sessionUsers = new ArrayList<>();
+    public Set<User> sessionUsers = new CopyOnWriteArraySet<>();
     @Autowired
     private DbBaseSettingService dbBaseSettingService;
 

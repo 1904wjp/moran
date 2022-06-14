@@ -35,7 +35,7 @@ public interface FileService {
      * @param username
      * @param map
      */
-    void writeJoyceConfig(String username,Map<String, List<PageComponent>> map);
+    void writeJoyceConfig(String username,Map<String, List<PageComponent>> map,boolean flag);
 
     /**
      * 下载文件

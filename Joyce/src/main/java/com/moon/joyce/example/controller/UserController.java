@@ -10,15 +10,14 @@ import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.entity.vo.UserChartVo;
+import com.moon.joyce.example.functionality.entity.PageComponent;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.ChatRecordService;
-import com.moon.joyce.example.service.UUService;
 import com.moon.joyce.example.service.UserService;
 import com.moon.joyce.example.service.serviceControllerDetails.UserServiceControllerDetailService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -80,7 +80,7 @@ public class UserController extends BaseController {
     @Autowired
     private UserServiceControllerDetailService userServiceControllerDetailService;
 
-
+    private ReentrantLock lock = new ReentrantLock();
     /*****************************************************************************************************************************************************************/
     /***********页面映射****************/
 
@@ -376,6 +376,9 @@ public class UserController extends BaseController {
             if (!checkStatusResult.getRs()){
                 return checkStatusResult;
             }
+           /* if (sessionUsers.contains(dbUser)){
+                return error("用户已存在");
+            }*/
             //设置当前登录人
             setSession(Constant.SESSION_USER,dbUser);
             //设置当前在线集合
@@ -388,6 +391,9 @@ public class UserController extends BaseController {
                     setSession(getSessionUser().getId()+Constant.CURRENT_SETTING,currentSetting);
                 }
             }
+            fileService.writeJoyceConfig(user.getUsername(),null,false);
+            Map<String, List<PageComponent>> map = fileService.readJoyceConfig(user.getUsername());
+            logger.info("map:",map.toString());
             logger.info(username+"======>登录成功");
             setSession("index",0);
             redisTemplate.opsForValue().set(Constant.SESSION_USER,sessionUsers,24, TimeUnit.HOURS);

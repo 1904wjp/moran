@@ -6,7 +6,11 @@
                a.column_name AS columnName ,
                a.column_comment AS columnComment,
                a.data_type AS columnType,
+               a.IS_NULLABLE isNull,
+               a.COLUMN_KEY isKey,
+               a.COLUMN_DEFAULT defaultValue,
                a.table_name AS tableName,
+               a.CHARACTER_MAXIMUM_LENGTH AS  columnLength,
                b.table_comment AS tableComment
         FROM information_schema.columns a
         RIGHT  JOIN information_schema.tables b

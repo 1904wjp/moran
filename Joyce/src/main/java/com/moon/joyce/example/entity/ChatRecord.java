@@ -27,7 +27,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("chat_record")
-@Table(name = "chat_record",content = "聊天记录",strategy = TableStrategy.FORCE)
 public class ChatRecord extends BaseEntity {
     private static final long serialVersionUID = 7558750959590695111L;
     /**
@@ -101,32 +100,7 @@ public class ChatRecord extends BaseEntity {
         this.userBId = userBId;
     }
 
-    /**
-     * 将对象存入redis中
-     * @param jedis 当前redis对象
-     * @param chatRecord 聊天对象
-     * @param uniqueAppend 唯一标识
-     */
-    @Deprecated
-    public static void jPut(Jedis jedis , ChatRecord chatRecord ,String uniqueAppend){
-        Map<String,String> redisMap = new HashMap<>();
-        redisMap.put("id",chatRecord.getId().toString());
-        redisMap.put("createBy",chatRecord.getCreateBy());
-        redisMap.put("createTime",chatRecord.getCreateTime().toString());
-        redisMap.put("updateBy",chatRecord.getUpdateBy());
-        redisMap.put("updateTime",chatRecord.getUpdateTime().toString());
-        redisMap.put("deleteFlag",chatRecord.getDeleteFlag().toString());
-        redisMap.put("userAId",chatRecord.getUserAId().toString());
-        redisMap.put("userBId",chatRecord.getUserBId().toString());
-        redisMap.put("userAName",chatRecord.getUserAName());
-        redisMap.put("userBName",chatRecord.getUserBName());
-        redisMap.put("aFileUrl",chatRecord.getAFileUrl());
-        redisMap.put("bFileUrl",chatRecord.getBFileUrl());
-        redisMap.put("aNickname",chatRecord.getANickname());
-        redisMap.put("bNickname",chatRecord.getBNickname());
-        redisMap.put("createTimeValue",chatRecord.getCreateTimeValue());
-        jedis.hset(uniqueAppend,redisMap);
-    }
+
 
 
 }

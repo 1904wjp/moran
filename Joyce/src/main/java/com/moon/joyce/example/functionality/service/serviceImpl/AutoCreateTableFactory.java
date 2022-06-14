@@ -91,7 +91,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param packagePath
      * @throws ClassNotFoundException
      */
-    private void scannerPackage(String packagePath) throws ClassNotFoundException{
+    private void scannerPackage(String packagePath) {
         String[] packages;
         if (packagePath.contains(";")){
             packages = StringUtils.split(packagePath, ";");
@@ -273,7 +273,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param loadClass
      * @return
      */
-    private Field[] getFields(Class<?> loadClass) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+    private Field[] getFields(Class<?> loadClass) {
         Field[] fields = loadClass.getDeclaredFields();
         Class<?> superclass = loadClass.getSuperclass();
         if (Objects.nonNull(superclass)){
@@ -289,7 +289,6 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param fs2
      * @return
      */
-    int i = 0;
     private Field[] addFields(Field[] fs1,Field[] fs2)  {
         if (Objects.isNull(fs1)||fs1.length==0){
             return fs2;

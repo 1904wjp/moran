@@ -69,7 +69,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void writeJoyceConfig(String username, Map<String, List<PageComponent>> map) {
+    public void writeJoyceConfig(String username, Map<String, List<PageComponent>> map,boolean flag) {
         //文件全路径
         String filePathName = confPath + username + "_config.xml";
         File file = new File(filePathName);
@@ -77,13 +77,13 @@ public class FileServiceImpl implements FileService {
             file.getParentFile().mkdirs();
         }
         //初始化配置文件
-        if (null == map) {
+        if (Objects.isNull(map)) {
             logger.info("文件：{}，初始化配置开始", filePathName);
             Map<String, List<PageComponent>> initMap = new HashMap<>();
             QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
             wrapper.isNotNull("menu_url");
             List<SysMenu> sysMenus = sysMenuMapper.selectList(wrapper);
-            ArrayList<PageComponent> pageComponents = new ArrayList<>();
+            List<PageComponent> pageComponents = new ArrayList<>();
             for (SysMenu sysMenu : sysMenus) {
                 Map<String, String> params = new HashMap<>();
                 params.put(Constant.FONTSIZE_DEFAULT_NAME, Constant.FONTSIZE_DEFAULT_SIZE);
@@ -99,10 +99,11 @@ public class FileServiceImpl implements FileService {
                 pageComponents.add(pageComponent);
             }
             initMap.put("init_page_config", pageComponents);
-            FileUtils.writeConfigXml(filePathName,initMap);
+            map = initMap;
             logger.info("文件：{}初始化配置结束",filePathName);
-        }else {
-            logger.info("已有配置，无需初始化配置");
+        }
+        if (!map.isEmpty() && flag){
+            FileUtils.deleteFile(filePathName);
             FileUtils.writeConfigXml(filePathName,map);
         }
     }

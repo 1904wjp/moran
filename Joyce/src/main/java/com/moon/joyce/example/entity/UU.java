@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.moon.joyce.commons.annotation.Ids;
 import com.moon.joyce.commons.annotation.NotExist;
 import com.moon.joyce.commons.annotation.Table;
+import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("u_u")
-@Table(name = "u_u")
+@Table(name = "u_u",strategy = TableStrategy.FORCE)
 public class UU extends BaseEntity {
     private static final long serialVersionUID = -6234658347872749729L;
     /**

@@ -19,6 +19,22 @@ public class Column implements Serializable{
      */
     private String columnName;
     /**
+     * 最大长度
+     */
+    private Long columnLength;
+    /**
+     * 是否为空
+     */
+    private String isNull;
+    /**
+     * 是否为主键
+     */
+    private String isKey;
+    /**
+     * 默认值
+     */
+    private String defaultValue;
+    /**
      * 表字段类型
      */
     private String columnType;

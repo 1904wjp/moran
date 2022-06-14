@@ -58,24 +58,12 @@ public class ColumnsController extends BaseController {
             return R.error(Constant.ERROR_FILL_ERROR_CODE);
         }
         /* Column table = columnsService.getColumn.js(tableName,dbName);*/
-        List<Column> dbListColumn = new ArrayList<>();
-        if (tableName.equals("1")) {
-            dbListColumn = columnsService.selectAllTables(dbName);
-            logger.info(dbListColumn.toString());
-        } else {
-            Column column = new Column();
-            column.setTableName(tableName);
-            dbListColumn.add(column);
-        }
-        for (int i = 0; i < dbListColumn.size(); i++) {
-            tableName = dbListColumn.get(i).getTableName();
             List<Column> columns = columnsService.getColumns(tableName, dbName);
+            columns.stream().filter(x->"NO".equals(x.getIsNull())&&"null".equals(x.getDefaultValue())).forEach(x->x.setDefaultValue("默认值不为空"));
             if (Objects.isNull(columns) || columns.isEmpty()) {
                 return R.error("该表无数据或者不存在");
             }
-            logger.info("size:" + columns.size());
             List<Column> columns1 = new ArrayList();
-            logger.info("size:" + columns.size());
             tableName = columns.get(0).getTableName().substring(columns.get(0).getTableName().indexOf("_") + 1);
             for (Column column : columns) {
                 column.setTableName(tableName);
@@ -103,8 +91,7 @@ public class ColumnsController extends BaseController {
             setSession(getSessionUser().getUsername() + "webFile", map);
             logger.info("创建：" + columns1.get(0).getTableName());
             shutdownDatasource();
-        }
-        return R.success();
+        return R.success(columns);
     }
 
     /**

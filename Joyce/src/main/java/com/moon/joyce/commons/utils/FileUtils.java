@@ -186,36 +186,32 @@ public class FileUtils implements Serializable {
                 obj.addAttribute("name", entry.getValue().get(i).getName());
                 Element oElement = obj.addElement("obj_map");
                 oElement.addAttribute("name", "params");
-                for (Map.Entry<String, String> fEntry : entry.getValue().get(i).getParams().entrySet()) {
-                    Element fsElement = oElement.addElement("map_field");
-                    if (StringUtils.isNotEmpty(fEntry.getKey())) {
-                        fsElement.addAttribute("name", fEntry.getKey());
-                    }
-                    fsElement.addAttribute("value", fEntry.getValue());
+                Map<String, String> params = entry.getValue().get(i).getParams();
+                for (Map.Entry<String, String> fEntry : params.entrySet()) {
+                    setElementField(oElement,"map_field",fEntry.getKey(),fEntry.getValue());
                 }
-
-                if (StringUtils.isNotEmpty(entry.getValue().get(i).getBackgroundUrl())) {
-                    Element backgroundUrl = obj.addElement("obj_field");
-                    backgroundUrl.addAttribute("name", "backgroundUrl");
-                    backgroundUrl.addAttribute("value", entry.getValue().get(i).getBackgroundUrl());
-                }
-
-                if (StringUtils.isNotEmpty(entry.getValue().get(i).getBackgroundColor())) {
-                    Element backgroundUrl = obj.addElement("obj_field");
-                    backgroundUrl.addAttribute("name", "backgroundColor");
-                    backgroundUrl.addAttribute("value", entry.getValue().get(i).getBackgroundColor());
-                }
-
-                if (StringUtils.isNotEmpty(entry.getValue().get(i).getBackgroundType())) {
-                    Element backgroundUrl = obj.addElement("obj_field");
-                    backgroundUrl.addAttribute("name", "backgroundType");
-                    backgroundUrl.addAttribute("value", entry.getValue().get(i).getBackgroundType());
-                }
+                setElementField(obj,"obj_field","backgroundUrl",entry.getValue().get(i).getBackgroundUrl());
+                setElementField(obj,"obj_field","backgroundColor",entry.getValue().get(i).getBackgroundColor());
+                setElementField(obj,"obj_field","getBackgroundType",entry.getValue().get(i).getBackgroundType());
             }
         }
         return document;
     }
 
+    /**
+     * 设置属性值
+     * @param element
+     * @param elValue
+     * @param name
+     * @param value
+     */
+    private static void setElementField(Element element,String elValue,String name,String value){
+        Element childElement = element.addElement(elValue);
+        childElement.addAttribute("name",name);
+        if (StringUtils.isNotEmpty(value)){
+            childElement.addAttribute("value",value);
+        }
+    }
     /**
      * 写入文件
      * @param path
@@ -779,5 +775,46 @@ public class FileUtils implements Serializable {
         return createFile(path, false);
     }
 
+    /**
+     * 更新文件
+     * @param filePath
+     * @param flag
+     * @return
+     */
+    public static File updateFile(String filePath,boolean flag){
+        return updateFile(createFile(filePath),flag);
+    }
+
+    /**
+     * 更新文件
+     * @param file
+     * @param flag
+     * @return
+     */
+    public static File updateFile(File file,boolean flag){
+        String path = file.getPath();
+        if (flag){
+            if (file.exists()){
+                file.delete();
+            }
+        }else {
+            return file;
+        }
+        File f = createFile(path);
+        return f;
+    }
+
+    public static boolean deleteFile(String path){
+        File file = new File(path);
+        return deleteFile(file);
+    }
+
+    public static boolean deleteFile(File file){
+        if (file.exists()){
+            file.delete();
+            return true;
+        }
+        return false;
+    }
 }
 
