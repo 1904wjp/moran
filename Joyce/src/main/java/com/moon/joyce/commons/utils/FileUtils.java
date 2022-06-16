@@ -239,6 +239,21 @@ public class FileUtils implements Serializable {
         doCompress(createFile(srcFile), createFile(zipFile));
     }
 
+    public static ZipOutputStream getZipObj(String zipName,HttpServletResponse response) throws IOException {
+        response.setContentType("APPLICATION/OCTET-STREAM");
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=" + zipName);
+        return  new ZipOutputStream(response.getOutputStream());
+    }
+
+    public static void downloadZip(String zipName,HttpServletResponse response,Map<String,String> map) throws IOException {
+        ZipOutputStream out = null;
+        out = FileUtils.getZipObj(zipName, response);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            FileUtils.doCompress( entry.getValue(), out);
+            response.flushBuffer();
+        }
+    }
     /**
      * 文件压缩
      * @param srcFile 目录或者单个文件
