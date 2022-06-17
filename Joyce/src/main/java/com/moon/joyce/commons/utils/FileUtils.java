@@ -240,7 +240,7 @@ public class FileUtils implements Serializable {
     }
 
     public static ZipOutputStream getZipObj(String zipName,HttpServletResponse response) throws IOException {
-        response.setContentType("APPLICATION/OCTET-STREAM");
+        response.setContentType("application/octet-stream");
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=" + zipName);
         return  new ZipOutputStream(response.getOutputStream());
