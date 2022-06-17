@@ -819,11 +819,21 @@ public class FileUtils implements Serializable {
         return f;
     }
 
+    /**
+     * 删除文件
+     * @param path
+     * @return
+     */
     public static boolean deleteFile(String path){
         File file = new File(path);
         return deleteFile(file);
     }
 
+    /**
+     * 删除文件
+     * @param file
+     * @return
+     */
     public static boolean deleteFile(File file){
         if (file.exists()){
             file.delete();
