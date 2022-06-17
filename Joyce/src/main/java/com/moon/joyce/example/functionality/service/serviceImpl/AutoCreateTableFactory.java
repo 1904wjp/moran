@@ -42,6 +42,7 @@ public class AutoCreateTableFactory implements TableFactory {
     private  Logger logger = LoggerFactory.getLogger(this.getClass());
     private  ReentrantLock lock = new ReentrantLock();
     private static Map<TableEntity, List<ColumnEntity>> map = null;
+    private static int idValue = 0;
     private static Set<String> set = null;
     private static List<String> sqls = null;
     private static AutoCreateTableFactory autoCreateTableFactory = null;
@@ -209,6 +210,9 @@ public class AutoCreateTableFactory implements TableFactory {
                         newList.add(newColumnEntity);
                     }
                     map.put(tableEntity,newList);
+                    for (Map.Entry<TableEntity, List<ColumnEntity>> entry : map.entrySet()) {
+                        logger.info(entry.getKey()+"----------map-------->"+entry.getValue().stream().map(ColumnEntity::getName).collect(Collectors.toList()).toString());
+                    }
                 }
             }
             if (file.isDirectory()){
@@ -224,17 +228,20 @@ public class AutoCreateTableFactory implements TableFactory {
      * @return
      */
     private List<ColumnEntity> getTableEntitySuperList(Field[] fields,List<Field> idsField) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
-        ArrayList<ColumnEntity> columnEntities = new ArrayList<>();
+        ++idValue;
+        List<ColumnEntity> columnEntities = new ArrayList<>();
         Set<String> keySet = checkKey(fields);
         for (Field field : idsField) {
             ColumnEntity columnEntity = createColumnByIdsAn(field);
             if (Objects.nonNull(columnEntity)){
+                ColumnEntity newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
                 if (keySet.contains(columnEntity.getName())){
-                    columnEntity.setComment("主键");
-                    columnEntity.setKey(true);
-                    columnEntity.setNotNull(true);
+                    newColumnEntity.setComment("主键");
+                    newColumnEntity.setKey(true);
+                    newColumnEntity.setNotNull(true);
                 }
-                  columnEntities.add( columnEntity);
+                  newColumnEntity.setIdValue(idValue);
+                  columnEntities.add(newColumnEntity);
             }
         }
         return columnEntities;
@@ -278,9 +285,10 @@ public class AutoCreateTableFactory implements TableFactory {
     private Field[] getFields(Class<?> loadClass) {
         Field[] fields = loadClass.getDeclaredFields();
         Class<?> superclass = loadClass.getSuperclass();
-        if (Objects.nonNull(superclass)){
+        while (Objects.nonNull(superclass)){
             Field[] superclassFields = superclass.getDeclaredFields();
-            return addFields(fields,superclassFields);
+            fields = addFields(fields, superclassFields);
+            superclass = superclass.getSuperclass();
         }
         return fields;
     }

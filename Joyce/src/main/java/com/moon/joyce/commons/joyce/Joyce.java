@@ -3,8 +3,10 @@ package com.moon.joyce.commons.joyce;
 
 import com.moon.joyce.commons.factory.entity.ColumnEntity;
 import com.moon.joyce.commons.utils.*;
+import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.functionality.service.serviceImpl.AutoCreateTableFactory;
 import com.moon.joyce.example.service.SourceService;
+import org.apache.commons.beanutils.BeanUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -14,6 +16,7 @@ import redis.clients.jedis.Jedis;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -350,8 +353,37 @@ public class Joyce {
         System.arraycopy(arr1,1,arr2,2,2);
         System.out.println(Arrays.toString(arr2));
     }
+    public static User1 test115(String name){
+        User1 user = new User1();
+        user.setUsername(name);
+        user.setPassword("123");
+        return user;
+    }
+
+    public static User1 getXm(){
+        User1 user = new User1("小明", "xm");
+        return user;
+    }
+    public static List<User1> test116(String suf){
+        List<User1> users = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            users.add(test115(suf+i));
+        }
+        try {
+            users.add((User1) BeanUtils.cloneBean(getXm()));
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
     @org.junit.Test
     public void test0101() throws ParseException {
-
+        Map<String, List<User1>> map = new HashMap<>();
+        for (int i = 0; i < 4; i++) {
+            map.put("index:"+i,test116(String.valueOf(i)));
+        }
+        for (Map.Entry<String, List<User1>> entry : map.entrySet()) {
+            System.out.println(entry.getKey()+"------->"+entry.getValue().toString());
+        }
     }
 }

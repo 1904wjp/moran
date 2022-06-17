@@ -43,6 +43,10 @@ public class ColumnEntity{
      * 是否不为空
      */
     private Boolean isNotNull;
+    /**
+     * 序号
+     */
+    private Integer idValue;
 
     /**
      * 默认值
@@ -65,7 +69,13 @@ public class ColumnEntity{
         this.name = name;
     }
 
+    public Integer getIdValue() {
+        return idValue;
+    }
 
+    public void setIdValue(Integer idValue) {
+        this.idValue = idValue;
+    }
 
     public String getType() {
         return type;
@@ -143,16 +153,20 @@ public class ColumnEntity{
     public static Integer size(){
         return size;
     }
+
     @Override
     public String toString() {
-        return "ColumnEntity{" +
-                "name='" + name + '\'' +
-                ", length='" + length + '\'' +
-                ", content='" + comment + '\'' +
-                ", isKey=" + isKey +
-                ", auto=" + auto +
-                ", type='" + type + '\'' +
-                ", isNotNull=" + isNotNull +
-                '}';
+        final StringBuffer sb = new StringBuffer("ColumnEntity{");
+        sb.append("name='").append(name).append('\'');
+        sb.append(", length=").append(length);
+        sb.append(", comment='").append(comment).append('\'');
+        sb.append(", isKey=").append(isKey);
+        sb.append(", auto=").append(auto);
+        sb.append(", type='").append(type).append('\'');
+        sb.append(", isNotNull=").append(isNotNull);
+        sb.append(", idValue=").append(idValue);
+        sb.append(", defaultValue='").append(defaultValue).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }
