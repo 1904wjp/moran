@@ -28,9 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.jar.JarException;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +60,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public  AutoCreateTableFactory init(String ps) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public  AutoCreateTableFactory init(String ps)  {
         if (Objects.isNull(autoCreateTableFactory)){
             autoCreateTableFactory = new AutoCreateTableFactory();
         }
@@ -137,10 +135,14 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param entityClassPackage
      * @throws ClassNotFoundException
      */
-    private void scanner(String entityClassPackage) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+    private void scanner(String entityClassPackage)  {
         File dir = getFile(entityClassPackage);
         ClassLoader classLoader = getClassLoader();
-        fillMap(dir,classLoader);
+        try {
+            fillMap(dir,classLoader);
+        } catch (ClassNotFoundException | InvocationTargetException | IllegalAccessException | NoSuchMethodException | InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -186,7 +188,7 @@ public class AutoCreateTableFactory implements TableFactory {
                         Column column = field.getAnnotation(Column.class);
                         if (Objects.nonNull(column)){
                             ColumnEntity columnEntity = new ColumnEntity();
-                            createColumnByColumnAn(columnEntity, column);
+                            columnEntity = createColumnByColumnAn(columnEntity, column);
                             list.add(columnEntity);
                         }else {
                             idsField.add(field);
@@ -222,7 +224,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @return
      */
     private List<ColumnEntity> getTableEntitySuperList(Field[] fields,List<Field> idsField) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
-        ColumnEntity[] columnEntities = {};
+        ArrayList<ColumnEntity> columnEntities = new ArrayList<>();
         Set<String> keySet = checkKey(fields);
         for (Field field : idsField) {
             ColumnEntity columnEntity = createColumnByIdsAn(field);
@@ -232,10 +234,10 @@ public class AutoCreateTableFactory implements TableFactory {
                     columnEntity.setKey(true);
                     columnEntity.setNotNull(true);
                 }
-                 columnEntities = ColumnEntity.ArrayAdd(columnEntities, columnEntity);
+                  columnEntities.add( columnEntity);
             }
         }
-        return Arrays.asList(columnEntities);
+        return columnEntities;
     }
 
     /**
@@ -309,33 +311,11 @@ public class AutoCreateTableFactory implements TableFactory {
     }
 
     /**
-     * 检测文件重复元素
-     * @param fs1
-     * @param fs2
-     * @return
-     */
-   /* private List<String> checkField(Field[] fs1, Field[] fs2) {
-        List<String> fields = new ArrayList<>();
-        for (Field f1 : fs1) {
-            for (Field f2 : fs2) {
-                if (f1.getName().equals(f2.getName()) && f1.getType().equals(f2.getType())){
-                    String type = f1.getType().toString();
-                    type = type.substring(type.lastIndexOf(".") + 1);
-                    if (defMap.containsKey(type)){
-                        fields.add(f1.getName());
-                    }
-                }
-            }
-        }
-        return fields;
-    }
-*/
-    /**
      * 根据column注解创建实体类
      * @param columnEntity
      * @param column
      */
-    private void createColumnByColumnAn(ColumnEntity columnEntity, Column column){
+    private ColumnEntity createColumnByColumnAn(ColumnEntity columnEntity, Column column){
         columnEntity.setAuto(column.auto());
         columnEntity.setComment(column.comment());
         columnEntity.setKey(column.isKey());
@@ -347,6 +327,7 @@ public class AutoCreateTableFactory implements TableFactory {
         if (column.isKey()){
             columnEntity.setNotNull(true);
         }
+        return columnEntity;
     }
 
     /**
@@ -355,24 +336,16 @@ public class AutoCreateTableFactory implements TableFactory {
      * @return
      */
     private ColumnEntity createColumnByIdsAn(Field field) throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
-        ColumnEntity newColumnEntity = new ColumnEntity();
         String name = StringsUtils.toUnderScoreCase(field.getName());
         String type = field.getType().toString();
         type = type.substring(type.lastIndexOf(".") + 1);
         boolean rs = defMap.containsKey(type);
-  //  logger.info("-------->{}====>{}---->{}",type,rs,defMap.keySet().toString());
         if (rs){
             ColumnEntity columnEntity = (ColumnEntity) BeanUtils.cloneBean(defMap.get(type));
             columnEntity.setName(name);
-            try {
-                newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else {
-            return null;
+            return  (ColumnEntity) BeanUtils.cloneBean(columnEntity);
         }
-        return newColumnEntity;
+        return null;
     }
 
     /**
@@ -452,7 +425,7 @@ public class AutoCreateTableFactory implements TableFactory {
             }
         }
         if (types.size()!=lengths.size()){
-            throw new JarException("auto.def.type 与 auto.def.length 配置异常,请查看joyce.properties配置文件");
+            throw new JoyceException("auto.def.type 与 auto.def.length 配置异常,请查看joyce.properties配置文件");
         }
 
         for (Map.Entry<String, Object> type : types.entrySet()) {
@@ -576,7 +549,7 @@ public class AutoCreateTableFactory implements TableFactory {
      */
     private String createTableSql(TableEntity tableEntity, List<ColumnEntity> columnEntities){
         if (Objects.isNull(columnEntities)||columnEntities.isEmpty()){
-            throw  new JoyceException("无属性类无法创建");
+            throw  new JoyceException("在创建"+tableEntity.getName()+"的时候，该类无属性类，因此无法创建");
         }
         StringBuilder sb = new StringBuilder();
         sb.append("create table ");
@@ -593,7 +566,7 @@ public class AutoCreateTableFactory implements TableFactory {
             ColumnEntity column = columnEntities.get(i);
             if (Objects.isNull(column)){continue;}
             sb.append("`")
-                    .append(StringsUtils.camelToUnderline(column.getName()))
+                    .append(StringsUtils.camelToUnderline(column.getName()).toLowerCase())
                     .append("` ")
                     .append(column.getType())
                     .append("(")

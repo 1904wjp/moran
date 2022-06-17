@@ -2,6 +2,9 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.Ids;
+import com.moon.joyce.commons.annotation.Table;
+import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.example.entity.dto.Page;
 
 
@@ -15,12 +18,13 @@ import com.moon.joyce.example.entity.dto.Page;
  */
 /*@Entity*/
 @TableName("sys_menu")
+@Table(name = "sys_menu",strategy = TableStrategy.FORCE)
 /*@Table(name = "sys_menu")
 @org.hibernate.annotations.Table(appliesTo = "sys_menu",comment = "菜单表")*/
 public class SysMenu extends Page {
 
     private static final long serialVersionUID=1L;
-
+    @Ids
     @TableField("menu_name")
  /*   @Column(name = "menu_name",columnDefinition = "varchar(12) COMMENT '菜单名称'")*/
     private String menuName;
