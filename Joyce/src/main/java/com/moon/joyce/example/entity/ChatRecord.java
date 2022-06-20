@@ -27,7 +27,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("chat_record")
-@Table(name = "chat_record",strategy = TableStrategy.FORCE)
+@Table(name = "chat_record",strategy = TableStrategy.SECURITY)
 public class ChatRecord extends BaseEntity {
     private static final long serialVersionUID = 7558750959590695111L;
     /**

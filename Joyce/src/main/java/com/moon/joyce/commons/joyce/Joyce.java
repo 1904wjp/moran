@@ -378,12 +378,11 @@ public class Joyce {
     }
     @org.junit.Test
     public void test0101() throws ParseException {
-        Map<String, List<User1>> map = new HashMap<>();
-        for (int i = 0; i < 4; i++) {
-            map.put("index:"+i,test116(String.valueOf(i)));
-        }
-        for (Map.Entry<String, List<User1>> entry : map.entrySet()) {
-            System.out.println(entry.getKey()+"------->"+entry.getValue().toString());
+       int[] ints = {1,2};
+        int index = 0;
+        for (int i = 0; i < ints.length; i++) {
+            System.out.println("0:"+index++);
+            System.out.println("1:"+index++);
         }
     }
 }

@@ -39,16 +39,21 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AutoCreateTableFactory implements TableFactory {
+    //日志
     private  Logger logger = LoggerFactory.getLogger(this.getClass());
-    private  ReentrantLock lock = new ReentrantLock();
+    //sql容器
     private static Map<TableEntity, List<ColumnEntity>> map = null;
+    //计数标志
     private static int idValue = 0;
+    //检测子文件容器
     private static Set<String> set = null;
+    //sql容器
     private static List<String> sqls = null;
+    //工厂对象
     private static AutoCreateTableFactory autoCreateTableFactory = null;
+    //配置信息的容器
     private static Map<String,ColumnEntity> defMap = null;
-    @Autowired
-    private ColumnsService columnsService;
+
 
 
     /**
@@ -80,7 +85,7 @@ public class AutoCreateTableFactory implements TableFactory {
             //扫描包
             init(ps).scannerPackage(ps);
             //填充属性
-            init(ps).fillSqls();
+            init(ps).fillSqls(null);
         }
         return autoCreateTableFactory;
     }
@@ -166,6 +171,10 @@ public class AutoCreateTableFactory implements TableFactory {
                 if (loadClass.isAnnotationPresent(Table.class)){
                     //类注解获取并且填充
                     Table table = loadClass.getAnnotation(Table.class);
+                    if (table.isPresent()){
+                        logger.warn(loadClass+"为被继承类，无法扫描到map容器中");
+                        continue;
+                    }
                     TableEntity tableEntity = new TableEntity();
                     tableEntity.setName(table.name());
                     tableEntity.setContent(table.content());
@@ -210,9 +219,6 @@ public class AutoCreateTableFactory implements TableFactory {
                         newList.add(newColumnEntity);
                     }
                     map.put(tableEntity,newList);
-                    for (Map.Entry<TableEntity, List<ColumnEntity>> entry : map.entrySet()) {
-                        logger.info(entry.getKey()+"----------map-------->"+entry.getValue().stream().map(ColumnEntity::getName).collect(Collectors.toList()).toString());
-                    }
                 }
             }
             if (file.isDirectory()){
@@ -255,6 +261,7 @@ public class AutoCreateTableFactory implements TableFactory {
     private Set<String> checkKey(Field[] fields) {
         Set<String> keyList = new HashSet<>();
         String[] keys = new String[0];
+        //Ids注解计数器
         for (Field field : fields) {
             Ids ids = field.getAnnotation(Ids.class);
             if (Objects.nonNull(ids)){
@@ -266,6 +273,10 @@ public class AutoCreateTableFactory implements TableFactory {
         }
         if (keys.length==0){
             return keyList;
+        }
+        //检测Ids中的属性是否有重复元素，有的话也会报错
+        if (Arrays.stream(keys).collect(Collectors.toSet()).size()!=keys.length){
+            throw new JoyceException("Ids注解中存在相同属性");
         }
         for (String key : keys) {
             for (Field field : fields) {
@@ -286,13 +297,31 @@ public class AutoCreateTableFactory implements TableFactory {
         Field[] fields = loadClass.getDeclaredFields();
         Class<?> superclass = loadClass.getSuperclass();
         while (Objects.nonNull(superclass)){
-            Field[] superclassFields = superclass.getDeclaredFields();
-            fields = addFields(fields, superclassFields);
+            if (Objects.nonNull(superclass.getAnnotation(Table.class))){
+                Field[] superclassFields = superclass.getDeclaredFields();
+                fields = addFields(fields, superclassFields);
+            }
             superclass = superclass.getSuperclass();
         }
         return fields;
     }
 
+    /**
+     * 检测属性是否重复
+     * @param fields
+     * @param field
+     * @return
+     */
+    private Field[] checkFieldRepeat(Field[] fields,Field field){
+        Field[] repeatFields = {};
+        for (Field f : fields) {
+            if (field.getName().equals(f.getName()) && field.getType().equals(f.getType())){
+                repeatFields = new Field[repeatFields.length+1];
+                repeatFields[repeatFields.length-1] = f ;
+            }
+        }
+        return repeatFields;
+    }
     /**
      * 计算总属性集合
      * @param fs1
@@ -312,7 +341,12 @@ public class AutoCreateTableFactory implements TableFactory {
             if (i < fs1.length){
                 fields[i] = fs1[i];
             }else {
-                fields[i] = fs2[index++];
+                Field[] fieldRepeat = checkFieldRepeat(fs1, fs2[index++]);
+                if (fieldRepeat.length!=0){
+                    List<String> list = Arrays.stream(fieldRepeat).map(Field::getName).collect(Collectors.toList());
+                    throw new JoyceException("以下属性重复，请检测该列举属性:"+list);
+                }
+                fields[i] = fs2[index];
             }
         }
         return fields;
@@ -377,17 +411,8 @@ public class AutoCreateTableFactory implements TableFactory {
      */
     private  void readDefConfig() throws IOException {
         Properties properties = new Properties();
-        InputStream in = null;
-        lock.lock();
-        try {
-            in = getClassLoader().getResourceAsStream("joyce.properties");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            lock.unlock();
-        }
+        InputStream in  = getClassLoader().getResourceAsStream("joyce.properties");
         properties.load(in);
-
         Map<String, Object> types = new HashMap<>();
         Map<String, Object> lengths = new HashMap<>();
         Map<String, Object> autos = new HashMap<>();
@@ -514,9 +539,9 @@ public class AutoCreateTableFactory implements TableFactory {
     /**
      * 填充sqls
      */
-    private void fillSqls(){
+    private void fillSqls( List<com.moon.joyce.example.functionality.entity.Column> existColumns){
         for (Map.Entry<TableEntity, List<ColumnEntity>> entry : map.entrySet()) {
-            String[] sqlStrArr = selectCreateSql(entry.getKey(), entry.getValue());
+            String[] sqlStrArr = selectCreateSql(entry.getKey(), entry.getValue(),existColumns);
             if (Objects.isNull(sqlStrArr)) {
                 continue;
             }
@@ -536,11 +561,11 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param columnEntities
      * @return
      */
-    private String[] selectCreateSql(TableEntity tableEntity, List<ColumnEntity> columnEntities){
+    private String[] selectCreateSql(TableEntity tableEntity, List<ColumnEntity> columnEntities, List<com.moon.joyce.example.functionality.entity.Column> existColumns){
         String strategy = tableEntity.getStrategy();
         switch (strategy){
             case "1":
-                return new String[]{alterTable(tableEntity, columnEntities)};
+                return new String[]{alterTable(tableEntity, columnEntities,existColumns)};
             case "2":
                 return new String[]{createTableSql(tableEntity,columnEntities)};
             case "3":
@@ -617,8 +642,8 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param columnEntities
      * @return
      */
-    private String alterTable(TableEntity tableEntity, List<ColumnEntity> columnEntities){
-        List<String> list = columnsService.getColumns(tableEntity.getName(), null).stream().map(com.moon.joyce.example.functionality.entity.Column::getColumnName).collect(Collectors.toList());
+    private String alterTable(TableEntity tableEntity, List<ColumnEntity> columnEntities, List<com.moon.joyce.example.functionality.entity.Column> existColumns){
+        List<String> list = existColumns.stream().map(com.moon.joyce.example.functionality.entity.Column::getColumnName).collect(Collectors.toList());
         List<ColumnEntity> differentList = getDifferentList(list, columnEntities);
         if (!differentList.isEmpty()){
             StringBuilder sb = new StringBuilder();
