@@ -556,7 +556,7 @@ public class AutoCreateTableFactory implements TableFactory {
     }
 
     /**
-     * 填充sql
+     * 自动选取策略创建
      * @param tableEntity
      * @param columnEntities
      * @return
