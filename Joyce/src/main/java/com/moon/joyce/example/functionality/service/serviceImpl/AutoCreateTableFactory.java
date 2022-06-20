@@ -15,7 +15,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -28,7 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +35,6 @@ import java.util.stream.Collectors;
  * @date: 2022/05/13-- 21:48
  * @describe: 自动创建表工厂_扫描所有相关类
  */
-@Service
 public class AutoCreateTableFactory implements TableFactory {
     //日志
     private  Logger logger = LoggerFactory.getLogger(this.getClass());
