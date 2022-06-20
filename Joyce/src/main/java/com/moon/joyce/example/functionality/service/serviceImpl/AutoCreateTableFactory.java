@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
  * @date: 2022/05/13-- 21:48
  * @describe: 自动创建表工厂_扫描所有相关类
  */
+@Service
 public class AutoCreateTableFactory implements TableFactory {
     //日志
     private  Logger logger = LoggerFactory.getLogger(this.getClass());

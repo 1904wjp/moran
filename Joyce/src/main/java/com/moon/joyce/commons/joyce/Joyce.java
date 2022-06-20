@@ -353,29 +353,7 @@ public class Joyce {
         System.arraycopy(arr1,1,arr2,2,2);
         System.out.println(Arrays.toString(arr2));
     }
-    public static User1 test115(String name){
-        User1 user = new User1();
-        user.setUsername(name);
-        user.setPassword("123");
-        return user;
-    }
 
-    public static User1 getXm(){
-        User1 user = new User1("小明", "xm");
-        return user;
-    }
-    public static List<User1> test116(String suf){
-        List<User1> users = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            users.add(test115(suf+i));
-        }
-        try {
-            users.add((User1) BeanUtils.cloneBean(getXm()));
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return users;
-    }
     @org.junit.Test
     public void test0101() throws ParseException {
        int[] ints = {1,2};
