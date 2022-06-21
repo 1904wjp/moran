@@ -17,5 +17,6 @@ public @interface Table {
     String name();
     String content() default "";
     TableStrategy strategy() default TableStrategy.SECURITY;
-    boolean isPresent() default false;
+    boolean isParent() default false;
+    int parentStep() default 5;
 }

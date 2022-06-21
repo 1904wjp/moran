@@ -2,6 +2,7 @@ package com.moon.joyce.example.entity.base.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.moon.joyce.commons.annotation.Table;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,7 +15,7 @@ import java.util.Objects;
  * @date 2021/9/3 13:55
  * @desc 基础类实体类
  */
-
+@Table(name = "基础类",isParent = true)
 public class BaseEntity implements Serializable {
     private static final long serialVersionUID = 9019164396662157010L;
    /* @Id*/

@@ -4,6 +4,7 @@ import com.moon.joyce.commons.factory.enums.Type;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -152,6 +153,23 @@ public class ColumnEntity{
 
     public static Integer size(){
         return size;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ColumnEntity that = (ColumnEntity) o;
+        return Objects.equals(name, that.name) && Objects.equals(type, that.type) ;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, length, comment, isKey, auto, type, isNotNull, idValue, defaultValue);
     }
 
     @Override

@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AutoCreateTableFactory implements TableFactory {
+
     //日志
     private  Logger logger = LoggerFactory.getLogger(this.getClass());
     //sql容器
@@ -51,8 +52,6 @@ public class AutoCreateTableFactory implements TableFactory {
     private static AutoCreateTableFactory autoCreateTableFactory = null;
     //配置信息的容器
     private static Map<String,ColumnEntity> defMap = null;
-
-
 
     /**
      * 获取工厂实例
@@ -169,7 +168,7 @@ public class AutoCreateTableFactory implements TableFactory {
                 if (loadClass.isAnnotationPresent(Table.class)){
                     //类注解获取并且填充
                     Table table = loadClass.getAnnotation(Table.class);
-                    if (table.isPresent()){
+                    if (table.isParent()){
                         logger.warn(loadClass+"为被继承类，无法扫描到map容器中");
                         continue;
                     }
@@ -216,6 +215,9 @@ public class AutoCreateTableFactory implements TableFactory {
                         ColumnEntity newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
                         newList.add(newColumnEntity);
                     }
+                   if (Objects.nonNull(checkRepeatTableEntities(newList))){
+                       throw new JoyceException("存在如下相同属性，无法创建:"+ checkRepeatTableEntities(newList));
+                   }
                     map.put(tableEntity,newList);
                 }
             }
@@ -287,39 +289,61 @@ public class AutoCreateTableFactory implements TableFactory {
     }
 
     /**
+     * 检测list中重复元素
+     * @param list
+     * @return
+     */
+    private List<ColumnEntity> checkRepeatTableEntities(List<ColumnEntity> list){
+        if (Objects.isNull(list)){
+            return null;
+        }
+        if (list.isEmpty()){
+            return null;
+        }
+        if (list.stream().collect(Collectors.toSet()).size() == list.size()){
+            return null;
+        }
+        List<ColumnEntity> columnEntities = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+           int  index = i+1;
+           while (index < list.size()){
+               if (list.get(i).equals(list.get(index))){
+                   columnEntities.add(list.get(i));
+                   index++;
+               }
+           }
+        }
+        if (!columnEntities.isEmpty()){
+           return columnEntities;
+        }
+        return null;
+    }
+
+    /**
      * 获取类所有属性
      * @param loadClass
      * @return
      */
     private Field[] getFields(Class<?> loadClass) {
+        int step = 0;
+        int tempStep = 0;
+        Table table = loadClass.getAnnotation(Table.class);
+        if (Objects.nonNull(table)){
+            step = table.parentStep();
+        }
         Field[] fields = loadClass.getDeclaredFields();
         Class<?> superclass = loadClass.getSuperclass();
-        while (Objects.nonNull(superclass)){
+        while (Objects.nonNull(superclass) && step>0 && tempStep < step){
             if (Objects.nonNull(superclass.getAnnotation(Table.class))){
                 Field[] superclassFields = superclass.getDeclaredFields();
                 fields = addFields(fields, superclassFields);
             }
             superclass = superclass.getSuperclass();
+            tempStep++;
         }
         return fields;
     }
 
-    /**
-     * 检测属性是否重复
-     * @param fields
-     * @param field
-     * @return
-     */
-    private Field[] checkFieldRepeat(Field[] fields,Field field){
-        Field[] repeatFields = {};
-        for (Field f : fields) {
-            if (field.getName().equals(f.getName()) && field.getType().equals(f.getType())){
-                repeatFields = new Field[repeatFields.length+1];
-                repeatFields[repeatFields.length-1] = f ;
-            }
-        }
-        return repeatFields;
-    }
     /**
      * 计算总属性集合
      * @param fs1
@@ -339,12 +363,7 @@ public class AutoCreateTableFactory implements TableFactory {
             if (i < fs1.length){
                 fields[i] = fs1[i];
             }else {
-                Field[] fieldRepeat = checkFieldRepeat(fs1, fs2[index++]);
-                if (fieldRepeat.length!=0){
-                    List<String> list = Arrays.stream(fieldRepeat).map(Field::getName).collect(Collectors.toList());
-                    throw new JoyceException("以下属性重复，请检测该列举属性:"+list);
-                }
-                fields[i] = fs2[index];
+                fields[i] = fs2[index++];
             }
         }
         return fields;
@@ -682,6 +701,11 @@ public class AutoCreateTableFactory implements TableFactory {
     private String deleteTable(String tableName){
         return "DROP TABLE IF EXISTS `"+tableName+"`";
     }
+
+    /**
+     * 获取工程名称
+     * @return
+     */
     @Override
     public String getTableFactoryName() {
         return "自动创建sql表工厂";
@@ -719,7 +743,6 @@ public class AutoCreateTableFactory implements TableFactory {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        logger.info("map:"+map.toString());
         sqls.forEach(sql->logger.info("生成sql:------->"+sql));
         return sqls;
     }
