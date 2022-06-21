@@ -9,7 +9,6 @@ import com.moon.joyce.commons.factory.entity.TableEntity;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 
-import com.moon.joyce.example.functionality.service.ColumnsService;
 import com.moon.joyce.example.functionality.service.TableFactory;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
