@@ -6,12 +6,14 @@ import com.moon.joyce.commons.annotation.NotExist;
 import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.commons.factory.entity.ColumnEntity;
 import com.moon.joyce.commons.factory.entity.TableEntity;
+import com.moon.joyce.commons.factory.init.AutoCreateTableInit;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 
 import com.moon.joyce.example.functionality.service.TableFactory;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -71,10 +73,10 @@ public class AutoCreateTableFactory implements TableFactory {
             map =  new ConcurrentHashMap<>();
             set = new HashSet<>();
             sqls = new ArrayList<>();
-            defMap = new HashMap<>();
             try {
                 //读取配置
-                init(ps).readDefConfig();
+                InputStream in  = getClassLoader().getResourceAsStream("joyce.properties");
+               defMap =  AutoCreateTableInit.readDefConfig(in);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -426,106 +428,6 @@ public class AutoCreateTableFactory implements TableFactory {
     }
 
     /**
-     * 读取默认配置
-     * @throws IOException
-     */
-    private  void readDefConfig() throws IOException {
-        Properties properties = new Properties();
-        InputStream in  = getClassLoader().getResourceAsStream("joyce.properties");
-        properties.load(in);
-        Map<String, Object> types = new HashMap<>();
-        Map<String, Object> lengths = new HashMap<>();
-        Map<String, Object> autos = new HashMap<>();
-        Map<String, Object> keys = new HashMap<>();
-        Map<String, Object> notNulls = new HashMap<>();
-        Map<String, Object> comments = new HashMap<>();
-        Map<String, Object> defaultValues = new HashMap<>();
-        for (Object object : properties.keySet()) {
-            String type = properties.getProperty(object.toString()).trim();
-            String keyStr = object.toString().substring(object.toString().lastIndexOf(".")+1);
-            if (object.toString().startsWith("auto.def.type")){
-                types.put(keyStr,type);
-            }
-
-            if (object.toString().startsWith("auto.def.length")){
-                Long length = Long.valueOf(properties.getProperty(object.toString()).trim());
-                lengths.put(keyStr,length);
-            }
-
-            if (object.toString().startsWith("auto.def.auto")){
-                Boolean auto = Boolean.valueOf(properties.getProperty(object.toString()).trim());
-                autos.put(keyStr,auto);
-            }
-
-            if (object.toString().startsWith("auto.def.key")){
-                Boolean key = Boolean.valueOf(properties.getProperty(object.toString()).trim());
-                 keys.put(keyStr,key);
-            }
-
-            if (object.toString().startsWith("auto.def.notNull")){
-                Boolean notNull =  Boolean.valueOf(properties.getProperty(object.toString()).trim());
-                notNulls.put(keyStr,notNull);
-            }
-
-            if (object.toString().startsWith("auto.def.comment")){
-                String comment =  properties.getProperty(object.toString());
-                comments.put(keyStr,comment.trim());
-            }
-
-            if (object.toString().startsWith("auto.def.defaultValue")){
-                String defaultValue  = properties.getProperty(object.toString());
-                defaultValues.put(keyStr,defaultValue.trim());
-            }
-        }
-        if (types.size()!=lengths.size()){
-            throw new JoyceException("auto.def.type 与 auto.def.length 配置异常,请查看joyce.properties配置文件");
-        }
-
-        for (Map.Entry<String, Object> type : types.entrySet()) {
-
-            ColumnEntity columnEntity = new ColumnEntity();
-            columnEntity.setType(type.getValue().toString());
-            columnEntity.setLength(Long.valueOf(lengths.get(type.getKey()).toString()));
-            columnEntity.setAuto(false);
-
-            if (!autos.isEmpty()){
-                if (Objects.nonNull(autos.get(type.getKey()))){
-                    columnEntity.setAuto(Boolean.valueOf(autos.get(type.getKey()).toString()));
-                }
-            }
-
-            columnEntity.setNotNull(false);
-            if (notNulls.isEmpty()){
-                if (Objects.nonNull(notNulls.get(type.getKey()))){
-                    columnEntity.setNotNull(Boolean.valueOf(notNulls.get(type.getKey()).toString()));
-                }
-            }
-
-            columnEntity.setKey(false);
-            if (notNulls.isEmpty()){
-                if (Objects.nonNull(keys.get(type.getKey()))){
-                    columnEntity.setKey(Boolean.valueOf(keys.get(type.getKey()).toString()));
-                }
-            }
-
-            columnEntity.setDefaultValue("NULL");
-            if (notNulls.isEmpty()){
-                if (Objects.nonNull(defaultValues.get(type.getKey()))){
-                    columnEntity.setDefaultValue(defaultValues.get(type.getKey()).toString());
-                }
-            }
-
-            columnEntity.setComment("");
-            if (notNulls.isEmpty()){
-                if (Objects.nonNull(comments.get(type.getKey()))){
-                    columnEntity.setComment(comments.get(type.getKey()).toString());
-                }
-            }
-            defMap.put(type.getKey().trim(),columnEntity);
-        }
-    }
-
-    /**
      * 检测是否已存在
      * @param key
      * @return
@@ -629,7 +531,7 @@ public class AutoCreateTableFactory implements TableFactory {
                 sb.append(" not null ");
             }else {
                 if (!column.getKey()){
-                    sb.append(" default "+column.getDefaultValue());
+                    sb.append(" default "+AutoCreateTableInit.defValConvert(column.getDefaultValue(),column.getType()));
                 }
             }
             if (column.getAuto()){
@@ -749,4 +651,6 @@ public class AutoCreateTableFactory implements TableFactory {
         sqls.forEach(sql->logger.info("生成sql:------->"+sql));
         return sqls;
     }
+
+
 }
