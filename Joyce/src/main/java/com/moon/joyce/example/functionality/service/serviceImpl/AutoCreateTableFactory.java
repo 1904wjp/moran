@@ -326,25 +326,15 @@ public class AutoCreateTableFactory implements TableFactory {
      * @return
      */
     private Field[] getFields(Class<?> loadClass) {
-        int step = 0;
-        int tempStep = 0;
         Table table = loadClass.getAnnotation(Table.class);
-        if (Objects.nonNull(table)){
-            step = table.parentStep();
-        }
         Field[] fields = loadClass.getDeclaredFields();
         Class<?> superclass = loadClass.getSuperclass();
-        while (Objects.nonNull(superclass) && step>0 && tempStep < step){
-            Table supperTable = loadClass.getAnnotation(Table.class);
-            if (Objects.nonNull(supperTable)){
-                throw new JoyceException(superclass+"不能用parentStep属性");
-            }
+        while (Objects.nonNull(superclass) ){
             if (Objects.nonNull(superclass.getAnnotation(Table.class))){
                 Field[] superclassFields = superclass.getDeclaredFields();
                 fields = addFields(fields, superclassFields);
             }
             superclass = superclass.getSuperclass();
-            tempStep++;
         }
         return fields;
     }

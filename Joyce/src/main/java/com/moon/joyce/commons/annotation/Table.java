@@ -18,5 +18,4 @@ public @interface Table {
     String content() default "";
     TableStrategy strategy() default TableStrategy.SECURITY;
     boolean isParent() default false;
-    int parentStep() default 5;
 }
