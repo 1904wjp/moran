@@ -2,11 +2,15 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.Ids;
+import com.moon.joyce.commons.annotation.NotExist;
+import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.entity.dto.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 
 /**
@@ -18,12 +22,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("package_info")
+@Table(name = "package_info",content = "包配置")
 public class PackageInfo extends Page {
 
     private static final long serialVersionUID = 1814178285136632126L;
     /**
      * 包名
      */
+    @Ids
     @TableField("package_name")
     private String packageName;
     /**
@@ -34,6 +40,7 @@ public class PackageInfo extends Page {
     /**
      * 数据库用户
      */
+    @NotExist
     @TableField(exist = false)
     private String username;
     /**

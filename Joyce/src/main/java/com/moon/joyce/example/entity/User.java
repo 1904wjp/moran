@@ -1,6 +1,8 @@
 package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.moon.joyce.commons.annotation.Ids;
+import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.example.entity.base.entity.Person;
 
 
@@ -10,6 +12,7 @@ import com.moon.joyce.example.entity.base.entity.Person;
  * @since 2021-09-01
  */
 @TableName("user")
+@Table(name = "user",content = "用户表" )
 /*@Entity
 @Table(name = "user")
 @org.hibernate.annotations.Table(appliesTo = "user",comment = "用户表")*/
@@ -19,6 +22,7 @@ public class User extends Person {
      * 用户名
      */
   /*  @Column(name="username" ,unique = true,columnDefinition = "varchar(10) COMMENT '用户名'")*/
+    @Ids
     private String username;
     /**
      * 密码

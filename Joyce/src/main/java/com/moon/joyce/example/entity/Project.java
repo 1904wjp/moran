@@ -2,6 +2,8 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.Ids;
+import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.example.entity.dto.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,12 +19,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("project")
+@Table(name = "project",content = "项目信息")
 public class Project extends Page {
     private static final long serialVersionUID = 7516486402681355169L;
 
     /**
      * 项目名称
      */
+    @Ids
     @TableField("project_name")
     private String projectName;
     /**

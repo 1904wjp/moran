@@ -266,7 +266,7 @@ public class AutoCreateTableFactory implements TableFactory {
         for (Field field : fields) {
             Ids ids = field.getAnnotation(Ids.class);
             if (Objects.nonNull(ids)){
-                keys = ids.name();
+                keys = ids.values();
             }
             if (keys.length!=0){
                 break;

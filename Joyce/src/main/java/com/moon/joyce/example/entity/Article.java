@@ -2,6 +2,7 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.Ids;
 import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.entity.dto.Page;
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "article",content = "文章编辑表")
 /*@org.hibernate.annotations.Table(appliesTo = "article",comment = "文章编辑表")*/
 public class Article extends Page {
+   @Ids
    /* @Column(name = "author",columnDefinition = "varchar(12) COMMENT '作者名'")*/
     private String author;
    /* @Column(name = "title",columnDefinition = "varchar(64) COMMENT '标题'")*/

@@ -2,6 +2,8 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.Ids;
+import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.example.entity.dto.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,11 +20,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("db_base_setting")
+@Table(name = "db_base_setting",content = "数据库配置")
 public class DbBaseSetting extends Page {
     private static final long serialVersionUID = 5736882997195936413L;
     /**
      * 数据源名称
      */
+    @Ids
     @TableField("data_source_name")
     private String dataSourceName;
     /**

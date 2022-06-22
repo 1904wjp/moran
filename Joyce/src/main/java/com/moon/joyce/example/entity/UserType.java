@@ -3,6 +3,8 @@ package joyce.example.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.Ids;
+import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.example.entity.dto.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,11 +26,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "user_type",content = "用户类型")
 public class UserType extends Page {
     private static final long serialVersionUID = 1573373319724501081L;
     /**
      * 身份
      */
+    @Ids
     @TableField("id_code")
     /*@Column(name = "id_code",unique = true,columnDefinition = "varchar(64) COMMENT '角色名字'")*/
     private String idCode;

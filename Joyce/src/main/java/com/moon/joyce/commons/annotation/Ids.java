@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Ids {
-    String[] name() default {"id"};
+    String[] values() default {"id"};
 }

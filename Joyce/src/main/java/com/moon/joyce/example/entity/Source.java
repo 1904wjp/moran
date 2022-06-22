@@ -2,6 +2,9 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.Ids;
+import com.moon.joyce.commons.annotation.NotExist;
+import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.example.entity.dto.Page;
 import com.moon.joyce.example.entity.vo.PageVo;
 import lombok.AllArgsConstructor;
@@ -17,10 +20,12 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("source")
+@Table(name = "source",content = "资源表")
 public class Source  extends Page {
     /**
      * 资源名称
      */
+    @Ids
     @TableField("source_name")
     private String sourceName;
     /**
@@ -43,6 +48,7 @@ public class Source  extends Page {
     /**
      * 用户姓名
      */
+    @NotExist
     @TableField(exist = false)
     private String username;
     /**
@@ -63,6 +69,7 @@ public class Source  extends Page {
     /**
      * 视频url
      */
+    @NotExist
     @TableField(exist = false)
     private String vUrl;
 

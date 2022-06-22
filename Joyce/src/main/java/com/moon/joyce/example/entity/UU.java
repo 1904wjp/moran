@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("u_u")
-@Table(name = "u_u",strategy = TableStrategy.FORCE)
+@Table(name = "u_u",content = "用户关系和对话")
 public class UU extends BaseEntity {
     private static final long serialVersionUID = -6234658347872749729L;
     /**
