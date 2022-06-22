@@ -20,6 +20,6 @@ public @interface Column {
     String comment() default "";
     boolean isKey() default false;
     boolean auto() default false;
-    boolean isNotNull() default true;
+    boolean isNotNull() default false;
     String defaultValue() default "NULL";
 }

@@ -126,8 +126,8 @@ public class AutoCreateTableInit {
      */
     public static String defValConvert(String defVal,String type){
         Map<String, String> map = new HashMap<>();
-        if ("null".equalsIgnoreCase(defVal)){
-            return "null";
+        if ("NULL".equalsIgnoreCase(defVal)){
+            return "NULL";
         }
         if (!map.containsKey(type)){
             return defVal;

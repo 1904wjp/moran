@@ -378,6 +378,9 @@ public class AutoCreateTableFactory implements TableFactory {
         columnEntity.setType(column.type().getStr());
         columnEntity.setNotNull(column.isNotNull());
         columnEntity.setDefaultValue(column.defaultValue());
+        if (columnEntity.getAuto()){
+            columnEntity.setKey(true);
+        }
         if (column.isKey()){
             columnEntity.setNotNull(true);
         }
