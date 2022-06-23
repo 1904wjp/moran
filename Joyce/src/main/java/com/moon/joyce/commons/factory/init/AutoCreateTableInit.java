@@ -122,11 +122,11 @@ public class AutoCreateTableInit {
      * @return
      */
     public static ColumnEntity columnConfigRules(ColumnEntity columnEntity){
-        Map<String, Long> map = new HashMap<>();
-        map.put("datetime",0L);
-        map.put("text",0L);
+        Map<String, Long> lens = new HashMap<>();
+        lens.put("datetime",0L);
+        lens.put("text",0L);
         columnEntity.setDefaultValue( defValConvert(columnEntity.getDefaultValue(), columnEntity.getType()));
-        for (Map.Entry<String,Long> entry : map.entrySet()) {
+        for (Map.Entry<String,Long> entry : lens.entrySet()) {
             if (StringUtils.isBlank(columnEntity.getType())){continue;}
             if (entry.getKey().equalsIgnoreCase(columnEntity.getType())){
                 columnEntity.setLength(entry.getValue());

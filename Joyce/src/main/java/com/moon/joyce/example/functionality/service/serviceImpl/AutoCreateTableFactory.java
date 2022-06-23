@@ -182,7 +182,7 @@ public class AutoCreateTableFactory implements TableFactory {
                     tableEntity.setContent(table.content());
                     tableEntity.setStrategy(table.strategy().getCode().toString());
                     //检查是否有重复注解
-                    check(tableEntity.getName());
+                    checkRepeatTableName(tableEntity.getName());
                     //属性注解获取并且填充
                     Field[] fields = getFields(loadClass);
                     //储存属性的容器
@@ -220,8 +220,8 @@ public class AutoCreateTableFactory implements TableFactory {
                         ColumnEntity newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
                         newList.add(newColumnEntity);
                     }
-                    if (Objects.nonNull(checkRepeatTableEntities(newList))) {
-                        throw new JoyceException("存在如下相同属性，无法创建:" + checkRepeatTableEntities(newList));
+                    if (Objects.nonNull(checkRepeatColumnEntity(newList))) {
+                        throw new JoyceException("存在如下相同属性，无法创建:" + checkRepeatColumnEntity(newList));
                     }
                     map.put(tableEntity, newList);
                 }
@@ -313,7 +313,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param list
      * @return
      */
-    private List<ColumnEntity> checkRepeatTableEntities(List<ColumnEntity> list) {
+    private List<ColumnEntity> checkRepeatColumnEntity(List<ColumnEntity> list) {
         if (Objects.isNull(list)) {
             return null;
         }
@@ -451,7 +451,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param key
      * @return
      */
-    private void check(String key) {
+    private void checkRepeatTableName(String key) {
         if (set.contains(key)) {
             throw new JoyceException("实体类表名'" + key + "'已注册，无法重复创建");
         }
