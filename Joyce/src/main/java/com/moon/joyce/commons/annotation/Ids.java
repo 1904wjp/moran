@@ -13,4 +13,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Ids {
     String[] values() default {"id"};
+    String[] uniques() default {"id"};
 }

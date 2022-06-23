@@ -2,9 +2,11 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.Column;
 import com.moon.joyce.commons.annotation.Ids;
 import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.commons.factory.enums.TableStrategy;
+import com.moon.joyce.commons.factory.enums.Type;
 import com.moon.joyce.example.entity.dto.Page;
 
 
@@ -24,12 +26,13 @@ import com.moon.joyce.example.entity.dto.Page;
 public class SysMenu extends Page {
 
     private static final long serialVersionUID=1L;
-    @Ids
+    @Ids(uniques = "menuName")
     @TableField("menu_name")
  /*   @Column(name = "menu_name",columnDefinition = "varchar(12) COMMENT '菜单名称'")*/
     private String menuName;
 
     @TableField("menu_url")
+    @Column(name="menu_url",comment = "菜单链接", type = Type.VARCHAR,unique = true)
    /* @Column(name = "menu_url",columnDefinition = "varchar(12) COMMENT '菜单地址'")*/
     private String menuUrl;
 

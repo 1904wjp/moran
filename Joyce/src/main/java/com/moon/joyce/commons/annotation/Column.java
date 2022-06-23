@@ -22,4 +22,5 @@ public @interface Column {
     boolean auto() default false;
     boolean isNotNull() default false;
     String defaultValue() default "NULL";
+    boolean unique() default false;
 }

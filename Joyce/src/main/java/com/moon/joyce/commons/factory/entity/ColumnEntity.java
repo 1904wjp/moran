@@ -49,6 +49,16 @@ public class ColumnEntity{
      */
     private Integer idValue;
 
+    private Boolean unique;
+
+    public Boolean getUnique() {
+        return unique;
+    }
+
+    public void setUnique(Boolean unique) {
+        this.unique = unique;
+    }
+
     /**
      * 默认值
      */

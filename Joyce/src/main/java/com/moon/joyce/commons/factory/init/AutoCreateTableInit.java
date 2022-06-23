@@ -1,7 +1,9 @@
 package com.moon.joyce.commons.factory.init;
 
 import com.moon.joyce.commons.factory.entity.ColumnEntity;
+import com.moon.joyce.commons.factory.entity.TableEntity;
 import com.moon.joyce.example.functionality.entity.JoyceException;
+import org.apache.commons.lang3.StringUtils;
 
 
 import java.io.IOException;
@@ -28,8 +30,6 @@ public class AutoCreateTableInit {
         properties.load(in);
         Map<String, Object> types = new HashMap<>();
         Map<String, Object> lengths = new HashMap<>();
-        Map<String, Object> autos = new HashMap<>();
-        Map<String, Object> keys = new HashMap<>();
         Map<String, Object> notNulls = new HashMap<>();
         Map<String, Object> comments = new HashMap<>();
         Map<String, Object> defaultValues = new HashMap<>();
@@ -43,16 +43,6 @@ public class AutoCreateTableInit {
             if (object.toString().startsWith("auto.def.length")){
                 Long length = Long.valueOf(properties.getProperty(object.toString()).trim());
                 lengths.put(keyStr,length);
-            }
-
-            if (object.toString().startsWith("auto.def.auto")){
-                Boolean auto = Boolean.valueOf(properties.getProperty(object.toString()).trim());
-                autos.put(keyStr,auto);
-            }
-
-            if (object.toString().startsWith("auto.def.key")){
-                Boolean key = Boolean.valueOf(properties.getProperty(object.toString()).trim());
-                keys.put(keyStr,key);
             }
 
             if (object.toString().startsWith("auto.def.notNull")){
@@ -81,27 +71,15 @@ public class AutoCreateTableInit {
             columnEntity.setLength(Long.valueOf(lengths.get(type.getKey()).toString()));
             columnEntity.setAuto(false);
 
-            if (!autos.isEmpty()){
-                if (Objects.nonNull(autos.get(type.getKey()))){
-                    columnEntity.setAuto(Boolean.valueOf(autos.get(type.getKey()).toString()));
-                }
-            }
-
             columnEntity.setNotNull(false);
             if (notNulls.isEmpty()){
                 if (Objects.nonNull(notNulls.get(type.getKey()))){
                     columnEntity.setNotNull(Boolean.valueOf(notNulls.get(type.getKey()).toString()));
                 }
             }
-
             columnEntity.setKey(false);
-            if (notNulls.isEmpty()){
-                if (Objects.nonNull(keys.get(type.getKey()))){
-                    columnEntity.setKey(Boolean.valueOf(keys.get(type.getKey()).toString()));
-                }
-            }
 
-            columnEntity.setDefaultValue("null");
+            columnEntity.setDefaultValue("NULL");
             if (notNulls.isEmpty()){
                 if (Objects.nonNull(defaultValues.get(type.getKey()))){
                     columnEntity.setDefaultValue(defaultValues.get(type.getKey()).toString());
@@ -133,8 +111,28 @@ public class AutoCreateTableInit {
             return defVal;
         }
         map.put("int",defVal);
-        map.put("varchar","'"+type+"'");
+        map.put("varchar","'"+defVal+"'");
         //靠大家自己去扩充
         return map.get(type);
+    }
+
+    /**
+     * sql表列映射对象配置规则
+     * @param columnEntity
+     * @return
+     */
+    public static ColumnEntity columnConfigRules(ColumnEntity columnEntity){
+        Map<String, Long> map = new HashMap<>();
+        map.put("datetime",0L);
+        map.put("text",0L);
+        columnEntity.setDefaultValue( defValConvert(columnEntity.getDefaultValue(), columnEntity.getType()));
+        for (Map.Entry<String,Long> entry : map.entrySet()) {
+            if (StringUtils.isBlank(columnEntity.getType())){continue;}
+            if (entry.getKey().equalsIgnoreCase(columnEntity.getType())){
+                columnEntity.setLength(entry.getValue());
+                break;
+            }
+        }
+        return columnEntity;
     }
 }
