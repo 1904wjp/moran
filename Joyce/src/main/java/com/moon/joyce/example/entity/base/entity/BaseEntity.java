@@ -29,7 +29,7 @@ public class BaseEntity implements Serializable {
     private String createBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Column(name="createTime",comment = "创建时间",length = "0", type = Type.DATETIME)
+    @Column(name="createTime",comment = "创建时间",length = "10000000000", type = Type.DATETIME)
     @TableField(value = "create_time",fill = FieldFill.INSERT)
     private Date createTime;
 

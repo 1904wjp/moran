@@ -181,6 +181,7 @@ public class AutoCreateTableFactory implements TableFactory {
                     tableEntity.setName(table.name());
                     tableEntity.setContent(table.content());
                     tableEntity.setStrategy(table.strategy().getCode().toString());
+                    tableEntity = AutoCreateTableInit.tableEntityConfigRules(tableEntity);
                     //检查是否有重复注解
                     checkRepeatTableName(tableEntity.getName());
                     //属性注解获取并且填充

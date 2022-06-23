@@ -4,6 +4,8 @@ import com.moon.joyce.commons.factory.entity.ColumnEntity;
 import com.moon.joyce.commons.factory.entity.TableEntity;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.io.IOException;
@@ -102,7 +104,7 @@ public class AutoCreateTableInit {
      * @param defVal
      * @return
      */
-    public static String defValConvert(String defVal,String type){
+    private static String defValConvert(String defVal,String type){
         Map<String, String> map = new HashMap<>();
         if ("NULL".equalsIgnoreCase(defVal)){
             return "NULL";
@@ -115,24 +117,45 @@ public class AutoCreateTableInit {
         //靠大家自己去扩充
         return map.get(type);
     }
+    /**
+     * 默认值转换
+     * @param type
+     * @return
+     */
+    private static long defLenConvert(String type,long len){
+        Map<String, Long> lens = new HashMap<>();
+        lens.put("datetime",6L);
+        lens.put("text",0L);
+        for (Map.Entry<String,Long> entry : lens.entrySet()) {
+            if (StringUtils.isBlank(type)){continue;}
+            if (entry.getKey().equalsIgnoreCase(type)){
+                len = entry.getValue();
+                break;
+            }
+        }
+        //靠大家自己去扩充
+        return len;
+    }
 
     /**
+     * 可以无视yml注解等默认配置，形成自定义配置
      * sql表列映射对象配置规则
      * @param columnEntity
      * @return
      */
     public static ColumnEntity columnConfigRules(ColumnEntity columnEntity){
-        Map<String, Long> lens = new HashMap<>();
-        lens.put("datetime",0L);
-        lens.put("text",0L);
         columnEntity.setDefaultValue( defValConvert(columnEntity.getDefaultValue(), columnEntity.getType()));
-        for (Map.Entry<String,Long> entry : lens.entrySet()) {
-            if (StringUtils.isBlank(columnEntity.getType())){continue;}
-            if (entry.getKey().equalsIgnoreCase(columnEntity.getType())){
-                columnEntity.setLength(entry.getValue());
-                break;
-            }
-        }
+        columnEntity.setLength(defLenConvert(columnEntity.getType(),columnEntity.getLength()));
         return columnEntity;
+    }
+
+    /**
+     * 可以无视yml注解等默认配置，形成自定义配置
+     * sql表映射对象配置规则
+     * @param tableEntity
+     * @return
+     */
+    public static TableEntity tableEntityConfigRules(TableEntity tableEntity){
+        return tableEntity;
     }
 }
