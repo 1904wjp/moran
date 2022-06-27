@@ -180,7 +180,7 @@ context:
 ###    classes: com.moon.joyce.listeners.RequestListener.java
 #超级管理员
 setting:
-  super_administrator: xd
+  super_administrator: admin
 
 ###日志输出sql
 logging:

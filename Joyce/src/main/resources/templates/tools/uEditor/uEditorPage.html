@@ -123,6 +123,7 @@
             $("#add_article_info").modal('show');
           },
           index : function(){
+            saveEdit();
             toList("/example/uedit/uEditorListPage");
           }
         }
@@ -140,5 +141,7 @@
       });
     }
   }
-
+  window.onbeforeunload = function () {
+    saveEdit();
+  }
 </script>

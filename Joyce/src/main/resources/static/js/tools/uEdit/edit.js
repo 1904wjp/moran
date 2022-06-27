@@ -61,10 +61,18 @@ function saveArticleFuc() {
     $('#add_article_info').modal('hide');
     let resData = {
         "id": $('#article_id').val(),
-        "title": $('#in_title').val(),
+        "title": "未命名"+getRandom(100000,0),
         "author": $('#in_author').val(),
         "content": $('#in_content').val()
     };
+    if (notBlank($('#in_title').val())){
+        resData = {
+            "id": $('#article_id').val(),
+            "title": $('#in_title').val(),
+            "author": $('#in_author').val(),
+            "content": $('#in_content').val()
+        };
+    }
     let filter = {
         "title": $('#in_title').val(),
         "author": $('#in_author').val(),
@@ -88,7 +96,7 @@ function saveArticleFuc() {
                     tips(data.rs,data.msg)
                 }
             }).fail(function () {
-                tips(false,data.msg)
+                tips(false,data.msg);
             });
         });
     }
@@ -142,26 +150,31 @@ function addArticleFuc() {
  * @param id
  */
 function queryArticleFuc(id) {
-    let hello223 = id;
-    toList("/example/uedit/get/" + hello223);
-    /*var data={
-           "id":id
-       }
-       $.ajax({
-           url: '/example/uedit/get',
-           type: 'POST',
-           dataType: 'json',
-           data: data,
-
-       }).done(function (data) {
-           if (data.rs){
-               $("#article_id").val(data.data.id);
-               $("#in_title").val(data.data.title);
-               $("#in_content").attr("text",data.data.content);
-               toList("/example/uedit/uEditorPage");
-           }else {
-               alert(data.msg);
-           };
-       }).fail(function () {
-       });*/
+    toList("/example/uedit/get/" + id);
+}
+/**
+ * 保存数据
+ * @param resData
+ */
+function saveEdit(){
+    let resData = {
+        "id": $('#article_id').val(),
+        "title": "未命名"+getRandom(100000,0),
+        "author": $('#in_author').val(),
+        "content": $('#in_content').val()
+    };
+    if (notBlank($('#in_title').val())){
+        resData = {
+            "id": $('#article_id').val(),
+            "title": $('#in_title').val(),
+            "author": $('#in_author').val(),
+            "content": $('#in_content').val()
+        };
+    }
+    $.ajax({
+        url: "/example/uedit/saveArticle",
+        type: 'POST',
+        dataType: 'json',
+        data: resData
+    });
 }

@@ -324,7 +324,7 @@ function echarts_x_y_value_list(data, nameValue, type) {
  */
 function notBlank(str) {
     str = str.replace(/\s/g, "");
-    if (null != str && str != "" && str != undefined) {
+    if (null != str && str !== "" && str !== undefined) {
         return true;
     }
     return false;
@@ -736,6 +736,15 @@ function guid() {
     });
 }
 
+/**
+ * 获取随机
+ * @param max
+ * @param min
+ * @returns {number}
+ */
+function getRandom(max,min){
+    return  parseInt(Math.random()*(max-min+1)+min);
+}
 
 class Modal {
     static show(obj) {
@@ -744,5 +753,4 @@ class Modal {
     static hide(obj) {
         obj.modal('hide');
     }
-
 }

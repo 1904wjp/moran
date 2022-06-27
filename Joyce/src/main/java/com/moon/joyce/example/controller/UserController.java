@@ -393,7 +393,9 @@ public class UserController extends BaseController {
             }
             fileService.writeJoyceConfig(user.getUsername(),null,false);
             Map<String, List<PageComponent>> map = fileService.readJoyceConfig(user.getUsername());
-            logger.info("map:",map.toString());
+            if (Objects.nonNull(map)){
+                logger.info("map:",map.toString());
+            }
             logger.info(username+"======>登录成功");
             setSession("index",0);
             redisTemplate.opsForValue().set(Constant.SESSION_USER,sessionUsers,24, TimeUnit.HOURS);

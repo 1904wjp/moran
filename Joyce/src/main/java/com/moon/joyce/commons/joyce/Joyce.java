@@ -10,6 +10,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import redis.clients.jedis.Jedis;
@@ -356,11 +357,131 @@ public class Joyce {
 
     @org.junit.Test
     public void test0101() throws ParseException {
-       int[] ints = {1,2};
-        int index = 0;
-        for (int i = 0; i < ints.length; i++) {
-            System.out.println("0:"+index++);
-            System.out.println("1:"+index++);
+       int s= -124654640;
+        String s1 = String.valueOf(s);
+        char[] chars = s1.toCharArray();
+        for (int i = 0; i < chars.length/2 ;i++) {
+            char temp = chars[s1.length()-i-1];
+            chars[s1.length()-i-1] = chars[i];
+            System.out.println(chars[s1.length()-i-1] +":"+ chars[i]);
+            chars[i] = temp;
         }
+        String sum= "";
+        for (int i = 0; i < chars.length ;i++) {
+            sum = sum +chars[i];
+        }
+        if (sum.contains("-")){
+            sum = sum.substring(0,sum.indexOf("-"));
+            sum = "-"+sum;
+        }
+        System.out.println(Integer.valueOf(sum));
+    }
+
+    public static long reverse(int x) {
+        System.out.println(x);
+        String s1 = String.valueOf(x);
+        StringBuilder builder = new StringBuilder(s1).reverse();
+
+        char[] chars = s1.toCharArray();
+        for (int i = 0; i < chars.length/2 ;i++) {
+            char temp = chars[s1.length()-i-1];
+            chars[s1.length()-i-1] = chars[i];
+            chars[i] = temp;
+        }
+        String sum= "";
+        for (int i = 0; i < chars.length ;i++) {
+            sum = sum +chars[i];
+        }
+        if (sum.contains("-")){
+            sum = sum.substring(0,sum.indexOf("-"));
+            sum = "-"+sum;
+        }
+
+        return  Long.parseLong(sum);
+    }
+
+    public int lengthOfLongestSubstring(String s) {
+        int[] end = new int[128];
+        for(int i = 0;i<end.length;i++){
+            end[i] = -1;
+        }
+        int start = 0;
+        int rs = 0;
+        for(int i=0;i<s.length();i++ ){
+            int index = s.charAt(i);
+            if(start<end[index]+1){
+                start = end[index]+1;
+            }
+            if(rs<i-start+1){
+                rs = i-start+1;
+            }
+
+            end[index] = i;
+        }
+        System.out.println(rs);
+        return rs;
+    }
+
+    public static double getMedian(int[] num1,int[] num2){
+        int[] num ={};
+        if (num1.length==0){
+            num = num2;
+        } else if (num2.length==0){
+            num = num1;
+        }else {
+            num = getSumNum(num1, num2);
+        }
+        double median = 0.00;
+        if (num.length%2==0){
+            median= (num[num.length/2-1]+num[num.length/2]) /(double)2;
+        }else {
+            median = num[num.length/2];
+        }
+        return median;
+    }
+    public static int[] getSumNum(int[] num1,int[] num2){
+        int[] num = new int[num1.length+num2.length];
+        int index = 0;
+        for (int i = 0; i < num.length; i++) {
+            if (i<num1.length){
+                num[i] = num1[i];
+            }else {
+                num[i] = num2[index++];
+            }
+        }
+        Arrays.sort(num);
+        return num;
+    }
+
+    public static   double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        double median1 = 0.00;
+        double median2 = 0.00;
+        if (nums1.length!=0 && nums2.length!=0){
+            median1 = getChildMedian(nums1);
+            median2 = getChildMedian(nums2);
+            return (median1+median2)/2;
+        }
+        if (nums2.length==0 ){
+            return getChildMedian(nums1);
+        }
+        if (nums1.length==0 ){
+            return getChildMedian(nums2);
+        }
+        return 0.00;
+
+    }
+    public static double getChildMedian(int[] num){
+        double median = 0.00;
+        if (num.length%2==0){
+            median = (num[num.length/2]+num[num.length/2-1])/(double)2;
+        }else {
+            median = num[num.length/2];
+        }
+        return median;
+    }
+    @Test
+    public void test0110(){
+        String s ="";
+
     }
 }
