@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ColumnsMapper {
@@ -28,4 +29,12 @@ public interface ColumnsMapper {
      * @return
      */
     List<Column> getAllTables(String databaseName);
+
+    /**
+     * 查询特定表中的数据
+     * @param tableName
+     * @param dbName
+     * @return
+     */
+    List<Map<String,Object>> getMapData(@Param("tableName") String tableName, @Param("dbName") String dbName);
 }

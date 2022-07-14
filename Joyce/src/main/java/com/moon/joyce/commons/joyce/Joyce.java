@@ -19,6 +19,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 /**
@@ -481,7 +482,9 @@ public class Joyce {
     }
     @Test
     public void test0110(){
-        String s ="";
-
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        Date date = new Date();
+        String week = sdf.format(date);
+        System.out.println(week);
     }
 }

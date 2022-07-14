@@ -181,6 +181,8 @@ public class UserController extends BaseController {
 
     /**
      * 好友
+     * @param nickname
+     * @return
      */
     @ResponseBody
     @GetMapping("/sessionUsers")

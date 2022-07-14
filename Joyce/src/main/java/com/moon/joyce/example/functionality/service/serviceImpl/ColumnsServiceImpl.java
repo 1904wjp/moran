@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -46,6 +47,11 @@ public class ColumnsServiceImpl implements ColumnsService {
         for (String sql : sqls) {
             jdbcTemplate.execute(sql);
         }
+    }
+
+    @Override
+    public List<Map<String,Object>> getMapTableData(String tableName,String dbName) {
+        return columnsMapper.getMapData(tableName, dbName);
     }
 
 

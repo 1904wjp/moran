@@ -9,6 +9,7 @@ import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,10 +22,10 @@ import java.util.List;
 @Service
 public class DataSourceServiceImpl implements DataSourceService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private DbBaseSettingService dbBaseSettingService;
+
     @Autowired
     private DynamicDataSource dynamicDataSource;
+
 
     /**
      * 切换数据源
@@ -56,6 +57,7 @@ public class DataSourceServiceImpl implements DataSourceService {
 
     }
 
+     @Override
      public boolean testDateSource(DataSource dataSource){
          logger.info("启动测试指定数据源:"+dataSource.getDataSourceName());
          return dynamicDataSource.testDatasource(dataSource.getDataSourceName(), dataSource.getDriver(), dataSource.getUrl(), dataSource.getUserName(), dataSource.getPassWord());

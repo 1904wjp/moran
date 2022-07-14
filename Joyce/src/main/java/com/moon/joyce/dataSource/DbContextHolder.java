@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class DbContextHolder {
     private final static Logger log = LoggerFactory.getLogger(DbContextHolder.class);
     //对于当前线程的操作-线程安全
-    private static final ThreadLocal<String> contextHolder = new ThreadLocal<String>();
+    private static final ThreadLocal<String> contextHolder = new ThreadLocal<>();
 
     /**
      * 切换数据源

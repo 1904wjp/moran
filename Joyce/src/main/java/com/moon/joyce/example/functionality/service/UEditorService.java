@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * web实体类
  */
-@Service
 public interface UEditorService extends IService<Article> {
     /**
      * 文章集合

@@ -22,7 +22,7 @@ spring:
   aop:
      proxy-target-class: true #true表示cglib代理
   datasource:
-    url: jdbc:mysql://localhost:3306/springboot?useSSL=false
+    url: jdbc:mysql://localhost:3306/springboot?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowLoadLocalInfile=true
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: root
@@ -142,6 +142,7 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     ##这个不在控制台打印查询结果,但是在log4j中打印
     ##log-impl: rg.apache.ibatis.logging.log4j2.Log4j2Impl
+    call-setters-on-nulls: true
 #  config-location: classpath:mybatis/mybatis-config.xml
 
 #mybatis-plus配置

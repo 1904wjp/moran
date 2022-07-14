@@ -3,6 +3,7 @@ package com.moon.joyce.example.controller;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
+import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Column;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.service.ColumnsService;
@@ -11,15 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.zip.ZipOutputStream;
+
 
 /**
  * @Author: XingDaoRong
@@ -123,6 +122,13 @@ public class ColumnsController extends BaseController {
         }
         return R.success(tables);
     }
-
+    @ResponseBody
+    @PostMapping("/getTableData")
+    public Result selectTableData(@RequestParam String tableName, @RequestParam String dbName){
+        startupDatasource();
+        List<Map<String,Object>> data = columnsService.getMapTableData(tableName,dbName);
+        shutdownDatasource();
+        return success(data);
+    }
 }
 

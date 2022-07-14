@@ -607,3 +607,52 @@ $('#tableName').change(function () {
         });
     }
 });
+
+
+/**
+ * 显示表格
+ */
+$('#tableName').change(function () {
+    var dbName = $('#dbName').val();
+    var tableName = $(this).children('option:selected').val()
+    if (!isBlank(tableName) && !isBlank(dbName)) {
+        var data = {
+            dbName: dbName,
+            tableName: tableName
+        }
+        $.ajax({
+            url: '/example/columns/getTableData',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+        }).done(function (data) {
+            if (data.rs) {
+                var html = "";
+                var arry = data.data;
+                if (notNull(arry)) {
+                    $('#c_table').remove();
+                    var obj = $('#column_table2');
+                    html = "<table id='c_table2' style='margin-left: 25%' border=\"1\">\n <tr>" ;
+                    $.each(arry[0],function (key,values){
+                        html +=  "<td>" + key + "</td>\n" ;
+                    })  ;
+                    html += "</tr>";
+                    for (let i = 0; i < arry.length; i++) {
+                        html += html +"<tr>";
+                        $.each(arry[0],function (key,values){
+                            html += "<td>" + values + "</td>\n" ;
+                        })  ;
+                        html +=  "</tr>\n";
+                    }
+                    html = html + "</table>";
+                }
+                obj.append(html);
+            } else {
+                tips(data.rs, data.msg)
+            }
+            ;
+        }).fail(function () {
+            tips(false, data.msg)
+        });
+    }
+});

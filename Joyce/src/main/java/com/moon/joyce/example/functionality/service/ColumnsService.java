@@ -4,6 +4,7 @@ import com.moon.joyce.example.functionality.entity.Column;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface ColumnsService {
@@ -35,4 +36,11 @@ public interface ColumnsService {
      * @param set
      */
     void execute(List<String> set);
+
+    /**
+     *  查询表数据
+     * @param tableName
+     * @return
+     */
+    List<Map<String,Object>> getMapTableData(String tableName,String dbName);
 }

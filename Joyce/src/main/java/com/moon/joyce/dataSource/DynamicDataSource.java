@@ -261,9 +261,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     /**
      * 创建数据源
      * @param dataSource
-     * @throws Exception
      */
-    private  boolean createDataSource(DataSource dataSource) throws Exception {
+    private  boolean createDataSource(DataSource dataSource) {
         String datasourceId = dataSource.getDataSourceName();
         log.info("准备创建数据源"+datasourceId);
         String databaseType = dataSource.getDatabaseType();

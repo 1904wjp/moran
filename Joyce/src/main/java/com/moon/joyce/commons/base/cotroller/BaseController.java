@@ -90,12 +90,13 @@ public class BaseController extends R {
     public User getSessionUser(){
         return  (User) getSession().getAttribute(Constant.SESSION_USER);
     }
+
     /**
-     * 获取在线用户id
+     * 获取在线用户名
      * @return
      */
     public String getSessionUserName(){
-        return  ((User) getSession().getAttribute(Constant.SESSION_USER)).getUsername();
+        return  getSessionUser().getUsername();
     }
 
     /**
@@ -103,7 +104,7 @@ public class BaseController extends R {
      * @return
      */
     public Long getSessionUserId(){
-        return  ((User) getSession().getAttribute(Constant.SESSION_USER)).getId();
+        return  getSessionUser().getId();
     }
 
     /**
