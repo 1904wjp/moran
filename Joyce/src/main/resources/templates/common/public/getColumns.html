@@ -21,7 +21,7 @@
                 <div class="form-group ">
                     <label class="col-sm-2 control-label" for="tableName">表名称</label>
                     <div  class="col-sm-8 ">
-                        <select class="form-control" id="tableName">
+                        <select class="form-control" id="tableName"></select>
                         <!--<input class="form-control" id="tableName" type="text" name="tableName" placeholder="请输入表名称"   required="required"/>-->
                     </div>
                 </div>
@@ -29,13 +29,14 @@
                     <label class="col-sm-2 control-label" for=""> </label>
                     <div class="col-sm-8">
                         <input class="btn btn-default pull-left" id="sure" type="button" onclick="inputColumns()" value="确认"/>
+                        <input type="button" value="查看详情" onclick="lookDetailTableData()"/>
                         <input  class="btn btn-default pull-right" id="download" type="button" onclick="downloadWebFile()" value="下载"/>
                     </div>
                 </div>
             </form>
         </div>
+
         <div id="column_table"></div>
-        <div id="column_table2"></div>
     </div>
 </div>
 <input class="title" type="hidden" value="columns">

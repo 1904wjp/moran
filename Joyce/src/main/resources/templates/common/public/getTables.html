@@ -1,0 +1,73 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>数据表名称</title>
+</head>
+<div class="log">
+    <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
+
+<div class="container">
+    <div class="row row-centered">
+        <input type="hide" id="dbName" th:value="${dbName}"/>
+        <input type="hide" id="tableName" th:value="${tableName}"/>
+        <div id="column_table2"></div>
+    </div>
+</div>
+<input class="title" type="hidden" value="columns">
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript">
+    $().ready(function (){
+        getTableData();
+    });
+    /**
+     * 显示表格
+     */
+    function getTableData() {
+        var dbName = $('#dbName').val();
+        var tableName =$('#tableName').val();
+        if (!isBlank(tableName) && !isBlank(dbName)) {
+            var data = {
+                dbName: dbName,
+                tableName: tableName
+            }
+            $.ajax({
+                url: '/example/columns/getTableData',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+            }).done(function (data) {
+                if (data.rs) {
+                    var html = "";
+                    var arry = data.data;
+                    if (notNull(arry)) {
+                        $('#c_table').remove();
+                        var obj = $('#column_table2');
+                        html = "<table id='c_table2' style='margin-left: 25%' border=\"1\">\n <tr>" ;
+                        $.each(arry[0],function (key,values){
+                            html +=  "<td>" + key + "</td>\n" ;
+                        })  ;
+                        html += "</tr>\n";
+                       /* for (let i = 0; i < arry.length(); i++) {*/
+
+                        $.each(arry,function (key,values){
+                            html += "<tr>\n";
+                            $.each(values,function (k,v){
+                                html += "<td>" + v + "</td>\n" ;
+                            })  ;
+                            html +=  "</tr>\n";
+                        })  ;
+
+                     /*   }*/
+                        html = html + "</table>";
+                    }
+                    obj.append(html);
+                } else {
+                    tips(data.rs, data.msg)
+                }
+                ;
+            }).fail(function () {
+                tips(false, data.msg)
+            });
+        }
+    }
+</script>
+</html>

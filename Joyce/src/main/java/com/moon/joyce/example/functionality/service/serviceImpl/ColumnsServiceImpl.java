@@ -50,8 +50,8 @@ public class ColumnsServiceImpl implements ColumnsService {
     }
 
     @Override
-    public List<Map<String,Object>> getMapTableData(String tableName,String dbName) {
-        return columnsMapper.getMapData(tableName, dbName);
+    public List<Map<String,Object>> getMapTableData(String tableName,String dbName,int pageNumber,int offset) {
+        return columnsMapper.getMapData(tableName, dbName,pageNumber,offset);
     }
 
 

@@ -36,5 +36,5 @@ public interface ColumnsMapper {
      * @param dbName
      * @return
      */
-    List<Map<String,Object>> getMapData(@Param("tableName") String tableName, @Param("dbName") String dbName);
+    List<Map<String,Object>> getMapData(@Param("tableName") String tableName, @Param("dbName") String dbName,@Param("pageNumber")int pageNumber,@Param("offset")int offset);
 }

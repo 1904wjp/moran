@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -41,6 +42,13 @@ public class ColumnsController extends BaseController {
         return "common/public/getColumns";
     }
 
+
+    @RequestMapping("/getTablesPage/{dbName}/{tableName}")
+    public String getTablesPage(ModelMap map,@PathVariable String dbName,@PathVariable String tableName) {
+        map.addAttribute("dbName",dbName);
+        map.addAttribute("tableName",tableName);
+        return "common/public/getTables";
+    }
     /**
      * 获取属性列表
      * @param tableName
@@ -124,11 +132,12 @@ public class ColumnsController extends BaseController {
     }
     @ResponseBody
     @PostMapping("/getTableData")
-    public Result selectTableData(@RequestParam String tableName, @RequestParam String dbName){
+    public Result selectTableData(@RequestParam String tableName, @RequestParam String dbName,@RequestParam int pageNumber,@RequestParam String searchWord,@RequestParam int offset){
         startupDatasource();
-        List<Map<String,Object>> data = columnsService.getMapTableData(tableName,dbName);
+        List<Map<String,Object>> data = columnsService.getMapTableData(tableName,dbName,pageNumber,offset);
+        int count = columnsService.getMapTableDataCount(tableName,dbName);
         shutdownDatasource();
-        return success(data);
+        return success(new PageVo(data,count));
     }
 }
 

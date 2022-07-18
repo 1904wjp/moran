@@ -42,5 +42,5 @@ public interface ColumnsService {
      * @param tableName
      * @return
      */
-    List<Map<String,Object>> getMapTableData(String tableName,String dbName);
+    List<Map<String,Object>> getMapTableData(String tableName,String dbName,int pageNumber,int offset);
 }

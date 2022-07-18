@@ -38,3 +38,9 @@ function downloadWebFile() {
     toList("/example/columns/downloadWebFile");
     $('#download').hide();
 }
+
+function lookDetailTableData(){
+   var dbName = $('#dbName').val();
+   var tableName = $('#tableName').val();
+   toList("/example/columns/getTablesPage/"+dbName+"/"+tableName)
+}
