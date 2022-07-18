@@ -37,4 +37,12 @@ public interface ColumnsMapper {
      * @return
      */
     List<Map<String,Object>> getMapData(@Param("tableName") String tableName, @Param("dbName") String dbName,@Param("pageNumber")int pageNumber,@Param("offset")int offset);
+
+    /**
+     * 获取表数据数量
+     * @param tableName
+     * @param dbName
+     * @return
+     */
+    int getCount(@Param("tableName") String tableName, @Param("dbName") String dbName);
 }

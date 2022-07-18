@@ -139,5 +139,14 @@ public class ColumnsController extends BaseController {
         shutdownDatasource();
         return success(new PageVo(data,count));
     }
+
+    @ResponseBody
+    @PostMapping("/getCount")
+    public Result getCount(@RequestParam String tableName, @RequestParam String dbName){
+        startupDatasource();
+        int count = columnsService.getMapTableDataCount(tableName,dbName);
+        shutdownDatasource();
+        return success(200,"ok",count);
+    }
 }
 

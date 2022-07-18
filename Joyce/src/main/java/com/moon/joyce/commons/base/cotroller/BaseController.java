@@ -189,6 +189,11 @@ public class BaseController extends R {
         if (Objects.nonNull(getCurrentSetting())){
             if (Objects.nonNull(getCurrentSetting().getDbBaseSetting())){
                  logger.info("当前为默认系统数据源");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 return dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.CREATE_DATASOURCE);
             }
         }

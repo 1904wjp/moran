@@ -2,39 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moon.joyce.example.mapper.ColumnsMapper">
     <select id="getColumns" resultType="com.moon.joyce.example.functionality.entity.Column">
-        SELECT DISTINCT
-               a.column_name AS columnName ,
-               a.column_comment AS columnComment,
-               a.data_type AS columnType,
-               a.IS_NULLABLE isNull,
-               a.COLUMN_KEY isKey,
-               a.COLUMN_DEFAULT defaultValue,
-               a.table_name AS tableName,
-               a.CHARACTER_MAXIMUM_LENGTH AS  columnLength,
-               b.table_comment AS tableComment
+        SELECT DISTINCT a.column_name              AS columnName,
+                        a.column_comment           AS columnComment,
+                        a.data_type                AS columnType,
+                        a.IS_NULLABLE                 isNull,
+                        a.COLUMN_KEY                  isKey,
+                        a.COLUMN_DEFAULT              defaultValue,
+                        a.table_name               AS tableName,
+                        a.CHARACTER_MAXIMUM_LENGTH AS columnLength,
+                        b.table_comment            AS tableComment
         FROM information_schema.columns a
-        RIGHT  JOIN information_schema.tables b
-        ON a.table_name = b.table_name
-        WHERE
-            b.table_schema = #{dbName}
-          AND  a.table_name = #{tableName}
+                 RIGHT JOIN information_schema.tables b
+                            ON a.table_name = b.table_name
+        WHERE b.table_schema = #{dbName}
+          AND a.table_name = #{tableName}
     </select>
     <select id="getOne" resultType="com.moon.joyce.example.functionality.entity.Column">
-        SELECT
-               table_name  AS tableName,
+        SELECT table_name    AS tableName,
                table_comment AS tableComment
         FROM INFORMATION_SCHEMA.TABLES
-        WHERE  table_schema = #{dbName}
-        AND  TABLE_NAME = #{tableName}
+        WHERE table_schema = #{dbName}
+          AND TABLE_NAME = #{tableName}
     </select>
     <select id="getAllTables" resultType="com.moon.joyce.example.functionality.entity.Column">
-        SELECT
-            table_name  AS tableName,
-            table_comment AS tableComment
+        SELECT table_name    AS tableName,
+               table_comment AS tableComment
         FROM INFORMATION_SCHEMA.TABLES
-        WHERE  table_schema = #{databaseName}
+        WHERE table_schema = #{databaseName}
     </select>
-    <select id="getMapData"  resultType="java.util.Map">
+    <select id="getMapData" resultType="java.util.Map">
         SELECT * FROM ${dbName}.${tableName}
+        <if test="offset!=null and   pageNumber!=null  and  pageNumber!=0">
+            LIMIT #{offset}, #{pageNumber}
+        </if>
+    </select>
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT count(*) FROM ${dbName}.${tableName}
     </select>
 </mapper>

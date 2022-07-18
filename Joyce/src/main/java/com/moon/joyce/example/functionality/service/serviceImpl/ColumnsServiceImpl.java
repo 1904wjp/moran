@@ -54,5 +54,10 @@ public class ColumnsServiceImpl implements ColumnsService {
         return columnsMapper.getMapData(tableName, dbName,pageNumber,offset);
     }
 
+    @Override
+    public int getMapTableDataCount(String tableName, String dbName) {
+        return columnsMapper.getCount(tableName,dbName);
+    }
+
 
 }

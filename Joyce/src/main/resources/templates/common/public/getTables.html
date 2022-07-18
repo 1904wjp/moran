@@ -4,30 +4,94 @@
 <div class="log">
     <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
 </div>
-
+<link rel="stylesheet"  type="text/css" th:href="@{/static/css/common/public/getTable.css}" />
 <div class="container">
     <div class="row row-centered">
         <input type="hide" id="dbName" th:value="${dbName}"/>
         <input type="hide" id="tableName" th:value="${tableName}"/>
         <div id="column_table2"></div>
+        <div><span id="count"></span> <input id="pro_page" type="button" value="上一页" onclick="getTableDataPage(0)"/>
+            <input id="next_page" type="button" value="下一页" onclick="getTableDataPage(1)"/></div>
     </div>
 </div>
 <input class="title" type="hidden" value="columns">
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
 <script type="text/javascript">
-    $().ready(function (){
-        getTableData();
+    var off = 0;
+    var pageNum = 10;
+    var sumCount = 0;
+    var sumPage = 0;
+    var currentPage = 0;
+    var dbName = $('#dbName').val();
+    var tableName = $('#tableName').val();
+    $().ready(function () {
+        getTableData(off, pageNum);
+        getCount();
+        sumPage = Math.ceil(sumCount/10);
+        setFeild();
     });
+
+    function setFeild() {
+        if (off === 0) {
+            $("#pro_page").hide();
+        }else {
+            $("#pro_page").show();
+        }
+        if (sumCount !== 0) {
+            currentPage = Math.ceil(off / 10);
+            if (currentPage>=Math.ceil(sumCount/10)){
+                $("#next_page").hide();
+            }else {
+                $("#next_page").show();
+            }
+        }
+        $("#count").text("总数量:"+sumCount+",页面:"+currentPage+"/"+sumPage);
+    }
+    /**
+     * 获取页面
+     * @param type
+     **/
+    function getTableDataPage(type) {
+        if (type === 0) {
+            off = off-pageNum;
+        }else{
+            off = off+pageNum;
+        }
+        setFeild();
+        getTableData(off, pageNum)
+    }
+
+    /**
+     *获取总量
+     **/
+    function getCount() {
+        var data = {
+            dbName: dbName,
+            tableName: tableName
+        };
+        $.ajax({
+            url: '/example/columns/getCount',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+        }).done(function (data) {
+            sumCount = data.data;
+        });
+    }
+
     /**
      * 显示表格
+     * @param offset
+     * @param pageNumber
      */
-    function getTableData() {
-        var dbName = $('#dbName').val();
-        var tableName =$('#tableName').val();
+    function getTableData(offset, pageNumber) {
         if (!isBlank(tableName) && !isBlank(dbName)) {
             var data = {
                 dbName: dbName,
-                tableName: tableName
+                tableName: tableName,
+                offset: offset,
+                pageNumber: pageNumber,
+                searchWord: null
             }
             $.ajax({
                 url: '/example/columns/getTableData',
@@ -37,26 +101,23 @@
             }).done(function (data) {
                 if (data.rs) {
                     var html = "";
-                    var arry = data.data;
+                    var arry = data.data.rows;
                     if (notNull(arry)) {
-                        $('#c_table').remove();
+                        $('#c_table2').remove();
                         var obj = $('#column_table2');
-                        html = "<table id='c_table2' style='margin-left: 25%' border=\"1\">\n <tr>" ;
-                        $.each(arry[0],function (key,values){
-                            html +=  "<td>" + key + "</td>\n" ;
-                        })  ;
+                        html = "<table id='c_table2'  border='1px' cellpadding='5px'  cellspacing='5px'>\n <tr>";
+                        $.each(arry[0], function (key, values) {
+                            html += "<td>" + key + "</td>\n";
+                        });
                         html += "</tr>\n";
-                       /* for (let i = 0; i < arry.length(); i++) {*/
 
-                        $.each(arry,function (key,values){
+                        $.each(arry, function (key, values) {
                             html += "<tr>\n";
-                            $.each(values,function (k,v){
-                                html += "<td>" + v + "</td>\n" ;
-                            })  ;
-                            html +=  "</tr>\n";
-                        })  ;
-
-                     /*   }*/
+                            $.each(values, function (k, v) {
+                                html += "<td>" + v + "</td>\n";
+                            });
+                            html += "</tr>\n";
+                        });
                         html = html + "</table>";
                     }
                     obj.append(html);

@@ -43,4 +43,12 @@ public interface ColumnsService {
      * @return
      */
     List<Map<String,Object>> getMapTableData(String tableName,String dbName,int pageNumber,int offset);
+
+    /**
+     * 获取表数据数量
+     * @param tableName
+     * @param dbName
+     * @return
+     */
+    int getMapTableDataCount(String tableName, String dbName);
 }
