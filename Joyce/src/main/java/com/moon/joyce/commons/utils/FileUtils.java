@@ -12,7 +12,6 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -110,16 +109,16 @@ public class FileUtils implements Serializable {
                     Iterator<Element> objectIterator = object.elementIterator();
                     while (objectIterator.hasNext()) {
                         Element field = objectIterator.next();
-                        if (field.attributeValue("name").equals("backgroundUrl")) {
+                        if ("backgroundUrl".equals(field.attributeValue("name"))) {
                             pageComponent.setBackgroundUrl(field.attributeValue("value"));
                         }
-                        if (field.attributeValue("name").equals("backgroundColor")) {
+                        if ("backgroundColor".equals(field.attributeValue("name"))) {
                             pageComponent.setBackgroundColor(field.attributeValue("value"));
                         }
-                        if (field.attributeValue("name").equals("backgroundType")) {
+                        if ("backgroundType".equals(field.attributeValue("name"))) {
                             pageComponent.setBackgroundType(field.attributeValue("value"));
                         }
-                        if (field.attributeValue("name").equals("params")) {
+                        if ("params".equals(field.attributeValue("name"))) {
                             Iterator<Element> fieldIterator = field.elementIterator();
                             Map<String, String> fieldMap = new HashMap<>();
                             while (fieldIterator.hasNext()) {
@@ -134,9 +133,7 @@ public class FileUtils implements Serializable {
                     pageComponents.add(pageComponent);
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (DocumentException e) {
+        } catch (FileNotFoundException | DocumentException e) {
             e.printStackTrace();
         }
         map.put(id, pageComponents);
@@ -748,7 +745,9 @@ public class FileUtils implements Serializable {
        if (file.isDirectory()){
            File[] files = file.listFiles();
            for (File f : files) {
-               if (Objects.nonNull(f)) continue;
+               if (Objects.nonNull(f)) {
+                   continue;
+               }
                getFilesByMkdirPath(f.getPath());
            }
        }
@@ -809,14 +808,10 @@ public class FileUtils implements Serializable {
     public static File updateFile(File file,boolean flag){
         String path = file.getPath();
         if (flag){
-            if (file.exists()){
-                file.delete();
-            }
-        }else {
-            return file;
+           deleteFile(file);
+           return createFile(path);
         }
-        File f = createFile(path);
-        return f;
+           return file;
     }
 
     /**

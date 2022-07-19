@@ -1,12 +1,8 @@
-package joyce.example.controller;
+package com.moon.joyce.example.controller;
 
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
-import com.moon.joyce.example.entity.base.entity.BaseEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 /**
