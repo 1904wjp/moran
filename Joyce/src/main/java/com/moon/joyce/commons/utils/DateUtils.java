@@ -237,7 +237,4 @@ public class DateUtils implements Serializable {
         }
         return result;
     }
-
-
-
 }

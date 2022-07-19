@@ -24,14 +24,9 @@ public class RegularUtils implements Serializable {
      * @return
      */
     public static boolean matcherUtil(String var,String  formula) {
-        Pattern p = null;
-        Matcher m = null;
         boolean b = false;
-        String s2=formula;
-        if(StringUtils.isNotBlank(var)){
-            p = Pattern.compile(s2);
-            m = p.matcher(var);
-            b = m.matches();
+        if(StringUtils.isNotBlank(var) && StringUtils.isNoneBlank(formula)){
+            b = Pattern.compile(formula).matcher(var).matches();
         }
         return b;
     }

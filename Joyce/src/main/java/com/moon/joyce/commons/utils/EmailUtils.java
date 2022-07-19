@@ -68,5 +68,4 @@ public class EmailUtils implements Serializable {
         }
         return code;
     }
-
 }
