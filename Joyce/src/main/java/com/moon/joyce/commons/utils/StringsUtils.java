@@ -8,10 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -39,15 +36,8 @@ public class StringsUtils  implements Serializable {
     }
     //集合是否含有某个字符串
     public static boolean listIsContainsStr(String str,List<String> list){
-        for (String string : list) {
-            if(StringUtils.isBlank(string)) {
-                continue;
-            }
-            if (string.equals(str)) {
-                return true;
-            }
-        }
-        return  false;
+        Set<String> set = new HashSet<>(list);
+        return  set.contains(str);
     }
 
 
