@@ -131,11 +131,9 @@ public class FileServiceImpl implements FileService {
             try {
                 if (servletOutputStream != null) {
                     servletOutputStream.close();
-                    servletOutputStream = null;
                 }
                 if (inputStream != null) {
                     inputStream.close();
-                    inputStream = null;
                 }
                 File file = new File(System.getProperty("user.dir") + "\\Joyce\\target\\classes\\templates\\" + serverFilename);
                 if (file.exists()){
