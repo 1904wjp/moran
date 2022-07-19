@@ -11,7 +11,8 @@
         <input type="hide" id="tableName" th:value="${tableName}"/>
         <div id="column_table2"></div>
         <div><span id="count"></span> <input id="pro_page" type="button" value="上一页" onclick="getTableDataPage(0)"/>
-            <input id="next_page" type="button" value="下一页" onclick="getTableDataPage(1)"/></div>
+            <input id="next_page" type="button" value="下一页" onclick="getTableDataPage(1)"/> <input id="page" style="width: 5%"/> <input id="switch" type="button" value="跳转" onclick="getTableDataPage(2)"/>
+        </div>
     </div>
 </div>
 <input class="title" type="hidden" value="columns">
@@ -27,7 +28,6 @@
     $().ready(function () {
         getTableData(off, pageNum);
         getCount();
-        sumPage = Math.ceil(sumCount/10);
         setFeild();
     });
 
@@ -54,11 +54,17 @@
     function getTableDataPage(type) {
         if (type === 0) {
             off = off-pageNum;
-        }else{
+        }else if(type === 1){
             off = off+pageNum;
+        }else {
+            off = $("#page").val()*10;
         }
         setFeild();
-        getTableData(off, pageNum)
+        if (off<=sumPage){
+            getTableData(off, pageNum)
+        }else {
+            tips(false,"超过最大页面")
+        }
     }
 
     /**
@@ -76,6 +82,7 @@
             data: data,
         }).done(function (data) {
             sumCount = data.data;
+            sumPage = Math.ceil(sumCount/10);
         });
     }
 
