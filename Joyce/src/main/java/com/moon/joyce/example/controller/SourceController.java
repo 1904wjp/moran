@@ -121,6 +121,13 @@ public class SourceController extends BaseController {
     public Result saveAlbum(Album album) {
         JSONObject jsonObject = (JSONObject) JSON.parse(album.getSourceConfig());
         String site = jsonObject.get("site").toString();
+        int size = StringsUtils.StrToList(jsonObject.get("ids").toString()).size();
+        if ("0".equals(album.getType())){
+            if (size!=12){
+                return error("当前类型只能是12张");
+            }
+        }
+        album.setTotal(size);
         if (StringUtils.isBlank(site)){
             jsonObject.put("site",getSite());
         }

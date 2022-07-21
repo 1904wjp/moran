@@ -42,7 +42,7 @@ public class Album extends Page {
     private String type;
 
     @Column(name = "total",type = Type.BIGINT,comment = "张数")
-    private Long total;
+    private Integer total;
 
     @NotExist
     @TableField(exist = false)
