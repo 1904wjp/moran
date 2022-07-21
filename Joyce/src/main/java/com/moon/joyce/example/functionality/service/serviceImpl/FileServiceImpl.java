@@ -69,7 +69,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void writeJoyceConfig(String username, Map<String, List<PageComponent>> map,boolean flag) {
+    public boolean writeJoyceConfig(String username, Map<String, List<PageComponent>> map,boolean flag) {
         //文件全路径
         String filePathName = confPath + username + "_config.xml";
         File file = new File(filePathName);
@@ -102,10 +102,18 @@ public class FileServiceImpl implements FileService {
             map = initMap;
             logger.info("文件：{}初始化配置结束",filePathName);
         }
-        if (!map.isEmpty() && flag){
+        if (!file.exists()){
+            flag = true;
+        }
+        if (!map.isEmpty() && flag ){
             FileUtils.deleteFile(filePathName);
             FileUtils.writeConfigXml(filePathName,map);
         }
+
+        if (FileUtils.fileExist(file,60) && !readJoyceConfig(username).isEmpty()){
+            return true;
+        }
+        return false;
     }
 
     @Override

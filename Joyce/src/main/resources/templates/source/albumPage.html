@@ -1,56 +1,24 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<title>css-3d–˝◊™</title>
-		<link rel="stylesheet" href="css/index.css" />
-	</head>
-	<body>
-		<!--/*Õ‚≤„◊Ó¥Û»›∆˜*/-->
-		<div class="wrap">
-	<!--	/*∞¸π¸À˘”–‘™Àÿµƒ»›∆˜*/-->
-		<div class="cube">
-			<!--«∞√ÊÕº∆¨ -->
-			<div class="out_front">
-				<img src="img/1.jpg"  class="pic"/>
-			</div>
-			<!--∫Û√ÊÕº∆¨ -->
-			<div class="out_back">
-				<img src="img/2.jpg"  class="pic"/>
-			</div>
-			<!--◊ÛÕº∆¨ -->
-			<div class="out_left">
-				<img src="img/3.jpg"  class="pic"/>
-			</div>
-			<div class="out_right">
-				<img src="img/4.jpg"  class="pic"/>
-			</div>
-			<div class="out_top">
-				<img src="img/5.jpg"  class="pic"/>
-			</div>
-			<div class="out_bottom">
-				<img src="img/6.jpg"  class="pic"/>
-			</div>
-			<!--–°’˝∑ΩÃÂ --> 
-			<span class="in_front">
-				<img src="img/7.jpg" class="in_pic" />
-			</span>
-			<span class="in_back">
-			     <img src="img/8.jpg" class="in_pic" />
-			</span>
-			<span class="in_left">
-				<img src="img/9.jpg" class="in_pic" />
-			</span>
-			<span class="in_right">
-				<img src="img/10.jpg" class="in_pic" />
-			</span>
-			<span class="in_top">
-				<img src="img/11.jpg" class="in_pic" />
-			</span>
-			<span class="in_bottom">
-				<img src="img/12.jpg" class="in_pic" />
-			</span>
-		</div>
-		</div>
-	</body>
-</html>
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+	<title>ËµÑÊ∫ê‰∏ä‰º†</title>
+</head>
+<link  rel="stylesheet" th:href="@{/static/css/source/album.css}"/>
+<input id="album_id" type="hidden" th:value="${id}"/>
+<!--/*ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ*/-->
+<div class="wrap">
+	<!--	/*ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ‘™ÔøΩÿµÔøΩÔøΩÔøΩÔøΩÔøΩ*/-->
+	<div class="cube">
+
+	</div>
+</div>
+<script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/source/album.js}"></script>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript">
+$.ready(function () {
+	var id = $('#album_id').var
+	getSource(id);
+});
+</script>
+
+

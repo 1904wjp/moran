@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;;
 
@@ -85,8 +86,9 @@ public class SourceController extends BaseController {
      *
      * @return
      */
-    @RequestMapping("/albumPage")
-    public String albumPage() {
+    @RequestMapping("/albumPage/{id}")
+    public String albumPage(@PathVariable Long id, ModelMap map) {
+        map.addAttribute("id",id);
         return pagePrefix + "albumPage";
     }
 
@@ -224,8 +226,13 @@ public class SourceController extends BaseController {
     @ResponseBody
     @RequestMapping("/uploadSource")
     public Result uploadSource(@RequestParam(value = "file", required = true) MultipartFile file) {
-        String filePath = fileService.uploadImg(file);
-        return R.success("上传成功", filePath);
+        String filePath = null;
+        try {
+            filePath = fileService.uploadImg(file);
+        } catch (Exception e) {
+            return error("上传异常");
+        }
+        return success("上传成功", filePath);
     }
 
 
@@ -247,7 +254,7 @@ public class SourceController extends BaseController {
         List<Source> list = sourceService.getList(source);
         if (Objects.nonNull(dbSource) && !list.isEmpty()) {
             MainSource mainSource = new MainSource(1L, dbSource, list);
-            return R.dataResult(true, mainSource);
+            return success(mainSource);
         }
         return R.error("主页背景默认配置");
     }
@@ -261,7 +268,12 @@ public class SourceController extends BaseController {
     @ResponseBody
     @PostMapping("/uploadVideoSource")
     public Result uploadVideo(HttpServletRequest req, HttpServletResponse resp) {
-        int code = fileService.uploadVideo(req, resp);
+        int code = 0;
+        try {
+            code = fileService.uploadVideo(req, resp);
+        } catch (Exception e) {
+            return error("上传异常,视频上传失败！");
+        }
         if (code==200){
             return R.success("视频上传完成，进行解析！");
         }
@@ -280,8 +292,13 @@ public class SourceController extends BaseController {
     @ResponseBody
     @GetMapping("/mergeVideoSource")
     public Result mergeVideo( String uuid, String newFileName){
-        Map<String, Object> map = fileService.mergeTempFile(uuid, newFileName);
-        map.remove(FileUtils.vrp);
+        Map<String, Object> map = null;
+        try {
+            map = fileService.mergeTempFile(uuid, newFileName);
+            map.remove(FileUtils.vrp);
+        } catch (Exception e) {
+            return error("视频解析失败");
+        }
         return R.dataResult(Objects.nonNull(map),"视频解析失败","视频解析成功",map);
     }
 

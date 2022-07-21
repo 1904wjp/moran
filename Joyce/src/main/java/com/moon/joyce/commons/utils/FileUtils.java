@@ -836,5 +836,39 @@ public class FileUtils implements Serializable {
         }
         return false;
     }
+
+    /**
+     * 规定时间类检测文件是否完成
+     * @param path
+     * @param time
+     * @return
+     */
+    public static boolean fileExist(String path,long time){
+        File file = createFile(path);
+       return fileExist(file,time);
+    }
+    /**
+     * 规定时间类检测文件是否完成
+     * @param file
+     * @param time
+     * @return
+     */
+    public static boolean fileExist(File file,long time){
+        long t = 0L;
+        boolean flag = false;
+        while (t<=time && !flag){
+            if (file.exists()){
+                flag = true;
+                break;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            t++;
+        }
+        return flag;
+    }
 }
 

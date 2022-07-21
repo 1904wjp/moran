@@ -393,10 +393,9 @@ public class UserController extends BaseController {
                     setSession(getSessionUser().getId()+Constant.CURRENT_SETTING,currentSetting);
                 }
             }
-            fileService.writeJoyceConfig(user.getUsername(),null,false);
-            Map<String, List<PageComponent>> map = fileService.readJoyceConfig(user.getUsername());
-            if (Objects.nonNull(map)){
-                logger.info("map:",map.toString());
+            boolean rs = fileService.writeJoyceConfig(user.getUsername(), null, false);
+            if (!rs){
+                return error("初始化用户文件失败");
             }
             logger.info(username+"======>登录成功");
             setSession("index",0);

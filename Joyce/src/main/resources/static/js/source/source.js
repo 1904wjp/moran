@@ -37,13 +37,13 @@ function selectSource(type){
  */
 function uploadSource(){
      var def = $('#type').val();
-    if(def==='1'){
-        uploadFile($('#pic_source_file'),"/example/source/uploadSource",$("#display_img_resource"),"source_url");
-    }
     if (def==='3'){
         var file = $("#pic_source_file")[0].files[0];
         uploadVideoFile(file,0,guid(),"/example/source/uploadVideoSource","/example/source/mergeVideoSource", $("#display_img_resource"));
+    }else {
+        uploadFile($('#pic_source_file'),"/example/source/uploadSource",$("#display_img_resource"),"source_url");
     }
+
 }
 
 //保存资源
