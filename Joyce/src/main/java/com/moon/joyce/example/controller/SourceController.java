@@ -1,6 +1,8 @@
 package com.moon.joyce.example.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.FileUtils;
@@ -56,6 +58,8 @@ public class SourceController extends BaseController {
     private AlbumService albumService;
     @Autowired
     private SourceServiceControllerDetailService sourceServiceControllerDetailService;
+    //默认位置
+    private String site = "";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 资源页面
@@ -105,6 +109,11 @@ public class SourceController extends BaseController {
     @ResponseBody
     @PostMapping("/saveAlbum")
     public Result saveAlbum(Album album) {
+        JSONObject jsonObject = (JSONObject) JSON.parse(album.getSourceConfig());
+        String site = jsonObject.get("site").toString();
+        if (StringUtils.isBlank(site)){
+
+        }
         album.setUserId(getSessionUserId());
         setBaseField(album);
         boolean rs = albumService.saveOrUpdate(album);
