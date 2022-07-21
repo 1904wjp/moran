@@ -109,7 +109,7 @@ public class UEditorController extends BaseController {
         List<Long>  idList = uuService.getList("1", getSessionUser().getId());
         idList.add(getSessionUser().getId());
         List<Article> list = uEditorService.getList(article,idList);
-        int total = uEditorService.getTotal(article,idList);
+        long total = uEditorService.getTotal(article,idList);
         return new PageVo(list,total);
     }
 

@@ -28,5 +28,5 @@ public interface UserMapper extends BaseMapper<User> {
      * 查询数据个数
      * @return
      */
-    int getTotal(User user);
+    long getTotal(User user);
 }

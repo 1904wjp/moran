@@ -20,5 +20,5 @@ public interface DbBaseSettingMapper extends BaseMapper<DbBaseSetting> {
      * @param dbBaseSetting
      * @return
      */
-    int getCount(DbBaseSetting dbBaseSetting);
+    long getCount(DbBaseSetting dbBaseSetting);
 }

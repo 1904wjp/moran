@@ -28,7 +28,7 @@ public interface AccountingMapper extends BaseMapper<Accounting> {
      * @param accounting
      * @return
      */
-    int getTotal(Accounting accounting);
+    long getTotal(Accounting accounting);
 
     /**
      * 根据类型和日期获取数据

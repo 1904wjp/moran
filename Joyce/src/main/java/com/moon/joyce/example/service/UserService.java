@@ -52,7 +52,7 @@ public interface UserService extends IService<User> {
      * @param
      * @return
      */
-    int getUsersCount(User user);
+    long getUsersCount(User user);
 
 
 

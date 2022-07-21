@@ -40,7 +40,7 @@
     </select>
 
     <!--统计所有数据数量-->
-    <select id="getTotal" resultType="java.lang.Integer">
+    <select id="getTotal" resultType="java.lang.Long">
         SELECT count(*)
         FROM springboot.user u
         WHERE u.delete_flag =0

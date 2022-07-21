@@ -35,7 +35,7 @@ public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> impleme
     }
 
     @Override
-    public int getCount(Source source) {
+    public long getCount(Source source) {
         return sourceMapper.selectCount(source);
     }
 

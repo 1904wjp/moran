@@ -27,5 +27,5 @@ public interface SourceMapper extends BaseMapper<Source> {
      * @param source
      * @return
      */
-    int selectCount(Source source);
+    long selectCount(Source source);
 }

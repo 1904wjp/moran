@@ -31,7 +31,7 @@ public interface DbBaseSettingService extends IService<DbBaseSetting> {
      * @param dbBaseSetting
      * @return
      */
-    int getDbBaseSettingCount(DbBaseSetting dbBaseSetting);
+    long getDbBaseSettingCount(DbBaseSetting dbBaseSetting);
 
     /**
      * 查询条件数量

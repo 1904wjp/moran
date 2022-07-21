@@ -24,7 +24,7 @@ public interface AccountingService extends IService<Accounting> {
      * @param accounting
      * @return
      */
-    int getTotal(Accounting accounting);
+    long getTotal(Accounting accounting);
 
     /**
      * 根据时间获取数据集

@@ -22,6 +22,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @Author: XingDaoRong
  * @Date: 2021/12/17
@@ -482,9 +485,18 @@ public class Joyce {
     }
     @Test
     public void test0110(){
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-        Date date = new Date();
-        String week = sdf.format(date);
-        System.out.println(week);
+        String name = "_";
+        Pattern userNameRegex = Pattern.compile("^[/_|\\\\]*$");
+        for (int i = 0; i < name.length(); i++) {
+            String nameChar = name.substring(i,i+1);
+            Matcher m = userNameRegex.matcher(nameChar);
+            if (m.matches()) {
+                System.out.println(name + " 中是含有特殊字符！");
+                return;
+            }
+
+        }
+        System.out.println(name + " 中不含有特殊字符！");
+
     }
 }

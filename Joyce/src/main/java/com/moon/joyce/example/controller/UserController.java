@@ -415,7 +415,7 @@ public class UserController extends BaseController {
     @RequestMapping("/userListData")
     public PageVo getUsers(User user){
         //得到总页数
-        int total = userService.getUsersCount(user);
+        long total = userService.getUsersCount(user);
         //得到user数据对象
         List<User> rows = userService.getUserList(user);
         return  new PageVo(rows,total);

@@ -9,8 +9,6 @@ import com.moon.joyce.example.entity.PackageInfo;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.entity.Setting;
-import com.moon.joyce.example.functionality.service.ColumnsService;
-import com.moon.joyce.example.functionality.service.DataSourceService;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import com.moon.joyce.example.functionality.service.PackageInfoService;
 import org.apache.commons.lang3.StringUtils;
@@ -167,7 +165,7 @@ public class DataSourceController extends BaseController {
     public PageVo getDbList(DbBaseSetting dbBaseSetting) {
         dbBaseSetting.setUserId(getSessionUser().getId());
         List<DbBaseSetting> dbs = dbBaseSettingService.getDbBaseSettings(dbBaseSetting);
-        int total = dbBaseSettingService.getDbBaseSettingCount(dbBaseSetting);
+        long total = dbBaseSettingService.getDbBaseSettingCount(dbBaseSetting);
         return new PageVo(dbs,total);
     }
 

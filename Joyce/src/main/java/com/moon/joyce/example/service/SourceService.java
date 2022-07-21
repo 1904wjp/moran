@@ -29,7 +29,7 @@ public interface SourceService extends IService<Source> {
      * @param source
      * @return
      */
-    int getCount(Source source);
+    long getCount(Source source);
 
     /**
      * 查询单个资源

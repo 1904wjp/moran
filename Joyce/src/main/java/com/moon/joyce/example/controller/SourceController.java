@@ -6,11 +6,13 @@ import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
+import com.moon.joyce.example.entity.Album;
 import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.entity.vo.MainSource;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.service.FileService;
+import com.moon.joyce.example.service.AlbumService;
 import com.moon.joyce.example.service.SourceService;
 import com.moon.joyce.example.service.serviceControllerDetails.SourceServiceControllerDetailService;
 
@@ -51,6 +53,8 @@ public class SourceController extends BaseController {
     @Autowired
     private FileService fileService;
     @Autowired
+    private AlbumService albumService;
+    @Autowired
     private SourceServiceControllerDetailService sourceServiceControllerDetailService;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
@@ -72,6 +76,41 @@ public class SourceController extends BaseController {
         return pagePrefix + "sourceListPage";
     }
 
+
+    /**
+     * 获取资源列表
+     * @param album
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/getAlbumList")
+    public PageVo getAlbumList(Album album) {
+        album.setUserId(getSessionUser().getId());
+        return albumService.getPage(album);
+    }
+    @ResponseBody
+    @GetMapping("/get/{id}")
+    public Result getAlbumById(@PathVariable String id){
+        Album album = albumService.getById(id);
+        Map<String, Source> map = albumService.analyAlbumConfig(album.getSourceConfig());
+        album.setMap(map);
+        return success(album);
+    }
+
+    /**
+     * 保存资源
+     * @param album
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/saveAlbum")
+    public Result saveAlbum(Album album) {
+        album.setUserId(getSessionUserId());
+        setBaseField(album);
+        boolean rs = albumService.saveOrUpdate(album);
+        return dataResult(rs);
+    }
+
     /**
      * 获取资源列表
      *
@@ -82,9 +121,10 @@ public class SourceController extends BaseController {
     public PageVo getList(Source source) {
         source.setUserId(getSessionUser().getId());
         List<Source> list = sourceService.getList(source);
-        int total = sourceService.getCount(source);
+        long total = sourceService.getCount(source);
         return new PageVo(list, total);
     }
+
 
     /**
      * 保存资源

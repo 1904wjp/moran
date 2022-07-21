@@ -1,5 +1,7 @@
 package com.moon.joyce.example.entity.vo;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,16 +15,19 @@ public class PageVo implements Serializable {
 
     private static final long serialVersionUID = 6864620675861590712L;
     //总数据条数
-    private int total;
+    private long total;
     //分页查询的数据集合
     private List<?> rows;
 
-    public PageVo(List<?> list, int total) {
+    public PageVo(List<?> list, long total) {
         this.rows = list;
         this.total = total;
     }
-
-    public int getTotal() {
+    public PageVo(IPage<?> page){
+        this.rows = page.getRecords();
+        this.total = page.getTotal();
+    }
+    public long getTotal() {
         return total;
     }
 

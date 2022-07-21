@@ -46,7 +46,7 @@
 
     </select>
 
-    <select id="selectCount" resultType="java.lang.Integer">
+    <select id="selectCount" resultType="java.lang.Long">
         SELECT count(*) FROM springboot.source s
         LEFT JOIN springboot.user u
         ON s.user_id = u.id

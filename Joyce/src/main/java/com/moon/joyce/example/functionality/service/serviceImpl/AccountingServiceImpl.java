@@ -27,7 +27,7 @@ public class AccountingServiceImpl extends ServiceImpl<AccountingMapper, Account
     }
 
     @Override
-    public int getTotal(Accounting accounting) {
+    public long getTotal(Accounting accounting) {
         return accountingMapper.getTotal(accounting);
     }
 

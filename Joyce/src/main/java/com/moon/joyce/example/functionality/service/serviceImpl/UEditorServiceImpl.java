@@ -26,7 +26,7 @@ public class UEditorServiceImpl extends ServiceImpl<UEditorMapper, Article> impl
     }
 
     @Override
-    public int getTotal(Article article,List<Long> idList) {
+    public long getTotal(Article article,List<Long> idList) {
         return uEditorMapper.getTotal(article,idList);
     }
 }

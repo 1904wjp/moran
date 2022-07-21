@@ -24,5 +24,5 @@ public interface UEditorMapper extends BaseMapper<Article>{
      * @param article
      * @return
      */
-    int getTotal(@Param("article") Article article,@Param("idList") List<Long> idList);
+    long getTotal(@Param("article") Article article,@Param("idList") List<Long> idList);
 }

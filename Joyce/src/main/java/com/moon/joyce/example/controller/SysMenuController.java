@@ -69,9 +69,9 @@ public class SysMenuController extends BaseController {
         }
         List<SysMenuVo> menuVos = TreeUtils.toTree(sysMenuVos);
         if (menuVos.isEmpty()){
-            return R.error(Constant.NULL_CODE);
+            return error(Constant.NULL_CODE);
         }
-        return R.success(menuVos);
+        return success(menuVos);
     }
 
     /**
@@ -81,10 +81,10 @@ public class SysMenuController extends BaseController {
     @GetMapping("/addMenu/{id}")
     public String  addMenuPage(ModelMap model,@PathVariable Long id){
         SysMenu sysMenu = new SysMenu();
-        sysMenu.setParentId(-1l);
+        sysMenu.setParentId(-1L);
         List<SysMenu> parentMenus = sysMenuService.getMenus(sysMenu);
         SysMenu rootMenu = new SysMenu();
-        rootMenu.setId(-1l);
+        rootMenu.setId(-1L);
         rootMenu.setMenuName("初始菜单");
         parentMenus.add(rootMenu);
         model.addAttribute("parentMenus",parentMenus);

@@ -194,7 +194,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public int getUsersCount(User user) {
+    public long getUsersCount(User user) {
         return userMapper.getTotal(user);
     }
 

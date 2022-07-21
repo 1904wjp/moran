@@ -64,7 +64,7 @@ public class DbBaseSettingServiceImpl extends ServiceImpl<DbBaseSettingMapper, D
     }
 
     @Override
-    public int  getDbBaseSettingCount(DbBaseSetting dbBaseSetting) {
+    public long  getDbBaseSettingCount(DbBaseSetting dbBaseSetting) {
         return dbBaseSettingMapper.getCount(dbBaseSetting);
     }
 

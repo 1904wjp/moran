@@ -308,4 +308,15 @@ public class StringsUtils  implements Serializable {
         return builder.toString();
     }
 
+    /**
+     * 字符串集合转其他
+     * @param list
+     * @return
+     */
+    public static  List<Long> strListToOther(List<String> list){
+            List<Long> longs = new ArrayList<>();
+            list.forEach(x->longs.add(Long.valueOf(x)));
+            return   longs ;
+    }
+
 }

@@ -24,5 +24,5 @@ public interface UEditorService extends IService<Article> {
      * @param article
      * @return
      */
-    int getTotal(Article article,List<Long> idList);
+    long getTotal(Article article,List<Long> idList);
 }

@@ -43,7 +43,7 @@ public class AccountingController extends BaseController {
             accounting.setUpdateTime(new Date());
         }
         boolean rs = accountingService.saveOrUpdate(accounting);
-        return R.dataResult(rs);
+        return dataResult(rs);
     }
 
     /**
@@ -57,9 +57,11 @@ public class AccountingController extends BaseController {
         //获取自己的列表
         accounting.setUserId(getSessionUserId());
         List<Accounting> list = accountingService.getList(accounting);
-        int total = accountingService.getTotal(accounting);
+        long total = accountingService.getTotal(accounting);
         return new PageVo(list,total);
     }
+
+
 
     /**
      * 获取对应的数据

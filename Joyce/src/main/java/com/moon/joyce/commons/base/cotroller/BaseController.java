@@ -7,6 +7,7 @@ import com.moon.joyce.commons.utils.RedisUtils;
 import com.moon.joyce.example.entity.DbBaseSetting;
 import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import com.moon.joyce.example.service.UUService;
@@ -219,5 +220,17 @@ public class BaseController extends R {
             return -3;
         }
         return getRedisValueOperation().getOperations().getExpire(k);
+    }
+
+
+    public void setBaseField(BaseEntity baseFeild){
+        if (Objects.isNull(baseFeild.getId())){
+            baseFeild.setCreateBy(getSessionUserName());
+            baseFeild.setCreateTime(new Date());
+            baseFeild.setDeleteFlag(0);
+        }else {
+            baseFeild.setUpdateBy(getSessionUserName());
+            baseFeild.setUpdateTime(new Date());
+        }
     }
 }

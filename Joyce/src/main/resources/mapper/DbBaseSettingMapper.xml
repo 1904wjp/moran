@@ -46,7 +46,7 @@
         </if>
     </select>
 
-    <select id="getCount" resultType="java.lang.Integer">
+    <select id="getCount" resultType="java.lang.Long">
         SELECT count(*)
         FROM springboot.db_base_setting a
         LEFT JOIN springboot.user b
