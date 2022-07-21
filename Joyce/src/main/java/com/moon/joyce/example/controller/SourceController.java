@@ -129,7 +129,7 @@ public class SourceController extends BaseController {
         }
         album.setTotal(size);
         if (StringUtils.isBlank(site)){
-            jsonObject.put("site",getSite());
+            jsonObject.put("site",getDefSite());
         }
         album.setUserId(getSessionUserId());
         setBaseField(album);
@@ -326,10 +326,10 @@ public class SourceController extends BaseController {
     }
 
     /**
-     * 获取位置信息
+     * 获取默认位置信息
      * @return
      */
-    private String getSite(){
+    private String getDefSite(){
         String[] pres = {"out","in"};
         StringBuilder sb = new StringBuilder();
         String[] sites = baseSite.split(",");
