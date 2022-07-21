@@ -44,7 +44,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     @Override
     public Map<String, Source> analyAlbumConfig(String config) {
-
+        Map<String, Source> map = new HashMap<>();
         if (StringUtils.isNoneBlank(config)){
             JSONObject jsonObject = (JSONObject) JSON.parse(config);
             List<Long> longs = StringsUtils.strListToOther(StringsUtils.StrToList(jsonObject.get("ids").toString()));
@@ -57,17 +57,14 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             for (int i = 0; i < idList.size(); i++) {
                 siteMap.put(idList.get(i),siteList.get(i));
             }
-            Map<String, Source> map = new HashMap<>();
             for (Map.Entry<String, Source> sourceEntry : sourceMap.entrySet()) {
                 for (Map.Entry<String, String> siteEntry : siteMap.entrySet()) {
                     if (sourceEntry.getKey().equals(siteEntry.getKey())){
                         map.put(siteEntry.getValue(),sourceEntry.getValue());
                     }
-
                 }
             }
-            return map;
         }
-        return null;
+        return map;
     }
 }

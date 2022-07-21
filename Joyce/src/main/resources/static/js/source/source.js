@@ -37,7 +37,6 @@ function selectSource(type){
  */
 function uploadSource(){
      var def = $('#type').val();
-
     if(def==='1'){
         uploadFile($('#pic_source_file'),"/example/source/uploadSource",$("#display_img_resource"),"source_url");
     }

@@ -59,7 +59,7 @@ public class SourceController extends BaseController {
     @Autowired
     private SourceServiceControllerDetailService sourceServiceControllerDetailService;
     //默认位置
-    private String site = "";
+    private String baseSite = "front,back,left,right,top,bottom";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 资源页面
@@ -80,6 +80,15 @@ public class SourceController extends BaseController {
         return pagePrefix + "sourceListPage";
     }
 
+    /**
+     * 相册页面
+     *
+     * @return
+     */
+    @RequestMapping("/albumPage")
+    public String albumPage() {
+        return pagePrefix + "albumPage";
+    }
 
     /**
      * 获取资源列表
@@ -98,7 +107,7 @@ public class SourceController extends BaseController {
         Album album = albumService.getById(id);
         Map<String, Source> map = albumService.analyAlbumConfig(album.getSourceConfig());
         album.setMap(map);
-        return success(album);
+        return dataResult(map.isEmpty(),album);
     }
 
     /**
@@ -112,7 +121,7 @@ public class SourceController extends BaseController {
         JSONObject jsonObject = (JSONObject) JSON.parse(album.getSourceConfig());
         String site = jsonObject.get("site").toString();
         if (StringUtils.isBlank(site)){
-
+            jsonObject.put("site",getSite());
         }
         album.setUserId(getSessionUserId());
         setBaseField(album);
@@ -295,7 +304,18 @@ public class SourceController extends BaseController {
         return R.success(dbSource);
     }
 
+    private String getSite(){
+        String[] pres = {"out","in"};
+        StringBuilder sb = new StringBuilder();
+        String[] sites = baseSite.split(",");
+        for (String pre : pres) {
+            for (String site : sites) {
+                sb.append(pre).append("_").append(site).append(",");
+            }
+        }
+        return  sb.substring(0, sb.toString().length());
 
+    }
 
 }
 
