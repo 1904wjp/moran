@@ -82,7 +82,7 @@ function saveSource(){
                 $("#sourceName").val('');
                 $("#sort").val('');
                 $('#descContent').val('');
-                $("#applyStatus option:selected").val('');
+               /* $("#applyStatus option:selected").val('');*/
                 $("#src_video").empty();
             }
         }).fail(function () {

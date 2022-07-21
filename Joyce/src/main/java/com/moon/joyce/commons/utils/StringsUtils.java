@@ -314,8 +314,10 @@ public class StringsUtils  implements Serializable {
      * @return
      */
     public static  List<Long> strListToOther(List<String> list){
-            List<Long> longs = new ArrayList<>();
-            list.forEach(x->longs.add(Long.valueOf(x)));
+        List<Long> longs = new ArrayList<>();
+        for (String aLong : list) {
+            longs.add(Long.valueOf(aLong));
+        }
             return   longs ;
     }
 

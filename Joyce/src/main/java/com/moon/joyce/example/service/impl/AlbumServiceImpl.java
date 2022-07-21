@@ -44,27 +44,25 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     @Override
     public Map<String, Source> analyAlbumConfig(String config) {
-        Map<String, Source> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
+        Map<String, Source> sourceMap = new HashMap<>();
         if (StringUtils.isNoneBlank(config)){
             JSONObject jsonObject = (JSONObject) JSON.parse(config);
             List<Long> longs = StringsUtils.strListToOther(StringsUtils.StrToList(jsonObject.get("ids").toString()));
             List<Source> sources = new ArrayList<>(sourceService.listByIds(longs));
-            List<String> idList = StringsUtils.StrToList(jsonObject.get("id").toString());
+            List<String> idList = StringsUtils.StrToList(jsonObject.get("ids").toString());
             List<String> siteList = StringsUtils.StrToList(jsonObject.get("site").toString());
-            Map<String, Source> sourceMap = new HashMap<>();
-            sources.forEach(x->sourceMap.put(x.getId().toString(),x));
-            Map<String, String> siteMap = new HashMap<>();
-            for (int i = 0; i < idList.size(); i++) {
-                siteMap.put(idList.get(i),siteList.get(i));
+            for (int i = 0; i < siteList.size(); i++) {
+                map.put(siteList.get(i),idList.get(i));
             }
-            for (Map.Entry<String, Source> sourceEntry : sourceMap.entrySet()) {
-                for (Map.Entry<String, String> siteEntry : siteMap.entrySet()) {
-                    if (sourceEntry.getKey().equals(siteEntry.getKey())){
-                        map.put(siteEntry.getValue(),sourceEntry.getValue());
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                for (int i = 0; i < sources.size(); i++) {
+                    if (entry.getValue().equals(sources.get(i).getId().toString())){
+                        sourceMap.put(entry.getKey(),sources.get(i));
                     }
                 }
             }
         }
-        return map;
+        return sourceMap;
     }
 }

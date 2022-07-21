@@ -2,31 +2,35 @@
  * 获取资源
  */
 function getSource(id){
-    var obj = $('.wrap');
-    obj.remove();
+    var obj = $('.cube');
     $.ajax({
         url: '/example/source/get/'+id,
-        type: 'POST',
-        dataType: 'json',
-        data: data,
+        type: 'GET',
+        dataType: 'json'
     }).done(function (data) {
-
         if (data.rs){
+            $('#pic').remove();
+            $('#in_pic').remove();
             res = data.data;
-            var html = '';
             $.each(res.map,function (key,value) {
                 if (key.includes("out")){
-                    html+=" <div className=\""+key+"\">\n" +
-                        "                    <img src=\""+value.url+"\" className=\"pic\"/>\n" +
-                        "                </div>";
+                    var html =" <div class=\""+key+"\">\n" +
+                        "                   <img src=\""+value.url+"\" class=\"pic\"/>\n" +
+                        "                </div>\n";
+                    obj.append(html);
                 }
+
+            });
+
+            $.each(res.map,function (key,value) {
                 if (key.includes("in")){
-                    html+=" <span className=\""+key+"\">\n" +
-                        "                    <img src=\""+value.url+"\" className=\"in_pic\"/>\n" +
-                        "                </span>";
+                   var html=" <span class=\""+key+"\">\n" +
+                        "                    <img src=\""+value.url+"\" class=\"in_pic\"/>\n" +
+                        "                </span>\n";
+                    obj.append(html);
                 }
             });
-            obj.append(html);
+
         }
     }).fail(function () {
         tips(false,ajaxFailMsg);

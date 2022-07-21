@@ -485,18 +485,15 @@ public class Joyce {
     }
     @Test
     public void test0110(){
-        String name = "_";
-        Pattern userNameRegex = Pattern.compile("^[/_|\\\\]*$");
-        for (int i = 0; i < name.length(); i++) {
-            String nameChar = name.substring(i,i+1);
-            Matcher m = userNameRegex.matcher(nameChar);
-            if (m.matches()) {
-                System.out.println(name + " 中是含有特殊字符！");
-                return;
+         String baseSite = "front,back,left,right,top,bottom";
+        String[] pres = {"out","in"};
+        StringBuilder sb = new StringBuilder();
+        String[] sites = baseSite.split(",");
+        for (String pre : pres) {
+            for (String site : sites) {
+                sb.append(pre).append("_").append(site).append(",");
             }
-
         }
-        System.out.println(name + " 中不含有特殊字符！");
-
+        System.out.println(sb.substring(0, sb.toString().length()-1));
     }
 }

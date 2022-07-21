@@ -8,6 +8,7 @@ import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
+import com.moon.joyce.commons.utils.UUIDUtils;
 import com.moon.joyce.example.entity.Album;
 import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.entity.vo.MainSource;
@@ -64,7 +65,6 @@ public class SourceController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 资源页面
-     *
      * @return
      */
     @RequestMapping("/sourcePage")
@@ -83,7 +83,6 @@ public class SourceController extends BaseController {
 
     /**
      * 相册页面
-     *
      * @return
      */
     @RequestMapping("/albumPage/{id}")
@@ -109,7 +108,7 @@ public class SourceController extends BaseController {
         Album album = albumService.getById(id);
         Map<String, Source> map = albumService.analyAlbumConfig(album.getSourceConfig());
         album.setMap(map);
-        return dataResult(map.isEmpty(),album);
+        return dataResult(!map.isEmpty(),album);
     }
 
     /**
@@ -133,7 +132,6 @@ public class SourceController extends BaseController {
 
     /**
      * 获取资源列表
-     *
      * @return
      */
     @ResponseBody
@@ -148,12 +146,14 @@ public class SourceController extends BaseController {
 
     /**
      * 保存资源
-     *
      * @return
      */
     @ResponseBody
     @PostMapping("/saveSource")
     public Result addSource(Source source) {
+        if (StringUtils.isNoneBlank(source.getSourceName())){
+            source.setSourceName(UUIDUtils.getUUID(8));
+        }
         if (!sourceServiceControllerDetailService.check(source)) {
             return error("该资源名已被使用");
         }
@@ -195,7 +195,6 @@ public class SourceController extends BaseController {
 
     /**
      * 保存资源
-     *
      * @return
      */
     @ResponseBody
@@ -219,7 +218,6 @@ public class SourceController extends BaseController {
 
     /**
      * 上传资源
-     *
      * @param file
      * @return
      */
@@ -239,7 +237,6 @@ public class SourceController extends BaseController {
 
     /**
      * 主页配置
-     *
      * @return
      */
     @ResponseBody
@@ -299,7 +296,7 @@ public class SourceController extends BaseController {
         } catch (Exception e) {
             return error("视频解析失败");
         }
-        return R.dataResult(Objects.nonNull(map),"视频解析失败","视频解析成功",map);
+        return R.dataResult(!map.isEmpty(),"视频解析失败","视频解析成功",map);
     }
 
     /**
@@ -321,6 +318,10 @@ public class SourceController extends BaseController {
         return R.success(dbSource);
     }
 
+    /**
+     * 获取位置信息
+     * @return
+     */
     private String getSite(){
         String[] pres = {"out","in"};
         StringBuilder sb = new StringBuilder();
@@ -330,9 +331,7 @@ public class SourceController extends BaseController {
                 sb.append(pre).append("_").append(site).append(",");
             }
         }
-        return  sb.substring(0, sb.toString().length());
-
+        return  sb.substring(0, sb.toString().length()-1);
     }
-
 }
 
