@@ -36,7 +36,9 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
     @Override
     public PageVo getPage(Album album) {
         QueryWrapper<Album> qw = new QueryWrapper<>();
-        qw.like("name",album.getName());
+        if (StringUtils.isNoneBlank(album.getName())){
+            qw.like("name",album.getName());
+        }
         Page<Album> page = new Page<>(album.getOffset(), album.getPageNumber());
         IPage<Album> albumIPage = baseMapper.selectPage(page, qw);
         return new PageVo(albumIPage);

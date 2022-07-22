@@ -40,12 +40,12 @@ function getSource(id) {
  * 搜索
  */
 function albumSearch(){
-    $('#albumSearch').bootstrapTable("refresh");
+    $('#albumTable').bootstrapTable("refresh");
 }
 
 //资源列表
 function getAlbumTables() {
-    var obj = $('#albumSearch');
+    var obj = $('#albumTable');
     var url = '/example/source/getAlbumList';
     var queryObj = $('#query-form');
     var columns = [{
@@ -69,7 +69,7 @@ function getAlbumTables() {
         title: '类型',
         sortables: true,
         formatter: function (value, row, index) {
-            if (row.status === '0') {
+            if (row.type === '0') {
                 return "<button class='btn-success'disabled='disabled'style='padding:3px; border:10px;'>内外盒子</button>";
             }
            /* else if (row.status === '2') {
