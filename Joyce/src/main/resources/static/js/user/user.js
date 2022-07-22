@@ -169,7 +169,7 @@ function deleteIdsFuc() {
             }).done(function (data) {
                 if (data.rs) {
                     toastr.success(data.msg)
-                    toList('/example/user/userList');
+                    toList('/example/source/userList');
                 }else {
                     toastr.error(data.msg)
                 }

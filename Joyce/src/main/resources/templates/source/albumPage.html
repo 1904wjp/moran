@@ -15,11 +15,10 @@
 <script type="text/javascript" th:src="@{/static/js/source/album.js}"></script>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
 <script type="text/javascript">
-$().ready(function () {
-	var id = $('#album_id').val();
-	console.log("id--------->"+id);
-	getSource(id);
-});
+	$().ready(function () {
+		var id = $('#album_id').val();
+		getSource(id);
+	});
 </script>
 
 

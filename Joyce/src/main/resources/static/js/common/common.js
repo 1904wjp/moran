@@ -436,7 +436,6 @@ function inputColumns() {
 }
 
 
-
 /**
  * 时间格式转化
  * @param date
@@ -479,7 +478,7 @@ function getSessionUserId() {
  */
 function toBut(obj) {
     if (obj.scrollHeight > obj.clientHeight) {
-        obj.scrollTop = obj.scrollHeight+10;
+        obj.scrollTop = obj.scrollHeight + 10;
     }
 }
 
@@ -629,10 +628,10 @@ function getInitL2D() {
  * @param i
  * @param uuid
  */
-function uploadVideoFile(file, i, uuid,url,mergeUrl,img) {
-    var fileType= file.name.substr(file.name.indexOf("\.")).toLowerCase();
-    if (fileType!=".mp4"){
-        tips("","格式必须为mp4");
+function uploadVideoFile(file, i, uuid, url, mergeUrl, img) {
+    var fileType = file.name.substr(file.name.indexOf("\.")).toLowerCase();
+    if (fileType != ".mp4") {
+        tips("", "格式必须为mp4");
         return;
     }
     addLoadingModal("请稍后...正在上传");
@@ -671,24 +670,24 @@ function uploadVideoFile(file, i, uuid,url,mergeUrl,img) {
         if (data.code === 201) {
             form = '';
             i++;
-            uploadVideoFile(file, i, uuid,url,mergeUrl,img);
-            tips(null,data.msg);
+            uploadVideoFile(file, i, uuid, url, mergeUrl, img);
+            tips(null, data.msg);
         } else if (data.code === 500) {
             count++;
             form = '';
             /* 失败后，每2秒继续传一次分片文件 */
-            var setIntervalFuc =  setInterval(function () {
-                uploadVideoFile(file, i, uuid,url,mergeUrl,img)
+            var setIntervalFuc = setInterval(function () {
+                uploadVideoFile(file, i, uuid, url, mergeUrl, img)
             }, 2000);
             //达到一定错误数量停止
-            if (count===10){
+            if (count === 10) {
                 clearInterval(setIntervalFuc);
                 loading(false);
-                tips(data.rs,data.msg);
+                tips(data.rs, data.msg);
             }
-        } else if(data.code === 200) {
-            tips(data.rs,data.msg);
-            mergeVideo(uuid,name,mergeUrl,img);
+        } else if (data.code === 200) {
+            tips(data.rs, data.msg);
+            mergeVideo(uuid, name, mergeUrl, img);
         }
     });
 
@@ -699,26 +698,26 @@ function uploadVideoFile(file, i, uuid,url,mergeUrl,img) {
  * @param uuid
  * @param fileName
  */
-function mergeVideo(uuid, fileName,mergeurl,img) {
+function mergeVideo(uuid, fileName, mergeurl, img) {
     $.ajax({
         url: mergeurl,
         type: "GET",
         data: {uuid: uuid, newFileName: fileName},
 //timeout:"10000", //超时10秒
         async: true, //异步
-        dataType:"json",
+        dataType: "json",
         success: function (data) {
             loading(false);
-            if (data.rs){
+            if (data.rs) {
                 $("#source_url").val(data.data.videoPicturePath);
                 $("#vUrl").val(data.data.videoAccessPath);
-                console.log("src",data.data.videoPicturePath);
+                console.log("src", data.data.videoPicturePath);
                 img.attr("src", data.data.videoPicturePath);
                 //清楚上一个添加的
-               /* $("#src_video").empty();
-                appendVideo($("#src_video"),"index_v",data.data);*/
+                /* $("#src_video").empty();
+                 appendVideo($("#src_video"),"index_v",data.data);*/
             }
-            tips(data.rs,data.msg)
+            tips(data.rs, data.msg)
         }
     })
 }
@@ -742,15 +741,60 @@ function guid() {
  * @param min
  * @returns {number}
  */
-function getRandom(max,min){
-    return  parseInt(Math.random()*(max-min+1)+min);
+function getRandom(max, min) {
+    return parseInt(Math.random() * (max - min + 1) + min);
 }
 
 class Modal {
     static show(obj) {
         obj.modal('show');
     }
+
     static hide(obj) {
         obj.modal('hide');
+    }
+}
+
+/**
+ * 删除
+ * @param tableObj
+ * @param delUrl
+ * @param isToUrl
+ * @param delUrl
+ * @param toUrl
+ */
+function deleteByIdsT(tableObj,delUrl,isToUrl,delUrl,toUrl) {
+
+//删除id为ids的数据集合
+    var ids = getIds(tableObj);
+    if (ids != '' && ids != null) {
+        var data = {"ids": ids};
+        Ewin.confirm(
+            {
+                message: "确认要删除选择的数据吗？"
+            }).on(
+            function (e) {
+                if (!e) {
+                    return;
+                }
+                $.ajax({
+                    url: delUrl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: data,
+                }).done(function (data) {
+                    if (data.rs) {
+                        tips(data.msg)
+                        if (isToUrl){
+                            toList(toUrl);
+                        }
+                    } else {
+                        tips(data.msg)
+                    }
+                }).fail(function () {
+                    tips(false, data.msg)
+
+                });
+            });
     }
 }

@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;;
@@ -80,7 +81,15 @@ public class SourceController extends BaseController {
     public String sourceListPage() {
         return pagePrefix + "sourceListPage";
     }
-
+    /**
+     * 相册列表页面
+     *
+     * @return
+     */
+    @RequestMapping("/albumListPage")
+    public String albumListPage() {
+        return pagePrefix + "albumListPage";
+    }
     /**
      * 相册页面
      * @return
@@ -103,7 +112,7 @@ public class SourceController extends BaseController {
         return albumService.getPage(album);
     }
     @ResponseBody
-    @GetMapping("/get/{id}")
+    @GetMapping("/getAlbum/{id}")
     public Result getAlbumById(@PathVariable String id){
         Album album = albumService.getById(id);
         Map<String, Source> map = albumService.analyAlbumConfig(album.getSourceConfig());
@@ -198,6 +207,22 @@ public class SourceController extends BaseController {
         }
         boolean rs = sourceService.saveOrUpdate(source);
         return R.dataResult(rs);
+    }
+
+    /**
+     * 删除某个相册
+     * @return
+     */
+    @ResponseBody
+    @Transactional
+    @RequestMapping("/deleteAlbum")
+    public Result deleteUser(@RequestParam String ids){
+        if (StringUtils.isBlank(ids)){
+            return error(Constant.NULL_CODE);
+        }
+        List<String> list = StringsUtils.StrToList(ids);
+        boolean del = albumService.removeByIds(list);
+        return dataResult(del,Constant.ERROR_CODE);
     }
 
     /**
