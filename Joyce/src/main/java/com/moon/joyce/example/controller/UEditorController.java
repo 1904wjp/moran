@@ -5,7 +5,6 @@ import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.Article;
-import com.moon.joyce.example.entity.dto.Page;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.service.FileService;
@@ -155,7 +154,7 @@ public class UEditorController extends BaseController {
     @ResponseBody
     @RequestMapping("/delete")
     public Result delArticle(@RequestParam String ids){
-        List<String> list = StringsUtils.StrToList(ids);
+        List<String> list = StringsUtils.strToList(ids);
         boolean del = uEditorService.removeByIds(list);
         return R.dataResult(del,"删除失败","删除成功");
     }

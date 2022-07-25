@@ -115,6 +115,15 @@ public class BaseEntity implements Serializable {
         return false;
     }
 
+    public static void setBaseField(BaseEntity entity){
+        if (Objects.isNull(entity.getId())){
+            entity.setCreateTime(new Date());
+            entity.setDeleteFlag(0);
+        }else {
+            entity.setUpdateTime(new Date());
+        }
+    }
+
     @Override
     public int hashCode() {
         return Integer.parseInt(String.valueOf(this.id % 16));

@@ -22,7 +22,6 @@ import java.util.Objects;
 public class UserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         //重定向到公开主页
         String indexUrl =request.getContextPath()+ Constant.APP_INDEX_PATH;
         User sessionUser = (User) request.getSession().getAttribute(Constant.SESSION_USER);
@@ -30,7 +29,7 @@ public class UserInterceptor implements HandlerInterceptor {
             return true;
         }
         response.sendRedirect(indexUrl);
-        return false;
+        return true;
     }
 
     @Override

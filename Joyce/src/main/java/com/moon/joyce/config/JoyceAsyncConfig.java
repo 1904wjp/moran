@@ -1,5 +1,6 @@
 package com.moon.joyce.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -17,9 +18,12 @@ import java.util.concurrent.Executor;
 public class JoyceAsyncConfig {
     /*此处成员变量应该使用@Value从配置中读取
      */
-    private int corePoolSize = 10;
-    private int maxPoolSize = 200;
-    private int queueCapacity = 10;
+    @Value("${async.corePoolSize}")
+    private int corePoolSize;
+    @Value("${async.maxPoolSize}")
+    private int maxPoolSize;
+    @Value("${async.queueCapacity}")
+    private int queueCapacity;
     @Bean
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

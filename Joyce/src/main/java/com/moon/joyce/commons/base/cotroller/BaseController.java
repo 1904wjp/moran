@@ -222,15 +222,18 @@ public class BaseController extends R {
         return getRedisValueOperation().getOperations().getExpire(k);
     }
 
-
-    public void setBaseField(BaseEntity baseFeild){
-        if (Objects.isNull(baseFeild.getId())){
-            baseFeild.setCreateBy(getSessionUserName());
-            baseFeild.setCreateTime(new Date());
-            baseFeild.setDeleteFlag(0);
+    /**
+     * 设置基础属性
+     * @param entity
+     */
+    public void setBaseField(BaseEntity entity){
+        entity.setDeleteFlag(0);
+        if (Objects.isNull(entity.getId())){
+            entity.setCreateBy(getSessionUserName());
+            entity.setCreateTime(new Date());
         }else {
-            baseFeild.setUpdateBy(getSessionUserName());
-            baseFeild.setUpdateTime(new Date());
+            entity.setUpdateBy(getSessionUserName());
+            entity.setUpdateTime(new Date());
         }
     }
 }

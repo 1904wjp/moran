@@ -14,6 +14,8 @@ import com.moon.joyce.example.entity.Source;
 import com.moon.joyce.example.entity.vo.MainSource;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Result;
+import com.moon.joyce.example.functionality.entity.tundish.AlbumSource;
+import com.moon.joyce.example.functionality.service.AlbumSourceService;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.AlbumService;
 import com.moon.joyce.example.service.SourceService;
@@ -23,7 +25,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -32,7 +33,6 @@ import org.springframework.web.multipart.MultipartFile;;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,8 +51,6 @@ public class SourceController extends BaseController {
      * 页面路径前缀
      */
     private final String pagePrefix = "source/";
-    @Value("${file.upload.path}")
-    private String filePath;
     @Autowired
     private SourceService sourceService;
     @Autowired
@@ -60,9 +58,12 @@ public class SourceController extends BaseController {
     @Autowired
     private AlbumService albumService;
     @Autowired
+    private AlbumSourceService albumSourceService;
+    @Autowired
     private SourceServiceControllerDetailService sourceServiceControllerDetailService;
     //默认位置
     private String baseSite = "front,back,left,right,top,bottom";
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 资源页面
@@ -99,6 +100,14 @@ public class SourceController extends BaseController {
         map.addAttribute("id",id);
         return pagePrefix + "albumPage";
     }
+    /**
+     * 相册页面
+     * @return
+     */
+    @RequestMapping("/addAlbumPage")
+    public String addAlbumPage() {
+        return pagePrefix + "addAlbumPage";
+    }
 
     /**
      * 获取资源列表
@@ -128,22 +137,30 @@ public class SourceController extends BaseController {
     @ResponseBody
     @PostMapping("/saveAlbum")
     public Result saveAlbum(Album album) {
-        JSONObject jsonObject = (JSONObject) JSON.parse(album.getSourceConfig());
-        String site = jsonObject.get("site").toString();
-        int size = StringsUtils.StrToList(jsonObject.get("ids").toString()).size();
+        int size = album.getSources().size();
         if ("0".equals(album.getType())){
-            if (size!=12){
+            if (size != 12){
                 return error("当前类型只能是12张");
             }
         }
-        album.setTotal(size);
-        if (StringUtils.isBlank(site)){
-            jsonObject.put("site",getDefSite());
-        }
-        album.setUserId(getSessionUserId());
-        setBaseField(album);
+        List<Source> sources = new ArrayList<>();
+        album.getSources().forEach(x->{
+                    setBaseField(x);
+                    x.setType("4");
+                    sources.add(x);
+                });
+        boolean saveSourceRs = sourceService.saveBatch(sources);
+        String ids = StringsUtils.listToStr(sources.stream().map(Source::getId).collect(Collectors.toList()));
+        JSONObject jo = (JSONObject)JSON.parse(album.getSourceConfig());
+        jo.put("ids",ids);
+        album.setSourceConfig(jo.toString());
         boolean rs = albumService.saveOrUpdate(album);
-        return dataResult(rs);
+        List<AlbumSource> albumSources = new ArrayList<>();
+        album.getSources().forEach(x->albumSources.add(new AlbumSource(album.getId(),x.getId())));
+        boolean asRs = albumSourceService.saveBatch(albumSources);
+        album.setTotal(size);
+        album.setUserId(getSessionUserId());
+        return dataResult(rs && saveSourceRs && asRs);
     }
 
     /**
@@ -220,7 +237,7 @@ public class SourceController extends BaseController {
         if (StringUtils.isBlank(ids)){
             return error(Constant.NULL_CODE);
         }
-        List<String> list = StringsUtils.StrToList(ids);
+        List<String> list = StringsUtils.strToList(ids);
         boolean del = albumService.removeByIds(list);
         return dataResult(del,Constant.ERROR_CODE);
     }

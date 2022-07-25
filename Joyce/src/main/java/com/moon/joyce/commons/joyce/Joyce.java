@@ -4,6 +4,7 @@ package com.moon.joyce.commons.joyce;
 import com.moon.joyce.commons.factory.entity.ColumnEntity;
 import com.moon.joyce.commons.utils.*;
 import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.functionality.service.serviceImpl.AutoCreateTableFactory;
 import com.moon.joyce.example.service.SourceService;
 import org.apache.commons.beanutils.BeanUtils;
@@ -485,15 +486,6 @@ public class Joyce {
     }
     @Test
     public void test0110(){
-         String baseSite = "front,back,left,right,top,bottom";
-        String[] pres = {"out","in"};
-        StringBuilder sb = new StringBuilder();
-        String[] sites = baseSite.split(",");
-        for (String pre : pres) {
-            for (String site : sites) {
-                sb.append(pre).append("_").append(site).append(",");
-            }
-        }
-        System.out.println(sb.substring(0, sb.toString().length()-1));
+
     }
 }

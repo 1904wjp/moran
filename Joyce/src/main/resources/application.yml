@@ -192,3 +192,7 @@ logging:
     path: D://${app:name}/
     name: joyce.log
 
+async:
+  corePoolSize: 10
+  maxPoolSize: 200
+  queueCapacity: 10

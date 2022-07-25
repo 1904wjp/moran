@@ -22,8 +22,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -96,9 +94,9 @@ public class DayTaskServiceImpl extends ServiceImpl<DayTaskMapper, DayTask> impl
                     dayTask.setProjectId(dbProject.getId());
                 }
                 dayTask.setUserId(dbUser.getId());
-                dayTask.setStartTime(StringsUtils.StringToDate(FileUtils.getCellValueOfTrim(row.getCell(1))));
+                dayTask.setStartTime(StringsUtils.stringToDate(FileUtils.getCellValueOfTrim(row.getCell(1))));
                 dayTask.setTodayTask(FileUtils.getCellValueOfTrim(row.getCell(2)));
-                dayTask.setEndTimes(StringsUtils.StringToDate(FileUtils.getCellValueOfTrim(row.getCell(3))));
+                dayTask.setEndTimes(StringsUtils.stringToDate(FileUtils.getCellValueOfTrim(row.getCell(3))));
                 dayTask.setFinallyTask(FileUtils.getCellValueOfTrim(row.getCell(4)));
                 dayTasks.add(dayTask);
             }

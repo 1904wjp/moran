@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author Xing Dao Rong
@@ -24,8 +23,13 @@ public class StringsUtils  implements Serializable {
     private StringsUtils() throws JoyceException {
         throw JoyceExceptionUtils.exception("工具类无法实例化");
     }
-    //字符串转集合
-    public static List<String> StrToList(String str){
+
+    /**
+     * 字符串转集合
+     * @param str
+     * @return
+     */
+    public static List<String> strToList(String str){
         String[] strs ={};
         if (str.contains(",")){
             strs = str.split(",");
@@ -33,6 +37,19 @@ public class StringsUtils  implements Serializable {
             strs = new String[]{str};
         }
         return  Arrays.asList(strs);
+    }
+
+    /**
+     * 集合转字符
+     * @param list
+     * @return
+     */
+    public static String listToStr(List<Long> list){
+        StringBuilder builder = new StringBuilder();
+        list.forEach(x->{
+            builder.append(x).append(",");
+        });
+        return builder.substring(0,builder.length()-1);
     }
     //集合是否含有某个字符串
     public static boolean listIsContainsStr(String str,List<String> list){
@@ -269,7 +286,7 @@ public class StringsUtils  implements Serializable {
      * 字符串转时间
      * @return
      */
-    public static Date StringToDate(String dateStr,String pattern){
+    public static Date stringToDate(String dateStr, String pattern){
         SimpleDateFormat dfm =  new SimpleDateFormat(pattern);
         Date parse = null;
         try {
@@ -283,7 +300,7 @@ public class StringsUtils  implements Serializable {
      * 字符串转时间
      * @return
      */
-    public static Date StringToDate(String dateStr){
+    public static Date stringToDate(String dateStr){
         SimpleDateFormat dfm =  new SimpleDateFormat(Constant.DATE_TIME_DAY);
         Date parse = null;
         try {

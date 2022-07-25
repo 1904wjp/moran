@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>资源上传</title>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/source/album.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/static/css/source/normalize.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/css/source/default.css}">
+<link rel="stylesheet" th:href="@{/static/css/source/demo.css}">
+<link rel="stylesheet" th:href="@{/static/css/source/dropify.min.css}">
+<div class="container">
+    <div class="row">
+      <!--  <div class="col-sm-3"></div>-->
+        <div id="pics" class="col-sm-6">
+       <!--     <h2>Before</h2>
+            <label for="input-file-before">Basic HTML input file</label>
+            <input type="file" id="input-file-before" />
+            <hr class="big" />
+            <h2>Now</h2>
+            <label for="input-file-now">Your so fresh input file — Default version</label>
+            <input type="file" id="input-file-now" class="dropify" data-default-file="" />
+            <br />
+            <label for="input-file-now-custom-1">You can add a default value</label>
+            <input type="file" id="input-file-now-custom-1" class="dropify" data-default-file="src/images/test-image-1.jpg" />
+            <br />-->
+            <label for="input-file-now-custom-2">You can set the height</label>
+            <input type="file" id="input-file-now-custom-2" class="dropify" data-height="300" /><input type="button" value="添加" onclick="addPicDiv()"/>
+          <!--  <label for="input-file-now-custom-3">You can combine options</label>
+            <input type="file" id="input-file-now-custom-3" class="dropify" data-height="500" data-default-file="src/images/test-image-2.jpg" />
+            <br />
+            <label for="input-file-now-disabled-1">You can disabled the input</label>
+            <input type="file" id="input-file-now-disabled-1" class="dropify" disabled="disabled" />
+            <br />
+            <label for="input-file-now-disabled-2">Also with a default file</label>
+            <input type="file" id="input-file-now-disabled-2" class="dropify" disabled="disabled" data-default-file="src/images/test-image-1.jpg" />
+            <br />
+            <label for="input-file-max-fs">You can add a max file size</label>
+            <input type="file" id="input-file-max-fs" class="dropify" data-max-file-size="2M" />
+            <br />
+            <label for="input-file-disable-remove">You can disable remove button</label>
+            <input type="file" id="input-file-disable-remove" class="dropify" data-disable-remove="true" />
+            <br />
+            <label for="input-file-events">You can use events</label>
+            <input type="file" id="input-file-events" class="dropify-event" data-default-file="src/images/test-image-1.jpg" />
+            <br />
+            <h2>French one</h2>
+            <label for="input-file-french-1">"Et voilà"</label>
+            <input type="file" id="input-file-french-1" class="dropify-fr" data-default-file="" />
+            <br />
+            <label for="input-file-french-2">"Avec options"</label>
+            <input type="file" id="input-file-french-2" class="dropify-fr" data-height="350" data-default-file="src/images/test-image-2.jpg" />-->
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
+<script th:src="@{/static/js/source/jquery-2.1.1.min.js}"></script>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script th:src="@{/static/js/source/dropify.min.js}"></script>
+<script th:src="@{/static/js/source/dropify.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/source/album.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        // Basic
+        $('.dropify').dropify();
+
+        // Translated
+        $('.dropify-fr').dropify({
+            messages: {
+                'default': '点击或拖拽文件到这里',
+                'replace': '点击或拖拽文件到这里来替换文件',
+                'remove':  '移除文件',
+                'error':   '对不起，你上传的文件太大了'
+            }
+        });
+
+        // Used events
+        var drEvent = $('.dropify-event').dropify();
+
+        drEvent.on('dropify.beforeClear', function(event, element){
+            return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+        });
+
+        drEvent.on('dropify.afterClear', function(event, element){
+            alert('File deleted');
+        });
+    });
+    function addPicDiv() {
+        $('#pics').append(' <label for="input-file-now-custom-2">You can set the height</label>\n' +
+            '            <input type="file" id="input-file-now-custom-2" class="dropify" data-height="300" />');
+    }
+</script>
+
+

@@ -117,7 +117,7 @@ public class DataSourceController extends BaseController {
     @ResponseBody
     @RequestMapping("/deleteDb")
     public Result deleteDbBaseSetting(@RequestParam(value = "ids") String ids) {
-        List<String> list = StringsUtils.StrToList(ids);
+        List<String> list = StringsUtils.strToList(ids);
         DbBaseSetting dbBaseSetting = getCurrentSetting().getDbBaseSetting();
         if (Objects.nonNull(dbBaseSetting)){
             boolean b = StringsUtils.listIsContainsStr(String.valueOf(dbBaseSetting.getId()), list);
@@ -202,7 +202,7 @@ public class DataSourceController extends BaseController {
         if (StringUtils.isBlank(ids)){
             return R.error(Constant.NULL_CODE);
         }
-        List<String> list = StringsUtils.StrToList(ids);
+        List<String> list = StringsUtils.strToList(ids);
             PackageInfo packageInfo = getCurrentSetting().getPackageInfo();
             if (Objects.nonNull(packageInfo)){
                 boolean b = StringsUtils.listIsContainsStr(String.valueOf(packageInfo.getId()), list);

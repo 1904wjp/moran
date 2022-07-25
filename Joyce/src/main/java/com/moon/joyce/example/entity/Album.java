@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +44,10 @@ public class Album extends Page {
 
     @Column(name = "total",type = Type.BIGINT,comment = "张数")
     private Integer total;
+
+    @NotExist
+    @TableField(exist = false)
+    private List<Source> sources;
 
     @NotExist
     @TableField(exist = false)

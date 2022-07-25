@@ -10,7 +10,6 @@ import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.entity.vo.UserChartVo;
-import com.moon.joyce.example.functionality.entity.PageComponent;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.FileService;
@@ -431,7 +430,7 @@ public class UserController extends BaseController {
         if (StringUtils.isBlank(ids)){
             return error(Constant.NULL_CODE);
         }
-        List<String> list = StringsUtils.StrToList(ids);
+        List<String> list = StringsUtils.strToList(ids);
         if (StringsUtils.listIsContainsStr(getSessionUser().getId().toString(),list)){
             return error(getSessionUser().getUsername()+"正在使用，无法操作");
         }
