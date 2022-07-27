@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @date: 2022/04/12-- 11:13
  * @describe:
  */
-public class ListsUtils {
+public class ListsUtils<E> {
     /**
      * 一行一行读取文件转成字符串集合
      * @param path
@@ -53,5 +53,18 @@ public class ListsUtils {
             return l1.stream().filter(itme -> !l2.contains(itme)).collect(Collectors.toList());
         }
         return  l1.stream().filter(l2::contains).collect(Collectors.toList());
+    }
+
+    /**
+     * list转字符串
+     * @param list
+     * @return
+     */
+    public  String listToStr(List<E> list){
+        StringBuilder builder = new StringBuilder();
+        list.forEach(x->{
+            builder.append(x).append(",");
+        });
+        return builder.substring(0,builder.length()-1);
     }
 }

@@ -48,6 +48,7 @@ public class FileUtils implements Serializable {
     //新建文件
     private  static File newFile;
     public static List<File> fileList =new ArrayList<>();
+
     /**
      * 文件上传工具类
      *
@@ -79,6 +80,21 @@ public class FileUtils implements Serializable {
         return StringUtils.isNoneBlank(fileName) ? "/static/1" + access +now + "/" + fileName : null;
     }
 
+    /**
+     * 上传图片
+     * @param files
+     * @param sysPath
+     * @param access
+     * @return
+     */
+    public static String fileUpLoad(MultipartFile[] files, String sysPath, String access) {
+        List<String> list = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String path = fileUpLoad(file, sysPath, access);
+            list.add(path);
+        }
+        return StringsUtils.appendStr(list,",");
+    }
     /**
      * xml配置的读取
      * @param filePathName

@@ -24,6 +24,13 @@ public interface FileService {
     String uploadImg(MultipartFile file);
 
     /**
+     * 图片上传
+     * @param file
+     * @return
+     */
+    String uploadImgs(MultipartFile[] file);
+
+    /**
      * 读取Joyce用户设置配置
      * @param username
      * @return

@@ -4,6 +4,7 @@ package com.moon.joyce.commons.utils;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -44,13 +45,11 @@ public class StringsUtils  implements Serializable {
      * @param list
      * @return
      */
-    public static String listToStr(List<Long> list){
-        StringBuilder builder = new StringBuilder();
-        list.forEach(x->{
-            builder.append(x).append(",");
-        });
-        return builder.substring(0,builder.length()-1);
+    public static String listToStr(List list){
+        ListsUtils listsUtils = new ListsUtils<>();
+        return listsUtils.listToStr(list);
     }
+
     //集合是否含有某个字符串
     public static boolean listIsContainsStr(String str,List<String> list){
         Set<String> set = new HashSet<>(list);
@@ -250,7 +249,6 @@ public class StringsUtils  implements Serializable {
      * @param prefix
      * @param strs
      * @param suffix
-     * @param suffix
      * @param g
      * @return
      */
@@ -269,6 +267,16 @@ public class StringsUtils  implements Serializable {
             }
         }
         return prefixBuilder.append(suffix).toString();
+    }
+
+
+    /**拼接字符
+     * @param strs
+     * @param g
+     * @return
+     */
+    public static String appendStr(List<String> strs,String g){
+        return appendStr("",strs,"",g);
     }
 
     /**

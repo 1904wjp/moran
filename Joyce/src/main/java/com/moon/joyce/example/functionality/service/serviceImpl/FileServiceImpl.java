@@ -10,7 +10,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.moon.joyce.commons.utils.R;
+import com.moon.joyce.commons.utils.ListsUtils;
+import com.moon.joyce.commons.utils.StringsUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author: Joyce
@@ -55,9 +57,32 @@ public class FileServiceImpl implements FileService {
     private ResourceLoader resourceLoader;
     @Override
     public String uploadImg(MultipartFile file) {
-        String path = FileUtils.fileUpLoad(file, sysPath, access);
-        logger.info("文件:{}正在上传,访问路径为：{}",sysPath+file,path);
+        String path = null;
+        try {
+            path = FileUtils.fileUpLoad(file, sysPath, access);
+        } catch (Exception e) {
+            logger.error("文件上传异常:"+e.getMessage());
+        }
+        logger.info("文件:{}正在上传,访问路径为：{}",sysPath+file.getName(),path);
         return   path;
+    }
+
+    @Override
+    public String uploadImgs(MultipartFile[] files) {
+        String paths = null;
+        try {
+            paths = FileUtils.fileUpLoad(files, sysPath, access);
+        } catch (Exception e) {
+            logger.error("文件上传异常:"+e.getMessage());
+        }
+        List<String> list = Arrays.stream(files)
+                .map(MultipartFile::getName)
+                .collect(Collectors.toList());
+        ArrayList<String> arrayList = new ArrayList<>();
+        list.forEach(x->arrayList.add(sysPath+x));
+        String names = StringsUtils.listToStr(arrayList);
+        logger.info("文件:{}正在上传,访问路径为：{}",names,paths);
+        return paths;
     }
 
     @Override

@@ -1,13 +1,8 @@
 package com.moon.joyce.commons.joyce;
 
 
-import com.moon.joyce.commons.factory.entity.ColumnEntity;
 import com.moon.joyce.commons.utils.*;
-import com.moon.joyce.example.entity.User;
-import com.moon.joyce.example.entity.base.entity.BaseEntity;
-import com.moon.joyce.example.functionality.service.serviceImpl.AutoCreateTableFactory;
 import com.moon.joyce.example.service.SourceService;
-import org.apache.commons.beanutils.BeanUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -17,22 +12,16 @@ import org.springframework.beans.factory.annotation.Value;
 import redis.clients.jedis.Jedis;
 
 import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @Author: XingDaoRong
  * @Date: 2021/12/17
  */
 public class Joyce {
-    @Autowired
-    private SourceService sourceService;
     @Value("${file.upload.path}")
     String filePath;
 
@@ -420,7 +409,6 @@ public class Joyce {
             if(rs<i-start+1){
                 rs = i-start+1;
             }
-
             end[index] = i;
         }
         System.out.println(rs);
@@ -486,6 +474,10 @@ public class Joyce {
     }
     @Test
     public void test0110(){
-
+        String strs = "f,g,s,d,h,b,d,f,f,s,a,f,g";
+        String[] split = strs.split(",");
+        List<String> collect = Arrays.stream(split).collect(Collectors.toList());
+        String s = StringsUtils.listToStr(collect);
+        System.out.println(s);
     }
 }

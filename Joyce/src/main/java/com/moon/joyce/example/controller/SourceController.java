@@ -150,7 +150,8 @@ public class SourceController extends BaseController {
                     sources.add(x);
                 });
         boolean saveSourceRs = sourceService.saveBatch(sources);
-        String ids = StringsUtils.listToStr(sources.stream().map(Source::getId).collect(Collectors.toList()));
+        List<Long> collect = sources.stream().map(Source::getId).collect(Collectors.toList());
+        String ids = StringsUtils.listToStr(collect);
         JSONObject jo = (JSONObject)JSON.parse(album.getSourceConfig());
         jo.put("ids",ids);
         album.setSourceConfig(jo.toString());
