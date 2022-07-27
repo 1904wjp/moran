@@ -19,7 +19,7 @@ import com.moon.joyce.example.functionality.service.AlbumSourceService;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.AlbumService;
 import com.moon.joyce.example.service.SourceService;
-import com.moon.joyce.example.service.serviceControllerDetails.SourceServiceControllerDetailService;
+import com.moon.joyce.example.service.serviceControllerDetails.SourceControllerDetailService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -60,7 +60,7 @@ public class SourceController extends BaseController {
     @Autowired
     private AlbumSourceService albumSourceService;
     @Autowired
-    private SourceServiceControllerDetailService sourceServiceControllerDetailService;
+    private SourceControllerDetailService sourceServiceControllerDetailService;
     //默认位置
     private String baseSite = "front,back,left,right,top,bottom";
 

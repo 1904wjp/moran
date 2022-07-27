@@ -1,4 +1,4 @@
-package com.moon.joyce.example.service.serviceControllerDetails.UserServiceControllerDetailServiceImpl;
+package com.moon.joyce.example.service.serviceControllerDetails.UserControllerDetailServiceImpl;
 
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.R;
@@ -12,9 +12,8 @@ import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import com.moon.joyce.example.functionality.service.MailService;
 import com.moon.joyce.example.functionality.service.PackageInfoService;
-import com.moon.joyce.example.functionality.service.serviceImpl.PackageInfoServiceImpl;
 import com.moon.joyce.example.service.UserService;
-import com.moon.joyce.example.service.serviceControllerDetails.UserServiceControllerDetailService;
+import com.moon.joyce.example.service.serviceControllerDetails.UserControllerDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,7 @@ import java.util.Objects;
  * @describe: controller细节处理服务层
  */
 @Service
-public class UserServiceControllerDetailServiceImpl implements UserServiceControllerDetailService {
+public class UserControllerDetailServiceImpl implements UserControllerDetailService {
     /**
      * 注入用户服务
      */

@@ -1,26 +1,12 @@
-package com.moon.joyce.example.service.serviceControllerDetails.SourceServiceControllerDetailServiceImpl;
+package com.moon.joyce.example.service.serviceControllerDetails.SourceControllerDetailServiceImpl;
 
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.commons.utils.R;
-import com.moon.joyce.commons.utils.UUIDUtils;
-import com.moon.joyce.example.entity.DbBaseSetting;
-import com.moon.joyce.example.entity.PackageInfo;
 import com.moon.joyce.example.entity.Source;
-import com.moon.joyce.example.entity.User;
-import com.moon.joyce.example.functionality.entity.EmailData;
-import com.moon.joyce.example.functionality.entity.Result;
-import com.moon.joyce.example.functionality.entity.Setting;
-import com.moon.joyce.example.functionality.service.DbBaseSettingService;
-import com.moon.joyce.example.functionality.service.MailService;
-import com.moon.joyce.example.functionality.service.PackageInfoService;
 import com.moon.joyce.example.service.SourceService;
-import com.moon.joyce.example.service.UserService;
-import com.moon.joyce.example.service.serviceControllerDetails.SourceServiceControllerDetailService;
-import com.moon.joyce.example.service.serviceControllerDetails.UserServiceControllerDetailService;
+import com.moon.joyce.example.service.serviceControllerDetails.SourceControllerDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -30,7 +16,7 @@ import java.util.Objects;
  * @describe: controller细节处理服务层
  */
 @Service
-public class SourceServiceControllerDetailServiceImpl implements SourceServiceControllerDetailService {
+public class SourceControllerDetailServiceImpl implements SourceControllerDetailService {
     @Autowired
     private SourceService sourceService;
     @Override

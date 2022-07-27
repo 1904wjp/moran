@@ -15,7 +15,7 @@ import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.ChatRecordService;
 import com.moon.joyce.example.service.UserService;
-import com.moon.joyce.example.service.serviceControllerDetails.UserServiceControllerDetailService;
+import com.moon.joyce.example.service.serviceControllerDetails.UserControllerDetailService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +77,7 @@ public class UserController extends BaseController {
      * 细节处理
       */
     @Autowired
-    private UserServiceControllerDetailService userServiceControllerDetailService;
+    private UserControllerDetailService userServiceControllerDetailService;
 
     private ReentrantLock lock = new ReentrantLock();
     /*****************************************************************************************************************************************************************/
@@ -412,11 +412,7 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping("/userListData")
     public PageVo getUsers(User user){
-        //得到总页数
-        long total = userService.getUsersCount(user);
-        //得到user数据对象
-        List<User> rows = userService.getUserList(user);
-        return  new PageVo(rows,total);
+        return  userService.getPage(user);
     }
 
     /**
@@ -584,7 +580,12 @@ public class UserController extends BaseController {
     @Transactional
     @PostMapping("/upload")
     public Result uploadImg(@RequestParam("file") MultipartFile file){
-        String filePath = fileService.uploadImg(file);
+        String filePath = null;
+        try {
+            filePath = fileService.uploadImg(file);
+        } catch (Exception e) {
+            return error("上传失败");
+        }
         return success("上传成功",filePath);
     }
 
@@ -595,10 +596,14 @@ public class UserController extends BaseController {
     @GetMapping("/toRemoveUser")
     public Result toRemoveUser(){
         //移除会话数据存在的用户
-        removeCurrentSetting();
-        removeSessionUser();
-        sessionUsers.remove(getSessionUser());
-        redisTemplate.opsForValue().set(Constant.SESSION_USER,sessionUsers,24, TimeUnit.HOURS);
+        try {
+            removeCurrentSetting();
+            removeSessionUser();
+            sessionUsers.remove(getSessionUser());
+            redisTemplate.opsForValue().set(Constant.SESSION_USER,sessionUsers,24, TimeUnit.HOURS);
+        } catch (Exception e) {
+            return error();
+        }
         return success();
     }
 

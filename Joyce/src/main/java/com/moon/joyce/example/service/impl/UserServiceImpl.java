@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.mapper.UserMapper;
 import com.moon.joyce.example.service.CommonService;
 import com.moon.joyce.example.service.UUService;
@@ -191,6 +192,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return baseMapper.selectList(wrapper);
         }
         return null;
+    }
+
+    @Override
+    public PageVo getPage(User user) {
+        return new PageVo(userMapper.getUsers(user),userMapper.getTotal(user));
     }
 
     @Override

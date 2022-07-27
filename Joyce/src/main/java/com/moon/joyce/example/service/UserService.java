@@ -3,6 +3,7 @@ package com.moon.joyce.example.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.entity.vo.PageVo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -71,4 +72,10 @@ public interface UserService extends IService<User> {
      */
     List<User> getAllFriendsByIds(List<Long> list);
 
+    /**
+     * 分页查询
+     * @param user
+     * @return
+     */
+    PageVo getPage(User user);
 }

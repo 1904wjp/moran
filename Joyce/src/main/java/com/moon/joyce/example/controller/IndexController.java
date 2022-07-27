@@ -3,21 +3,15 @@ package com.moon.joyce.example.controller;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.ListsUtils;
 import com.moon.joyce.commons.utils.R;
-import com.moon.joyce.example.entity.Source;
-import com.moon.joyce.example.entity.SysMenu;
 import com.moon.joyce.example.entity.User;
-import com.moon.joyce.example.entity.vo.MainSource;
-import com.moon.joyce.example.functionality.entity.PageComponent;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.SourceService;
 import com.moon.joyce.example.service.UserService;
-import com.moon.joyce.example.service.serviceControllerDetails.UserServiceControllerDetailService;
-import org.apache.commons.lang3.StringUtils;
+import com.moon.joyce.example.service.serviceControllerDetails.UserControllerDetailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +42,7 @@ public class IndexController extends BaseController {
     @Autowired
     private UserService userService;
     @Autowired
-    private UserServiceControllerDetailService userServiceControllerDetailService;
+    private UserControllerDetailService userServiceControllerDetailService;
     /**
      * 头菜单
      * @return
