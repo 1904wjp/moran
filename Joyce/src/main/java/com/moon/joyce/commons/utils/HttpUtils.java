@@ -1,7 +1,12 @@
 package com.moon.joyce.commons.utils;
 
+import com.github.kevinsawicki.http.HttpRequest;
+import com.moon.joyce.commons.constants.Constant;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * @Author: XingDaoRong
@@ -26,5 +31,24 @@ public class HttpUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * get请求
+     * @param url
+     * @return
+     * @throws HttpRequest.HttpRequestException
+     */
+    public static HttpRequest get(final URL url) throws HttpRequest.HttpRequestException {
+        return new HttpRequest(url, Constant.METHOD_GET);
+    }
+    /**
+     * get请求
+     * @param url
+     * @return
+     * @throws HttpRequest.HttpRequestException
+     */
+    public static HttpRequest get(String url) throws HttpRequest.HttpRequestException, MalformedURLException {
+        return get(new URL(url));
     }
 }

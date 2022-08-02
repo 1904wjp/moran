@@ -75,9 +75,47 @@ public class FileUtils implements Serializable {
             file.transferTo(new File(path + File.separator + fileName));
         } catch (IOException e) {
             e.printStackTrace();
+            deleteFile(filepath);
         }
         //将请求文件的相对路径返回
         return StringUtils.isNoneBlank(fileName) ? "/static/1" + access +now + "/" + fileName : null;
+    }
+
+    /**
+     * 文件上传工具类
+     *
+     * @param file
+     * @return
+     */
+    public static Map<String,String> fileUpLoadRealDummy(MultipartFile file, String sysPath, String access) {
+        if (Objects.isNull(file) || StringUtils.isBlank(sysPath) || StringUtils.isBlank(access)) {
+            return null;
+        }
+        Map<String, String> map = new HashMap<>();
+        //uuid生成的唯一前缀 + 上传文件名 构成唯一的新文件名
+        String fileName = UUIDUtils.getUUID(6)  + "_" + StringsUtils.substringFileName(Objects.requireNonNull(file.getOriginalFilename()));
+        //文件保存路径
+        String now = DateUtils.dateForMat("dv", new Date());
+        String path = sysPath +"1"+access + now;
+        //新建文件filepath
+        File filepath = new File(path, fileName);
+        //判断路径是否存在，如果不存在就创建一个
+        if (!filepath.getParentFile().exists()) {
+            filepath.getParentFile().mkdirs();
+        }
+        map.put("real",filepath.getPath());
+        try {
+            //将上传的文件file写入文件filepath
+            file.transferTo(new File(path + File.separator + fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+            deleteFile(filepath);
+            map.put("dummy",null);
+            return map;
+        }
+        //将请求文件的相对路径返回
+        map.put("dummy",StringUtils.isNoneBlank(fileName) ? "/static/1" + access +now + "/" + fileName : null);
+        return map;
     }
 
     /**
@@ -87,13 +125,22 @@ public class FileUtils implements Serializable {
      * @param access
      * @return
      */
-    public static String fileUpLoad(MultipartFile[] files, String sysPath, String access) {
+    public static List<String> fileUpLoad(MultipartFile[] files, String sysPath, String access) {
         List<String> list = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+
         for (MultipartFile file : files) {
-            String path = fileUpLoad(file, sysPath, access);
-            list.add(path);
+            Map<String, String> map =null;
+            try {
+               map = fileUpLoadRealDummy(file, sysPath, access);
+            } catch (Exception e) {
+                e.printStackTrace();
+                deleteFile(set);
+            }
+            list.add(map.get("dummy"));
+            set.add(map.get("real"));
         }
-        return StringsUtils.appendStr(list,",");
+        return list;
     }
     /**
      * xml配置的读取
@@ -828,6 +875,25 @@ public class FileUtils implements Serializable {
            return createFile(path);
         }
            return file;
+    }
+
+    /**
+     * 删除文件
+     * @param paths
+     * @return
+     */
+    public static boolean deleteFile(Set<String> paths){
+        boolean flag = true;
+        for (String path : paths) {
+            if (Objects.isNull(null)){
+                throw new JoyceException("该文件路径不能为空");
+            }
+            boolean rs = deleteFile(path);
+            if (!rs){
+                flag = false;
+            }
+        }
+        return flag;
     }
 
     /**

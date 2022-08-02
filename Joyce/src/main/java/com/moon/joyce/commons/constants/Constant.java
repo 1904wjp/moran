@@ -196,6 +196,8 @@ public class Constant {
     /**
      * 返回的信息
      */
+    public static final String CHINESE_COMMON_ERROR_MESSAGE = "操作失败";
+
     //填写错误的信息
     public static final String CHINESE_FILL_ERROR_MESSAGE = "填写有误，请填写正确信息";
     public static final String ERROR_FILL_MESSAGE = "Please fill in the correct information";
@@ -317,11 +319,16 @@ public class Constant {
      * 日志
      */
     //日志文件夹路径
-    public static final String LOGGER_PATH = "G://Joyce/joyce.log";
+    public static final String LOGGER_PATH = "D://Joyce/joyce.log";
 
     public static final String UNKNOW = "====================>";
     /**
      * redis总和map
      */
     public static final String redisMap = "redisMap";
+
+    /**
+     * 方法
+     */
+    public static final String METHOD_GET = "GET";
 }

@@ -1,21 +1,22 @@
 package com.moon.joyce.commons.joyce;
 
 
+import com.github.kevinsawicki.http.HttpRequest;
 import com.moon.joyce.commons.utils.*;
-import com.moon.joyce.example.service.SourceService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import redis.clients.jedis.Jedis;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
 
 /**
  * @Author: XingDaoRong
@@ -31,7 +32,7 @@ public class Joyce {
      * @return
      */
     public static int[][] addHeap()  {
-        int[][] intervals = {{1,3},{2,6},{8,10},{15,18},{7,9}};
+        int[][] intervals = {{1,3},{2,6},{4,10},{15,18},{7,9}};
         int couti = 0;
         int count = 0;
         if (intervals.length<=1){
@@ -67,6 +68,7 @@ public class Joyce {
         }
         return merge;
     }
+
     public static int[] getMaxAndMinValue(int var1,int var2,int var3,int var4){
          int[] arry= { var1, var2, var3, var4};
          int max = var1;
@@ -170,6 +172,7 @@ public class Joyce {
         }
         return ints;
     }
+
     public static void getContext() {
         File file = new File("E:\\我的绝色美女房客");
         if (!file.exists()) {
@@ -203,7 +206,6 @@ public class Joyce {
             }
             i++;
         }
-
     }
 
     /**
@@ -230,7 +232,6 @@ public class Joyce {
         } while (flag);
         return document;
     }
-
 
     /*public static void arrayFunction(int[] arr){
         int eor = 0;
@@ -325,7 +326,6 @@ public class Joyce {
         }
         System.out.println(sum);
     }
-
 
     public static void  test112(int num){
         int month =  num*12;
@@ -432,6 +432,7 @@ public class Joyce {
         }
         return median;
     }
+
     public static int[] getSumNum(int[] num1,int[] num2){
         int[] num = new int[num1.length+num2.length];
         int index = 0;
@@ -463,6 +464,7 @@ public class Joyce {
         return 0.00;
 
     }
+
     public static double getChildMedian(int[] num){
         double median = 0.00;
         if (num.length%2==0){
@@ -472,12 +474,20 @@ public class Joyce {
         }
         return median;
     }
+
     @Test
-    public void test0110(){
-        String strs = "f,g,s,d,h,b,d,f,f,s,a,f,g";
-        String[] split = strs.split(",");
-        List<String> collect = Arrays.stream(split).collect(Collectors.toList());
-        String s = StringsUtils.listToStr(collect);
-        System.out.println(s);
+    public void test0111(){
+        HttpRequest httpRequest = null;
+        HashMap<String, String> map = new HashMap<>();
+        map.put("username","admin");
+        map.put("password","admin");
+        File file = new File("C:\\Users\\WJP\\Desktop\\ui");
+        List<File> files = Arrays.stream(file.listFiles()).filter(x -> x.getName().endsWith(".json") || x.getName().endsWith("")).collect(Collectors.toList());
+        files.forEach(x->{
+            System.out.println(x);
+        });
+        //  System.out.println("--------->"+HttpRequest.post("http://localhost:9099/example/user/doLogin").form(map).body());
     }
+
+
 }

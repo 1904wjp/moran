@@ -33,8 +33,8 @@ import java.util.Map;
 public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements AlbumService {
     @Autowired
     private SourceService sourceService;
-    @Autowired
-    private AlbumSourceService albumSourceService;
+    /*@Autowired
+    private AlbumSourceService albumSourceService;*/
     @Override
     public PageVo getPage(Album album) {
         QueryWrapper<Album> qw = new QueryWrapper<>();

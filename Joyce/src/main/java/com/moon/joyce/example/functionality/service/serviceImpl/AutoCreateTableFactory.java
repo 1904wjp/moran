@@ -55,14 +55,8 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 获取工厂实例
-     *
      * @param ps
      * @return
-     * @throws ClassNotFoundException
-     * @throws InvocationTargetException
-     * @throws NoSuchMethodException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
      */
     public AutoCreateTableFactory init(String ps) {
         if (Objects.isNull(autoCreateTableFactory)) {
@@ -90,7 +84,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 扫描指定文件
-     *
      * @param packagePath
      * @throws ClassNotFoundException
      */
@@ -114,7 +107,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 检测里面是否有子文件
-     *
      * @param packages
      */
     private void checkIsParentFile(String[] packages) {
@@ -138,7 +130,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 扫描指定文件并且填充属性
-     *
      * @param entityClassPackage
      * @throws ClassNotFoundException
      */
@@ -154,7 +145,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 填充属性
-     *
      * @param dir
      * @param classLoader
      * @throws ClassNotFoundException
@@ -235,7 +225,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 获取父类属性实体类集合
-     *
      * @param fields
      * @param idsField
      * @return
@@ -269,7 +258,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 返回主键集合
-     *
      * @param fields
      * @return
      */
@@ -310,7 +298,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 检测list中重复元素
-     *
      * @param list
      * @return
      */
@@ -342,7 +329,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 获取类所有属性
-     *
      * @param loadClass
      * @return
      */
@@ -362,7 +348,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 计算总属性集合
-     *
      * @param fs1
      * @param fs2
      * @return
@@ -388,7 +373,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 根据column注解创建实体类
-     *
      * @param columnEntity
      * @param column
      */
@@ -413,7 +397,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 根据ids注解创建实体类
-     *
      * @param field
      * @return
      */
@@ -432,7 +415,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 判断是否有ids
-     *
      * @param fields
      * @return
      */
@@ -448,7 +430,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 检测是否已存在
-     *
      * @param key
      * @return
      */
@@ -461,7 +442,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 根据路径获取对应文件
-     *
      * @param packagePath
      * @return
      */
@@ -500,7 +480,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 自动选取策略创建
-     *
      * @param tableEntity
      * @param columnEntities
      * @return
@@ -521,7 +500,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 创建表的sql
-     *
      * @param tableEntity
      * @param columnEntities
      * @return
@@ -594,7 +572,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 给表添加字段
-     *
      * @param tableEntity
      * @param columnEntities
      * @return
@@ -635,7 +612,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 删除表
-     *
      * @param tableName
      * @return
      */
@@ -645,7 +621,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 获取工程名称
-     *
      * @return
      */
     @Override
@@ -655,7 +630,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 检测是否有多出的字段
-     *
      * @param strs
      * @param list
      * @return
@@ -673,7 +647,6 @@ public class AutoCreateTableFactory implements TableFactory {
 
     /**
      * 获取执行sql集合
-     *
      * @param ps
      * @return
      */

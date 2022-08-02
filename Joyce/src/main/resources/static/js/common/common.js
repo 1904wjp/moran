@@ -137,7 +137,7 @@ function uploadFile(file, restUrl, img, objUrl, size) {
         return;
     }
     var formData = new FormData();
-    formData.append('file', file[0].files[0]);
+    formData.append('files', file[0].files[0]);
     //设置图片类型
     if (!/.(gif|jpg|jpeg|png|gif|jpg|png)$/.test(file.val())) {
         tips("", "图片类型不符合要求");
@@ -162,15 +162,41 @@ function uploadFile(file, restUrl, img, objUrl, size) {
         processData: false,
         success: function (data) {
             tips(data.rs, data.msg);
-            if (data.rs) {
-                img.attr("src", data.data);
-                $("input[name=" + objUrl + "]").val(data.data);
-            }
         }
     });
     loading(false);
 }
 
+/**
+ * 上传多个文件
+ * @param files
+ * @param restUrl
+ */
+function uploadFiles(files,restUrl,obj){
+    console.log(files,"--",restUrl,"--",obj)
+    var formData = new FormData();
+    for (let i = 0; i <files.length ; i++) {
+        formData.append("files",files[i]);
+    }
+    console.log("--",formData);
+    addLoadingModal("请稍后...正在上传资源");
+    $.ajax({
+        url: restUrl,
+        type: "POST",
+        //上传格式为formData
+        data: formData,
+        processData: false,
+        contentType: "multipart/form-data",
+        success: function (data) {
+            tips(data.rs, data.msg);
+            if (data.rs){
+                obj.val(data.data);
+            }
+        }
+    });
+    loading(false);
+    return flag;
+}
 
 /**
  * 添加视频组件
@@ -742,7 +768,7 @@ function guid() {
  * @returns {number}
  */
 function getRandom(max, min) {
-    return parseInt(Math.random() * (max - min + 1) + min);
+    return Math.random() * (max - min + 1) + min;
 }
 
 class Modal {

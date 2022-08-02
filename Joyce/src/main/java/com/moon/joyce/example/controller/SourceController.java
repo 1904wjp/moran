@@ -15,6 +15,7 @@ import com.moon.joyce.example.entity.vo.MainSource;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.entity.tundish.AlbumSource;
+import com.moon.joyce.example.functionality.enums.AlbumEnum;
 import com.moon.joyce.example.functionality.service.AlbumSourceService;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.AlbumService;
@@ -63,7 +64,6 @@ public class SourceController extends BaseController {
     private SourceControllerDetailService sourceServiceControllerDetailService;
     //默认位置
     private String baseSite = "front,back,left,right,top,bottom";
-
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 资源页面
@@ -120,6 +120,12 @@ public class SourceController extends BaseController {
         album.setUserId(getSessionUser().getId());
         return albumService.getPage(album);
     }
+
+    /**
+     * 查询相册资源
+     * @param id
+     * @return
+     */
     @ResponseBody
     @GetMapping("/getAlbum/{id}")
     public Result getAlbumById(@PathVariable String id){
@@ -128,6 +134,7 @@ public class SourceController extends BaseController {
         album.setMap(map);
         return dataResult(!map.isEmpty(),album);
     }
+
 
     /**
      * 保存资源
@@ -138,9 +145,9 @@ public class SourceController extends BaseController {
     @PostMapping("/saveAlbum")
     public Result saveAlbum(Album album) {
         int size = album.getSources().size();
-        if ("0".equals(album.getType())){
-            if (size != 12){
-                return error("当前类型只能是12张");
+        if (AlbumEnum.BOX.getCode().toString().equals(album.getType())){
+            if (size != AlbumEnum.BOX.getLength()){
+                return error("当前类型只能是"+AlbumEnum.BOX.getLength()+"张");
             }
         }
         List<Source> sources = new ArrayList<>();
@@ -154,6 +161,7 @@ public class SourceController extends BaseController {
         String ids = StringsUtils.listToStr(collect);
         JSONObject jo = (JSONObject)JSON.parse(album.getSourceConfig());
         jo.put("ids",ids);
+        jo.put("site",getDefSite());
         album.setSourceConfig(jo.toString());
         boolean rs = albumService.saveOrUpdate(album);
         List<AlbumSource> albumSources = new ArrayList<>();
@@ -383,5 +391,6 @@ public class SourceController extends BaseController {
         }
         return  sb.substring(0, sb.toString().length()-1);
     }
+
 }
 

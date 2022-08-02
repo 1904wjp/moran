@@ -69,7 +69,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String uploadImgs(MultipartFile[] files) {
-        String paths = null;
+        List<String> paths = null;
         try {
             paths = FileUtils.fileUpLoad(files, sysPath, access);
         } catch (Exception e) {
@@ -81,8 +81,9 @@ public class FileServiceImpl implements FileService {
         ArrayList<String> arrayList = new ArrayList<>();
         list.forEach(x->arrayList.add(sysPath+x));
         String names = StringsUtils.listToStr(arrayList);
-        logger.info("文件:{}正在上传,访问路径为：{}",names,paths);
-        return paths;
+        String pathStr = StringsUtils.appendStr(paths, ",");
+        logger.info("文件:{}正在上传,访问路径为：{}",names,pathStr);
+        return pathStr;
     }
 
     @Override
