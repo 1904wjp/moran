@@ -32,4 +32,12 @@ public class UUIDUtils implements Serializable {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         return uuid.length()>=len ? uuid.substring(0,len-1): uuid;
     }
+    /**
+     * 获得一个长度为len的纯数字字母的字符串的名字
+     * @return
+     */
+    public static String getUUIDName(){
+        return getUUID(8);
+    }
+
 }

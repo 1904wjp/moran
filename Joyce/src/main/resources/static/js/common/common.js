@@ -125,19 +125,21 @@ function getIds(obj) {
 /**
  * 上传单个文件
  * @param file
- * @param requestUrl
+ * @param restUrl
  * @param img
  * @param objUrl
+ * @param size
  */
 // 处理上传
 function uploadFile(file, restUrl, img, objUrl, size) {
 
-    if (file.val() == '') {
+    if (file.val() === '') {
         tips("", "图片不能为空");
         return;
     }
+    console.log("图片", file[0].files[0]);
     var formData = new FormData();
-    formData.append('files', file[0].files[0]);
+    formData.append('file', file[0].files[0]);
     //设置图片类型
     if (!/.(gif|jpg|jpeg|png|gif|jpg|png)$/.test(file.val())) {
         tips("", "图片类型不符合要求");
@@ -162,6 +164,9 @@ function uploadFile(file, restUrl, img, objUrl, size) {
         processData: false,
         success: function (data) {
             tips(data.rs, data.msg);
+            if (data.rs){
+                img.attr("src",data.data);
+            }
         }
     });
     loading(false);
@@ -171,11 +176,12 @@ function uploadFile(file, restUrl, img, objUrl, size) {
  * 上传多个文件
  * @param files
  * @param restUrl
+ * @param obj
  */
 function uploadFiles(files,restUrl,obj){
     console.log(files,"--",restUrl,"--",obj)
     var formData = new FormData();
-    for (let i = 0; i <files.length ; i++) {
+    for (let i = 0; i < files.length ; i++) {
         formData.append("files",files[i]);
     }
     console.log("--",formData);
@@ -186,7 +192,7 @@ function uploadFiles(files,restUrl,obj){
         //上传格式为formData
         data: formData,
         processData: false,
-        contentType: "multipart/form-data",
+        contentType: false,
         success: function (data) {
             tips(data.rs, data.msg);
             if (data.rs){

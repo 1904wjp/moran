@@ -144,30 +144,35 @@ public class SourceController extends BaseController {
     @ResponseBody
     @PostMapping("/saveAlbum")
     public Result saveAlbum(Album album) {
-        int size = album.getSources().size();
+        String[] sourceUrls = album.getSourceUrls().split(",");
         if (AlbumEnum.BOX.getCode().toString().equals(album.getType())){
-            if (size != AlbumEnum.BOX.getLength()){
+            if (!album.getTotal().toString().equals(AlbumEnum.BOX.getLength().toString())){
                 return error("当前类型只能是"+AlbumEnum.BOX.getLength()+"张");
             }
         }
         List<Source> sources = new ArrayList<>();
-        album.getSources().forEach(x->{
-                    setBaseField(x);
-                    x.setType("4");
-                    sources.add(x);
+        Arrays.stream(sourceUrls).forEach(x->{
+            Source source = new Source();
+            source.setUrl(x);
+            source.setSourceName(UUIDUtils.getUUIDName());
+            setBaseField(source);
+            source.setApplyStatus(0);
+            source.setType("0");
+            source.setDescContent("盒型相册");
+            source.setType("4");
+            sources.add(source);
                 });
         boolean saveSourceRs = sourceService.saveBatch(sources);
         List<Long> collect = sources.stream().map(Source::getId).collect(Collectors.toList());
         String ids = StringsUtils.listToStr(collect);
-        JSONObject jo = (JSONObject)JSON.parse(album.getSourceConfig());
+        JSONObject jo = new JSONObject();
         jo.put("ids",ids);
         jo.put("site",getDefSite());
         album.setSourceConfig(jo.toString());
         boolean rs = albumService.saveOrUpdate(album);
         List<AlbumSource> albumSources = new ArrayList<>();
-        album.getSources().forEach(x->albumSources.add(new AlbumSource(album.getId(),x.getId())));
+        sources.forEach(x->albumSources.add(new AlbumSource(album.getId(),x.getId())));
         boolean asRs = albumSourceService.saveBatch(albumSources);
-        album.setTotal(size);
         album.setUserId(getSessionUserId());
         return dataResult(rs && saveSourceRs && asRs);
     }
@@ -194,7 +199,7 @@ public class SourceController extends BaseController {
     @PostMapping("/saveSource")
     public Result addSource(Source source) {
         if (StringUtils.isNoneBlank(source.getSourceName())){
-            source.setSourceName(UUIDUtils.getUUID(8));
+            source.setSourceName(UUIDUtils.getUUIDName());
         }
         if (!sourceServiceControllerDetailService.check(source)) {
             return error("该资源名已被使用");

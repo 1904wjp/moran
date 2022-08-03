@@ -53,7 +53,6 @@ function registFuc() {
             type: 'POST',
             dataType: 'json',
             data: data,
-
         }).done(function (data) {
             tips(data.rs,data.msg);
             if (data.rs) {

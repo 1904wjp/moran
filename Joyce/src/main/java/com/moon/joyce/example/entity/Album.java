@@ -45,11 +45,12 @@ public class Album extends Page {
     @Column(name = "total",type = Type.BIGINT,comment = "张数")
     private Integer total;
 
-    @NotExist
-    @TableField(exist = false)
-    private List<Source> sources;
 
     @NotExist
     @TableField(exist = false)
     private Map<String,Source> map;
+
+    @NotExist
+    @TableField(exist = false)
+    private String sourceUrls;
 }

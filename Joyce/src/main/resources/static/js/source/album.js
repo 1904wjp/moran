@@ -137,6 +137,7 @@ function uploadAlbum(size,lenth){
             $(".uploadDIv").show();
         }
         imgs = img;
+        console.log("图片",imgs);
 });
 }
 
@@ -158,45 +159,61 @@ function reads(fil) {
 
 
 function saveAlbum(){
-    uploadFiles(imgs,"/fileUpload/files",$('#albumPath'));
-    if (notNull($('#albumPath').val())){
-        $('#add_article_info').modal('hide');
-        var urls = $('#albumPath').val().split(",");
-        var data={
-                name:$('#in_title').val()==null?('#in_title').val()==null:"album"+getRandom(0,2000000),
-                total:imgs.length,
-                type:0,
-                sources:[]
-        }
-        if (urls.length==12){
-            for (let k in urls) {
-                data.sources.push({
-                    sourceName:"album"+getRandom(0,100000),
-                    type:0,
-                    url:k,
-                    applyStatus:0,
-                    descContent:"盒型相册"
-                });
-            }
-        }
-        console.log(data);
-        Ewin.confirm({message: "确认提交数据源？"}).on(function (e) {
-            if (!e) {
-                return;
-            }
-            $.ajax({
-                url: '/example/source/saveAlbum',
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-                processData: false
-            }).done(function (data) {
-                tips(data.rs, data.msg);
-            }).fail(function () {
-                tips(false, data.msg)
-            });
-        });
+    var formData = new FormData();
+    for (let i = 0; i < imgs.length ; i++) {
+        formData.append("files",imgs[i]);
     }
+    console.log("--",formData);
+    addLoadingModal("请稍后...正在上传资源");
+    $.ajax({
+        url: "/fileUpload/files",
+        type: "POST",
+        //上传格式为formData
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            tips(data.rs, data.msg);
+            if (data.rs){
+                loading(false);
+                var obj = $('#albumPath');
+                obj.val(data.data);
+                if (notNull(obj.val())){
+                    $('#add_article_info').modal('hide');
+                    var urls = $('#albumPath').val().split(",");
+                    console.log(urls,"::::",urls.length);
+                    var album = {
+                        name:$('#in_title').val()==null?('#in_title').val()==null:"album"+getRandom(0,20000),
+                        total:imgs.length,
+                        type:0,
+                        sourceConfig:{},
+                        sources:[],
+                        userId: 0,
+                        map:{},
+                        sourceUrls:urls
+                    }
+                    console.log(album);
+                    Ewin.confirm({message: "确认提交数据源？"}).on(function (e) {
+                        if (!e) {
+                            return;
+                        }
+                        $.ajax({
+                            url: '/example/source/saveAlbum',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: album,
+                        }).done(function (data) {
+                            tips(data.rs, data.msg);
+                        }).fail(function () {
+                            tips(false, data.msg)
+                        });
+                    });
+                }
+            }
+        }
+    });
+    loading(false);
+
 }
 
 

@@ -28,10 +28,10 @@ public class Accounting extends Page {
   @Column(name = "income",type = Type.BIGINT,comment = "收入")
   private Long income;
 
-  @Column(name = "income",type = Type.BIGINT,comment = "支出")
+  @Column(name = "expenditure",type = Type.BIGINT,comment = "支出")
   private Long expenditure;
 
-  @Column(name = "income",type = Type.BIGINT,comment = "预算")
+  @Column(name = "budget",type = Type.BIGINT,comment = "预算")
   private Long budget;
 
   @Column(name = "remark",type = Type.TEXT,length = "0",comment = "备注")
