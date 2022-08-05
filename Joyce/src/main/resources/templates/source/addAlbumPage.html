@@ -19,6 +19,9 @@
                         <div style="margin-left: 22px;margin-top: 30px;">
                             输入相册名<input type="text" class="album" id='in_title' required="required" placeholder="请输入相册名" autocomplete="off"  />
                         </div>
+                        <div style="margin-left: 22px;margin-top: 30px;">
+                            输入相册描述<input type="text" class="album" id='albumDesc' required="required" placeholder="请输入相册描述" autocomplete="off"  />
+                        </div>
                         <div class="modal-footer">
                             <button type="button"  onclick="saveAlbum()" class="btn btn-primary ">提交</button>
                             <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
@@ -55,7 +58,11 @@
     $(function(){
         uploadAlbum(6,12);
     });
-
+    $("#productImg").on("mousedown",".link",function(e){
+        if(e.which==3){
+            alert(this,"右键触发");
+        }
+    });
 </script>
 
 

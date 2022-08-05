@@ -59,7 +59,7 @@ $(function () {
         val: "dayTask",
         url: "/example/dayTask/dayTaskListPage",
         name: "每日看板",
-        childs: []
+        childs: []example/source/addAlbumPage
     },*/ {
         id: 7,
         parentId: 0,
@@ -67,7 +67,14 @@ $(function () {
         url: "/aboutUs",
         name: "关于我们",
         childs: []
-    }  ];
+    } ,{
+        id: 8,
+        parentId: 0,
+        val: "al",
+        url: "/example/source/albumListPage",
+        name: "相册",
+        childs: []
+    } ];
     let menu = $('#menu_bar');
     for (i = 0, len = menuList.length; i < len; i++) {
         if (menuList[i].parentId == 0) {

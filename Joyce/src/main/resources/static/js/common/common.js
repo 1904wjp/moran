@@ -197,6 +197,7 @@ function uploadFiles(files,restUrl,obj){
             tips(data.rs, data.msg);
             if (data.rs){
                 obj.val(data.data);
+                console.log("---------+---->",obj.val());
             }
         }
     });
@@ -795,7 +796,7 @@ class Modal {
  * @param delUrl
  * @param toUrl
  */
-function deleteByIdsT(tableObj,delUrl,isToUrl,delUrl,toUrl) {
+function deleteByIdsT(tableObj,delUrl,toUrl) {
 
 //删除id为ids的数据集合
     var ids = getIds(tableObj);
@@ -816,16 +817,13 @@ function deleteByIdsT(tableObj,delUrl,isToUrl,delUrl,toUrl) {
                     data: data,
                 }).done(function (data) {
                     if (data.rs) {
-                        tips(data.msg)
-                        if (isToUrl){
-                            toList(toUrl);
-                        }
+                        tips(data.msg);
+                        toList(toUrl);
                     } else {
                         tips(data.msg)
                     }
                 }).fail(function () {
                     tips(false, data.msg)
-
                 });
             });
     }

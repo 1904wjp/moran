@@ -3,8 +3,10 @@ package com.moon.joyce.example.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.commons.enums.RE;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
@@ -121,6 +123,23 @@ public class SourceController extends BaseController {
         return albumService.getPage(album);
     }
 
+    @ResponseBody
+    @PostMapping("/delAlbum")
+    public Result delAlbum(@RequestParam("ids") String ids) {
+        List<String> list = StringsUtils.strToList(ids);
+        List<AlbumSource> albumSources = new ArrayList<>();
+        for (String s : list) {
+            AlbumSource albumSource = new AlbumSource();
+            albumSource.setAlbumId(Long.valueOf(s));
+            List<AlbumSource> albumSourceList = albumSourceService.getList(albumSource);
+            albumSources.addAll(albumSourceList);
+        }
+        List<String> collect = albumSources.stream().map(AlbumSource::getId).map(String::valueOf).collect(Collectors.toList());
+        boolean conRs = albumSourceService.removeByIds(collect);
+        boolean rs = albumService.removeByIds(list);
+        return dataResult(rs && conRs,RE.DELETE.getCode());
+    }
+
     /**
      * 查询相册资源
      * @param id
@@ -132,7 +151,7 @@ public class SourceController extends BaseController {
         Album album = albumService.getById(id);
         Map<String, Source> map = albumService.analyAlbumConfig(album.getSourceConfig());
         album.setMap(map);
-        return dataResult(!map.isEmpty(),album);
+        return dataResult(!map.isEmpty(),RE.SELECT.getCode(),album);
     }
 
 
@@ -156,10 +175,10 @@ public class SourceController extends BaseController {
             source.setUrl(x);
             source.setSourceName(UUIDUtils.getUUIDName());
             setBaseField(source);
-            source.setApplyStatus(0);
+            source.setApplyStatus(3);
             source.setType("0");
             source.setDescContent("盒型相册");
-            source.setType("4");
+            source.setUserId(getSessionUserId());
             sources.add(source);
                 });
         boolean saveSourceRs = sourceService.saveBatch(sources);
@@ -168,14 +187,17 @@ public class SourceController extends BaseController {
         JSONObject jo = new JSONObject();
         jo.put("ids",ids);
         jo.put("site",getDefSite());
+        setBaseField(album);
         album.setSourceConfig(jo.toString());
         boolean rs = albumService.saveOrUpdate(album);
         List<AlbumSource> albumSources = new ArrayList<>();
         sources.forEach(x->albumSources.add(new AlbumSource(album.getId(),x.getId())));
         boolean asRs = albumSourceService.saveBatch(albumSources);
         album.setUserId(getSessionUserId());
-        return dataResult(rs && saveSourceRs && asRs);
+        return dataResult(rs && saveSourceRs && asRs,RE.ADDORUPDATE.getCode(),album);
     }
+
+
 
     /**
      * 获取资源列表
@@ -184,6 +206,7 @@ public class SourceController extends BaseController {
     @ResponseBody
     @GetMapping("/getList")
     public PageVo getList(Source source) {
+        source.setApplyStatus(0);
         source.setUserId(getSessionUser().getId());
         List<Source> list = sourceService.getList(source);
         long total = sourceService.getCount(source);

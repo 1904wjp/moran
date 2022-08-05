@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.moon.joyce.commons.annotation.Column;
 import com.moon.joyce.commons.annotation.NotExist;
 import com.moon.joyce.commons.annotation.Table;
+import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.commons.factory.enums.Type;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.entity.dto.Page;
@@ -45,6 +46,8 @@ public class Album extends Page {
     @Column(name = "total",type = Type.BIGINT,comment = "张数")
     private Integer total;
 
+    @Column(name = "album_desc",type = Type.TEXT,length = "0",comment = "张数")
+    private String albumDesc;
 
     @NotExist
     @TableField(exist = false)

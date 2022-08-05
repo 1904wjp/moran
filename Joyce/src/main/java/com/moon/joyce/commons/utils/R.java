@@ -1,6 +1,8 @@
 package com.moon.joyce.commons.utils;
 
 import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.commons.enums.RE;
+import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Result;
 
@@ -14,6 +16,65 @@ import java.util.Objects;
  */
 public class R  {
 
+
+    /**
+     * 返回结果
+     * @param rsi
+     * @param reCode
+     * @return
+     */
+    public static Result dataResult(int rsi, int reCode, BaseEntity entity){
+        if (reCode!=RE.ADDORUPDATE.getCode()){
+            return dataResult(rsi,reCode);
+        }
+        if (Objects.isNull(entity.getId())){
+            return dataResult(rsi,RE.ADD.getCode());
+        }
+        return dataResult(rsi,RE.UPDATE.getCode());
+    }
+
+    /**
+     * 返回结果
+     * @param rsi
+     * @param reCode
+     * @return
+     */
+    public static Result dataResult(int rsi,int reCode){
+        return dataResult(rsi,reCode,null);
+    }
+    /**
+     * 返回结果
+     * @param rsi
+     * @param reCode
+     * @param data
+     * @return
+     */
+    public static Result dataResult(int rsi,int reCode,Object data){
+        String MSG = "";
+        if (reCode== RE.ADD.getCode()){
+            MSG = "添加";
+        }
+        if (reCode== RE.DELETE.getCode()){
+            MSG = "删除";
+        }
+        if (reCode== RE.UPDATE.getCode()){
+            MSG = "修改";
+        }
+        if (reCode== RE.SELECT.getCode()){
+            MSG = "查询";
+        }
+        if (rsi!=0){
+            if (MSG.equals("")){
+                return success(data);
+            }
+            return R.success(MSG+"成功");
+        }
+        if (!MSG.equals("")){
+            return R.success(MSG+"失败");
+        }
+        
+        return R.error();
+    }
     /**
      * 返回结果
      * @param rsi
@@ -105,6 +166,7 @@ public class R  {
         }
         return error(code,msg,false);
     }
+   
     /**
      * 返回结果
      * @param rsi
@@ -153,6 +215,19 @@ public class R  {
     /**
      * 返回结果
      * @param rs
+     * @param reCode
+     * @param entity
+     * @return
+     */
+    public static Result dataResult(boolean rs, int reCode, BaseEntity entity){
+        if (!rs){
+            return dataResult(0,reCode,entity);
+        }
+        return dataResult(1,reCode,entity);
+    }
+    /**
+     * 返回结果
+     * @param rs
      * @param errorRs
      * @param successRs
      * @return
@@ -162,6 +237,31 @@ public class R  {
             return successRs;
         }
         return errorRs;
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @param reCode
+     * @return
+     */
+    public static Result dataResult(boolean rs,int reCode){
+        if (!rs){
+            return dataResult(0,reCode,null);
+        }
+        return dataResult(1,reCode,null);
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @param reCode
+     * @param data
+     * @return
+     */
+    public static Result dataResult(boolean rs,int reCode,Object data){
+        if (!rs){
+            return dataResult(0,reCode,data);
+        }
+        return dataResult(1,reCode,data);
     }
     /**
      * 返回结果

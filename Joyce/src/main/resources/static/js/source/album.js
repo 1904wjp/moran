@@ -9,9 +9,11 @@ function getSource(id) {
         dataType: 'json'
     }).done(function (data) {
         if (data.rs) {
+            console.log(data.data);
             $('#pic').remove();
             $('#in_pic').remove();
             res = data.data;
+            console.log(data.data.map);
             $.each(res.map, function (key, value) {
                 if (key.includes("out")) {
                     var html = " <div class=\"" + key + "\">\n" +
@@ -109,6 +111,7 @@ function albumOpFormatter(value,row,index){
 
 
 var imgs = [] ;
+var rsLen = 0;
 /**
  * 页面上传图片
  * @param size
@@ -137,6 +140,7 @@ function uploadAlbum(size,lenth){
             $(".uploadDIv").show();
         }
         imgs = img;
+        rsLen = lenth;
         console.log("图片",imgs);
 });
 }
@@ -159,6 +163,15 @@ function reads(fil) {
 
 
 function saveAlbum(){
+   if (imgs.length === rsLen){
+       saveAndUpload();
+   }else {
+       tips(false,"图片必须时"+rsLen+"张");
+   }
+
+}
+
+function saveAndUpload(){
     var formData = new FormData();
     for (let i = 0; i < imgs.length ; i++) {
         formData.append("files",imgs[i]);
@@ -188,6 +201,7 @@ function saveAlbum(){
                         type:0,
                         sourceConfig:{},
                         sources:[],
+                        albumDesc: $('#albumDesc').val(),
                         userId: 0,
                         map:{},
                         sourceUrls:urls
@@ -213,10 +227,9 @@ function saveAlbum(){
         }
     });
     loading(false);
-
 }
-
 
 function albumSave(){
     $("#add_article_info").modal('show');
 }
+

@@ -12,4 +12,5 @@ import java.util.List;
  */
 public interface AlbumSourceService extends IService<AlbumSource> {
 
+    List<AlbumSource> getList(AlbumSource albumSource);
 }
