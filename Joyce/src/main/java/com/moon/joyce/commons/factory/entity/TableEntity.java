@@ -8,6 +8,7 @@ package com.moon.joyce.commons.factory.entity;
  */
 
 import com.moon.joyce.commons.factory.enums.TableStrategy;
+import com.moon.joyce.example.functionality.entity.Column;
 
 /**
  * 表实体类
@@ -53,6 +54,16 @@ public class TableEntity{
     public TableEntity() {
     }
 
+    /**
+     * 转换
+     * @param column
+     * @return
+     */
+    public TableEntity columnToTableEntity(Column column){
+        this.name = column.getTableName();
+        this.content = column.getTableComment();
+        return this;
+    }
     @Override
     public String toString() {
         return "TableEntity{" +

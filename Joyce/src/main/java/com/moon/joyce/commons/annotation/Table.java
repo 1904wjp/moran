@@ -16,6 +16,6 @@ import java.lang.annotation.*;
 public @interface Table {
     String name();
     String content() default "";
-    TableStrategy strategy() default TableStrategy.SECURITY;
+    TableStrategy strategy() default TableStrategy.ADD;
     boolean isParent() default false;
 }

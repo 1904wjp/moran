@@ -1,6 +1,7 @@
 package com.moon.joyce.commons.factory.entity;
 
 import com.moon.joyce.commons.factory.enums.Type;
+import com.moon.joyce.example.functionality.entity.Column;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,8 +49,14 @@ public class ColumnEntity{
      * 序号
      */
     private Integer idValue;
-
+    /**
+     * 唯一
+     */
     private Boolean unique;
+    /**
+     * 默认值
+     */
+    private String defaultValue;
 
     public Boolean getUnique() {
         return unique;
@@ -59,10 +66,6 @@ public class ColumnEntity{
         this.unique = unique;
     }
 
-    /**
-     * 默认值
-     */
-    private String defaultValue;
 
     public String getDefaultValue() {
         return defaultValue;
@@ -165,6 +168,23 @@ public class ColumnEntity{
         return size;
     }
 
+    /**
+     * 转换
+     * @param column
+     * @return
+     */
+    public ColumnEntity columnToColumnEntity(Column column){
+        this.name = column.getColumnName();
+        this.length = column.getColumnLength();
+        this.comment = column.getColumnComment();
+        this.defaultValue = column.getDefaultValue();
+        this.isKey = "PRI".equals(column.getIsKey());
+        this.defaultValue = column.getDefaultValue();
+        this.isNotNull = "OK".equals(column.getIsNull());
+        this.type = column.getColumnType();
+        this.auto = (null != column.getAutoIncrement());
+        return this;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -52,4 +52,8 @@ public class Column implements Serializable{
      * 表注释
      */
     private String tableComment;
+    /**
+     * 增长
+     */
+    private String autoIncrement;
 }

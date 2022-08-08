@@ -844,6 +844,28 @@ public class FileUtils implements Serializable {
    }
 
     /**
+     * 获取文件全路径名称
+     * @param filePath
+     * @return
+     */
+   public static  String getFilePathName(String filePath){
+       String[] split = filePath.split(".");
+       String suf = "."+split[1];
+       File file = new File(filePath);
+       if (!file.getParentFile().exists()){
+           file.getParentFile().mkdirs();
+       }
+       StringBuilder builder = new StringBuilder();
+       builder.append(filePath);
+       while (file.exists()){
+           builder.append("(1)");
+           filePath =  builder.append(suf).toString();
+           file = new File(filePath);
+       }
+       return filePath;
+   }
+
+    /**
      * 创建文件
      * @param path
      * @return

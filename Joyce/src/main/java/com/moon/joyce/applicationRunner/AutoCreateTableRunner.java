@@ -1,9 +1,9 @@
 package com.moon.joyce.applicationRunner;
 
 
+import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.example.functionality.entity.Column;
 import com.moon.joyce.example.functionality.service.ColumnsService;
-import com.moon.joyce.example.functionality.service.TableFactory;
 import com.moon.joyce.example.functionality.service.serviceImpl.AutoCreateTableFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +35,8 @@ public class AutoCreateTableRunner implements ApplicationRunner {
         try {
             AutoCreateTableFactory factory = AutoCreateTableFactory.getInstance();
             factory.init(ps);
-            Set<String> tableSet = factory.getTableSet();
-            Map<String, List<Column>> map = columnsService.getTableInfoBySet(tableSet, dbName);
+            Map<String, Set<String>> tableSet = factory.getTableSet();
+            Map<String, List<Column>> map = columnsService.getTableInfoBySet(tableSet.get(TableStrategy.ADD.getCode().toString()), dbName);
             List<String> sqls = factory.getSqls(map);
             columnsService.execute(sqls);
         } catch (Exception e) {

@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moon.joyce.commons.annotation.Column;
 import com.moon.joyce.commons.annotation.Table;
-import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.commons.factory.enums.Type;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 

@@ -16,6 +16,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
@@ -47,14 +48,15 @@ public class AutoCreateTableFactory implements TableFactory {
     private static int idValue = 0;
     //检测子文件容器
     private static Set<String> set = null;
-    private static  Set<String> exitSet = null;
+    private static  Map<String,Set<String>> exitMap = null;
     //sql容器
     private static List<String> sqls = null;
     //工厂对象
     private static AutoCreateTableFactory autoCreateTableFactory = null;
     //配置信息的容器
     private static Map<String, ColumnEntity> defMap = null;
-
+    @Value("${}")
+    private String delTablePath;
     /**
      * 获取实例
      * @return
@@ -70,8 +72,8 @@ public class AutoCreateTableFactory implements TableFactory {
      * 获取名称集合
      * @return
      */
-    public  Set<String> getTableSet(){
-        return exitSet;
+    public  Map<String,Set<String>> getTableSet(){
+        return exitMap;
     }
     /**
      * 获取工厂实例
@@ -85,7 +87,7 @@ public class AutoCreateTableFactory implements TableFactory {
             map = new ConcurrentHashMap<>();
             set = new HashSet<>();
             sqls = new ArrayList<>();
-            exitSet = new HashSet<>();
+            exitMap = new HashMap<>();
             try {
                 //读取配置
                 InputStream in = getClassLoader().getResourceAsStream("joyce.properties");
@@ -101,11 +103,18 @@ public class AutoCreateTableFactory implements TableFactory {
     }
 
     private void initExitMap(){
+        Set<String> exitSet = new HashSet<>();
+        Set<String> delSet = new HashSet<>();
         for (Map.Entry<TableEntity, List<ColumnEntity>> entry : map.entrySet()) {
             if (entry.getKey().getStrategy().equals(TableStrategy.ADD.getCode().toString())){
                 exitSet.add(entry.getKey().getName());
             }
+            if (entry.getKey().getStrategy().equals(TableStrategy.FORCE.getCode().toString())){
+                delSet.add(entry.getKey().getName());
+            }
         }
+        exitMap.put(TableStrategy.ADD.getCode().toString(),exitSet);
+        exitMap.put(TableStrategy.FORCE.getCode().toString(),delSet);
     }
     /**
      * 扫描指定文件
@@ -625,7 +634,6 @@ public class AutoCreateTableFactory implements TableFactory {
     private String alterTable(TableEntity tableEntity, List<ColumnEntity> columnEntities, List<com.moon.joyce.example.functionality.entity.Column> existColumns) {
         List<String> list = existColumns.stream().map(com.moon.joyce.example.functionality.entity.Column::getColumnName).collect(Collectors.toList());
         List<ColumnEntity> differentList = getDifferentList(list, columnEntities);
-        logger.info("---------------->{}", differentList);
         if (!differentList.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append("alter table ").append(tableEntity.getName()).append(" add (");
@@ -689,6 +697,8 @@ public class AutoCreateTableFactory implements TableFactory {
      * @return
      */
     private String deleteTable(String tableName) {
+        //todo
+        // 导出文件，待实现
         return "DROP TABLE IF EXISTS `" + tableName + "`";
     }
 
@@ -719,9 +729,6 @@ public class AutoCreateTableFactory implements TableFactory {
         return columnEntities;
     }
 
-
-
-
     /**
      * 获取执行sql集合
      * @param maps
@@ -747,5 +754,6 @@ public class AutoCreateTableFactory implements TableFactory {
         }
         init(ps);
     }
+
 
 }
