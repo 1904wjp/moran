@@ -754,6 +754,4 @@ public class AutoCreateTableFactory implements TableFactory {
         }
         init(ps);
     }
-
-
 }
