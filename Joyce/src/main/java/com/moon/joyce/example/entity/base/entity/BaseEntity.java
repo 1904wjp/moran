@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moon.joyce.commons.annotation.Column;
 import com.moon.joyce.commons.annotation.Table;
+import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.commons.factory.enums.Type;
 
 import java.io.Serializable;
@@ -29,7 +30,7 @@ public class BaseEntity implements Serializable {
     private String createBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Column(name="createTime",comment = "创建时间",length = "10000000000", type = Type.DATETIME)
+    @Column(name="create_time",comment = "创建时间",length = "10000000000", type = Type.DATETIME)
     @TableField(value = "create_time",fill = FieldFill.INSERT)
     private Date createTime;
 
@@ -46,6 +47,10 @@ public class BaseEntity implements Serializable {
     @Column(name="delete_flag",comment = "删除标志", type = Type.INT,defaultValue = "0")
     @TableField(value = "delete_flag")
     private Integer deleteFlag;
+
+    @Column(name = "user_ids",comment = "用户id",type = Type.BIGINT)
+    @TableField(value = "user_ids")
+    private Long userIds;
 
     @TableField(exist = false)
     private Map<String,String> params;
@@ -105,6 +110,14 @@ public class BaseEntity implements Serializable {
 
     public void setParams(Map<String, String> params) {
         this.params = params;
+    }
+
+    public Long getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(Long userIds) {
+        this.userIds = userIds;
     }
 
     @Override

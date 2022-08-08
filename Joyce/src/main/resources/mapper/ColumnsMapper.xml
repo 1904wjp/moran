@@ -14,15 +14,21 @@
         FROM information_schema.columns a
                  RIGHT JOIN information_schema.tables b
                             ON a.table_name = b.table_name
-        WHERE b.table_schema = #{dbName}
-          AND a.table_name = #{tableName}
+        WHERE  a.table_name = #{tableName}
+            <if test="dbName!=null and dbName!=''">
+                AND b.table_schema = #{dbName}
+            </if>
+
     </select>
     <select id="getOne" resultType="com.moon.joyce.example.functionality.entity.Column">
         SELECT table_name    AS tableName,
                table_comment AS tableComment
         FROM INFORMATION_SCHEMA.TABLES
-        WHERE table_schema = #{dbName}
-          AND TABLE_NAME = #{tableName}
+        WHERE  TABLE_NAME = #{tableName}
+          <if test="dbName!=null and dbName!=''">
+              AND  table_schema = #{dbName}
+          </if>
+
     </select>
     <select id="getAllTables" resultType="com.moon.joyce.example.functionality.entity.Column">
         SELECT table_name    AS tableName,

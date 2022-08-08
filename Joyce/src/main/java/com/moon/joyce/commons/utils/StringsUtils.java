@@ -50,7 +50,12 @@ public class StringsUtils  implements Serializable {
         return listsUtils.listToStr(list);
     }
 
-    //集合是否含有某个字符串
+    /**
+     * 集合是否含有某个字符串
+     * @param str
+     * @param list
+     * @return
+     */
     public static boolean listIsContainsStr(String str,List<String> list){
         Set<String> set = new HashSet<>(list);
         return  set.contains(str);

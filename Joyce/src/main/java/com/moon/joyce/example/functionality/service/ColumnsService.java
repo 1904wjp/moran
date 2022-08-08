@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
 public interface ColumnsService {
     /**
      * 获取所有列
@@ -51,4 +52,12 @@ public interface ColumnsService {
      * @return
      */
     int getMapTableDataCount(String tableName, String dbName);
+
+    /**
+     * 根据set获取表信息
+     * @param tableSet
+     * @param dbName
+     * @return
+     */
+    Map<String, List<Column>> getTableInfoBySet(Set<String> tableSet, String dbName);
 }

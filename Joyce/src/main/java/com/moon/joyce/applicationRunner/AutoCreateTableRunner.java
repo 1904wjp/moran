@@ -1,8 +1,10 @@
 package com.moon.joyce.applicationRunner;
 
 
+import com.moon.joyce.example.functionality.entity.Column;
 import com.moon.joyce.example.functionality.service.ColumnsService;
 import com.moon.joyce.example.functionality.service.TableFactory;
+import com.moon.joyce.example.functionality.service.serviceImpl.AutoCreateTableFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * @author: Joyce
@@ -23,16 +25,19 @@ import java.util.List;
 public class AutoCreateTableRunner implements ApplicationRunner {
     @Value("${auto.entity.package}")
     private String ps;
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Value("${auto.source.dbName}")
+    private String dbName;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private ColumnsService columnsService;
-    @Autowired
-    private TableFactory tableFactory;
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        List<String> sqls = tableFactory.getSqls(ps);
-        logger.info(sqls.toString());
         try {
+            AutoCreateTableFactory factory = AutoCreateTableFactory.getInstance();
+            factory.init(ps);
+            Set<String> tableSet = factory.getTableSet();
+            Map<String, List<Column>> map = columnsService.getTableInfoBySet(tableSet, dbName);
+            List<String> sqls = factory.getSqls(map);
             columnsService.execute(sqls);
         } catch (Exception e) {
             e.printStackTrace();

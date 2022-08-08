@@ -3,14 +3,13 @@ package com.moon.joyce.example.functionality.service.serviceImpl;
 import com.moon.joyce.example.functionality.entity.Column;
 import com.moon.joyce.example.functionality.service.ColumnsService;
 import com.moon.joyce.example.mapper.ColumnsMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author: XingDaoRong
@@ -18,6 +17,7 @@ import java.util.Set;
  */
 @Service
 public class ColumnsServiceImpl implements ColumnsService {
+   private final Logger logger = LoggerFactory.getLogger(this.getClass());
    @Autowired
    private JdbcTemplate jdbcTemplate;
    @Autowired
@@ -57,6 +57,18 @@ public class ColumnsServiceImpl implements ColumnsService {
     @Override
     public int getMapTableDataCount(String tableName, String dbName) {
         return columnsMapper.getCount(tableName,dbName);
+    }
+
+    @Override
+    public Map<String, List<Column>> getTableInfoBySet(Set<String> tableSet,String dbName) {
+        Map<String, List<Column>> map = new HashMap<>();
+        for (String tableName : tableSet) {
+            List<Column> columns = getColumns(tableName, dbName);
+            if (Objects.nonNull(columns)&&!columns.isEmpty()){
+                map.put(tableName,columns);
+            }
+        }
+        return map;
     }
 
 

@@ -1,6 +1,8 @@
 auto:
   entity:
     package: com.moon.joyce.example.entity;com.moon.joyce.example.functionality.entity
+  source:
+    dbName: springboot
 #端口号
 server:
   port: 9099

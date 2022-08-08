@@ -26,7 +26,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("album")
-@Table(name = "album",content = "相册表")
+@Table(name = "album",content = "相册表",strategy = TableStrategy.ADD)
 public class Album extends Page {
     @TableField("config")
     @Column(name = "config",length = "0",type = Type.TEXT,comment = "相片集合配置")

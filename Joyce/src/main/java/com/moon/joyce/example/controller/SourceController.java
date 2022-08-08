@@ -191,7 +191,10 @@ public class SourceController extends BaseController {
         album.setSourceConfig(jo.toString());
         boolean rs = albumService.saveOrUpdate(album);
         List<AlbumSource> albumSources = new ArrayList<>();
-        sources.forEach(x->albumSources.add(new AlbumSource(album.getId(),x.getId())));
+        sources.forEach(x->{
+            AlbumSource albumSource = new AlbumSource(album.getId(), x.getId());
+            setBaseField(albumSource);
+            albumSources.add(albumSource);});
         boolean asRs = albumSourceService.saveBatch(albumSources);
         album.setUserId(getSessionUserId());
         return dataResult(rs && saveSourceRs && asRs,RE.ADDORUPDATE.getCode(),album);

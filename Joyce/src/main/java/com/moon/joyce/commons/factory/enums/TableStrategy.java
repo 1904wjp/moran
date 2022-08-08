@@ -8,7 +8,7 @@ package com.moon.joyce.commons.factory.enums;
  */
 public enum TableStrategy {
     //该策略暂不使用
-   // ADD(1,"添加属性"),
+    ADD(1,"添加属性"),
     SECURITY(2,"安全创建"),
     FORCE(3,"强制创建");
     private  Integer code;

@@ -1,6 +1,9 @@
 package com.moon.joyce.example.functionality.service;
 
+import com.moon.joyce.example.functionality.entity.Column;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -20,5 +23,11 @@ public interface TableFactory {
      * 获取sql
      * @return
      */
-    List<String> getSqls(String ps);
+    List<String> getSqls(Map<String,List<Column>> map);
+
+    /**
+     * 初始化
+     * @param ps
+     */
+    void initData(String ps);
 }
