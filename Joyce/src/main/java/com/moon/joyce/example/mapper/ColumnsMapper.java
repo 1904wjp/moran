@@ -3,6 +3,7 @@ package com.moon.joyce.example.mapper;
 import com.moon.joyce.example.functionality.entity.Column;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
@@ -45,4 +46,7 @@ public interface ColumnsMapper {
      * @return
      */
     int getCount(@Param("tableName") String tableName, @Param("dbName") String dbName);
+
+    @Select("SHOW DATABASES")
+    List<String> getDataBases();
 }

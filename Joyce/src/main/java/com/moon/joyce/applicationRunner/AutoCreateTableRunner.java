@@ -4,7 +4,7 @@ package com.moon.joyce.applicationRunner;
 import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.example.functionality.entity.Column;
 import com.moon.joyce.example.functionality.service.ColumnsService;
-import com.moon.joyce.example.functionality.service.serviceImpl.AutoCreateTableFactory;
+import com.moon.joyce.commons.factory.demo.AutoCreateTableFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,8 @@ public class AutoCreateTableRunner implements ApplicationRunner {
     private ColumnsService columnsService;
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        List<String> dataBaseNames = columnsService.getDataBaseNames();
+        logger.info("-----------{}",dataBaseNames.toString());
         try {
             AutoCreateTableFactory factory = AutoCreateTableFactory.getInstance();
             factory.init(ps);

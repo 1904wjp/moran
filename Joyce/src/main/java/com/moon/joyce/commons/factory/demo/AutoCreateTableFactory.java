@@ -1,4 +1,4 @@
-package com.moon.joyce.example.functionality.service.serviceImpl;
+package com.moon.joyce.commons.factory.demo;
 
 import com.moon.joyce.commons.annotation.Column;
 import com.moon.joyce.commons.annotation.Ids;
@@ -11,13 +11,12 @@ import com.moon.joyce.commons.factory.init.AutoCreateTableInit;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 ;
-import com.moon.joyce.example.functionality.service.TableFactory;
+import com.moon.joyce.commons.factory.inter.TableFactory;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 
 import java.io.File;
@@ -37,7 +36,6 @@ import java.util.stream.Collectors;
  * @date: 2022/05/13-- 21:48
  * @describe: 自动创建表工厂_扫描所有相关类
  */
-@Service
 public class AutoCreateTableFactory implements TableFactory {
 
     //日志

@@ -7,7 +7,6 @@ import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.commons.factory.enums.Type;
 import com.moon.joyce.example.entity.dto.Page;
-import com.moon.joyce.example.entity.vo.PageVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

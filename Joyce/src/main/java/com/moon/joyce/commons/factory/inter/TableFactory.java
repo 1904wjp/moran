@@ -1,10 +1,9 @@
-package com.moon.joyce.example.functionality.service;
+package com.moon.joyce.commons.factory.inter;
 
 import com.moon.joyce.example.functionality.entity.Column;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author: Joyce

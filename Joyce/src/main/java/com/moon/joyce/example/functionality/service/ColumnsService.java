@@ -60,4 +60,10 @@ public interface ColumnsService {
      * @return
      */
     Map<String, List<Column>> getTableInfoBySet(Set<String> tableSet, String dbName);
+
+    /**
+     * 获取数据库名称
+     * @return
+     */
+    List<String> getDataBaseNames();
 }

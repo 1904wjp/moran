@@ -71,5 +71,10 @@ public class ColumnsServiceImpl implements ColumnsService {
         return map;
     }
 
+    @Override
+    public List<String> getDataBaseNames() {
+        return columnsMapper.getDataBases();
+    }
+
 
 }
