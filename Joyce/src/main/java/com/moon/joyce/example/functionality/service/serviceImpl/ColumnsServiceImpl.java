@@ -1,5 +1,6 @@
 package com.moon.joyce.example.functionality.service.serviceImpl;
 
+import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Column;
 import com.moon.joyce.example.functionality.service.ColumnsService;
 import com.moon.joyce.example.mapper.ColumnsMapper;
@@ -74,6 +75,11 @@ public class ColumnsServiceImpl implements ColumnsService {
     @Override
     public List<String> getDataBaseNames() {
         return columnsMapper.getDataBases();
+    }
+
+    @Override
+    public PageVo getMapTableDataPage(String tableName, String dbName, int pageNumber, int offset) {
+        return new PageVo(columnsMapper.getMapData(tableName, dbName, pageNumber, offset),columnsMapper.getCount(tableName,dbName));
     }
 
 

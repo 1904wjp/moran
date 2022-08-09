@@ -551,13 +551,14 @@ function autoFill() {
  * 显示表格
  */
 $('#tableName').change(function () {
-    var dbName = $('#dbName').val();
-    var tableName = $(this).children('option:selected').val()
+    var dbName = $('#dbName').children('option:selected').val();
+    var tableName = $('#tableName').children('option:selected').val();
     if (!isBlank(tableName) && !isBlank(dbName)) {
         var data = {
             dbName: dbName,
             tableName: tableName
         }
+        console.log("h========>",data);
         $.ajax({
             url: '/example/columns/getColumns',
             type: 'POST',
@@ -570,7 +571,7 @@ $('#tableName').change(function () {
                 if (notNull(arry)) {
                     $('#c_table').remove();
                     var obj = $('#column_table');
-                    html = "<table id='c_table' style='margin-left: 25%' border=\"1\">\n" +
+                    html = "<table id='c_table' style='margin-left: 25%;background-color: white' border=\"1\">\n" +
                         "    <tr>\n" +
                         "        <th colspan='7' align='center'>" + arry[0].tableName + ":" + arry[0].tableComment + "</th>\n" +
                         "    </tr>\n" +

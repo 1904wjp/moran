@@ -189,6 +189,19 @@ public class R  {
         }
         return error(errorMsg);
     }
+
+    /**
+     * 返回结果
+     * @param rsi
+     * @return
+     */
+    public static Result dataResult(int rsi,String errorMsg,Object data){
+        if (rsi!=0){
+            return success(data);
+        }
+        return error(errorMsg);
+    }
+
     /**
      * 返回结果
      * @param rsi
@@ -339,6 +352,17 @@ public class R  {
     public static Result dataResult(boolean rs,String errorMsg,String successMsg){
         if (rs){
             return success(successMsg);
+        }
+        return error(errorMsg);
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs,String errorMsg,Object data){
+        if (rs){
+            return success(data);
         }
         return error(errorMsg);
     }

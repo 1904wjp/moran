@@ -42,13 +42,13 @@ public class ColumnsController extends BaseController {
         return "common/public/getColumns";
     }
 
-
     @RequestMapping("/getTablesPage/{dbName}/{tableName}")
     public String getTablesPage(ModelMap map,@PathVariable String dbName,@PathVariable String tableName) {
         map.addAttribute("dbName",dbName);
         map.addAttribute("tableName",tableName);
         return "common/public/getTables";
     }
+
     /**
      * 获取属性列表
      * @param tableName
@@ -120,24 +120,31 @@ public class ColumnsController extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("/getAllDataBases")
+    public Result selectTablesByDatabase() {
+        startupDatasource();
+        List<String> dataBaseNames = columnsService.getDataBaseNames();
+        shutdownDatasource();
+        return R.dataResult(!dataBaseNames.isEmpty(),"该数据库无数据或者连接有误",dataBaseNames);
+    }
+
+    @ResponseBody
     @RequestMapping("/getAllTables")
     public Result selectTablesByDatabase(String databaseName) {
         startupDatasource();
         List<Column> tables = columnsService.selectAllTables(databaseName);
         shutdownDatasource();
-        if (tables.isEmpty()) {
-            return R.error("该数据库无数据或者连接有误");
-        }
-        return R.success(tables);
+        return R.dataResult(!tables.isEmpty(),"该数据库无数据或者连接有误",tables);
     }
+
     @ResponseBody
     @PostMapping("/getTableData")
     public Result selectTableData(@RequestParam String tableName, @RequestParam String dbName,@RequestParam int pageNumber,@RequestParam String searchWord,@RequestParam int offset){
         startupDatasource();
-        List<Map<String,Object>> data = columnsService.getMapTableData(tableName,dbName,pageNumber,offset);
-        int count = columnsService.getMapTableDataCount(tableName,dbName);
+        PageVo data = columnsService.getMapTableDataPage(tableName,dbName,pageNumber,offset);
+
         shutdownDatasource();
-        return success(new PageVo(data,count));
+        return success(data);
     }
 
     @ResponseBody

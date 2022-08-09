@@ -100,6 +100,7 @@
                 pageNumber: pageNumber,
                 searchWord: null
             }
+            console.log("h----->",data);
             $.ajax({
                 url: '/example/columns/getTableData',
                 type: 'POST',
@@ -108,11 +109,12 @@
             }).done(function (data) {
                 if (data.rs) {
                     var html = "";
+                    console.log("h----->",data.data);
                     var arry = data.data.rows;
                     if (notNull(arry)) {
                         $('#c_table2').remove();
                         var obj = $('#column_table2');
-                        html = "<table id='c_table2'  border='1px' cellpadding='5px'  cellspacing='5px'>\n <tr>";
+                        html = "<table id='c_table2'  style='background-color: white' border='1px' cellpadding='5px'  cellspacing='5px'>\n <tr>";
                         $.each(arry[0], function (key, values) {
                             html += "<td>" + key + "</td>\n";
                         });

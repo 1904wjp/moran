@@ -1,5 +1,6 @@
 package com.moon.joyce.example.functionality.service;
 
+import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.Column;
 
 
@@ -66,4 +67,6 @@ public interface ColumnsService {
      * @return
      */
     List<String> getDataBaseNames();
+
+    PageVo getMapTableDataPage(String tableName, String dbName, int pageNumber, int offset);
 }

@@ -1,5 +1,23 @@
 $().ready(function (){
     $('#download').hide();
+    $.ajax({
+        url: '/example/columns/getAllDataBases',
+        type: 'POST',
+        dataType: 'json'
+    }).done(function (data) {
+        loading(false);
+        if (data.rs){
+            console.log("cccc")
+            $('#dbName').append('<option value="">请选择表</option>');
+            for (let i = 0; i < data.data.length; i++) {
+                $('#dbName').append("<option value=\""+data.data[i]+"\">"+data.data[i]+"</option>");
+            }
+        }else {
+            tips(data.rs,data.msg);
+        };
+    }).fail(function (){
+        tips(false,data.msg);
+    });
 });
 
 /**
