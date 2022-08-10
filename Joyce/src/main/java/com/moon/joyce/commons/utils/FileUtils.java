@@ -283,13 +283,9 @@ public class FileUtils implements Serializable {
         if (!(file.getParentFile()).exists()){
             file.getParentFile().mkdirs();
         }
-        FileWriter fw = null;
+        BufferedWriter fw = null;
         try {
-            if (file.exists()){
-                fw = new FileWriter(file,true);
-            }else {
-                fw = new FileWriter(file);
-            }
+            fw = new BufferedWriter (new OutputStreamWriter (new FileOutputStream (path,false),"UTF-8"));
             fw.write(text);
             fw.close();
         } catch (IOException e) {
@@ -297,6 +293,26 @@ public class FileUtils implements Serializable {
         }
     }
 
+    /**
+     * 写入文件
+     * @param path
+     * @param text
+     */
+    public static void writeFile(String path,String text,boolean append,String charsetName){
+        System.out.println("---------->"+path);
+        File file = createFile(path);
+        if (!(file.getParentFile()).exists()){
+            file.getParentFile().mkdirs();
+        }
+        BufferedWriter fw = null;
+        try {
+            fw = new BufferedWriter (new OutputStreamWriter (new FileOutputStream (path,append),charsetName));
+            fw.write(text);
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void doCompress(String srcFile, String zipFile) throws IOException {
         doCompress(createFile(srcFile), createFile(zipFile));
     }
@@ -857,11 +873,11 @@ public class FileUtils implements Serializable {
            file.getParentFile().mkdirs();
        }
        StringBuilder builder = new StringBuilder();
-       builder.append(filePath);
+       builder.append(filePath, 0, filePath.indexOf("."));
        while (file.exists()){
            builder.append("(1)");
            String tempPath = builder.toString();
-           filePath =  tempPath+suf;
+           filePath = tempPath+suf;
            file = new File(filePath);
        }
        return filePath;

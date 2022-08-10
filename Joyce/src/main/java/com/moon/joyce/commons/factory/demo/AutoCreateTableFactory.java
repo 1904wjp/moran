@@ -785,6 +785,7 @@ public class AutoCreateTableFactory implements TableFactory {
         }
         String filePathName = FileUtils.getFilePathName(path + tableEntity.getName() + ".sql");
         FileUtils.writeFile(filePathName,stringBuilder.toString());
+        logger.info("删除的旧文件sql文件:{}",filePathName);
     }
 
     private String mapToStr(Map<String,Object> map,String kv, List<ColumnEntity> columnEntities){
@@ -800,7 +801,8 @@ public class AutoCreateTableFactory implements TableFactory {
         }
         if ("v".equals(kv)){
             for (Object value : map.values()) {
-                if (StringsUtils.equals(columnEntities.get(index).getType(),"varchar","text","char","datetime")){
+                logger.info("------------>{}",columnEntities.get(index).getType());
+                if (StringsUtils.equalsIgnoreCase(columnEntities.get(index).getType(),"varchar","text","char","datetime")||Objects.isNull(columnEntities.get(index).getType())){
                     builder.append("'").append(value).append("'");
                 }else {
                     builder.append(value);
