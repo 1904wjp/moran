@@ -1,15 +1,16 @@
 package com.moon.joyce.example.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.annotation.RedisValueComponet;
+import com.moon.joyce.example.entity.UserType;
 import com.moon.joyce.example.mapper.UserTypeMapper;
 import com.moon.joyce.example.service.CommonService;
-import joyce.example.entity.UserType;
 
-import joyce.example.service.UserTypeService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+
+import com.moon.joyce.example.service.UserTypeService;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 /**
  * <p>
@@ -21,6 +22,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RedisValueComponet("UserTypeService")
-public class UserTypeServiceImpl extends ServiceImpl<UserTypeMapper, UserType> implements UserTypeService , CommonService {
-
+public class UserTypeServiceImpl extends ServiceImpl<UserTypeMapper, UserType> implements UserTypeService {
 }

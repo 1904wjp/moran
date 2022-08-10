@@ -1,12 +1,9 @@
 package com.moon.joyce.commons.factory.entity;
 
-import com.moon.joyce.commons.factory.enums.Type;
+import com.moon.joyce.commons.factory.init.AutoCreateTableInit;
 import com.moon.joyce.example.functionality.entity.Column;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author: Joyce
@@ -171,9 +168,8 @@ public class ColumnEntity{
     /**
      * 转换
      * @param column
-     * @return
      */
-    public ColumnEntity columnToColumnEntity(Column column){
+    public void columnToColumnEntity(Column column){
         this.name = column.getColumnName();
         this.length = column.getColumnLength();
         this.comment = column.getColumnComment();
@@ -182,8 +178,14 @@ public class ColumnEntity{
         this.defaultValue = column.getDefaultValue();
         this.isNotNull = "OK".equals(column.getIsNull());
         this.type = column.getColumnType();
-        this.auto = (null != column.getAutoIncrement());
-        return this;
+        this.auto = false;
+        if (isKey){
+            this.auto = true;
+        }
+        this.unique = false;
+        if (this.isKey){
+            this.unique = true;
+        }
     }
     @Override
     public boolean equals(Object o) {

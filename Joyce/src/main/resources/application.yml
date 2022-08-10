@@ -3,7 +3,7 @@ auto:
     package: com.moon.joyce.example.entity;com.moon.joyce.example.functionality.entity
   source:
     dbName: springboot
-    delPath: ${file.prefix}:/delFile
+    delPath: ${file.prefix}:/delFile/
 #端口号
 server:
   port: 9099

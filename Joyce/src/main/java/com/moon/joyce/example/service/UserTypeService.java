@@ -1,9 +1,7 @@
-package joyce.example.service;
+package com.moon.joyce.example.service;
 
-import com.moon.joyce.commons.annotation.RedisValueComponet;
-import joyce.example.entity.UserType;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.data.redis.core.RedisTemplate;
+import com.moon.joyce.example.entity.UserType;
 
 /**
  * <p>

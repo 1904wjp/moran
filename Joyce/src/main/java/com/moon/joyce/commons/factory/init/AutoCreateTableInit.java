@@ -124,8 +124,9 @@ public class AutoCreateTableInit {
      */
     private static long defLenConvert(String type,long len){
         Map<String, Long> lens = new HashMap<>();
-        lens.put("datetime",6L);
+        lens.put("datetime",0L);
         lens.put("text",0L);
+        lens.put("bigint",64L);
         for (Map.Entry<String,Long> entry : lens.entrySet()) {
             if (StringUtils.isBlank(type)){continue;}
             if (entry.getKey().equalsIgnoreCase(type)){

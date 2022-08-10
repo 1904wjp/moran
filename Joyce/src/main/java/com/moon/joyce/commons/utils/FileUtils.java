@@ -278,16 +278,18 @@ public class FileUtils implements Serializable {
      * @param text
      */
     public static void writeFile(String path,String text){
+        System.out.println("---------->"+path);
         File file = createFile(path);
-        if (file.exists()){
-            file.delete();
-        }
         if (!(file.getParentFile()).exists()){
             file.getParentFile().mkdirs();
         }
         FileWriter fw = null;
         try {
-            fw = new FileWriter(file);
+            if (file.exists()){
+                fw = new FileWriter(file,true);
+            }else {
+                fw = new FileWriter(file);
+            }
             fw.write(text);
             fw.close();
         } catch (IOException e) {
@@ -849,8 +851,7 @@ public class FileUtils implements Serializable {
      * @return
      */
    public static  String getFilePathName(String filePath){
-       String[] split = filePath.split(".");
-       String suf = "."+split[1];
+       String suf = filePath.substring(filePath.indexOf("."));
        File file = new File(filePath);
        if (!file.getParentFile().exists()){
            file.getParentFile().mkdirs();
@@ -859,7 +860,8 @@ public class FileUtils implements Serializable {
        builder.append(filePath);
        while (file.exists()){
            builder.append("(1)");
-           filePath =  builder.append(suf).toString();
+           String tempPath = builder.toString();
+           filePath =  tempPath+suf;
            file = new File(filePath);
        }
        return filePath;

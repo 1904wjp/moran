@@ -1,9 +1,7 @@
 package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.example.entity.Source;
-import joyce.example.entity.UserType;
 
 import java.util.List;
 

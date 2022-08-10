@@ -1,10 +1,11 @@
-package joyce.example.entity;
+package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moon.joyce.commons.annotation.Ids;
 import com.moon.joyce.commons.annotation.Table;
+import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.example.entity.dto.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user_type",content = "用户类型")
+@Table(name = "user_type",content = "用户类型",strategy = TableStrategy.FORCE)
 public class UserType extends Page {
     private static final long serialVersionUID = 1573373319724501081L;
     /**

@@ -20,7 +20,7 @@ import com.moon.joyce.example.entity.dto.Page;
  */
 /*@Entity*/
 @TableName("sys_menu")
-@Table(name = "sys_menu",content = "菜单表")
+@Table(name = "sys_menu",content = "菜单表",strategy = TableStrategy.FORCE)
 /*@Table(name = "sys_menu")
 @org.hibernate.annotations.Table(appliesTo = "sys_menu",comment = "菜单表")*/
 public class SysMenu extends Page {

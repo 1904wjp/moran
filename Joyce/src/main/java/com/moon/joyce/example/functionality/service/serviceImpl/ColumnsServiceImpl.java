@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: XingDaoRong
@@ -30,7 +31,16 @@ public class ColumnsServiceImpl implements ColumnsService {
         if (Objects.isNull(table)){
             return null;
         }
-        return columnsMapper.getColumns(tableName,dbName);
+        List<Column> columns = columnsMapper.getColumns(tableName, dbName);
+        List<Column> list = new ArrayList<>();
+        for (Column column : columns) {
+            if (Objects.isNull(column.getColumnLength())){
+                column.setColumnLength(0L);
+            }
+            list.add(column);
+        }
+        System.out.println(list+"lllll");
+        return list;
     }
 
     @Override

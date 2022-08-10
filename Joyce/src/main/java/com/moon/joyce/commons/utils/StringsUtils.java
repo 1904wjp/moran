@@ -351,4 +351,22 @@ public class StringsUtils  implements Serializable {
             return   longs ;
     }
 
+    /**
+     * 字符匹配多个
+     * @param strs
+     * @return
+     */
+    public static boolean equals(String... strs){
+       if (strs.length<2){
+           throw new JoyceException("长度大于等于2");
+       }
+        boolean flag = false;
+        for (int i = 1; i < strs.length; i++) {
+            if (strs[0].equals(strs[i])){
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    }
 }

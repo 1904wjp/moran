@@ -8,6 +8,7 @@ import com.moon.joyce.commons.factory.entity.ColumnEntity;
 import com.moon.joyce.commons.factory.entity.TableEntity;
 import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.commons.factory.init.AutoCreateTableInit;
+import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 ;
@@ -78,7 +79,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param ps
      * @return
      */
-    public AutoCreateTableFactory init(String ps) {
+    public void init(String ps) {
         AutoCreateTableFactory instance = getInstance();
         if (Objects.isNull(map) && Objects.isNull(set) && Objects.isNull(sqls) && Objects.isNull(defMap)) {
             //初始化
@@ -97,17 +98,21 @@ public class AutoCreateTableFactory implements TableFactory {
             instance.scannerPackage(ps);
             initExitMap();
         }
-        return autoCreateTableFactory;
     }
 
+    /**
+     * 初始化传出的类型
+     */
     private void initExitMap(){
         Set<String> exitSet = new HashSet<>();
         Set<String> delSet = new HashSet<>();
         for (Map.Entry<TableEntity, List<ColumnEntity>> entry : map.entrySet()) {
             if (entry.getKey().getStrategy().equals(TableStrategy.ADD.getCode().toString())){
+                logger.info("***add:{}",entry.getKey());
                 exitSet.add(entry.getKey().getName());
             }
             if (entry.getKey().getStrategy().equals(TableStrategy.FORCE.getCode().toString())){
+                logger.info("***del:{}",entry.getKey());
                 delSet.add(entry.getKey().getName());
             }
         }
@@ -240,6 +245,7 @@ public class AutoCreateTableFactory implements TableFactory {
                         if (Objects.nonNull(checkRepeatColumnEntity(newList))) {
                             throw new JoyceException("存在如下相同属性，无法创建:" + checkRepeatColumnEntity(newList));
                         }
+                        logger.info("1423:{}",tableEntity.toString());
                         map.put(tableEntity, newList);
                     }
                 }
@@ -751,5 +757,59 @@ public class AutoCreateTableFactory implements TableFactory {
             throw new JoyceException("扫描包路径格式不合法");
         }
         init(ps);
+    }
+
+    /**
+     * 导出文件
+     * @param columns
+     * @param mapTableData
+     */
+    public void exportSqlFile(List<com.moon.joyce.example.functionality.entity.Column> columns, List<Map<String, Object>> mapTableData, com.moon.joyce.example.functionality.entity.Column column,String path) {
+        TableEntity tableEntity = new TableEntity();
+        tableEntity.columnToTableEntity(column);
+        List<ColumnEntity> columnEntities = new ArrayList<>();
+        for (com.moon.joyce.example.functionality.entity.Column c : columns) {
+            ColumnEntity columnEntity = new ColumnEntity();
+            columnEntity.columnToColumnEntity(c);
+            logger.info("---------->{}",columnEntity);
+            AutoCreateTableInit.columnConfigRules(columnEntity);
+            columnEntities.add(columnEntity);
+        }
+        String tableSql = createTableSql(tableEntity, columnEntities)+"\n";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(tableSql);
+        for (Map<String, Object> maps : mapTableData) {
+            stringBuilder.append("INSERT INTO ").append(tableEntity.getName()).append("(");
+            stringBuilder.append(mapToStr(maps, "k", columnEntities)).append(") VALUES(");
+            stringBuilder.append(mapToStr(maps, "v", columnEntities)).append(")\n");
+        }
+        String filePathName = FileUtils.getFilePathName(path + tableEntity.getName() + ".sql");
+        FileUtils.writeFile(filePathName,stringBuilder.toString());
+    }
+
+    private String mapToStr(Map<String,Object> map,String kv, List<ColumnEntity> columnEntities){
+        StringBuilder builder = new StringBuilder();
+        int index = 0;
+        if ("k".equals(kv)){
+            for (String k : map.keySet()) {
+                builder.append(k);
+                if (index++ < map.keySet().size()){
+                    builder.append(",");
+                }
+            }
+        }
+        if ("v".equals(kv)){
+            for (Object value : map.values()) {
+                if (StringsUtils.equals(columnEntities.get(index).getType(),"varchar","text","char","datetime")){
+                    builder.append("'").append(value).append("'");
+                }else {
+                    builder.append(value);
+                }
+                if (index++ < map.keySet().size()){
+                    builder.append(",");
+                }
+            }
+        }
+        return builder.toString();
     }
 }
