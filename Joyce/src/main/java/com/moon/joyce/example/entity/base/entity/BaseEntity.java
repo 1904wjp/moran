@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moon.joyce.commons.annotation.Column;
 import com.moon.joyce.commons.annotation.Table;
 import com.moon.joyce.commons.factory.enums.Type;
+import com.moon.joyce.example.functionality.entity.JoyceException;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -120,21 +121,11 @@ public class BaseEntity implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof BaseEntity){
-            return this.id.equals(((BaseEntity) obj).id);
+        if (!(obj instanceof BaseEntity)){
+           throw new JoyceException("该数据不是需要的数据，无法比较");
         }
-        return false;
+        return this.id.toString().equals(((BaseEntity) obj).id.toString());
     }
-
-    public static void setBaseField(BaseEntity entity){
-        if (Objects.isNull(entity.getId())){
-            entity.setCreateTime(new Date());
-            entity.setDeleteFlag(0);
-        }else {
-            entity.setUpdateTime(new Date());
-        }
-    }
-
     @Override
     public int hashCode() {
         return Integer.parseInt(String.valueOf(this.id % 16));

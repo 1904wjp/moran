@@ -167,7 +167,7 @@ public class BaseController extends R {
     }
 
     /**
-     * 获取当前数据源
+     * 移除当前数据源
      * @return
      */
     public void removeCurrentSetting(){
@@ -228,6 +228,7 @@ public class BaseController extends R {
      */
     public void setBaseField(BaseEntity entity){
         entity.setDeleteFlag(0);
+        entity.setUserIds(getSessionUserId());
         if (Objects.isNull(entity.getId())){
             entity.setCreateBy(getSessionUserName());
             entity.setCreateTime(new Date());
