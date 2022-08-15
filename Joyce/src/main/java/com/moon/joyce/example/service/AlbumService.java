@@ -23,8 +23,8 @@ public interface AlbumService extends IService<Album> {
     PageVo getPage(Album album);
     /**
      * 解析配置
-     * @param config
+     * @param album
      * @return
      */
-    Map<String, Source> analyAlbumConfig(String config);
+    Album analyAlbumConfig(Album album);
 }

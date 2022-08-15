@@ -32,7 +32,7 @@ input[type="button"] {
 .uploadDIv {
 	width: 78px;
 	height: 81px;
-	background-color: #edf0f2;
+	/*background-color: #edf0f2;*/
 	font-size: 28px;
 	color: #bfbfbf;
 	text-align: center;
@@ -52,7 +52,7 @@ input[type="button"] {
 }
 
 html{
-	background: #000;
+	/*background: #000;*/
 	height: 100%;
 }
 /*最外层容器样式*/

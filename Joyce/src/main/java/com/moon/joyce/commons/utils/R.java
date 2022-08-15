@@ -64,15 +64,14 @@ public class R  {
             MSG = "查询";
         }
         if (rsi!=0){
-            if (MSG.equals("")){
+            if ("".equals(MSG)){
                 return success(data);
             }
-            return R.success(MSG+"成功");
+            return R.success(MSG+"成功",data);
         }
         if (!MSG.equals("")){
             return R.success(MSG+"失败");
         }
-        
         return R.error();
     }
     /**

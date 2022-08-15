@@ -149,9 +149,8 @@ public class SourceController extends BaseController {
     @GetMapping("/getAlbum/{id}")
     public Result getAlbumById(@PathVariable String id){
         Album album = albumService.getById(id);
-        Map<String, Source> map = albumService.analyAlbumConfig(album.getSourceConfig());
-        album.setMap(map);
-        return dataResult(!map.isEmpty(),RE.SELECT.getCode(),album);
+        album = albumService.analyAlbumConfig(album);
+        return dataResult(!album.getMap().isEmpty(),RE.SELECT.getCode(),album);
     }
 
 

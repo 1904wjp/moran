@@ -13,7 +13,10 @@ function getSource(id) {
             $('#pic').remove();
             $('#in_pic').remove();
             res = data.data;
-            console.log(data.data.map);
+            console.log(notNull(res.backGround));
+            if (notNull(res.backGround)){
+                backGroundSetting(res.backGround);
+            }
             $.each(res.map, function (key, value) {
                 if (key.includes("out")) {
                     var html = " <div class=\"" + key + "\">\n" +

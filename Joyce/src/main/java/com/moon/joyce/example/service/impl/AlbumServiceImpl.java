@@ -47,11 +47,11 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
     }
 
     @Override
-    public Map<String, Source> analyAlbumConfig(String config) {
+    public Album analyAlbumConfig(Album album) {
 
         Map<String, String> map = new HashMap<>();
         Map<String, Source> sourceMap = new HashMap<>();
-        if (StringUtils.isNoneBlank(config)){
+        if (StringUtils.isNoneBlank(album.getSourceConfig())){
            /* JSONObject jsonObject = (JSONObject) JSON.parse(config);
             List<String> siteList = StringsUtils.StrToList(jsonObject.get("site").toString());
             QueryWrapper<AlbumSource> wrapper = new QueryWrapper<>();
@@ -59,11 +59,13 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             List<Long> list = albumSourceService.list(wrapper).stream().map(AlbumSource::getSourceId).collect(Collectors.toList());
             List<Source> sources = new ArrayList<>(sourceService.listByIds(list));*/
 
-            JSONObject jsonObject = (JSONObject) JSON.parse(config);
+            JSONObject jsonObject = (JSONObject) JSON.parse(album.getSourceConfig());
             List<Long> longs = StringsUtils.strListToOther(StringsUtils.strToList(jsonObject.get("ids").toString()));
             List<Source> sources = new ArrayList<>(sourceService.listByIds(longs));
             List<String> idList = StringsUtils.strToList(jsonObject.get("ids").toString());
             List<String> siteList = StringsUtils.strToList(jsonObject.get("site").toString());
+            String bg = jsonObject.get("bg").toString();
+            album.setBackGround(bg);
             for (int i = 0; i < siteList.size(); i++) {
                 map.put(siteList.get(i),idList.get(i));
             }
@@ -75,6 +77,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
                 }
             }
         }
-        return sourceMap;
+        album.setMap(sourceMap);
+        return album;
     }
 }

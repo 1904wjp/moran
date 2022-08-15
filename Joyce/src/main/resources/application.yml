@@ -15,7 +15,7 @@ server:
   max-http-header-size: 80KB
 #app相关信息
 app:
-  domain: 192.168.215.73
+  domain: localhost
   urlValue: ${app.domain}:${server.port}
   url: http://${app.urlValue}
   name: Joyce

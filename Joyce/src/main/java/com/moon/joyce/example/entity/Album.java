@@ -56,4 +56,8 @@ public class Album extends Page {
     @NotExist
     @TableField(exist = false)
     private String sourceUrls;
+
+    @NotExist
+    @TableField(exist = false)
+    private String backGround;
 }

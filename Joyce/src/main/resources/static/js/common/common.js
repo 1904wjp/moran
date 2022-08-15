@@ -40,15 +40,19 @@ function password_md5(str) {
 /**
  * 背景url设置
  * @param url
+ * @param ap
  */
-function backGroundSetting(url) {
+function backGroundSetting(url,ap) {
     document.body.style.backgroundRepeat = "no-repeat";
     document.body.style.position = "center center";
     document.body.style.backgroundAttachment = "fixed";
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundImage = "URL(" + url + ")";
-    /*  document.body.style.opacity = 0.4;
-      document.body.style.filter = 'alpha(opacity=' + 80 + ')';*/
+     if(null!=ap){
+         document.body.style.opacity = 0.4;
+        /* document.body.style.opacity = 0.4;
+         document.body.style.filter = 'alpha(opacity=' + 80 + ')';*/
+     }
 }
 
 /**
