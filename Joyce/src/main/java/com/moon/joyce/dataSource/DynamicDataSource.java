@@ -3,7 +3,6 @@ package com.moon.joyce.dataSource;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidPooledConnection;
 import com.alibaba.druid.stat.DruidDataSourceStatManager;
-import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.JoyceExceptionUtils;
 import com.moon.joyce.example.functionality.entity.DataSource;
 import org.apache.commons.lang3.StringUtils;
@@ -72,22 +71,22 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
             druidDataSource.setMaxWait(60000); //获取连接时最大等待时间，单位毫秒。当链接数已经达到了最大链接数的时候，应用如果还要获取链接就会出现等待的现象，等待链接释放并回到链接池，如果等待的时间过长就应该踢掉这个等待，不然应用很可能出现雪崩现象
             druidDataSource.setMinIdle(5); //最小连接池数量
             String validationQuery = "select 1 from dual";
-//            if("mysql".equalsIgnoreCase(databasetype)) {
-//                driveClass = DBUtil.mysqldriver;
-//                validationQuery = "select 1";
-//            } else if("oracle".equalsIgnoreCase(databasetype)){
-//                driveClass = DBUtil.oracledriver;
-//                druidDataSource.setPoolPreparedStatements(true); //是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。
-//                druidDataSource.setMaxPoolPreparedStatementPerConnectionSize(50);
-//                int sqlQueryTimeout = ADIPropUtil.sqlQueryTimeOut();
-//                druidDataSource.setConnectionProperties("oracle.net.CONNECT_TIMEOUT=6000;oracle.jdbc.ReadTimeout="+sqlQueryTimeout);//对于耗时长的查询sql，会受限于ReadTimeout的控制，单位毫秒
-//            } else if("sqlserver2000".equalsIgnoreCase(databasetype)){
-//                driveClass = DBUtil.sql2000driver;
-//                validationQuery = "select 1";
-//            } else if("sqlserver".equalsIgnoreCase(databasetype)){
-//                driveClass = DBUtil.sql2005driver;
-//                validationQuery = "select 1";
-//            }
+    /*        if("mysql".equalsIgnoreCase(databasetype)) {
+                driveClass = DBUtil.mysqldriver;
+                validationQuery = "select 1";
+            } else if("oracle".equalsIgnoreCase(databasetype)){
+                driveClass = DBUtil.oracledriver;
+                druidDataSource.setPoolPreparedStatements(true); //是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。
+                druidDataSource.setMaxPoolPreparedStatementPerConnectionSize(50);
+                int sqlQueryTimeout = ADIPropUtil.sqlQueryTimeOut();
+                druidDataSource.setConnectionProperties("oracle.net.CONNECT_TIMEOUT=6000;oracle.jdbc.ReadTimeout="+sqlQueryTimeout);//对于耗时长的查询sql，会受限于ReadTimeout的控制，单位毫秒
+            } else if("sqlserver2000".equalsIgnoreCase(databasetype)){
+                driveClass = DBUtil.sql2000driver;
+                validationQuery = "select 1";
+            } else if("sqlserver".equalsIgnoreCase(databasetype)){
+                driveClass = DBUtil.sql2005driver;
+                validationQuery = "select 1";
+            }*/
             druidDataSource.setTestOnBorrow(true); //申请连接时执行validationQuery检测连接是否有效，这里建议配置为TRUE，防止取到的连接不可用
             druidDataSource.setTestWhileIdle(true);//建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
             druidDataSource.setValidationQuery(validationQuery); //用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会起作用。
@@ -238,7 +237,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
                 if(delDatasources(datasourceId)) {
                     log.info("缓存数据源删除成功");
                 } else {
-                    log.info("缓存数据源删除失败");
+                    log.warn("缓存数据源删除失败");
                 }
             } finally {
                 if(null != connection) {
@@ -273,13 +272,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         if(testDatasource(dataSource.getDataSourceName(),driveClass,url,username,password)) {
             boolean result = this.createDataSource(datasourceId, driveClass, url, username, password, databaseType);
             if(!result) {
-                log.error("数据源"+datasourceId+"配置正确，但是创建失败");
              throw JoyceExceptionUtils.exception("数据源"+datasourceId+"配置正确，但是创建失败");
             }else {
                 return true;
             }
         } else {
-                log.error("数据源配置有错误");
             throw JoyceExceptionUtils.exception("数据源配置有错误");
         }
     }

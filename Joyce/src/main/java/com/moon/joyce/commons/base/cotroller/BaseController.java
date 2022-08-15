@@ -3,20 +3,14 @@ package com.moon.joyce.commons.base.cotroller;
 
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.R;
-import com.moon.joyce.commons.utils.RedisUtils;
-import com.moon.joyce.example.entity.DbBaseSetting;
-import com.moon.joyce.example.entity.UU;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.functionality.entity.Setting;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
-import com.moon.joyce.example.service.UUService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
-import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
@@ -26,7 +20,6 @@ import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -177,16 +170,16 @@ public class BaseController extends R {
     }
 
     //关闭数据源
-    public  boolean shutdownDatasource(){
+    public void shutdownDatasource(){
         if (Objects.nonNull(getCurrentSetting())){
                 logger.info("数据源关闭成功");
-                return dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.REMOVE_DATASOURCE);
+            dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.REMOVE_DATASOURCE);
+            return;
         }
          logger.info("数据源关闭失败");
-        return false;
     }
     //开启数据源
-    public boolean startupDatasource(){
+    public void startupDatasource(){
         if (Objects.nonNull(getCurrentSetting())){
             if (Objects.nonNull(getCurrentSetting().getDbBaseSetting())){
                  logger.info("当前为默认系统数据源");
@@ -195,11 +188,11 @@ public class BaseController extends R {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                return dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.CREATE_DATASOURCE);
+                dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.CREATE_DATASOURCE);
+                return;
             }
         }
         logger.info("当前数据源:" + Objects.requireNonNull(getCurrentSetting()).getDbBaseSetting().getDataSourceName());
-        return false;
     }
 
     /**
