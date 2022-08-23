@@ -4,6 +4,7 @@ package com.moon.joyce.commons.utils;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 import com.moon.joyce.example.functionality.entity.PageComponent;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -33,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -42,12 +44,15 @@ import java.util.zip.ZipOutputStream;
  */
 public class FileUtils implements Serializable {
     private static final long serialVersionUID = 6813374997135795261L;
+
     private FileUtils() throws JoyceException {
         throw JoyceExceptionUtils.exception("工具类无法实例化");
     }
+
     //新建文件
-    private  static File newFile;
-    public static List<File> fileList =new ArrayList<>();
+    private static File newFile;
+    public static List<File> fileList = new ArrayList<>();
+    private static int BUFFER = 1024;
 
     /**
      * 文件上传工具类
@@ -60,10 +65,10 @@ public class FileUtils implements Serializable {
             return null;
         }
         //uuid生成的唯一前缀 + 上传文件名 构成唯一的新文件名
-        String fileName = UUIDUtils.getUUID(6)  + "_" + StringsUtils.substringFileName(Objects.requireNonNull(file.getOriginalFilename()));
+        String fileName = UUIDUtils.getUUID(6) + "_" + StringsUtils.substringFileName(Objects.requireNonNull(file.getOriginalFilename()));
         //文件保存路径
         String now = DateUtils.dateForMat("dv", new Date());
-        String path = sysPath +"1"+access + now;
+        String path = sysPath + "1" + access + now;
         //新建文件filepath
         File filepath = new File(path, fileName);
         //判断路径是否存在，如果不存在就创建一个
@@ -78,7 +83,7 @@ public class FileUtils implements Serializable {
             deleteFile(filepath);
         }
         //将请求文件的相对路径返回
-        return StringUtils.isNoneBlank(fileName) ? "/static/1" + access +now + "/" + fileName : null;
+        return StringUtils.isNoneBlank(fileName) ? "/static/1" + access + now + "/" + fileName : null;
     }
 
     /**
@@ -87,39 +92,40 @@ public class FileUtils implements Serializable {
      * @param file
      * @return
      */
-    public static Map<String,String> fileUpLoadRealDummy(MultipartFile file, String sysPath, String access) {
+    public static Map<String, String> fileUpLoadRealDummy(MultipartFile file, String sysPath, String access) {
         if (Objects.isNull(file) || StringUtils.isBlank(sysPath) || StringUtils.isBlank(access)) {
             return null;
         }
         Map<String, String> map = new HashMap<>();
         //uuid生成的唯一前缀 + 上传文件名 构成唯一的新文件名
-        String fileName = UUIDUtils.getUUID(6)  + "_" + StringsUtils.substringFileName(Objects.requireNonNull(file.getOriginalFilename()));
+        String fileName = UUIDUtils.getUUID(6) + "_" + StringsUtils.substringFileName(Objects.requireNonNull(file.getOriginalFilename()));
         //文件保存路径
         String now = DateUtils.dateForMat("dv", new Date());
-        String path = sysPath +"1"+access + now;
+        String path = sysPath + "1" + access + now;
         //新建文件filepath
         File filepath = new File(path, fileName);
         //判断路径是否存在，如果不存在就创建一个
         if (!filepath.getParentFile().exists()) {
             filepath.getParentFile().mkdirs();
         }
-        map.put("real",filepath.getPath());
+        map.put("real", filepath.getPath());
         try {
             //将上传的文件file写入文件filepath
             file.transferTo(new File(path + File.separator + fileName));
         } catch (IOException e) {
             e.printStackTrace();
             deleteFile(filepath);
-            map.put("dummy",null);
+            map.put("dummy", null);
             return map;
         }
         //将请求文件的相对路径返回
-        map.put("dummy",StringUtils.isNoneBlank(fileName) ? "/static/1" + access +now + "/" + fileName : null);
+        map.put("dummy", StringUtils.isNoneBlank(fileName) ? "/static/1" + access + now + "/" + fileName : null);
         return map;
     }
 
     /**
      * 上传图片
+     *
      * @param files
      * @param sysPath
      * @param access
@@ -130,9 +136,9 @@ public class FileUtils implements Serializable {
         Set<String> set = new HashSet<>();
 
         for (MultipartFile file : files) {
-            Map<String, String> map =null;
+            Map<String, String> map = null;
             try {
-               map = fileUpLoadRealDummy(file, sysPath, access);
+                map = fileUpLoadRealDummy(file, sysPath, access);
             } catch (Exception e) {
                 e.printStackTrace();
                 deleteFile(set);
@@ -142,8 +148,10 @@ public class FileUtils implements Serializable {
         }
         return list;
     }
+
     /**
      * xml配置的读取
+     *
      * @param filePathName
      * @return
      */
@@ -205,6 +213,7 @@ public class FileUtils implements Serializable {
 
     /**
      * xml配置的初始化和更改
+     *
      * @param filePathName
      * @return
      */
@@ -248,11 +257,11 @@ public class FileUtils implements Serializable {
                 oElement.addAttribute("name", "params");
                 Map<String, String> params = entry.getValue().get(i).getParams();
                 for (Map.Entry<String, String> fEntry : params.entrySet()) {
-                    setElementField(oElement,"map_field",fEntry.getKey(),fEntry.getValue());
+                    setElementField(oElement, "map_field", fEntry.getKey(), fEntry.getValue());
                 }
-                setElementField(obj,"obj_field","backgroundUrl",entry.getValue().get(i).getBackgroundUrl());
-                setElementField(obj,"obj_field","backgroundColor",entry.getValue().get(i).getBackgroundColor());
-                setElementField(obj,"obj_field","getBackgroundType",entry.getValue().get(i).getBackgroundType());
+                setElementField(obj, "obj_field", "backgroundUrl", entry.getValue().get(i).getBackgroundUrl());
+                setElementField(obj, "obj_field", "backgroundColor", entry.getValue().get(i).getBackgroundColor());
+                setElementField(obj, "obj_field", "getBackgroundType", entry.getValue().get(i).getBackgroundType());
             }
         }
         return document;
@@ -260,32 +269,35 @@ public class FileUtils implements Serializable {
 
     /**
      * 设置属性值
+     *
      * @param element
      * @param elValue
      * @param name
      * @param value
      */
-    private static void setElementField(Element element,String elValue,String name,String value){
+    private static void setElementField(Element element, String elValue, String name, String value) {
         Element childElement = element.addElement(elValue);
-        childElement.addAttribute("name",name);
-        if (StringUtils.isNotEmpty(value)){
-            childElement.addAttribute("value",value);
+        childElement.addAttribute("name", name);
+        if (StringUtils.isNotEmpty(value)) {
+            childElement.addAttribute("value", value);
         }
     }
+
     /**
      * 写入文件
+     *
      * @param path
      * @param text
      */
-    public static void writeFile(String path,String text){
-        System.out.println("---------->"+path);
+    public static void writeFile(String path, String text) {
+        System.out.println("---------->" + path);
         File file = createFile(path);
-        if (!(file.getParentFile()).exists()){
+        if (!(file.getParentFile()).exists()) {
             file.getParentFile().mkdirs();
         }
         BufferedWriter fw = null;
         try {
-            fw = new BufferedWriter (new OutputStreamWriter (new FileOutputStream (path,false),"UTF-8"));
+            fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, false), "UTF-8"));
             fw.write(text);
             fw.close();
         } catch (IOException e) {
@@ -295,45 +307,49 @@ public class FileUtils implements Serializable {
 
     /**
      * 写入文件
+     *
      * @param path
      * @param text
      */
-    public static void writeFile(String path,String text,boolean append,String charsetName){
-        System.out.println("---------->"+path);
+    public static void writeFile(String path, String text, boolean append, String charsetName) {
+        System.out.println("---------->" + path);
         File file = createFile(path);
-        if (!(file.getParentFile()).exists()){
+        if (!(file.getParentFile()).exists()) {
             file.getParentFile().mkdirs();
         }
         BufferedWriter fw = null;
         try {
-            fw = new BufferedWriter (new OutputStreamWriter (new FileOutputStream (path,append),charsetName));
+            fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, append), charsetName));
             fw.write(text);
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     public static void doCompress(String srcFile, String zipFile) throws IOException {
         doCompress(createFile(srcFile), createFile(zipFile));
     }
 
-    public static ZipOutputStream getZipObj(String zipName,HttpServletResponse response) throws IOException {
+    public static ZipOutputStream getZipObj(String zipName, HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=" + zipName);
-        return  new ZipOutputStream(response.getOutputStream());
+        return new ZipOutputStream(response.getOutputStream());
     }
 
-    public static void downloadZip(String zipName,HttpServletResponse response,Map<String,String> map) throws IOException {
+    public static void downloadZip(String zipName, HttpServletResponse response, Map<String, String> map) throws IOException {
         ZipOutputStream out = null;
         out = FileUtils.getZipObj(zipName, response);
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            FileUtils.doCompress( entry.getValue(), out);
+            FileUtils.doCompress(entry.getValue(), out);
             response.flushBuffer();
         }
     }
+
     /**
      * 文件压缩
+     *
      * @param srcFile 目录或者单个文件
      * @param zipFile 压缩后的ZIP文件
      */
@@ -349,22 +365,22 @@ public class FileUtils implements Serializable {
         }
     }
 
-    public static void doCompress(String filelName, ZipOutputStream out) throws IOException{
+    public static void doCompress(String filelName, ZipOutputStream out) throws IOException {
         File file = createFile(filelName);
         doCompress(file, out);
-        if (file.exists()){
+        if (file.exists()) {
             file.delete();
         }
     }
 
-    public static void doCompress(File file, ZipOutputStream out) throws IOException{
+    public static void doCompress(File file, ZipOutputStream out) throws IOException {
         doCompress(file, out, "");
     }
 
     public static void doCompress(File inFile, ZipOutputStream out, String dir) throws IOException {
-        if ( inFile.isDirectory() ) {
+        if (inFile.isDirectory()) {
             File[] files = inFile.listFiles();
-            if (files!=null && files.length>0) {
+            if (files != null && files.length > 0) {
                 for (File file : files) {
                     String name = inFile.getName();
                     if (!"".equals(dir)) {
@@ -388,7 +404,7 @@ public class FileUtils implements Serializable {
         ZipEntry entry = new ZipEntry(entryName);
         out.putNextEntry(entry);
 
-        int len = 0 ;
+        int len = 0;
         byte[] buffer = new byte[1024];
         FileInputStream fis = new FileInputStream(inFile);
         while ((len = fis.read(buffer)) > 0) {
@@ -401,6 +417,7 @@ public class FileUtils implements Serializable {
 
     /**
      * 删除文件夹下所有的文件，不删除文件夹
+     *
      * @param path
      * @return
      */
@@ -414,7 +431,7 @@ public class FileUtils implements Serializable {
             return flag;
         }
         String[] tempList = file.list();
-        if (tempList.length==0){
+        if (tempList.length == 0) {
             return false;
         }
         File temp = null;
@@ -439,12 +456,13 @@ public class FileUtils implements Serializable {
 
     /**
      * 检测文件是否存在
+     *
      * @param filePath
      * @return
      */
-    public static boolean fileIsExists(String filePath){
+    public static boolean fileIsExists(String filePath) {
         File file = createFile(filePath);
-        if (file.exists()){
+        if (file.exists()) {
             return true;
         }
         return false;
@@ -453,22 +471,23 @@ public class FileUtils implements Serializable {
 
     /**
      * 导出
-     * @param response 响应
-     * @param fileName 文件名
+     *
+     * @param response   响应
+     * @param fileName   文件名
      * @param columnList 每列的标题名
-     * @param dataList 导出的数据
+     * @param dataList   导出的数据
      */
-    public static void exporExcel(HttpServletResponse response, String fileName, List<String> columnList,List<List<String>> dataList,String sheetName){
+    public static void exporExcel(HttpServletResponse response, String fileName, List<String> columnList, List<List<String>> dataList, String sheetName) {
         //声明输出流
         OutputStream os = null;
         //设置响应头
-        HttpUtils.setResponseHeader(response,fileName);
+        HttpUtils.setResponseHeader(response, fileName);
         try {
             //获取输出流
             os = response.getOutputStream();
             //内存中保留1000条数据，以免内存溢出，其余写入硬盘
             SXSSFWorkbook wb = new SXSSFWorkbook(1000);
-            if (Objects.isNull(sheetName)){
+            if (Objects.isNull(sheetName)) {
                 sheetName = "sheet1";
             }
             //获取该工作区的第一个sheet
@@ -476,24 +495,24 @@ public class FileUtils implements Serializable {
             int excelRow = 0;
             //创建标题行
             Row titleRow = sheet1.createRow(excelRow++);
-            for(int i = 0;i<columnList.size();i++){
+            for (int i = 0; i < columnList.size(); i++) {
                 //创建该行下的每一列，并写入标题数据
                 Cell cell = titleRow.createCell(i);
                 cell.setCellValue(columnList.get(i));
             }
             //设置内容行
-            if(dataList!=null && dataList.size()>0){
+            if (dataList != null && dataList.size() > 0) {
                 //序号是从1开始的
                 int count = 1;
                 //外层for循环创建行
-                for(int i = 0;i<dataList.size();i++){
+                for (int i = 0; i < dataList.size(); i++) {
                     Row dataRow = sheet1.createRow(excelRow++);
                     //内层for循环创建每行对应的列，并赋值
-                    for(int j = -1;j<dataList.get(0).size();j++){//由于多了一列序号列所以内层循环从-1开始
-                        Cell cell = dataRow.createCell(j+1);
-                       if(j==-1){//第一列是序号列，不是在数据库中读取的数据，因此手动递增赋值
+                    for (int j = -1; j < dataList.get(0).size(); j++) {//由于多了一列序号列所以内层循环从-1开始
+                        Cell cell = dataRow.createCell(j + 1);
+                        if (j == -1) {//第一列是序号列，不是在数据库中读取的数据，因此手动递增赋值
                             cell.setCellValue(count++);
-                        }else{//其余列是数据列，将数据库中读取到的数据依次赋值*/
+                        } else {//其余列是数据列，将数据库中读取到的数据依次赋值*/
                             cell.setCellValue(dataList.get(i).get(j));
                         }
                     }
@@ -518,12 +537,13 @@ public class FileUtils implements Serializable {
 
     /**
      * 导出
-     * @param response 响应
-     * @param fileName 文件名
+     *
+     * @param response   响应
+     * @param fileName   文件名
      * @param columnList 每列的标题名
-     * @param map 对应名字导出的数据
+     * @param map        对应名字导出的数据
      */
-    public static void exporExcel2(HttpServletResponse response, String fileName, List<String> columnList, Map<Date, List<List<String>>> map ) {
+    public static void exporExcel2(HttpServletResponse response, String fileName, List<String> columnList, Map<Date, List<List<String>>> map) {
         //声明输出流
         OutputStream os = null;
         //设置响应头
@@ -581,8 +601,10 @@ public class FileUtils implements Serializable {
             }
         }
     }
+
     /**
      * 判断Excel的版本,获取Workbook
+     *
      * @param file
      * @return
      * @throws IOException
@@ -592,9 +614,9 @@ public class FileUtils implements Serializable {
         FileInputStream in = null;
         try {
             in = new FileInputStream(file);
-            if(file.getName().endsWith(Constant.EXCEL_XLS)){
+            if (file.getName().endsWith(Constant.EXCEL_XLS)) {
                 wb = new HSSFWorkbook(in);
-            }else if(file.getName().endsWith(Constant.EXCEL_XLSX)){
+            } else if (file.getName().endsWith(Constant.EXCEL_XLSX)) {
                 wb = new XSSFWorkbook(in);
             }
         } catch (IOException e) {
@@ -649,21 +671,22 @@ public class FileUtils implements Serializable {
      * XSSFCell转换成String并且去空格
      */
     public static String getCellValueOfTrim(Cell cell) {
-       return getCellValue(cell).trim();
+        return getCellValue(cell).trim();
     }
 
 
-    public static BufferedReader getReadObj(String path ){
+    public static BufferedReader getReadObj(String path) {
         System.out.println("我结束后需要关闭资源");
         BufferedReader bufferedReader = null;
         try {
-           bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return bufferedReader;
     }
-    public static BufferedReader getReadObj(File file ){
+
+    public static BufferedReader getReadObj(File file) {
         System.out.println("我结束后需要关闭资源");
         BufferedReader bufferedReader = null;
         try {
@@ -676,46 +699,48 @@ public class FileUtils implements Serializable {
 
     /**
      * 上传视频（临时文件）
+     *
      * @param req
      * @param resp
      * @param fileUploadTempDir
      * @return
      */
-   public static int uploadVideo(HttpServletRequest req, HttpServletResponse resp,String fileUploadTempDir,String fileUploadDir){
-       resp.addHeader("Access-Control-Allow-Origin", "*");
-       MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
+    public static int uploadVideo(HttpServletRequest req, HttpServletResponse resp, String fileUploadTempDir, String fileUploadDir) {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) req;
 // 获得文件分片数据
-       MultipartFile file = multipartRequest.getFile("data");
+        MultipartFile file = multipartRequest.getFile("data");
 // 分片第几片
-       int index = Integer.parseInt(multipartRequest.getParameter("index"));
+        int index = Integer.parseInt(multipartRequest.getParameter("index"));
 // 总片数
-       int total = Integer.parseInt(multipartRequest.getParameter("total"));
+        int total = Integer.parseInt(multipartRequest.getParameter("total"));
 // 获取文件名
-       String fileName = multipartRequest.getParameter("name");
-       String name = fileName.substring(0, fileName.lastIndexOf("."));
+        String fileName = multipartRequest.getParameter("name");
+        String name = fileName.substring(0, fileName.lastIndexOf("."));
 
-       String uuid = multipartRequest.getParameter("uuid");
-       File uploadFile = new File(fileUploadTempDir + "/" + uuid, uuid + name + index + ".tem");
-       if (!uploadFile.getParentFile().exists()) {
-           uploadFile.getParentFile().mkdirs();
-       }
-       try {
-           if (index<total){
-               // 上传的文件分片名称
-               file.transferTo(uploadFile);
-               return 201;
-           }else {
-               file.transferTo(uploadFile);
-               return 200;
-           }
-       } catch (IOException e) {
-           e.printStackTrace();
-           return 500;
-       }
-   }
+        String uuid = multipartRequest.getParameter("uuid");
+        File uploadFile = new File(fileUploadTempDir + "/" + uuid, uuid + name + index + ".tem");
+        if (!uploadFile.getParentFile().exists()) {
+            uploadFile.getParentFile().mkdirs();
+        }
+        try {
+            if (index < total) {
+                // 上传的文件分片名称
+                file.transferTo(uploadFile);
+                return 201;
+            } else {
+                file.transferTo(uploadFile);
+                return 200;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 500;
+        }
+    }
 
     /**
      * 合并临时文件
+     *
      * @param fileUploadTempDir
      * @param access
      * @param uuid
@@ -727,85 +752,87 @@ public class FileUtils implements Serializable {
     public static String vap = "videoAccessPath";
     public static String vn = "videoName";
     public static String vp = "videoPicturePath";
-   public static Map<String,Object> mergeTempFile(String fileUploadTempDir,String sysPath,String access,String uuid, String newFileName){
 
-       Map<String, Object> map = new HashMap<>();
-       try {
-           File dirFile = createFile(fileUploadTempDir + "/" + uuid);
-           if (!dirFile.exists()) {
-               throw new JoyceException("文件不存在！");
-           }
+    public static Map<String, Object> mergeTempFile(String fileUploadTempDir, String sysPath, String access, String uuid, String newFileName) {
+
+        Map<String, Object> map = new HashMap<>();
+        try {
+            File dirFile = createFile(fileUploadTempDir + "/" + uuid);
+            if (!dirFile.exists()) {
+                throw new JoyceException("文件不存在！");
+            }
             //分片上传的文件已经位于同一个文件夹下，方便寻找和遍历(当文件数大于十的时候记得排序用冒泡排序确保顺序是正确的)
-           String[] fileNames = dirFile.list();
-           String createFileName = UUIDUtils.getUUID(6)  + "_" + StringsUtils.substringFileName(newFileName);
-           //文件保存路径
-           String now = DateUtils.dateForMat("dv", new Date());
-           String filePath = sysPath +"2"+access + now;
-           File targetFile = new File(filePath, createFileName);
-           if (!targetFile.getParentFile().exists()){
-               targetFile.getParentFile().mkdirs();
-           }
-           RandomAccessFile writeFile = new RandomAccessFile(targetFile, "rw");
-           int position = 0;
-           for (String fileName : fileNames) {
-               File sourceFile = new File(fileUploadTempDir + "/" + uuid, fileName);
-               RandomAccessFile readFile = new RandomAccessFile(sourceFile, "rw");
-               int chunksize = 1024 * 3;
-               byte[] buf = new byte[chunksize];
-               writeFile.seek(position);
-               int byteCount = 0;
-               while ((byteCount = readFile.read(buf)) != -1) {
-                   if (byteCount != chunksize) {
-                       byte[] tempBytes = new byte[byteCount];
-                       System.arraycopy(buf, 0, tempBytes, 0, byteCount);
-                       buf = tempBytes;
-                   }
-                   writeFile.write(buf);
-                   position = position + byteCount;
-               }
-               readFile.close();
-               //删除缓存的临时文件
-               org.apache.commons.io.FileUtils.deleteQuietly(sourceFile);
-           }
-           writeFile.close();
-           String path= "/static/2" + access +now + "/" + createFileName;
-           map.put(vrp,targetFile.getPath());
-           map.put(vap,path);
-           map.put(vn,newFileName);
-       } catch (IOException e) {
-           e.printStackTrace();
-       }
-       return map;
-   }
+            String[] fileNames = dirFile.list();
+            String createFileName = UUIDUtils.getUUID(6) + "_" + StringsUtils.substringFileName(newFileName);
+            //文件保存路径
+            String now = DateUtils.dateForMat("dv", new Date());
+            String filePath = sysPath + "2" + access + now;
+            File targetFile = new File(filePath, createFileName);
+            if (!targetFile.getParentFile().exists()) {
+                targetFile.getParentFile().mkdirs();
+            }
+            RandomAccessFile writeFile = new RandomAccessFile(targetFile, "rw");
+            int position = 0;
+            for (String fileName : fileNames) {
+                File sourceFile = new File(fileUploadTempDir + "/" + uuid, fileName);
+                RandomAccessFile readFile = new RandomAccessFile(sourceFile, "rw");
+                int chunksize = 1024 * 3;
+                byte[] buf = new byte[chunksize];
+                writeFile.seek(position);
+                int byteCount = 0;
+                while ((byteCount = readFile.read(buf)) != -1) {
+                    if (byteCount != chunksize) {
+                        byte[] tempBytes = new byte[byteCount];
+                        System.arraycopy(buf, 0, tempBytes, 0, byteCount);
+                        buf = tempBytes;
+                    }
+                    writeFile.write(buf);
+                    position = position + byteCount;
+                }
+                readFile.close();
+                //删除缓存的临时文件
+                org.apache.commons.io.FileUtils.deleteQuietly(sourceFile);
+            }
+            writeFile.close();
+            String path = "/static/2" + access + now + "/" + createFileName;
+            map.put(vrp, targetFile.getPath());
+            map.put(vap, path);
+            map.put(vn, newFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
 
     /**
      * 截取视频文件某一帧
+     *
      * @param videoRealPath
      * @param pictureRealPath
      * @return
      */
-    public static File  captureVideoFrames(String videoRealPath,String pictureRealPath) throws IOException {
+    public static File captureVideoFrames(String videoRealPath, String pictureRealPath) throws IOException {
         File videoFile = createFile(videoRealPath);
         File pictureFile = createFile(pictureRealPath);
         FFmpegFrameGrabber ff = new FFmpegFrameGrabber(videoFile);
         ff.start();
         int length = ff.getLengthInAudioFrames();
-        int i =0;
+        int i = 0;
         Frame f = null;
-        while (i < length){
+        while (i < length) {
             f = ff.grabFrame();
-            if ((i > 21) && (Objects.nonNull(f.image))){
+            if ((i > 21) && (Objects.nonNull(f.image))) {
                 break;
             }
             i++;
         }
-        int owidth = f.imageWidth ;
-        int oheight = f.imageHeight ;
+        int owidth = f.imageWidth;
+        int oheight = f.imageHeight;
         // 对截取的帧进行等比例缩放
         int width = 800;
         int height = (int) (((double) width / owidth) * oheight);
-        Java2DFrameConverter converter =new Java2DFrameConverter();
-        BufferedImage fecthedImage =converter.getBufferedImage(f);
+        Java2DFrameConverter converter = new Java2DFrameConverter();
+        BufferedImage fecthedImage = converter.getBufferedImage(f);
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         bi.getGraphics().drawImage(fecthedImage.getScaledInstance(width, height, Image.SCALE_SMOOTH),
                 0, 0, null);
@@ -818,118 +845,163 @@ public class FileUtils implements Serializable {
 
     /**
      * 通过目录获取文件集合
+     *
      * @param path
      * @return
      */
-   public static   List<File> getFilesByMkdirPath(String path){
-       File file = createFile(path);
-       if (file.isDirectory()){
-           File[] files = file.listFiles();
-           for (File f : files) {
-               if (Objects.nonNull(f)) {
-                   continue;
-               }
-               getFilesByMkdirPath(f.getPath());
-           }
-       }
-       if (file.isFile()){
-           fileList.add(file);
-       }
-       return fileList;
-   }
+    public static List<File> getFilesByMkdirPath(String path) {
+        File file = createFile(path);
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (File f : files) {
+                if (Objects.isNull(f)) {
+                    continue;
+                }
+                getFilesByMkdirPath(f.getPath());
+            }
+        }
+        if (file.isFile()) {
+            fileList.add(file);
+        }
+        return fileList;
+    }
 
     /**
      * 创建文件
+     *
      * @param path
      * @param bool 是否使用懒汉模式
      * @return
      */
-   public static File createFile(String path,boolean bool){
-       if (!bool){
-           newFile = new File(path);
-       }
-       if (Objects.isNull(newFile)&&bool){
-           synchronized (newFile){
-               if (Objects.isNull(newFile)){
-                   newFile = new File(path);
-               }
-           }
-       }
-       if (!newFile.getParentFile().exists()){
-           newFile.mkdirs();
-       }
-       return newFile;
-   }
+    public static File createFile(String path, boolean bool) {
+        if (!bool) {
+            newFile = new File(path);
+        }
+        if (Objects.isNull(newFile) && bool) {
+            synchronized (Objects.requireNonNull(newFile)) {
+                if (Objects.isNull(newFile)) {
+                    newFile = new File(path);
+                }
+            }
+        }
+        if (!newFile.getParentFile().exists()) {
+            newFile.mkdirs();
+        }
+        return newFile;
+    }
 
     /**
      * 获取文件全路径名称
+     *
      * @param filePath
      * @return
      */
-   public static  String getFilePathName(String filePath){
-       String suf = filePath.substring(filePath.indexOf("."));
-       File file = new File(filePath);
-       if (!file.getParentFile().exists()){
-           file.getParentFile().mkdirs();
-       }
-       StringBuilder builder = new StringBuilder();
-       builder.append(filePath, 0, filePath.indexOf("."));
-       while (file.exists()){
-           builder.append("(1)");
-           String tempPath = builder.toString();
-           filePath = tempPath+suf;
-           file = new File(filePath);
-       }
-       return filePath;
-   }
+    public static String getFilePathName(String filePath) {
+        String suf = filePath.substring(filePath.indexOf("."));
+        File file = new File(filePath);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        StringBuilder builder = new StringBuilder();
+        builder.append(filePath, 0, filePath.indexOf("."));
+        int index = 0;
+        while (file.exists()) {
+            builder.append("(").append(++index).append(")");
+            String tempPath = builder.toString();
+            filePath = tempPath + suf;
+            file = new File(filePath);
+        }
+        return filePath;
+    }
 
     /**
      * 创建文件
+     *
      * @param path
      * @return
      */
-    public static File createFile(String path){
+    public static File createFile(String path) {
         return createFile(path, false);
     }
 
     /**
+     * 创建新文件
+     * @param path
+     */
+    public static void createNewFile(String path,boolean isDir) {
+        File file = createFile(path);
+        createNewFile(file,isDir);
+    }
+
+    /**
+     * 创建新文件
+     * @param path
+     * @param bool
+     */
+    public static void createNewFile(String path,boolean bool,boolean isDir) {
+        File file = createFile(path,bool);
+        createNewFile(file,isDir);
+    }
+
+    /**
+     * 创建新文件
+     * @param file
+     */
+    public static void createNewFile(File file,boolean isDir) {
+        if (!file.exists()) {
+          if (isDir){
+              file.mkdirs();
+          }else {
+              try {
+                  file.createNewFile();
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+          }
+        }
+    }
+
+    /**
      * 更新文件
+     *
      * @param filePath
      * @param flag
      * @return
      */
-    public static File updateFile(String filePath,boolean flag){
-        return updateFile(createFile(filePath),flag);
+    public static File updateFile(String filePath, boolean flag) {
+        return updateFile(createFile(filePath), flag);
     }
 
     /**
      * 更新文件
+     *
      * @param file
      * @param flag
      * @return
      */
-    public static File updateFile(File file,boolean flag){
+    public static File updateFile(File file, boolean flag) {
         String path = file.getPath();
-        if (flag){
-           deleteFile(file);
-           return createFile(path);
+        if (flag) {
+            deleteFile(file);
+            return createFile(path);
         }
-           return file;
+        return file;
     }
 
     /**
      * 删除文件
+     *
      * @param paths
      * @return
      */
-    public static boolean deleteFile(Set<String> paths){
+    public static boolean deleteFile(Set<String> paths) {
         boolean flag = true;
         for (String path : paths) {
-            if (Objects.isNull(null)){
+            if (StringUtils.isNoneBlank(path)) {
                 throw new JoyceException("该文件路径不能为空");
             }
             boolean rs = deleteFile(path);
-            if (!rs){
+            if (!rs) {
                 flag = false;
             }
         }
@@ -938,48 +1010,52 @@ public class FileUtils implements Serializable {
 
     /**
      * 删除文件
+     *
      * @param path
      * @return
      */
-    public static boolean deleteFile(String path){
+    public static boolean deleteFile(String path) {
         File file = new File(path);
         return deleteFile(file);
     }
 
     /**
      * 删除文件
+     *
      * @param file
      * @return
      */
-    public static boolean deleteFile(File file){
-        if (file.exists()){
-            file.delete();
-            return true;
+    public static boolean deleteFile(File file) {
+        if (file.exists()) {
+            return file.delete();
         }
         return false;
     }
 
     /**
      * 规定时间类检测文件是否完成
+     *
      * @param path
      * @param time
      * @return
      */
-    public static boolean fileExist(String path,long time){
+    public static boolean fileExist(String path, long time) {
         File file = createFile(path);
-       return fileExist(file,time);
+        return fileExist(file, time);
     }
+
     /**
      * 规定时间类检测文件是否完成
+     *
      * @param file
      * @param time
      * @return
      */
-    public static boolean fileExist(File file,long time){
+    public static boolean fileExist(File file, long time) {
         long t = 0L;
         boolean flag = false;
-        while (t<=time && !flag){
-            if (file.exists()){
+        while (t * 1000 <= time) {
+            if (file.exists()) {
                 flag = true;
                 break;
             }
@@ -991,6 +1067,181 @@ public class FileUtils implements Serializable {
             t++;
         }
         return flag;
+    }
+
+    /**
+     * 解压zip文件
+     *
+     * @param filePath
+     * @param zipDir
+     * @return
+     */
+    public static int unzip(String filePath, String zipDir) {
+        int tempCount = 0;
+        String name = "";
+        try {
+            BufferedOutputStream dest = null;
+            BufferedInputStream is = null;
+            ZipEntry entry;
+            ZipFile zipfile = new ZipFile(filePath);
+            Enumeration dir = zipfile.entries();
+            while (dir.hasMoreElements()) {
+                entry = (ZipEntry) dir.nextElement();
+                if (entry.isDirectory()) {
+                    name = entry.getName();
+                    name = name.substring(0, name.length() - 1);
+                    File fileObject = new File(zipDir + name);
+                    fileObject.mkdir();
+                }
+            }
+
+            Enumeration e = zipfile.entries();
+            while (e.hasMoreElements()) {
+                entry = (ZipEntry) e.nextElement();
+                if (entry.isDirectory()) {
+                    continue;
+                } else {
+                    is = new BufferedInputStream(zipfile.getInputStream(entry));
+                    int count;
+                    byte[] dataByte = new byte[BUFFER];
+                    FileOutputStream fos = new FileOutputStream(zipDir + entry.getName());
+                    dest = new BufferedOutputStream(fos, BUFFER);
+                    while ((count = is.read(dataByte, 0, BUFFER)) != -1) {
+                        dest.write(dataByte, 0, count);
+                    }
+                    dest.flush();
+                    dest.close();
+                    is.close();
+                    tempCount++;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tempCount;
+    }
+
+    /**
+     * 执行py文件
+     *
+     * @param execArgs
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public static String execPythonFile(ExecArgs execArgs) throws IOException, InterruptedException {
+        System.out.println("文件检测中。。。。");
+        execArgs.setEnv("python");
+        String startFileName = execArgs.getStartFileName();
+        if (!startFileName.endsWith(".py")) {
+            startFileName += ".py";
+        }
+        File orFile = new File(execArgs.getFilePath());
+        String pyFilePath = orFile.getParent() + "\\"+UUIDUtils.getUUIDName();
+        createNewFile(pyFilePath,true);
+        int fileCount = unzip(execArgs.getFilePath(), pyFilePath+"\\");
+        List<File> dir = getFilesByMkdirPath(pyFilePath);
+        while (dir.size() != fileCount){
+            Thread.sleep(1000);
+            dir = getFilesByMkdirPath(pyFilePath);
+        }
+        boolean flag = false;
+        for (File file : dir) {
+            if (file.getName().equals(startFileName)) {
+                execArgs.setFilePath(file.getPath());
+                flag = true;
+            }
+        }
+        if (!flag) {
+            return "未找到启动文件";
+        }
+        String[] args = execArgsToArray(execArgs);
+        return execPythonFile(args);
+    }
+
+    /**
+     * 执行py文件
+     *
+     * @param args
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public static String execPythonFile(String[] args) throws IOException, InterruptedException {
+        Process exec = Runtime.getRuntime().exec(args);
+        BufferedReader br = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+        String text = null;
+        StringBuilder sum = new StringBuilder();
+        while ((text = br.readLine()) != null) {
+            sum.append(text);
+        }
+        br.close();
+        exec.waitFor();
+        return sum.toString();
+    }
+
+    /**
+     * 参数类
+     */
+    public static class ExecArgs {
+        //文件环境
+        private String env;
+        //文件路径
+        private String filePath;
+        //参数数组
+        private String[] args;
+        //文件开启文件名
+        private String startFileName;
+
+        public String getEnv() {
+            return env;
+        }
+
+        private void setEnv(String env) {
+            this.env = env;
+        }
+
+        public String getFilePath() {
+            return filePath;
+        }
+
+        public void setFilePath(String filePath) {
+            this.filePath = filePath;
+        }
+
+        public String[] getArgs() {
+            return args;
+        }
+
+        public void setArgs(String[] args) {
+            this.args = args;
+        }
+
+        public String getStartFileName() {
+            return startFileName;
+        }
+
+        public void setStartFileName(String startFileName) {
+            this.startFileName = startFileName;
+        }
+    }
+
+    /**
+     * 转化成字符数组
+     *
+     * @param execArgs
+     * @return
+     */
+    private static String[] execArgsToArray(ExecArgs execArgs) {
+        System.out.println("py start。。。。");
+        String[] args = new String[execArgs.args.length + 2];
+        args[0] = execArgs.getEnv();
+        args[1] = execArgs.getFilePath();
+        for (int i = 2; i < args.length; i++) {
+            args[i] = execArgs.getArgs()[i - 2];
+        }
+        System.out.println("py end");
+        return args;
     }
 }
 

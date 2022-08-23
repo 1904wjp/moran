@@ -1,5 +1,6 @@
 package com.moon.joyce.example.functionality.service;
 
+import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.example.functionality.entity.PageComponent;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,4 +67,11 @@ public interface FileService {
      * @return
      */
     Map<String,Object> mergeTempFile(String uuid,String name);
+
+    /**
+     *  执行文件
+     * @param execArgs
+     * @return
+     */
+    String execPythonFile(FileUtils.ExecArgs execArgs);
 }

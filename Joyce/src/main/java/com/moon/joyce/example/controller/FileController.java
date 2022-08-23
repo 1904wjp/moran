@@ -1,6 +1,7 @@
 package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
+import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.service.FileService;
 import org.slf4j.Logger;

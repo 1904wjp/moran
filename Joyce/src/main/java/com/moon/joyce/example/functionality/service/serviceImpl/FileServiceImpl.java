@@ -208,5 +208,15 @@ public class FileServiceImpl implements FileService {
         return map;
     }
 
+    @Override
+    public String execPythonFile(FileUtils.ExecArgs execArgs) {
+        String text = null;
+        try {
+            text = FileUtils.execPythonFile(execArgs);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return text;
+    }
 
 }

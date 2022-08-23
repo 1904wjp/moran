@@ -182,7 +182,7 @@ public class BaseController extends R {
     public void startupDatasource(){
         if (Objects.nonNull(getCurrentSetting())){
             if (Objects.nonNull(getCurrentSetting().getDbBaseSetting())){
-                 logger.info("当前为默认系统数据源");
+                 logger.info("当前为默认系统数据源,使用此方法接口结束之前需要使用‘shutdownDatasource()’方法结束，否则会出现数据源异常");
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
