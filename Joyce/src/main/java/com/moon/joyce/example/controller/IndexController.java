@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -148,24 +149,18 @@ public class IndexController extends BaseController {
         }else if (code.equals(c_init)){
             if (index==1){
                 for (String fileName : fileNames) {
-                    List<String> list = ListsUtils.readyLineFileConvertList(Constant.LOGGER_PATH + fileName);
+                    List<String> list = ListsUtils.readyLineFileConvertList(Constant.LOGGER_PATH + fileName, StandardCharsets.UTF_8);
                     ListsUtils.addList(strings, list);
                 }
                 strings.add(filePathName+" has been loaded");
+                strings.add("Joyce has been close");
                 user.setStatus(Constant.START_STATUS);
                 setSession(Constant.SESSION_USER,user);
             }else {
                 strings.clear();
                 strings.add("Joyce no start");
+                strings.add("Joyce no start");
             }
-        }else if (code.equals(c_init)){
-           if (index!=1){
-               strings.clear();
-               strings.add("Joyce no start");
-           }else {
-               strings.clear();
-               strings.add("Joyce has been close");
-           }
         }else if(code.equals(c_clear)){
             strings.clear();
             strings.add("########********###");

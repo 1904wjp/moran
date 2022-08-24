@@ -2,6 +2,7 @@ package com.moon.joyce.commons.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +19,8 @@ public class ListsUtils<E> {
      * @param path
      * @return
      */
-    public static List<String> readyLineFileConvertList(String path) {
-        BufferedReader readObj = FileUtils.getReadObj(path);
+    public static List<String> readyLineFileConvertList(String path, Charset charset) {
+        BufferedReader readObj = FileUtils.getReadObj(path,charset);
         List<String> list = new ArrayList<>();
         String text;
         try {

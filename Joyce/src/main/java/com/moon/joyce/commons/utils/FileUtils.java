@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -631,7 +633,9 @@ public class FileUtils implements Serializable {
     public static String getCellValue(Cell cell) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String ret = "";
-        if (cell == null) return ret;
+        if (cell == null) {
+            return ret;
+        }
         CellType type = cell.getCellTypeEnum();
         switch (type) {
             case BLANK:
@@ -669,28 +673,41 @@ public class FileUtils implements Serializable {
 
     /**
      * XSSFCell转换成String并且去空格
+     * @param cell
+     * @return
      */
     public static String getCellValueOfTrim(Cell cell) {
         return getCellValue(cell).trim();
     }
 
-
-    public static BufferedReader getReadObj(String path) {
+    /**
+     * 读取资源
+     * @param path
+     * @param charset
+     * @return
+     */
+    public static BufferedReader getReadObj(String path, Charset charset) {
         System.out.println("我结束后需要关闭资源");
         BufferedReader bufferedReader = null;
         try {
-            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path), charset));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return bufferedReader;
     }
 
-    public static BufferedReader getReadObj(File file) {
+    /**
+     * 读取资源
+     * @param file
+     * @param charset
+     * @return
+     */
+    public static BufferedReader getReadObj(File file,Charset charset) {
         System.out.println("我结束后需要关闭资源");
         BufferedReader bufferedReader = null;
         try {
-            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file),charset));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -699,7 +716,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 上传视频（临时文件）
-     *
      * @param req
      * @param resp
      * @param fileUploadTempDir
@@ -853,6 +869,9 @@ public class FileUtils implements Serializable {
         File file = createFile(path);
         if (file.isDirectory()) {
             File[] files = file.listFiles();
+            if (files.length == 0){
+                return fileList;
+            }
             for (File f : files) {
                 if (Objects.isNull(f)) {
                     continue;
@@ -926,38 +945,41 @@ public class FileUtils implements Serializable {
 
     /**
      * 创建新文件
+     *
      * @param path
      */
-    public static void createNewFile(String path,boolean isDir) {
+    public static void createNewFile(String path, boolean isDir) {
         File file = createFile(path);
-        createNewFile(file,isDir);
+        createNewFile(file, isDir);
     }
 
     /**
      * 创建新文件
+     *
      * @param path
      * @param bool
      */
-    public static void createNewFile(String path,boolean bool,boolean isDir) {
-        File file = createFile(path,bool);
-        createNewFile(file,isDir);
+    public static void createNewFile(String path, boolean bool, boolean isDir) {
+        File file = createFile(path, bool);
+        createNewFile(file, isDir);
     }
 
     /**
      * 创建新文件
+     *
      * @param file
      */
-    public static void createNewFile(File file,boolean isDir) {
+    public static void createNewFile(File file, boolean isDir) {
         if (!file.exists()) {
-          if (isDir){
-              file.mkdirs();
-          }else {
-              try {
-                  file.createNewFile();
-              } catch (IOException e) {
-                  e.printStackTrace();
-              }
-          }
+            if (isDir) {
+                file.mkdirs();
+            } else {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -1076,48 +1098,44 @@ public class FileUtils implements Serializable {
      * @param zipDir
      * @return
      */
-    public static int unzip(String filePath, String zipDir) {
+    public static int unzip(String filePath, String zipDir) throws IOException {
         int tempCount = 0;
         String name = "";
-        try {
-            BufferedOutputStream dest = null;
-            BufferedInputStream is = null;
-            ZipEntry entry;
-            ZipFile zipfile = new ZipFile(filePath);
-            Enumeration dir = zipfile.entries();
-            while (dir.hasMoreElements()) {
-                entry = (ZipEntry) dir.nextElement();
-                if (entry.isDirectory()) {
-                    name = entry.getName();
-                    name = name.substring(0, name.length() - 1);
-                    File fileObject = new File(zipDir + name);
-                    fileObject.mkdir();
-                }
+        ZipEntry entry;
+        BufferedInputStream is = null;
+        BufferedOutputStream dest = null;
+        ZipFile zipfile = new ZipFile(filePath);
+        Enumeration dir = zipfile.entries();
+        while (dir.hasMoreElements()) {
+            entry = (ZipEntry) dir.nextElement();
+            if (entry.isDirectory()) {
+                name = entry.getName();
+                name = name.substring(0, name.length() - 1);
+                File fileObject = new File(zipDir + name);
+                fileObject.mkdir();
             }
-
-            Enumeration e = zipfile.entries();
-            while (e.hasMoreElements()) {
-                entry = (ZipEntry) e.nextElement();
-                if (entry.isDirectory()) {
-                    continue;
-                } else {
-                    is = new BufferedInputStream(zipfile.getInputStream(entry));
-                    int count;
-                    byte[] dataByte = new byte[BUFFER];
-                    FileOutputStream fos = new FileOutputStream(zipDir + entry.getName());
-                    dest = new BufferedOutputStream(fos, BUFFER);
-                    while ((count = is.read(dataByte, 0, BUFFER)) != -1) {
-                        dest.write(dataByte, 0, count);
-                    }
-                    dest.flush();
-                    dest.close();
-                    is.close();
-                    tempCount++;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        Enumeration e = zipfile.entries();
+        while (e.hasMoreElements()) {
+            entry = (ZipEntry) e.nextElement();
+            if (entry.isDirectory()) {
+                continue;
+            } else {
+                is = new BufferedInputStream(zipfile.getInputStream(entry));
+                int count;
+                byte[] dataByte = new byte[BUFFER];
+                FileOutputStream fos = new FileOutputStream(zipDir + entry.getName());
+                dest = new BufferedOutputStream(fos, BUFFER);
+                while ((count = is.read(dataByte, 0, BUFFER)) != -1) {
+                    dest.write(dataByte, 0, count);
+                }
+                tempCount++;
+            }
+        }
+        dest.flush();
+        dest.close();
+        is.close();
         return tempCount;
     }
 
@@ -1132,16 +1150,17 @@ public class FileUtils implements Serializable {
     public static String execPythonFile(ExecArgs execArgs) throws IOException, InterruptedException {
         System.out.println("文件检测中。。。。");
         execArgs.setEnv("python");
+        String pySuf = ".py";
         String startFileName = execArgs.getStartFileName();
-        if (!startFileName.endsWith(".py")) {
-            startFileName += ".py";
+        if (!startFileName.endsWith(pySuf)) {
+            startFileName += pySuf;
         }
         File orFile = new File(execArgs.getFilePath());
-        String pyFilePath = orFile.getParent() + "\\"+UUIDUtils.getUUIDName();
-        createNewFile(pyFilePath,true);
-        int fileCount = unzip(execArgs.getFilePath(), pyFilePath+"\\");
+        String pyFilePath = orFile.getParent() + "\\" + UUIDUtils.getUUIDName();
+        createNewFile(pyFilePath, true);
+        int fileCount = unzip(execArgs.getFilePath(), pyFilePath + "\\");
         List<File> dir = getFilesByMkdirPath(pyFilePath);
-        while (dir.size() != fileCount){
+        while (dir.size() != fileCount) {
             Thread.sleep(1000);
             dir = getFilesByMkdirPath(pyFilePath);
         }
@@ -1155,8 +1174,7 @@ public class FileUtils implements Serializable {
         if (!flag) {
             return "未找到启动文件";
         }
-        String[] args = execArgsToArray(execArgs);
-        return execPythonFile(args);
+        return execPythonFile(execArgsToArray(execArgs));
     }
 
     /**
@@ -1234,11 +1252,17 @@ public class FileUtils implements Serializable {
      */
     private static String[] execArgsToArray(ExecArgs execArgs) {
         System.out.println("py start。。。。");
-        String[] args = new String[execArgs.args.length + 2];
+        int len = 2;
+        if (Objects.nonNull(execArgs.args)) {
+            len = execArgs.args.length + 2;
+        }
+        String[] args = new String[len];
         args[0] = execArgs.getEnv();
         args[1] = execArgs.getFilePath();
-        for (int i = 2; i < args.length; i++) {
-            args[i] = execArgs.getArgs()[i - 2];
+        if (Objects.nonNull(execArgs.getArgs()) && args.length > 2) {
+            for (int i = 2; i < args.length; i++) {
+                args[i] = execArgs.getArgs()[i - 2];
+            }
         }
         System.out.println("py end");
         return args;
