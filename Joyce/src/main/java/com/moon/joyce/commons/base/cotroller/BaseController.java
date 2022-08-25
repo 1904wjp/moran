@@ -68,13 +68,13 @@ public class BaseController extends R {
     //缓存的聊天记录
     public static String addChatRecords = "add_chatRecord";
 
-    public static Map<String,Object> redisMap = new HashMap<>();
+  //  public static Map<String,Object> redisMap = new HashMap<>();
     /**
      * 获得session
      * @return
      */
     public HttpSession getSession(){
-        return  ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+        return  ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest().getSession();
     }
 
     /**

@@ -126,6 +126,14 @@ public class BaseEntity implements Serializable {
         }
         return this.id.toString().equals(((BaseEntity) obj).id.toString());
     }
+
+    public static boolean equals(Object obj1,Object obj2){
+        if (!(obj1 instanceof BaseEntity)){
+            throw new JoyceException("该数据不是需要的数据，无法比较");
+        }
+        return ((BaseEntity) obj1).id.toString().equals(((BaseEntity) obj2).id.toString());
+    }
+
     @Override
     public int hashCode() {
         return Integer.parseInt(String.valueOf(this.id % 16));

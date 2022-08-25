@@ -211,7 +211,7 @@ public class UserController extends BaseController {
         collect.addAll(longs);
         List<Long> collect1 = collect.stream().distinct().collect(Collectors.toList());
         List<User> allFriends = userService.getAllFriendsByIds(collect1);
-        Set<Long> sessionUserIdSet = ((List<User>) redisTemplate.opsForValue().get(Constant.SESSION_USER)).stream().map(User::getId).collect(Collectors.toSet());
+        Set<Long> sessionUserIdSet = Arrays.stream((User[]) Objects.requireNonNull(redisTemplate.opsForValue().get(Constant.SESSION_USER))).map(User::getId).collect(Collectors.toSet());
         List<UserChartVo> userChartVos = new ArrayList<>();
         Set<Long> set = new HashSet<>();
        if (Objects.nonNull(allFriends)){
