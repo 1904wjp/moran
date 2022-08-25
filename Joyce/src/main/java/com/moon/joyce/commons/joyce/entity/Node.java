@@ -207,19 +207,5 @@ public class Node<T> implements DataConstructor<T> {
         return this.len;
     }
 
-    private Node<T> queCurrent = this;
-    public T quePull(){
-        T value = this.queCurrent.getValue();
-        this.queCurrent = this.queCurrent.next();
-        return value;
-    }
-    private Node<T> stackCurrent = this;
-    public T stackPull(){
-        while (this.first.hasNext()) {
-            this.stackCurrent = first.next();
-        }
-        T value = this.stackCurrent.getValue();
-        this.stackCurrent = this.stackCurrent.previous();
-        return value;
-    }
+
 }
