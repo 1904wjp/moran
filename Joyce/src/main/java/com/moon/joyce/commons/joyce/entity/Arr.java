@@ -1,11 +1,9 @@
 package com.moon.joyce.commons.joyce.entity;
 
 import com.moon.joyce.commons.joyce.entity.data.DataConstructor;
-import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -46,6 +44,37 @@ public class Arr<T> implements DataConstructor<T> {
             }
             this.arr[this.of++] = t;
             this.len = this.of;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean add(DataConstructor<T> dataConstructor){
+        if (dataConstructor instanceof Arr){
+            return add((Arr<T>)dataConstructor);
+        }
+        if (dataConstructor instanceof Node){
+            Arr<T> tArr = nodeToArr((Node<T>) dataConstructor);
+            return add(tArr);
+        }
+        return false;
+    }
+
+
+    public boolean add(Arr<T> arr){
+        try {
+            int size  = len();
+            while ((len+this.len)>size){
+                this.arr = capacity(this.arr);
+                size = this.arr.length;
+            }
+
+            for (int i = 0; i < arr.len(); i++) {
+                this.arr[len()+i] = arr.getArr()[i];
+            }
+            this.len = this.of = this.len + arr.len();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -141,5 +170,20 @@ public class Arr<T> implements DataConstructor<T> {
         sb.append("arr=").append(arr == null ? "null" : Arrays.asList(arr).toString());
         sb.append('}');
         return sb.toString();
+    }
+
+    /**
+     * 节点转数组
+     * @param node
+     * @return
+     */
+    public Arr<T> nodeToArr(Node<T> node){
+        Arr<T> tArr = new Arr<>();
+        Node<T> head = node.getFirst().next();
+        while (Objects.nonNull(head)){
+            tArr.add(head.getValue());
+            head = head.next();
+        }
+        return tArr;
     }
 }

@@ -122,11 +122,33 @@ public class Node<T> implements DataConstructor<T> {
      * @param n
      * @return
      */
-    public void add(Node<T> n) {
-       this.last.next = n.getFirst().next();
-       this.last = n.getLast();
-       this.len = this.len + n.len();
+    public boolean add(Node<T> n) {
+        try {
+            this.last.next = n.getFirst().next();
+            this.last = n.getLast();
+            this.len = this.len + n.len();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
+    /**
+     * 添加元素
+     * @param dataConstructor
+     * @return
+     */
+    public boolean add(DataConstructor<T> dataConstructor) {
+        if (dataConstructor instanceof Node){
+            return add((Node<T>) dataConstructor);
+        }
+        if (dataConstructor instanceof Arr){
+            Node<T> node = arrToNode((Arr<T>) dataConstructor);
+            return add(node);
+        }
+        return false;
+    }
+
 
     /**
      * 移除
@@ -207,5 +229,16 @@ public class Node<T> implements DataConstructor<T> {
         return this.len;
     }
 
-
+    /**
+     * 数组转节点
+     * @param arr
+     * @return
+     */
+    public Node<T> arrToNode(Arr<T> arr ){
+        Node<T> node = new Node<>();
+        for (T t : arr.getArr()) {
+            node.add(t);
+        }
+        return node;
+    }
 }
