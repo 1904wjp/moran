@@ -1,8 +1,10 @@
 package com.moon.joyce.commons.joyce.entity;
 
 import com.moon.joyce.commons.joyce.entity.data.DataConstructor;
+import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -10,9 +12,9 @@ import java.util.Objects;
  * @author: Joyce
  * @autograph: Logic is justice
  * @date: 2022/08/24-- 17:06
- * @describe:通用类型
+ * @describe: 通用类型
  */
-public class Arr<T> implements DataConstructor<T> {
+public class Arr<T> implements DataConstructor<T>, Serializable {
   private T[] arr ;
   private int len = 0;
   private int of = 0;
@@ -21,11 +23,11 @@ public class Arr<T> implements DataConstructor<T> {
      * 获取数组
      * @return
      */
-    public T[] getArr() {
+    public T[] arr() {
         T[] objects = (T[])new Object[this.of];
         if (this.of!=0){
             for (int i = 0; i < objects.length; i++) {
-                objects[i] = this.arr[i];
+                objects[i] = (T) this.arr[i];
             }
         }
         return objects;
@@ -51,6 +53,11 @@ public class Arr<T> implements DataConstructor<T> {
         return true;
     }
 
+    /**
+     * 新增元素
+     * @param dataConstructor
+     * @return
+     */
     public boolean add(DataConstructor<T> dataConstructor){
         if (dataConstructor instanceof Arr){
             return add((Arr<T>)dataConstructor);
@@ -62,8 +69,7 @@ public class Arr<T> implements DataConstructor<T> {
         return false;
     }
 
-
-    public boolean add(Arr<T> arr){
+    private boolean add(Arr<T> arr){
         try {
             int size  = len();
             while ((len+this.len)>size){
@@ -72,7 +78,7 @@ public class Arr<T> implements DataConstructor<T> {
             }
 
             for (int i = 0; i < arr.len(); i++) {
-                this.arr[len()+i] = arr.getArr()[i];
+                this.arr[len()+i] = arr.arr()[i];
             }
             this.len = this.of = this.len + arr.len();
         } catch (Exception e) {
@@ -161,11 +167,29 @@ public class Arr<T> implements DataConstructor<T> {
         return flag==0;
     }
 
+    @Override
+    public boolean removeObj(T t) {
+        if (!(t instanceof BaseEntity)){
+            throw new JoyceException("该变量不是所需对象");
+        }
+        int flag = 0;
+        for (int j = 0; j < this.len; j++) {
+            if (BaseEntity.equals(arr[j],t)){
+                boolean rs = remove(j);
+                if (!rs){
+                    flag ++;
+                }
+            }
+        }
+        return flag==0;
+    }
+
     public T get(int i){
         return arr[i];
     }
     @Override
     public String toString() {
+        this.arr = arr();
         final StringBuffer sb = new StringBuffer("Arr{");
         sb.append("arr=").append(arr == null ? "null" : Arrays.asList(arr).toString());
         sb.append('}');

@@ -6,6 +6,7 @@ import com.moon.joyce.commons.joyce.entity.data.DataConstructor;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Objects;
  * @describe:
  */
 
-public class Node<T> implements DataConstructor<T> {
+public class Node<T> implements DataConstructor<T>, Serializable {
     private T value;
     private Node<T> previous;
     private Node<T> next;
@@ -24,11 +25,11 @@ public class Node<T> implements DataConstructor<T> {
     private int len;
     private Node<T> node;
 
-    public Node(Node<T> node) {
-        this.node = node;
-    }
-
     public Node() { }
+
+    public Node<T> node() {
+        return this.first.next;
+    }
 
     /**
      * 查询下一个是否存在
@@ -189,9 +190,10 @@ public class Node<T> implements DataConstructor<T> {
      * @param t
      * @return
      */
+    @Override
     public boolean removeObj(T t) {
-        if (t instanceof BaseEntity){
-            throw new JoyceException("该类型不正确");
+        if (!(t instanceof BaseEntity)){
+            throw new JoyceException("该变量不是所需对象");
         }
         Node<T> head = getFirst();
         int count = -1;
@@ -236,7 +238,7 @@ public class Node<T> implements DataConstructor<T> {
      */
     public Node<T> arrToNode(Arr<T> arr ){
         Node<T> node = new Node<>();
-        for (T t : arr.getArr()) {
+        for (T t : arr.arr()) {
             node.add(t);
         }
         return node;

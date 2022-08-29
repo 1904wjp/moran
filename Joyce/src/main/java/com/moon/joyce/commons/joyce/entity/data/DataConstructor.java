@@ -30,4 +30,7 @@ public interface DataConstructor<T> {
      * @param t
      */
     boolean remove(T t);
+
+
+    boolean removeObj(T t);
 }
