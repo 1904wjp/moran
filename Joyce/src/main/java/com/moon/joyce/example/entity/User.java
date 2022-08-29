@@ -1,8 +1,8 @@
 package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.moon.joyce.commons.annotation.Ids;
-import com.moon.joyce.commons.annotation.Table;
+import com.moon.joyce.commons.annotation.auto.Ids;
+import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.example.entity.base.entity.Person;
 
 

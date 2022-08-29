@@ -1,4 +1,4 @@
-package com.moon.joyce.commons.annotation;
+package com.moon.joyce.commons.annotation.auto;
 
 import java.lang.annotation.*;
 

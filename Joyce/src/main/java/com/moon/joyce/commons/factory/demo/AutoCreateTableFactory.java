@@ -1,9 +1,9 @@
 package com.moon.joyce.commons.factory.demo;
 
-import com.moon.joyce.commons.annotation.Column;
-import com.moon.joyce.commons.annotation.Ids;
-import com.moon.joyce.commons.annotation.NotExist;
-import com.moon.joyce.commons.annotation.Table;
+import com.moon.joyce.commons.annotation.auto.Column;
+import com.moon.joyce.commons.annotation.auto.Ids;
+import com.moon.joyce.commons.annotation.auto.NotExist;
+import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.commons.factory.entity.ColumnEntity;
 import com.moon.joyce.commons.factory.entity.TableEntity;
 import com.moon.joyce.commons.factory.enums.TableStrategy;
@@ -54,7 +54,7 @@ public class AutoCreateTableFactory implements TableFactory {
     private static AutoCreateTableFactory autoCreateTableFactory = null;
     //配置信息的容器
     private static Map<String, ColumnEntity> defMap = null;
-    @Value("${}")
+    @Value("${auto.source.delPath}")
     private String delTablePath;
     /**
      * 获取实例
@@ -119,6 +119,7 @@ public class AutoCreateTableFactory implements TableFactory {
         exitMap.put(TableStrategy.ADD.getCode().toString(),exitSet);
         exitMap.put(TableStrategy.FORCE.getCode().toString(),delSet);
     }
+
     /**
      * 扫描指定文件
      * @param packagePath

@@ -20,12 +20,11 @@ public class SourceControllerDetailServiceImpl implements SourceControllerDetail
     @Autowired
     private SourceService sourceService;
     @Override
-    public boolean retireApplyStatus(String type,Long userId) {
-        Source source = new Source();
+    public boolean retireApplyStatus(Source source) {
         source.setDeleteFlag(Constant.UNDELETE_STATUS);
         source.setApplyStatus(Constant.APPLY_STATUS);
-        source.setUserId(userId);
-        source.setType(type);
+        source.setUserId(source.getUserId());
+        source.setType(source.getType());
         Source one = sourceService.getOne(source);
         if (Objects.nonNull(one)) {
             one.setApplyStatus(Constant.SPARE_STATUS);

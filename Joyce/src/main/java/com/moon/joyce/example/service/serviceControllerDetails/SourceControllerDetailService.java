@@ -14,11 +14,10 @@ import com.moon.joyce.example.functionality.entity.Setting;
 public interface SourceControllerDetailService {
     /**
      * 去除资源应用状态
-     * @param type
-     * @param userId
+     * @param source
      * @return
      */
-    boolean retireApplyStatus(String type,Long userId);
+    boolean retireApplyStatus(Source source);
 
     /**
      * 检查资源

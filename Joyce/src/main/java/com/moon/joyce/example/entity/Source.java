@@ -2,15 +2,13 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.moon.joyce.commons.annotation.Ids;
-import com.moon.joyce.commons.annotation.NotExist;
-import com.moon.joyce.commons.annotation.Table;
+import com.moon.joyce.commons.annotation.auto.Ids;
+import com.moon.joyce.commons.annotation.auto.NotExist;
+import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.example.entity.dto.Page;
-import com.moon.joyce.example.entity.vo.PageVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * @Author: XingDaoRong
@@ -52,7 +50,7 @@ public class Source  extends Page {
     @TableField(exist = false)
     private String username;
     /**
-     * 应用状态【0:普通页面 1:主页 2:主页选项 3:相册】
+     * 应用状态【0:普通1:主页;2:主页选项;3:备用;4:相册】
      */
     @TableField("apply_status")
     private Integer applyStatus;

@@ -2,15 +2,14 @@ package com.moon.joyce.example.entity.base.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.moon.joyce.commons.annotation.Column;
-import com.moon.joyce.commons.annotation.Table;
+import com.moon.joyce.commons.annotation.auto.Column;
+import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.commons.factory.enums.Type;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author Xing Dao Rong

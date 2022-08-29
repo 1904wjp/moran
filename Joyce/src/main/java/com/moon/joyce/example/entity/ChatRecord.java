@@ -2,21 +2,14 @@ package com.moon.joyce.example.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.moon.joyce.commons.annotation.Ids;
-import com.moon.joyce.commons.annotation.NotExist;
-import com.moon.joyce.commons.annotation.Table;
-import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.commons.annotation.auto.Ids;
+import com.moon.joyce.commons.annotation.auto.NotExist;
+import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.commons.factory.enums.TableStrategy;
-import com.moon.joyce.commons.utils.DateUtils;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import redis.clients.jedis.Jedis;
-
-import java.sql.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @Author: XingDaoRong

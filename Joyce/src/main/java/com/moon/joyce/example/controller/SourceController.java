@@ -67,6 +67,7 @@ public class SourceController extends BaseController {
     //默认位置
     private String baseSite = "front,back,left,right,top,bottom";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * 资源页面
      * @return
@@ -75,6 +76,7 @@ public class SourceController extends BaseController {
     public String addSourcePage() {
         return pagePrefix + "sourcePage";
     }
+
     /**
      * 资源列表页面
      *
@@ -84,6 +86,7 @@ public class SourceController extends BaseController {
     public String sourceListPage() {
         return pagePrefix + "sourceListPage";
     }
+
     /**
      * 相册列表页面
      *
@@ -102,6 +105,7 @@ public class SourceController extends BaseController {
         map.addAttribute("id",id);
         return pagePrefix + "albumPage";
     }
+
     /**
      * 相册页面
      * @return
@@ -153,7 +157,6 @@ public class SourceController extends BaseController {
         return dataResult(!album.getMap().isEmpty(),RE.SELECT.getCode(),album);
     }
 
-
     /**
      * 保存资源
      * @param album
@@ -199,8 +202,6 @@ public class SourceController extends BaseController {
         return dataResult(rs && saveSourceRs && asRs,RE.ADDORUPDATE.getCode(),album);
     }
 
-
-
     /**
      * 获取资源列表
      * @return
@@ -215,7 +216,6 @@ public class SourceController extends BaseController {
         return new PageVo(list, total);
     }
 
-
     /**
      * 保存资源
      * @return
@@ -223,6 +223,7 @@ public class SourceController extends BaseController {
     @ResponseBody
     @PostMapping("/saveSource")
     public Result addSource(Source source) {
+        source.setUserId(getSessionUserId());
         if (StringUtils.isNoneBlank(source.getSourceName())){
             source.setSourceName(UUIDUtils.getUUIDName());
         }
@@ -230,12 +231,11 @@ public class SourceController extends BaseController {
             return error("该资源名已被使用");
         }
         if (source.getApplyStatus().equals(Constant.APPLY_STATUS)) {
-            boolean b = sourceServiceControllerDetailService.retireApplyStatus(source.getType(),getSessionUserId());
+            boolean b = sourceServiceControllerDetailService.retireApplyStatus(source);
             if (!b) {
                 return R.error();
             }
         }
-
         if (Objects.isNull(source.getId())) {
             source.setCreateBy(getSessionUser().getUsername());
             source.setUserId(getSessionUser().getId());
@@ -294,7 +294,7 @@ public class SourceController extends BaseController {
         }
         source.setUpdateBy(getSessionUser().getUsername());
         source.setUpdateTime(new Date());
-        boolean b = sourceServiceControllerDetailService.retireApplyStatus(source.getType(),getSessionUserId());
+        boolean b = sourceServiceControllerDetailService.retireApplyStatus(source);
         if (!b) {
             return R.error();
         }
@@ -302,7 +302,6 @@ public class SourceController extends BaseController {
         boolean rs = sourceService.saveOrUpdate(source);
         return R.dataResult(rs, "修改失败", "修改成功", source);
     }
-
 
     /**
      * 上传资源
@@ -321,8 +320,6 @@ public class SourceController extends BaseController {
         return success("上传成功", filePath);
     }
 
-
-
     /**
      * 主页配置
      * @return
@@ -332,8 +329,9 @@ public class SourceController extends BaseController {
     public Result doProjectMainPage() {
         Source source = new Source();
         source.setDeleteFlag(Constant.UNDELETE_STATUS);
-        source.setApplyStatus(Constant.APPLY_STATUS);
+        source.setType("0");
         source.setUserId(getSessionUserId());
+        source.setApplyStatus(Constant.APPLY_STATUS);
         Source dbSource = sourceService.getOne(source);
         source.setApplyStatus(Constant.SPARE_STATUS);
         List<Source> list = sourceService.getList(source);

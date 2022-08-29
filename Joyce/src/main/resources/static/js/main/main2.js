@@ -14,7 +14,7 @@ function initMainPictures() {
     }).done(function (data) {
         loading(false);
         if (data.rs) {
-            if (data.data.length==0){
+            if (data.data.length===0){
                 tips(false, "该用户未设置图片");
             }
             let res = data.data;

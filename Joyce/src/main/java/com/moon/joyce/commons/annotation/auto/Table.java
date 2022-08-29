@@ -1,4 +1,4 @@
-package com.moon.joyce.commons.annotation;
+package com.moon.joyce.commons.annotation.auto;
 
 import com.moon.joyce.commons.factory.enums.TableStrategy;
 
