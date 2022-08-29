@@ -1,36 +1,54 @@
 package com.moon.joyce.commons.factory.demo;
 
+import com.moon.joyce.commons.annotation.url.MethodUrl;
+import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
 import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
-  * @author: Joyce 
-  * @autograph: Logic is justice
-  * @date:  2022/08/29-- 15:14
-  * @describe:
-  */public class UrlFactory {
-      private static Map<UrlPriEntity, MethodUrlEntity> map;
-      private static UrlFactory urlFactory;
+ * @author: Joyce
+ * @autograph: Logic is justice
+ * @date: 2022/08/29-- 15:14
+ * @describe:
+ */
+public class UrlFactory {
+    private static Map<MethodUrlEntity,UrlPriEntity> map;
+    private static UrlFactory urlFactory;
 
     /**
      * 获取实例
+     *
      * @return
      */
-    public static UrlFactory getInstance(){
+    public static UrlFactory getInstance() {
         if (Objects.isNull(urlFactory)) {
             urlFactory = new UrlFactory();
         }
         return urlFactory;
+    }
+
+    /**
+     * 获取工厂实例
+     * @param ps
+     * @return
+     */
+    public void init(String ps) {
+        UrlFactory instance = getInstance();
+        if (Objects.isNull(map)) {
+            //初始化
+            map = new ConcurrentHashMap<>();
+            //扫描包
+            instance.scannerPackage(ps);
+        }
     }
 
     /**
@@ -47,8 +65,50 @@ import java.util.stream.Collectors;
         //检测文件是否有包含关系
         checkIsParentFile(packages);
         for (String aPackage : packages) {
-
+            scanner(aPackage);
         }
+    }
+
+    private void scanner(String aPackage) {
+        File dir = getFile(aPackage);
+        ClassLoader classLoader = getClassLoader();
+        try {
+            fillMap(dir, classLoader);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fillMap(File dir, ClassLoader classLoader) throws ClassNotFoundException {
+        File[] files = dir.listFiles();
+        if (files.length != 0) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    String filePath = file.getAbsolutePath();
+                    if (!filePath.endsWith(".class")) {
+                        continue;
+                    }
+                    String classPath = filePath.substring(filePath.indexOf("com"), filePath.indexOf(".class")).replace("\\", ".");
+                    Class<?> loadClass = classLoader.loadClass(classPath);
+                    if (loadClass.isAnnotationPresent(UriPri.class)) {
+                        UriPri ulrPri = loadClass.getAnnotation(UriPri.class);
+                        if (Objects.nonNull(ulrPri)){
+                            UrlPriEntity urlPriEntity = new UrlPriEntity(ulrPri.name(),ulrPri.pri());
+                            Method[] method = getMethod(loadClass);
+                            for (Method md : method) {
+                                MethodUrl methodUrl = md.getAnnotation(MethodUrl.class);
+                                MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(), methodUrl.params());
+                                map.put(methodUrlEntity,urlPriEntity);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private Method[] getMethod(Class<?> loadClass) {
+        return loadClass.getDeclaredMethods();
     }
 
     /**
@@ -86,7 +146,11 @@ import java.util.stream.Collectors;
         return new File(resource.getFile());
     }
 
-    private ClassLoader getClassLoader(){
+    private ClassLoader getClassLoader() {
         return UrlFactory.class.getClassLoader();
+    }
+
+    public Map<MethodUrlEntity,UrlPriEntity> getMap(){
+        return map;
     }
 }

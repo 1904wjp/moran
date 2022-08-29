@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UlrPri {
+public @interface UriPri {
     String name() default "";
     String pri() default "";
 }

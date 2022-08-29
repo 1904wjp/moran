@@ -381,7 +381,6 @@ public class AutoCreateTableFactory implements TableFactory {
      * @return
      */
     private Field[] getFields(Class<?> loadClass) {
-        Table table = loadClass.getAnnotation(Table.class);
         Field[] fields = loadClass.getDeclaredFields();
         Class<?> superclass = loadClass.getSuperclass();
         while (Objects.nonNull(superclass)) {

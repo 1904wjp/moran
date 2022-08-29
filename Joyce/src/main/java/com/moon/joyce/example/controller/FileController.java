@@ -1,5 +1,7 @@
 package com.moon.joyce.example.controller;
 
+import com.moon.joyce.commons.annotation.url.MethodUrl;
+import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.example.functionality.entity.Result;
@@ -20,6 +22,7 @@ import java.util.Objects;
  * @describe:文件上传接口
  */
 @RestController
+@UriPri(name = "文件接口",pri = "/fileUpload")
 @RequestMapping("/fileUpload")
 public class FileController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -31,6 +34,7 @@ public class FileController extends BaseController {
      * @return
      */
     @ResponseBody
+    @MethodUrl(name = "多文件上传",url = "/files",params = "MultipartFile[] files")
     @PostMapping("/files")
     public Result uploadAlbum(@RequestParam("files") MultipartFile[] files){
         String paths = null;

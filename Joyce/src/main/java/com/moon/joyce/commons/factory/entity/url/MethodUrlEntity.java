@@ -1,6 +1,9 @@
 package com.moon.joyce.commons.factory.entity.url;
 
+import com.moon.joyce.commons.annotation.auto.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: Joyce
@@ -9,6 +12,8 @@ import lombok.Data;
  * @describe:
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MethodUrlEntity {
     String name;
     String url;

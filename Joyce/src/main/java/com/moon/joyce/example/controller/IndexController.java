@@ -208,6 +208,15 @@ public class IndexController extends BaseController {
         return R.dataResult(rs,"Joyce初始化失败","Joyce初始化成功");
     }
 
+    /**
+     * 改变状态
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getUri")
+    public Result getProjectUri(){
+        return R.dataResult(!getMap().isEmpty(),getMap());
+    }
 
 }
 

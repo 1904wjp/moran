@@ -51,7 +51,7 @@ public class BaseEntity implements Serializable {
     private Long userIds;
 
     @TableField(exist = false)
-    private Map<String,String> params;
+    private Map<String,String> paramMap;
 
 
     public Long getId() {
@@ -102,12 +102,12 @@ public class BaseEntity implements Serializable {
         this.deleteFlag = deleteFlag;
     }
 
-    public Map<String, String> getParams() {
-        return params;
+    public Map<String, String> getParamMap() {
+        return paramMap;
     }
 
-    public void setParams(Map<String, String> params) {
-        this.params = params;
+    public void setParamMap(Map<String, String> paramMap) {
+        this.paramMap = paramMap;
     }
 
     public Long getUserIds() {

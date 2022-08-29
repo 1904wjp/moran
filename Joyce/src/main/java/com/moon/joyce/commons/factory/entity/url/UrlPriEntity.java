@@ -1,6 +1,8 @@
 package com.moon.joyce.commons.factory.entity.url;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: Joyce
@@ -9,6 +11,8 @@ import lombok.Data;
  * @describe:
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UrlPriEntity {
     String name;
     String pri;

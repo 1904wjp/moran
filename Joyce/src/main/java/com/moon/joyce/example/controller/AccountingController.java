@@ -1,5 +1,6 @@
 package com.moon.joyce.example.controller;
 
+import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.vo.PageVo;
@@ -21,7 +22,7 @@ import java.util.*;
  * @describe:记账
  */
 @Controller
-@RequestMapping("/example/accounting ")
+@RequestMapping("/example/accounting")
 public class AccountingController extends BaseController {
     @Autowired
     private AccountingService accountingService;

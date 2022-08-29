@@ -2,10 +2,14 @@ package com.moon.joyce.commons.base.cotroller;
 
 
 import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.commons.factory.demo.UrlFactory;
+import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
+import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.User;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.functionality.entity.Setting;
+import com.moon.joyce.example.functionality.entity.Uri;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +52,8 @@ public class BaseController extends R {
     public  String filePath;
     @Value("${setting.super_administrator}")
     public String superAdministrator;
-
+    @Value("${auto.entity.package}")
+    private String ps;
     //私有命令
     @Value("$(command.start)")
     public   String c_start;
@@ -229,5 +234,24 @@ public class BaseController extends R {
             entity.setUpdateBy(getSessionUserName());
             entity.setUpdateTime(new Date());
         }
+    }
+
+    /**
+     * 获取所有接口
+     * @return
+     */
+    public Map<String, Uri> getMap() {
+        Map<String, Uri> hashMap = new HashMap<>();
+        UrlFactory instance = UrlFactory.getInstance();
+        instance.init(ps);
+        Map<MethodUrlEntity, UrlPriEntity> map = instance.getMap();
+        for (Map.Entry<MethodUrlEntity, UrlPriEntity> entry : map.entrySet()) {
+            Uri uri = new Uri();
+            uri.setName(entry.getValue().getName()+entry.getKey().getName());
+            uri.setUrl(entry.getValue().getPri()+entry.getKey().getUrl());
+            uri.setParams(entry.getKey().getParams());
+            hashMap.put(uri.getName(),uri);
+        }
+       return hashMap;
     }
 }
