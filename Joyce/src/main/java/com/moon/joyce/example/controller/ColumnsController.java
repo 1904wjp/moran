@@ -142,7 +142,6 @@ public class ColumnsController extends BaseController {
     public Result selectTableData(@RequestParam String tableName, @RequestParam String dbName,@RequestParam int pageNumber,@RequestParam String searchWord,@RequestParam int offset){
         startupDatasource();
         PageVo data = columnsService.getMapTableDataPage(tableName,dbName,pageNumber,offset);
-
         shutdownDatasource();
         return success(data);
     }
