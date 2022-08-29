@@ -111,5 +111,15 @@ public class ProjectController extends BaseController {
         return R.dataResult(result, "删除失败", "删除成功");
     }
 
+    /**
+     * 所有接口
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getUri")
+    public Result getProjectUri(){
+        return R.dataResult(!getMap().isEmpty(),getMap());
+    }
+
 }
 

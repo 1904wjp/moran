@@ -52,7 +52,7 @@ public class BaseController extends R {
     public  String filePath;
     @Value("${setting.super_administrator}")
     public String superAdministrator;
-    @Value("${auto.entity.package}")
+    @Value("${auto.controller.package}")
     private String ps;
     //私有命令
     @Value("$(command.start)")
@@ -242,9 +242,7 @@ public class BaseController extends R {
      */
     public Map<String, Uri> getMap() {
         Map<String, Uri> hashMap = new HashMap<>();
-        UrlFactory instance = UrlFactory.getInstance();
-        instance.init(ps);
-        Map<MethodUrlEntity, UrlPriEntity> map = instance.getMap();
+        Map<MethodUrlEntity, UrlPriEntity> map = UrlFactory.init(ps);
         for (Map.Entry<MethodUrlEntity, UrlPriEntity> entry : map.entrySet()) {
             Uri uri = new Uri();
             uri.setName(entry.getValue().getName()+entry.getKey().getName());

@@ -41,7 +41,7 @@ public class UrlFactory {
      * @param ps
      * @return
      */
-    public void init(String ps) {
+    public static Map<MethodUrlEntity,UrlPriEntity> init(String ps) {
         UrlFactory instance = getInstance();
         if (Objects.isNull(map)) {
             //初始化
@@ -49,6 +49,7 @@ public class UrlFactory {
             //扫描包
             instance.scannerPackage(ps);
         }
+        return map;
     }
 
     /**
@@ -97,8 +98,10 @@ public class UrlFactory {
                             Method[] method = getMethod(loadClass);
                             for (Method md : method) {
                                 MethodUrl methodUrl = md.getAnnotation(MethodUrl.class);
-                                MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(), methodUrl.params());
-                                map.put(methodUrlEntity,urlPriEntity);
+                               if (Objects.nonNull(methodUrl)){
+                                   MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(), methodUrl.params());
+                                   map.put(methodUrlEntity,urlPriEntity);
+                               }
                             }
                         }
                     }
@@ -150,7 +153,4 @@ public class UrlFactory {
         return UrlFactory.class.getClassLoader();
     }
 
-    public Map<MethodUrlEntity,UrlPriEntity> getMap(){
-        return map;
-    }
 }

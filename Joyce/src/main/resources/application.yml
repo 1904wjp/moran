@@ -4,6 +4,8 @@ auto:
   source:
     dbName: springboot
     delPath: ${file.prefix}:/${app.name}/old_sql/del_file/
+  controller:
+    package: com.moon.joyce.example.controller
 #端口号
 server:
   port: 9099
