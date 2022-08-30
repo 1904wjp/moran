@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @describe:
  */
 public class UrlFactory {
-    private static Map<MethodUrlEntity,UrlPriEntity> map;
+    private static Map<MethodUrlEntity, UrlPriEntity> map;
     private static UrlFactory urlFactory;
 
     /**
@@ -38,10 +38,11 @@ public class UrlFactory {
 
     /**
      * 获取工厂实例
+     *
      * @param ps
      * @return
      */
-    public static Map<MethodUrlEntity,UrlPriEntity> init(String ps) {
+    public static Map<MethodUrlEntity, UrlPriEntity> init(String ps) {
         UrlFactory instance = getInstance();
         if (Objects.isNull(map)) {
             //初始化
@@ -54,6 +55,7 @@ public class UrlFactory {
 
     /**
      * 扫描指定文件
+     *
      * @param packagePath
      */
     private void scannerPackage(String packagePath) {
@@ -91,20 +93,26 @@ public class UrlFactory {
                     }
                     String classPath = filePath.substring(filePath.indexOf("com"), filePath.indexOf(".class")).replace("\\", ".");
                     Class<?> loadClass = classLoader.loadClass(classPath);
-                    if (loadClass.isAnnotationPresent(UriPri.class)) {
-                        UriPri ulrPri = loadClass.getAnnotation(UriPri.class);
-                        if (Objects.nonNull(ulrPri)){
-                            UrlPriEntity urlPriEntity = new UrlPriEntity(ulrPri.name(),ulrPri.pri());
-                            Method[] method = getMethod(loadClass);
-                            for (Method md : method) {
-                                MethodUrl methodUrl = md.getAnnotation(MethodUrl.class);
-                               if (Objects.nonNull(methodUrl)){
-                                   MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(), methodUrl.params());
-                                   map.put(methodUrlEntity,urlPriEntity);
-                               }
-                            }
-                        }
+                    if (!loadClass.isAnnotationPresent(UriPri.class)) {
+                        continue;
                     }
+                    UriPri ulrPri = loadClass.getAnnotation(UriPri.class);
+                    if (Objects.isNull(ulrPri)) {
+                        continue;
+                    }
+
+                    UrlPriEntity urlPriEntity = new UrlPriEntity(ulrPri.name(), ulrPri.pri());
+                    Method[] method = getMethod(loadClass);
+                    for (Method md : method) {
+                        MethodUrl methodUrl = md.getAnnotation(MethodUrl.class);
+                        if (Objects.isNull(methodUrl)) {
+                            continue;
+                        }
+                        MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(), methodUrl.params());
+                        map.put(methodUrlEntity, urlPriEntity);
+                    }
+                } else {
+                    fillMap(file, classLoader);
                 }
             }
         }
@@ -116,6 +124,7 @@ public class UrlFactory {
 
     /**
      * 检测里面是否有子文件
+     *
      * @param packages
      */
     private void checkIsParentFile(String[] packages) {
@@ -139,6 +148,7 @@ public class UrlFactory {
 
     /**
      * 根据路径获取对应文件
+     *
      * @param packagePath
      * @return
      */

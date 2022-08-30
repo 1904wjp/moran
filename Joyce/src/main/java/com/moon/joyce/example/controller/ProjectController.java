@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,7 +53,6 @@ public class ProjectController extends BaseController {
         return pagePrefix+"projectListPage";
     }
 
-
     /**
      * 项目信息列表
      * @param project
@@ -65,6 +65,7 @@ public class ProjectController extends BaseController {
         int total = projectService.getCount(project);
         return new PageVo(list,total);
     }
+
     /**
      * 保存项目信息
      * @param project
@@ -84,6 +85,7 @@ public class ProjectController extends BaseController {
         boolean result = projectService.saveOrUpdate(project);
         return R.dataResult(result);
     }
+
     /**
      * 获取项目信息
      * @param id
@@ -98,6 +100,7 @@ public class ProjectController extends BaseController {
         }
         return R.dataResult(Objects.isNull(project),Constant.NULL_CODE,project);
     }
+
     /**
      * 删除项目信息
      * @param ids
@@ -116,8 +119,18 @@ public class ProjectController extends BaseController {
      * @return
      */
     @ResponseBody
+    @RequestMapping("/getUri/{key}")
+    public Result getProjectUri(@PathVariable String key){
+        return R.dataResult(!getMap().isEmpty(),getMap().get(key));
+    }
+
+    /**
+     * 所有接口
+     * @return
+     */
+    @ResponseBody
     @RequestMapping("/getUri")
-    public Result getProjectUri(){
+    public Result getProjectUriMap(){
         return R.dataResult(!getMap().isEmpty(),getMap());
     }
 
