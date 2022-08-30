@@ -18,24 +18,6 @@
                                     class="btn btn-info btn-space">导出</button>
                         </div>
                         <div class="pull-right" id="query-form"  style="padding-bottom:10px;">
-
-                           <!--  <div class="col-md-3"  style="width:14%;margin-right:5px;">
-                                 <label>姓名:</label>
-                                 <select id="userId"  name="userId" >
-                                     <option value="0">请选择</option>
-                                     <option th:each="user:${users}"
-                                             th:value="${user.id}" th:text="${user.nickname}"></option>
-                                 </select>
-                             </div>-->
-
-                          <!--  <div class="col-md-3"  style="width:18%;margin-right:5px;">
-                                <label>所属项目:</label>
-                                <select id="projectId"  name="projectId">
-                                    <option value="0">请选择</option>
-                                    <option th:each="project:${projects}" th:value="${project.id}"
-                                            th:text="${project.projectName }"></option>
-                                </select>
-                            </div>-->
                             <div class="col-md-3"  style="margin-right:5px;">
                                 <label>创建日期:</label>
                                 <input id="startTime" name="startTime" placeholder='创建日期开始' type="datetime-local" v-model="startTime" class="form-control">
