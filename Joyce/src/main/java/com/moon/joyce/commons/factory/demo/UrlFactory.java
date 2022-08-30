@@ -26,7 +26,6 @@ public class UrlFactory {
 
     /**
      * 获取实例
-     *
      * @return
      */
     public static UrlFactory getInstance() {
@@ -38,7 +37,6 @@ public class UrlFactory {
 
     /**
      * 获取工厂实例
-     *
      * @param ps
      * @return
      */
@@ -55,7 +53,6 @@ public class UrlFactory {
 
     /**
      * 扫描指定文件
-     *
      * @param packagePath
      */
     private void scannerPackage(String packagePath) {
@@ -124,7 +121,6 @@ public class UrlFactory {
 
     /**
      * 检测里面是否有子文件
-     *
      * @param packages
      */
     private void checkIsParentFile(String[] packages) {
@@ -148,7 +144,6 @@ public class UrlFactory {
 
     /**
      * 根据路径获取对应文件
-     *
      * @param packagePath
      * @return
      */
