@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user_type",content = "用户类型",strategy = TableStrategy.FORCE)
+@Table(name = "user_type",content = "用户类型")
 public class UserType extends Page {
     private static final long serialVersionUID = 1573373319724501081L;
     /**

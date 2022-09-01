@@ -48,6 +48,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 包页面
+     *
      * @return
      */
     @RequestMapping("/packagePage")
@@ -57,6 +58,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 数据源页面
+     *
      * @return
      */
     @RequestMapping("/dbPage")
@@ -66,6 +68,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 保存数据库
+     *
      * @param dbBaseSetting
      * @return
      */
@@ -74,17 +77,12 @@ public class DataSourceController extends BaseController {
     public Result saveDbBaseSetting(DbBaseSetting dbBaseSetting) {
         dbBaseSetting.setUserId(getSessionUser().getId());
         dbBaseSetting.setApplyStatus(Constant.APPLY_STATUS);
+        setBaseField(dbBaseSetting);
         if (Objects.isNull(dbBaseSetting.getId())) {
             dbBaseSetting.setApplyStatus(0);
-            dbBaseSetting.setDeleteFlag(Constant.UNDELETE_STATUS);
-            dbBaseSetting.setCreateBy(getSessionUser().getUsername());
-            dbBaseSetting.setCreateTime(new Date());
             if (dbBaseSettingService.getCount(dbBaseSetting, Constant.DATA_TYPE_UNIQUE_NAME) != 0) {
                 return R.error(Constant.CHINESE_SELECT_EXIST_MESSAGE + "(数据名称重复，修改名称)");
             }
-        } else {
-            dbBaseSetting.setUpdateBy(getSessionUser().getUsername());
-            dbBaseSetting.setUpdateTime(new Date());
         }
         boolean testDatasource = dbBaseSettingService.switchDataSource(dbBaseSetting, Constant.TEST_DATASOURCE);
         if (!testDatasource) {
@@ -99,6 +97,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 查询数据源
+     *
      * @param id
      * @return
      */
@@ -106,11 +105,12 @@ public class DataSourceController extends BaseController {
     @RequestMapping("/getDb")
     public Result getDbBaseSetting(@RequestParam(value = "id") Long id) {
         DbBaseSetting dbBaseSetting = dbBaseSettingService.getById(id);
-        return R.dataResult(Objects.nonNull(dbBaseSetting),Constant.NULL_CODE,dbBaseSetting);
+        return R.dataResult(Objects.nonNull(dbBaseSetting), Constant.NULL_CODE, dbBaseSetting);
     }
 
     /**
      * 删除数据源数据
+     *
      * @param ids
      * @return
      */
@@ -119,10 +119,10 @@ public class DataSourceController extends BaseController {
     public Result deleteDbBaseSetting(@RequestParam(value = "ids") String ids) {
         List<String> list = StringsUtils.strToList(ids);
         DbBaseSetting dbBaseSetting = getCurrentSetting().getDbBaseSetting();
-        if (Objects.nonNull(dbBaseSetting)){
+        if (Objects.nonNull(dbBaseSetting)) {
             boolean b = StringsUtils.listIsContainsStr(String.valueOf(dbBaseSetting.getId()), list);
-            if (b){
-                return R.error(dbBaseSetting.getDataSourceName()+"正在使用，无法删除");
+            if (b) {
+                return R.error(dbBaseSetting.getDataSourceName() + "正在使用，无法删除");
             }
         }
         boolean del = dbBaseSettingService.removeByIds(list);
@@ -131,6 +131,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 切换数据源数据
+     *
      * @param id
      * @return
      */
@@ -142,14 +143,13 @@ public class DataSourceController extends BaseController {
         if (retire == 0) {
             return R.error("设置失败");
         }
+        setBaseField(dbBaseSettingDto);
         dbBaseSettingDto.setUserId(getSessionUser().getId());
         dbBaseSettingDto.setDataSourceName(dbBaseSettingDto.getDataSourceName());
         dbBaseSettingDto.setApplyStatus(Constant.APPLY_STATUS);
-        dbBaseSettingDto.setUpdateBy(getSessionUser().getUsername());
-        dbBaseSettingDto.setUpdateTime(new Date());
         if (dbBaseSettingService.saveOrUpdate(dbBaseSettingDto)) {
-            setSession(getSessionUser().getId()+Constant.CURRENT_SETTING,new Setting(dbBaseSettingDto,getCurrentSetting().getPackageInfo()));
-            logger.info(dbBaseSettingDto.getDataSourceName()+"已被设置成主要数据源！！！！");
+            setSession(getSessionUser().getId() + Constant.CURRENT_SETTING, new Setting(dbBaseSettingDto, getCurrentSetting().getPackageInfo()));
+            logger.info(dbBaseSettingDto.getDataSourceName() + "已被设置成主要数据源！！！！");
             return R.success("数据源切换成功");
         }
         return R.error("数据源切换失败");
@@ -157,6 +157,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 数据源数据列表
+     *
      * @param dbBaseSetting
      * @return
      */
@@ -166,56 +167,55 @@ public class DataSourceController extends BaseController {
         dbBaseSetting.setUserId(getSessionUser().getId());
         List<DbBaseSetting> dbs = dbBaseSettingService.getDbBaseSettings(dbBaseSetting);
         long total = dbBaseSettingService.getDbBaseSettingCount(dbBaseSetting);
-        return new PageVo(dbs,total);
+        return new PageVo(dbs, total);
     }
 
     /**
      * 保存包
+     *
      * @param aPackageInfo
      * @return
      */
     @ResponseBody
     @RequestMapping("/savePg")
     public Result savePg(PackageInfo aPackageInfo) {
+        setBaseField(aPackageInfo);
         if (Objects.isNull(aPackageInfo.getId())) {
             aPackageInfo.setApplyStatus(0);
-            aPackageInfo.setDeleteFlag(Constant.UNDELETE_STATUS);
-            aPackageInfo.setCreateTime(new Date());
             aPackageInfo.setUserId(getSessionUser().getId());
-            aPackageInfo.setCreateBy(getSessionUser().getUsername());
-        } else {
-            aPackageInfo.setUpdateTime(new Date());
-            aPackageInfo.setUpdateBy(getSessionUser().getUsername());
+            ;
         }
         boolean saveOrUpdate = packageInfoService.saveOrUpdate(aPackageInfo);
-        return R.dataResult(saveOrUpdate,"数据包保存失败","数据包保存成功");
+        return R.dataResult(saveOrUpdate, "数据包保存失败", "数据包保存成功");
     }
 
     /**
      * 删除包
+     *
      * @param ids
      * @return
      */
     @ResponseBody
     @RequestMapping("/deletePg")
     public Result delPg(@RequestParam(value = "ids") String ids) {
-        if (StringUtils.isBlank(ids)){
+        if (StringUtils.isBlank(ids)) {
             return R.error(Constant.NULL_CODE);
         }
         List<String> list = StringsUtils.strToList(ids);
-            PackageInfo packageInfo = getCurrentSetting().getPackageInfo();
-            if (Objects.nonNull(packageInfo)){
-                boolean b = StringsUtils.listIsContainsStr(String.valueOf(packageInfo.getId()), list);
-                if (b){
-                    return R.error(packageInfo.getPackageName()+"正在使用，无法删除");
-                }
+        PackageInfo packageInfo = getCurrentSetting().getPackageInfo();
+        if (Objects.nonNull(packageInfo)) {
+            boolean b = StringsUtils.listIsContainsStr(String.valueOf(packageInfo.getId()), list);
+            if (b) {
+                return R.error(packageInfo.getPackageName() + "正在使用，无法删除");
             }
+        }
         boolean del = packageInfoService.removeByIds(list);
-        return R.dataResult(del,"数据包删除失败","数据包删除成功");
+        return R.dataResult(del, "数据包删除失败", "数据包删除成功");
     }
 
     /**
      * 查询包
+     *
      * @param id
      * @return
      */
@@ -223,11 +223,12 @@ public class DataSourceController extends BaseController {
     @RequestMapping("/getPg")
     public Result getPg(@RequestParam(value = "id") Long id) {
         PackageInfo packageInfo = packageInfoService.getById(id);
-        return R.dataResult(Objects.nonNull(packageInfo),Constant.NULL_CODE,packageInfo);
+        return R.dataResult(Objects.nonNull(packageInfo), Constant.NULL_CODE, packageInfo);
     }
 
     /**
      * 设为应用包
+     *
      * @param id
      * @return
      */
@@ -245,24 +246,25 @@ public class DataSourceController extends BaseController {
         aPackageInfo.setApplyStatus(Constant.APPLY_STATUS);
         boolean update = packageInfoService.saveOrUpdate(aPackageInfo);
         if (update) {
-            setSession(getSessionUser().getId()+Constant.CURRENT_SETTING,new Setting(getCurrentSetting().getDbBaseSetting(),aPackageInfo));
+            setSession(getSessionUser().getId() + Constant.CURRENT_SETTING, new Setting(getCurrentSetting().getDbBaseSetting(), aPackageInfo));
             return R.success("数据包设置应用成功");
         }
         return R.error("数据包设置应用成功");
     }
 
     /**
-     *包列表
+     * 包列表
+     *
      * @param packageInfo
      * @return
      */
     @ResponseBody
     @RequestMapping("/packageList")
-    public PageVo getPgList(PackageInfo packageInfo){
+    public PageVo getPgList(PackageInfo packageInfo) {
         packageInfo.setUserId(getSessionUser().getId());
         List<PackageInfo> packageInfos = packageInfoService.getPackageList(packageInfo);
         int total = packageInfoService.getCount(packageInfo);
-      return new PageVo(packageInfos,total);
+        return new PageVo(packageInfos, total);
     }
 
 }

@@ -164,22 +164,6 @@ public class ColumnEntity{
             this.unique = true;
         }
     }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ColumnEntity that = (ColumnEntity) o;
-        return Objects.equals(name, that.name) && Objects.equals(type, that.type) ;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, length, comment, isKey, auto, type, isNotNull, idValue, defaultValue);
-    }
 
     @Override
     public String toString() {
@@ -195,5 +179,18 @@ public class ColumnEntity{
         sb.append(", defaultValue='").append(defaultValue).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ColumnEntity that = (ColumnEntity) o;
+        return Objects.equals(name, that.name) && Objects.equals(length, that.length) && Objects.equals(comment, that.comment) && Objects.equals(isKey, that.isKey) && Objects.equals(auto, that.auto) && Objects.equals(type, that.type) && Objects.equals(isNotNull, that.isNotNull) && Objects.equals(idValue, that.idValue) && Objects.equals(unique, that.unique) && Objects.equals(defaultValue, that.defaultValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, length, comment, isKey, auto, type, isNotNull, idValue, unique, defaultValue);
     }
 }

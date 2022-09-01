@@ -46,9 +46,13 @@ public class BaseEntity implements Serializable {
     @TableField(value = "delete_flag")
     private Integer deleteFlag;
 
-    @Column(name = "user_ids",comment = "用户id",type = Type.BIGINT)
-    @TableField(value = "user_ids")
-    private Long userIds;
+    @Column(name = "create_ids",comment = "创建用户id",type = Type.BIGINT)
+    @TableField(value = "create_ids")
+    private Long createIds;
+
+    @Column(name = "update_ids",comment = "修改用户id",type = Type.BIGINT)
+    @TableField(value = "update_ids")
+    private Long updateIds;
 
     @TableField(exist = false)
     private Map<String,String> paramMap;
@@ -110,12 +114,20 @@ public class BaseEntity implements Serializable {
         this.paramMap = paramMap;
     }
 
-    public Long getUserIds() {
-        return userIds;
+    public Long getCreateIds() {
+        return createIds;
     }
 
-    public void setUserIds(Long userIds) {
-        this.userIds = userIds;
+    public void setCreateIds(Long createIds) {
+        this.createIds = createIds;
+    }
+
+    public Long getUpdateIds() {
+        return updateIds;
+    }
+
+    public void setUpdateIds(Long updateIds) {
+        this.updateIds = updateIds;
     }
 
     @Override

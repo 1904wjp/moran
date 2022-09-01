@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @Author: XingDaoRong
@@ -39,7 +38,6 @@ public class ColumnsServiceImpl implements ColumnsService {
             }
             list.add(column);
         }
-        System.out.println(list+"lllll");
         return list;
     }
 

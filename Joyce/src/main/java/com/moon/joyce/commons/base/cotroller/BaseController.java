@@ -225,14 +225,15 @@ public class BaseController extends R {
      * @param entity
      */
     public void setBaseField(BaseEntity entity){
-        entity.setDeleteFlag(0);
-        entity.setUserIds(getSessionUserId());
+        entity.setDeleteFlag(Constant.UNDELETE_STATUS);
         if (Objects.isNull(entity.getId())){
             entity.setCreateBy(getSessionUserName());
             entity.setCreateTime(new Date());
+            entity.setCreateIds(getSessionUserId());
         }else {
             entity.setUpdateBy(getSessionUserName());
             entity.setUpdateTime(new Date());
+            entity.setUpdateIds(getSessionUserId());
         }
     }
 

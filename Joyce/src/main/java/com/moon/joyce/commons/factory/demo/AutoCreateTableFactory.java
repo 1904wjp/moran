@@ -79,7 +79,7 @@ public class AutoCreateTableFactory implements TableFactory {
      * @param ps
      * @return
      */
-    public void init(String ps) {
+    private void init(String ps) {
         AutoCreateTableFactory instance = getInstance();
         if (Objects.isNull(map) && Objects.isNull(set) && Objects.isNull(sqls) && Objects.isNull(defMap)) {
             //初始化
@@ -520,12 +520,11 @@ public class AutoCreateTableFactory implements TableFactory {
             if (Objects.isNull(sqlStrArr)) {
                 continue;
             }
-            if (sqlStrArr.length == 1) {
-                sqls.add(sqlStrArr[0]);
-            }
-            if (sqlStrArr.length == 2) {
-                sqls.add(sqlStrArr[0]);
-                sqls.add(sqlStrArr[1]);
+            for (String sql : sqlStrArr) {
+                if (StringUtils.isBlank(sql)){
+                    continue;
+                }
+                sqls.add(sql);
             }
         }
     }
@@ -547,6 +546,12 @@ public class AutoCreateTableFactory implements TableFactory {
                     logger.warn("{}表无存在旧字段，将策略自动转向安全创建",tableEntity.getName());
                     return new String[]{createTableSql(tableEntity, columnEntities)};
                 }
+               /* String[] strings = modifyTable(tableEntity, columnEntities, existColumns);
+                if (Objects.isNull(strings)){
+                    return new String[]{alterTable(tableEntity, columnEntities, existColumns)};
+                }
+                strings[strings.length-1] = alterTable(tableEntity, columnEntities, existColumns);
+                return strings;*/
                 return new String[]{alterTable(tableEntity, columnEntities, existColumns)};
             case "2":
                 return new String[]{createTableSql(tableEntity, columnEntities)};
@@ -599,7 +604,7 @@ public class AutoCreateTableFactory implements TableFactory {
             }
 
             String defVal = column.getDefaultValue();
-            if (!column.getKey() && (!column.getNotNull() || !defVal.equalsIgnoreCase("NULL"))) {
+            if (!column.getKey() && (!column.getNotNull() || !"NULL".equalsIgnoreCase(defVal))) {
                 sb.append(" default ").append(defVal);
             }
 
@@ -686,7 +691,6 @@ public class AutoCreateTableFactory implements TableFactory {
                             .append("'");
                 }
                 sb.append(",");
-
             }
             StringBuilder newSb = new StringBuilder();
             newSb.append(sb.substring(0, sb.length() - 1));
@@ -696,13 +700,87 @@ public class AutoCreateTableFactory implements TableFactory {
     }
 
     /**
+     * 修改属性
+     * @param tableEntity
+     * @param columnEntities
+     * @param existColumns
+     * @return
+     */
+    private String[] modifyTable(TableEntity tableEntity, List<ColumnEntity> columnEntities, List<com.moon.joyce.example.functionality.entity.Column> existColumns){
+        List<String> list = new ArrayList<>();
+        List<ColumnEntity> cbfd = getCommonButFileDifferentList(columnEntities, existColumns);
+        if (!cbfd.isEmpty()) {
+           /* for (ColumnEntity columnEntity : cbfd) {
+                for (ColumnEntity entity : columnEntities) {
+                    if (columnEntity.getAuto() && columnEntity.getKey() && entity.getKey() && entity.getAuto() && entity.getName().equals(columnEntity.getName())){
+                        String sql1 = "alter table `"+tableEntity.getName()+"` MODIFY COLUMN "+entity.getName() +" "+columnEntity.getType()+"("+columnEntity.getLength()+") NOT NULL FIRST";
+                        list.add(sql1);
+                        String sql2 = "ALTER  TABLE  `"+tableEntity.getName()+"`  DROP  PRIMARY  KEY";
+                        list.add(sql2);
+                    }
+                }
+            }*/
+            for (int i = 0; i < cbfd.size(); i++) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("alter table ").append(tableEntity.getName()).append(" modify ");
+                if (Objects.isNull(cbfd.get(i))) {
+                    continue;
+                }
+                if (Objects.isNull(cbfd.get(i).getName())) {
+                    continue;
+                }
+                ColumnEntity column = cbfd.get(i);
+                if (Objects.isNull(column)) {
+                    continue;
+                }
+                sb.append("`")
+                        .append(StringsUtils.camelToUnderline(column.getName()).toLowerCase())
+                        .append("` ")
+                        .append(column.getType())
+                        .append("(")
+                        .append(column.getLength())
+                        .append(") ");
+                if (column.getNotNull()) {
+                    sb.append(" not null ");
+                }
+
+                if (column.getUnique()) {
+                    sb.append(" unique ");
+                }
+
+                String defVal = column.getDefaultValue();
+                if (!column.getKey() && (!column.getNotNull() || !defVal.equalsIgnoreCase("NULL"))) {
+                    sb.append(" default ").append(defVal);
+                }
+
+               /* if (column.getAuto()) {
+                    sb.append(" auto_increment ");
+                }
+
+                if (column.getKey()) {
+                    sb.append(" primary key ");
+                }*/
+
+                if (StringUtils.isNoneBlank(column.getComment())) {
+                    sb.append(" comment '")
+                            .append(column.getComment())
+                            .append("'");
+                }
+                list.add(sb.toString());
+            }
+            String[] strs = list.toArray(new String[list.size()+1]);
+            return  strs;
+        }
+        return null;
+    }
+
+
+    /**
      * 删除表
      * @param tableName
      * @return
      */
     private String deleteTable(String tableName) {
-        //todo
-        // 导出文件，待实现
         return "DROP TABLE IF EXISTS `" + tableName + "`";
     }
 
@@ -726,13 +804,36 @@ public class AutoCreateTableFactory implements TableFactory {
         for (ColumnEntity columnEntity : list) {
             boolean rs = StringsUtils.listIsContainsStr(StringsUtils.camelToUnderline(columnEntity.getName()).toLowerCase(), strs);
             if (!rs) {
-                logger.info("----------->{},{}",StringsUtils.camelToUnderline(columnEntity.getName()).toLowerCase(),strs);
                 columnEntities.add(columnEntity);
             }
         }
         return columnEntities;
     }
-
+    /**
+     * 检测是否有字段需要修改属性
+     * @param columnEntities
+     * @param list
+     * @return
+     */
+    private List<ColumnEntity> getCommonButFileDifferentList(List<ColumnEntity> columnEntities,List<com.moon.joyce.example.functionality.entity.Column> list){
+        List<ColumnEntity> columnEntityList = new ArrayList<>();
+        for (com.moon.joyce.example.functionality.entity.Column entity : list) {
+            ColumnEntity columnEntity = new ColumnEntity();
+            columnEntity.columnToColumnEntity(entity);
+            columnEntityList.add(columnEntity);
+        }
+        List<ColumnEntity> entities = new ArrayList<>();
+        for (ColumnEntity columnEntity : columnEntityList) {
+            for (ColumnEntity entity : columnEntities) {
+                if (entity.getName().equals(columnEntity.getName())){
+                    if (!columnEntity.equals(entity)){
+                        entities.add(entity);
+                    }
+                }
+            }
+        }
+        return entities;
+    }
     /**
      * 获取执行sql集合
      * @param maps

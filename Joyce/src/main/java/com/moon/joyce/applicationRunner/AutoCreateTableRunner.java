@@ -38,7 +38,7 @@ public class AutoCreateTableRunner implements ApplicationRunner {
         logger.info("-----------{}",dataBaseNames.toString());
         try {
             AutoCreateTableFactory factory = AutoCreateTableFactory.getInstance();
-            factory.init(ps);
+            factory.initData(ps);
             Map<String, Set<String>> tableSet = factory.getTableSet();
             Map<String, List<Column>> map = columnsService.getTableInfoBySet(tableSet.get(TableStrategy.ADD.getCode().toString()), dbName);
             Set<String> forceSet = tableSet.get(TableStrategy.FORCE.getCode().toString());
