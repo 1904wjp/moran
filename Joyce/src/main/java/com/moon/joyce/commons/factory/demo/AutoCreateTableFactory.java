@@ -235,17 +235,18 @@ public class AutoCreateTableFactory implements TableFactory {
                             list.addAll(tableEntityList);
                         }
                         List<ColumnEntity> newList = new ArrayList<>();
-                        for (ColumnEntity columnEntity : list) {
-                            if (Objects.isNull(columnEntity)) {
-                                continue;
+                        if (!list.isEmpty()){
+                            for (ColumnEntity columnEntity : list) {
+                                if (Objects.isNull(columnEntity)) {
+                                    continue;
+                                }
+                                ColumnEntity newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
+                                newList.add(newColumnEntity);
                             }
-                            ColumnEntity newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
-                            newList.add(newColumnEntity);
                         }
                         if (Objects.nonNull(checkRepeatColumnEntity(newList))) {
                             throw new JoyceException("存在如下相同属性，无法创建:" + checkRepeatColumnEntity(newList));
                         }
-                        logger.info("1423:{}",tableEntity.toString());
                         map.put(tableEntity, newList);
                     }
                 }
@@ -465,13 +466,15 @@ public class AutoCreateTableFactory implements TableFactory {
      * @return
      */
     private boolean isHaveIds(Field[] fields) {
+        boolean flag = false;
         for (Field field : fields) {
             Ids ids = field.getAnnotation(Ids.class);
             if (Objects.nonNull(ids)) {
-                return true;
+                flag = true;
+                break;
             }
         }
-        return false;
+        return flag;
     }
 
     /**

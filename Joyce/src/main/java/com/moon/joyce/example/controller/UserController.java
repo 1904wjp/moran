@@ -58,16 +58,17 @@ public class UserController extends BaseController {
      */
     private final String  pagePrefix = "user/";
 
-
     /**
      * url的路径前缀
      */
     private final String urlPrefix = "/example/user/";
+
     /**
      * 文件服务
      */
     @Autowired
     private FileService fileService;
+
     /**
      * 文件路径
      */
@@ -79,7 +80,6 @@ public class UserController extends BaseController {
     @Autowired
     private UserControllerDetailService userServiceControllerDetailService;
 
-    private ReentrantLock lock = new ReentrantLock();
     /*****************************************************************************************************************************************************************/
     /***********页面映射****************/
 
@@ -173,10 +173,8 @@ public class UserController extends BaseController {
         return pagePrefix+"websocketPage";
     }
 
-
     /**************************************************************************************************************************************************************************************************************/
     /**********逻辑判断**********/
-
 
     /**
      * 好友
@@ -203,7 +201,6 @@ public class UserController extends BaseController {
             }
         }
         List<User> allFriends1 = userService.getAllFriends(getSessionUserId());
-
         List<Long> collect = new ArrayList<>();
         if (Objects.nonNull(allFriends1)){
             collect =allFriends1.stream().map(User::getId).collect(Collectors.toList());
@@ -225,7 +222,6 @@ public class UserController extends BaseController {
                userChartVos.add(userChartVo);
            }
        }
-
         if (StringUtils.isNoneBlank(nickname)){
             userChartVos = userChartVos.stream().filter(x->x.getNickname().equals(nickname)).collect(Collectors.toList());
         }
@@ -254,7 +250,6 @@ public class UserController extends BaseController {
         chatRecord.setBNickname(bUser.getNickname());
         chatRecord.setUserAName(getSessionUserName());
         chatRecord.setUserBName(bUser.getUsername());
-
         Object obj = getRedisValueOperation().get(addChatRecords);
         List<ChatRecord> chatRecords =  new ArrayList<>();
         if (Objects.isNull(obj) || !redisTemplate.hasKey(addChatRecords)){
@@ -278,7 +273,6 @@ public class UserController extends BaseController {
         return dataResult(true,"发送失败","发送成功");
     }
 
-
     /**
      * user数据保存方法
      * @param user
@@ -288,6 +282,7 @@ public class UserController extends BaseController {
     @Transactional
     @RequestMapping("/doSaveUser")
     public Result saveUser(User user){
+        setBaseField(user);
         //创建保存数据结果
         boolean result = false;
         //密码加密
@@ -295,7 +290,6 @@ public class UserController extends BaseController {
             user.setPassword(MD5Utils.getMD5Str(user.getPassword()));
         }
         if (Objects.nonNull(user.getId())){
-            user.setUpdateTime(new Date());
             result = userService.saveOrUpdate(user);
         }
         //注册
@@ -304,14 +298,11 @@ public class UserController extends BaseController {
             if (!checkRegistResult.getRs()){
                 return checkRegistResult;
             }
-            user.setStatus(Constant.UNDELETE_STATUS);
             user.setStatus(Constant.USER_TYPE_VAILD_STATUS);
-            user.setDeleteFlag(Constant.UNDELETE_STATUS);
             //发送邮件
            // userServiceControllerDetailService.getEmailAddress(user,appUrl);
             user.setFileUrl(Constant.FILE_DEFAULT_NAME);
-            user.setCreateTime(new Date());
-            result =  userService.saveOrUpdate(user);
+            result = userService.saveOrUpdate(user);
         }
         //结果处理
         if (result){

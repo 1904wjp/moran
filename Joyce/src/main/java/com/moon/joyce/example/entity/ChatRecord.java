@@ -9,6 +9,7 @@ import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
  * @Date: 2022/1/4
  * 聊天记录
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -57,7 +57,7 @@ public class User extends Person {
      */
     @TableField(value = "user_type_id")
   /*  @Column(name="user_type_id" ,columnDefinition = "varchar(32) COMMENT '角色id'")*/
-    private Long UserTypeId;
+    private Long userTypeId;
     /**
      * 昵称
      */
@@ -119,11 +119,11 @@ public class User extends Person {
     }
 
     public Long getUserTypeId() {
-        return UserTypeId;
+        return this.userTypeId;
     }
 
     public void setUserTypeId(Long userTypeId) {
-        UserTypeId = userTypeId;
+        this.userTypeId = userTypeId;
     }
 
     public String getNickname() {
