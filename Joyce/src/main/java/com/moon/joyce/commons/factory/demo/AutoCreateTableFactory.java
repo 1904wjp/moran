@@ -54,8 +54,7 @@ public class AutoCreateTableFactory implements TableFactory {
     private static AutoCreateTableFactory autoCreateTableFactory = null;
     //配置信息的容器
     private static Map<String, ColumnEntity> defMap = null;
-    @Value("${auto.source.delPath}")
-    private String delTablePath;
+
     /**
      * 获取实例
      * @return
