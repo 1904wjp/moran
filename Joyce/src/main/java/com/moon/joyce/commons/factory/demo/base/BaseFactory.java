@@ -12,6 +12,7 @@ import java.util.Set;
  * @describe:
  */
 public class BaseFactory {
+
     protected Object[] typeName = {
     "byte","Byte",0,
     "short","Short",0,
@@ -22,14 +23,14 @@ public class BaseFactory {
     "boolean","Boolean",false,
     "char","Character",0};
 
-    private static int index = 1;
+    private static final int index = 1;
+
     /**
      * 获取类型的初始值
      * @param type
      * @return
      */
     protected Object getTypeValue(String type){
-
         Object o = null;
         for (int i = 0; i < typeName.length; i++) {
             if ((i+index)%3 == 0){
