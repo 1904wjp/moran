@@ -1,6 +1,8 @@
 package com.moon.joyce.example.controller;
 
 
+import com.moon.joyce.commons.annotation.url.MethodUrl;
+import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.R;
@@ -30,6 +32,7 @@ import java.util.Objects;
  * @since 2021-09-25
  */
 @Controller
+@UriPri(name = "项目接口路径",pri = "/example/project")
 @RequestMapping("/example/project")
 public class ProjectController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -59,6 +62,7 @@ public class ProjectController extends BaseController {
      * @return
      */
     @ResponseBody
+    @MethodUrl(name = "获取全部项目信息路径",url = "/getList")
     @RequestMapping("/getList")
     public PageVo getProjects(Project project){
         List<Project> list = projectService.getList(project);

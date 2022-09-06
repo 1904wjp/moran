@@ -4,6 +4,7 @@ import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.NotExist;
 import com.moon.joyce.commons.annotation.auto.Table;
+import com.moon.joyce.commons.factory.demo.base.BaseFactory;
 import com.moon.joyce.commons.factory.entity.ColumnEntity;
 import com.moon.joyce.commons.factory.entity.TableEntity;
 import com.moon.joyce.commons.factory.enums.TableStrategy;
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
  * @date: 2022/05/13-- 21:48
  * @describe: 自动创建表工厂_扫描所有相关类
  */
-public class AutoCreateTableFactory implements TableFactory {
+public class AutoCreateTableFactory extends BaseFactory implements TableFactory {
 
     //日志
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

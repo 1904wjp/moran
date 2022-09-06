@@ -2,13 +2,17 @@ package com.moon.joyce.commons.factory.demo;
 
 import com.moon.joyce.commons.annotation.url.MethodUrl;
 import com.moon.joyce.commons.annotation.url.UriPri;
+import com.moon.joyce.commons.factory.demo.base.BaseFactory;
 import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
 import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +24,7 @@ import java.util.stream.Collectors;
  * @date: 2022/08/29-- 15:14
  * @describe:
  */
-public class UrlFactory {
+public class UrlFactory extends BaseFactory {
     private static Map<MethodUrlEntity, UrlPriEntity> map;
     private static UrlFactory urlFactory;
 
@@ -102,10 +106,25 @@ public class UrlFactory {
                     Method[] method = getMethod(loadClass);
                     for (Method md : method) {
                         MethodUrl methodUrl = md.getAnnotation(MethodUrl.class);
+                        StringBuilder  params = new StringBuilder();
+                        String p = "";
                         if (Objects.isNull(methodUrl)) {
                             continue;
                         }
-                        MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(), methodUrl.params());
+                        Parameter[] parameters = getParameters(md);
+                        for (Parameter parameter : parameters) {
+                            Class<?> type = parameter.getType();
+                            boolean rs = isSimpleClass(type);
+                            if (rs){
+                                params.append("\"").append(parameter.getName()).append("\"=").append(getTypeValue(type.getTypeName())).append(",");
+                            }else if (type.isArray()){
+                                params.append("\"").append(parameter.getName()).append("\"=").append("[],");
+                            }else {
+                                params.append("\"").append(parameter.getName()).append(":{").append(getSelfClassValue(type)).append("},");
+                            }
+                        }
+                        p = params.substring(0,params.length());
+                        MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(),p);
                         map.put(methodUrlEntity, urlPriEntity);
                     }
                 } else {
@@ -115,10 +134,44 @@ public class UrlFactory {
         }
     }
 
-    private Method[] getMethod(Class<?> loadClass) {
-        return loadClass.getDeclaredMethods();
+    private Parameter[] getParameters(Method md) {
+        return md.getParameters();
     }
 
+    /**
+     * 根据类型获取初始化字段
+     * @param type
+     * @return
+     */
+    private String getInitValue(String name,String type){
+        return "\"" + name + "\"" + "=" + getTypeValue(type) + ",";
+    }
+
+    private boolean isSimpleClass(Type type){
+        boolean flag = false;
+        for (String allType : getAllTypes()) {
+            if (type.getTypeName().equals(allType)){
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    }
+
+    private String getSelfClassValue(Type type) {
+        Class<?> clazz = type.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+        StringBuilder sb = new StringBuilder("{");
+        for (Field field : fields) {
+            String name = field.getName();
+            String tp = field.getType().getSimpleName();
+            if (clazz.isArray()){
+                return "\""+name+"\" = []";
+            }
+            sb.append(getInitValue(name,tp));
+        }
+        return sb.substring(0,sb.length())+"}";
+    }
     /**
      * 检测里面是否有子文件
      * @param packages
