@@ -771,8 +771,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
                 }
                 list.add(sb.toString());
             }
-            String[] strs = list.toArray(new String[list.size()+1]);
-            return  strs;
+            return list.toArray(new String[list.size()+1]);
         }
         return null;
     }
