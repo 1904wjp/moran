@@ -99,7 +99,7 @@ public class BaseFactory {
     protected void checkIsParentFile(String[] packages, Class<?> clazz) {
         Set<String> set = Arrays.stream(packages).collect(Collectors.toSet());
         if (set.contains(null) || set.contains("")) {
-            throw new NullPointerException("配置包不可含有null或者''");
+            throw new JoyceException("配置包不可含有null或者''");
         }
         if (packages.length < 2) {
             return;
