@@ -4,7 +4,6 @@ package com.moon.joyce.commons.utils;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 import com.moon.joyce.example.functionality.entity.PageComponent;
-import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -31,7 +30,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -1105,7 +1103,7 @@ public class FileUtils implements Serializable {
         BufferedInputStream is = null;
         BufferedOutputStream dest = null;
         ZipFile zipfile = new ZipFile(filePath);
-        Enumeration dir = zipfile.entries();
+        Enumeration<? extends ZipEntry> dir = zipfile.entries();
         while (dir.hasMoreElements()) {
             entry = (ZipEntry) dir.nextElement();
             if (entry.isDirectory()) {
@@ -1116,7 +1114,7 @@ public class FileUtils implements Serializable {
             }
         }
 
-        Enumeration e = zipfile.entries();
+        Enumeration<? extends ZipEntry> e = zipfile.entries();
         while (e.hasMoreElements()) {
             entry = (ZipEntry) e.nextElement();
             if (entry.isDirectory()) {
