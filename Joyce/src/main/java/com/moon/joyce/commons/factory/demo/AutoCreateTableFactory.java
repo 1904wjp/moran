@@ -891,6 +891,13 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
         logger.info("删除的旧文件sql文件:{}",filePathName);
     }
 
+    /**
+     * map中的数据转成sql文件
+     * @param map
+     * @param kv
+     * @param columnEntities
+     * @return
+     */
     private String mapToStr(Map<String,Object> map,String kv, List<ColumnEntity> columnEntities){
         StringBuilder builder = new StringBuilder();
         int index = 0;
