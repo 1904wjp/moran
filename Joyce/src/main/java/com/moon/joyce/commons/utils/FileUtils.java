@@ -1195,6 +1195,7 @@ public class FileUtils implements Serializable {
         }
         br.close();
         exec.waitFor();
+        System.out.println("py end");
         return sum.toString();
     }
 
@@ -1264,7 +1265,6 @@ public class FileUtils implements Serializable {
                 args[i] = execArgs.getArgs()[i - 2];
             }
         }
-        System.out.println("py end");
         return args;
     }
 }
