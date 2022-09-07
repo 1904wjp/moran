@@ -56,7 +56,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 文件上传工具类
-     *
      * @param file
      * @return
      */
@@ -88,7 +87,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 文件上传工具类
-     *
      * @param file
      * @return
      */
@@ -125,7 +123,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 上传图片
-     *
      * @param files
      * @param sysPath
      * @param access
@@ -151,7 +148,6 @@ public class FileUtils implements Serializable {
 
     /**
      * xml配置的读取
-     *
      * @param filePathName
      * @return
      */
@@ -213,7 +209,6 @@ public class FileUtils implements Serializable {
 
     /**
      * xml配置的初始化和更改
-     *
      * @param filePathName
      * @return
      */
@@ -234,7 +229,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 创建xml节点工厂
-     *
      * @param map
      * @return
      */
@@ -269,7 +263,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 设置属性值
-     *
      * @param element
      * @param elValue
      * @param name
@@ -285,7 +278,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 写入文件
-     *
      * @param path
      * @param text
      */
@@ -307,7 +299,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 写入文件
-     *
      * @param path
      * @param text
      */
@@ -349,7 +340,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 文件压缩
-     *
      * @param srcFile 目录或者单个文件
      * @param zipFile 压缩后的ZIP文件
      */
@@ -417,7 +407,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 删除文件夹下所有的文件，不删除文件夹
-     *
      * @param path
      * @return
      */
@@ -456,7 +445,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 检测文件是否存在
-     *
      * @param filePath
      * @return
      */
@@ -471,7 +459,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 导出
-     *
      * @param response   响应
      * @param fileName   文件名
      * @param columnList 每列的标题名
@@ -537,7 +524,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 导出
-     *
      * @param response   响应
      * @param fileName   文件名
      * @param columnList 每列的标题名
@@ -604,7 +590,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 判断Excel的版本,获取Workbook
-     *
      * @param file
      * @return
      * @throws IOException
@@ -754,7 +739,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 合并临时文件
-     *
      * @param fileUploadTempDir
      * @param access
      * @param uuid
@@ -820,7 +804,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 截取视频文件某一帧
-     *
      * @param videoRealPath
      * @param pictureRealPath
      * @return
@@ -859,7 +842,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 通过目录获取文件集合
-     *
      * @param path
      * @return
      */
@@ -885,7 +867,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 创建文件
-     *
      * @param path
      * @param bool 是否使用懒汉模式
      * @return
@@ -909,7 +890,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 获取文件全路径名称
-     *
      * @param filePath
      * @return
      */
@@ -933,7 +913,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 创建文件
-     *
      * @param path
      * @return
      */
@@ -943,7 +922,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 创建新文件
-     *
      * @param path
      */
     public static void createNewFile(String path, boolean isDir) {
@@ -953,7 +931,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 创建新文件
-     *
      * @param path
      * @param bool
      */
@@ -964,7 +941,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 创建新文件
-     *
      * @param file
      */
     public static void createNewFile(File file, boolean isDir) {
@@ -983,7 +959,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 更新文件
-     *
      * @param filePath
      * @param flag
      * @return
@@ -994,7 +969,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 更新文件
-     *
      * @param file
      * @param flag
      * @return
@@ -1010,7 +984,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 删除文件
-     *
      * @param paths
      * @return
      */
@@ -1030,7 +1003,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 删除文件
-     *
      * @param path
      * @return
      */
@@ -1041,7 +1013,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 删除文件
-     *
      * @param file
      * @return
      */
@@ -1054,7 +1025,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 规定时间类检测文件是否完成
-     *
      * @param path
      * @param time
      * @return
@@ -1066,7 +1036,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 规定时间类检测文件是否完成
-     *
      * @param file
      * @param time
      * @return
@@ -1091,7 +1060,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 解压zip文件
-     *
      * @param filePath
      * @param zipDir
      * @return
@@ -1139,7 +1107,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 执行py文件
-     *
      * @param execArgs
      * @return
      * @throws IOException
@@ -1177,7 +1144,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 执行py文件
-     *
      * @param args
      * @return
      * @throws IOException
@@ -1245,7 +1211,6 @@ public class FileUtils implements Serializable {
 
     /**
      * 转化成字符数组
-     *
      * @param execArgs
      * @return
      */
