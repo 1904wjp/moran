@@ -78,7 +78,7 @@ public class BaseFactory {
      * 检测里面是否有子文件
      * @param packages
      */
-    protected void checkIsParentFile(String[] packages, Class clazz) {
+    protected void checkIsParentFile(String[] packages, Class<?> clazz) {
         Set<String> set = Arrays.stream(packages).collect(Collectors.toSet());
         if (set.contains(null) || set.contains("")) {
             throw new NullPointerException("配置包不可含有null或者''");
@@ -102,13 +102,13 @@ public class BaseFactory {
      * @param packagePath
      * @return
      */
-    protected File getFile(String packagePath, Class clazz) {
+    protected File getFile(String packagePath, Class<?> clazz) {
         ClassLoader classLoader = getClassLoader(clazz);
         String rePackageName = packagePath.replace(".", "/");
         URL resource = classLoader.getResource(rePackageName);
-        return new File(resource.getFile());
+        return new File(resource != null ? resource.getFile() : null);
     }
-    protected ClassLoader getClassLoader(Class clazz) {
+    protected ClassLoader getClassLoader(Class<?> clazz) {
         return clazz.getClassLoader();
     }
 
