@@ -1,9 +1,16 @@
 package com.moon.joyce.commons.factory.demo.base;
 
+import com.moon.joyce.commons.factory.demo.UrlFactory;
+import com.moon.joyce.example.functionality.entity.JoyceException;
+
+import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author: Joyce
@@ -12,7 +19,7 @@ import java.util.Set;
  * @describe:
  */
 public class BaseFactory {
-
+    //类型信息
     protected Object[] typeName = {
     "byte","Byte",0,
     "short","Short",0,
@@ -22,8 +29,8 @@ public class BaseFactory {
     "double","Double",0.0,
     "boolean","Boolean",false,
     "char","Character",0};
-
-    private static final int index = 1;
+    //下标基准
+    private static final int INDEX = 1;
 
     /**
      * 获取类型的初始值
@@ -33,7 +40,7 @@ public class BaseFactory {
     protected Object getTypeValue(String type){
         Object o = null;
         for (int i = 0; i < typeName.length; i++) {
-            if ((i+index)%3 == 0){
+            if ((i+ INDEX)%3 == 0){
                 if (type.contains(String.valueOf(typeName[i-1])) || type.contains(String.valueOf(typeName[i-2]))){
                     o = typeName[i];
                     break;
@@ -50,7 +57,7 @@ public class BaseFactory {
     protected Set<String> getAllTypes(){
         HashSet<String> set = new HashSet<>();
         for (int i = 0; i < typeName.length; i++) {
-            if ((i+index)%3 == 0){
+            if ((i+ INDEX)%3 == 0){
                 continue;
             }
             set.add(typeName[i].toString());
@@ -65,6 +72,44 @@ public class BaseFactory {
 
     protected Type[] getType(Method md){
         return md.getGenericParameterTypes();
+    }
+
+    /**
+     * 检测里面是否有子文件
+     * @param packages
+     */
+    protected void checkIsParentFile(String[] packages, Class clazz) {
+        Set<String> set = Arrays.stream(packages).collect(Collectors.toSet());
+        if (set.contains(null) || set.contains("")) {
+            throw new NullPointerException("配置包不可含有null或者''");
+        }
+        if (packages.length < 2) {
+            return;
+        }
+        for (int i = 0; i < packages.length; i++) {
+            File f1 = getFile(packages[i],clazz);
+            for (int j = i + 1; j < packages.length; j++) {
+                File f2 = getFile(packages[j],clazz);
+                if (f1.equals(f2.getParentFile()) || f2.equals(f1.getParentFile())) {
+                    throw new JoyceException(packages[i] + "与" + packages[j] + "是相互包含的关系，必须选择一个");
+                }
+            }
+        }
+    }
+
+    /**
+     * 根据路径获取对应文件
+     * @param packagePath
+     * @return
+     */
+    protected File getFile(String packagePath, Class clazz) {
+        ClassLoader classLoader = getClassLoader(clazz);
+        String rePackageName = packagePath.replace(".", "/");
+        URL resource = classLoader.getResource(rePackageName);
+        return new File(resource.getFile());
+    }
+    protected ClassLoader getClassLoader(Class clazz) {
+        return clazz.getClassLoader();
     }
 
 }

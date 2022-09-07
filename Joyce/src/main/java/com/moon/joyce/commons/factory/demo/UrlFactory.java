@@ -67,15 +67,15 @@ public class UrlFactory extends BaseFactory {
             packages = new String[]{packagePath};
         }
         //检测文件是否有包含关系
-        checkIsParentFile(packages);
+        checkIsParentFile(packages,this.getClass());
         for (String aPackage : packages) {
             scanner(aPackage);
         }
     }
 
     private void scanner(String aPackage) {
-        File dir = getFile(aPackage);
-        ClassLoader classLoader = getClassLoader();
+        File dir = getFile(aPackage,this.getClass());
+        ClassLoader classLoader = getClassLoader(this.getClass());
         try {
             fillMap(dir, classLoader);
         } catch (ClassNotFoundException e) {
@@ -172,43 +172,7 @@ public class UrlFactory extends BaseFactory {
         }
         return sb.substring(0,sb.length())+"}";
     }
-    /**
-     * 检测里面是否有子文件
-     * @param packages
-     */
-    private void checkIsParentFile(String[] packages) {
-        Set<String> set = Arrays.stream(packages).collect(Collectors.toSet());
-        if (set.contains(null) || set.contains("")) {
-            throw new NullPointerException("配置包不可含有null或者''");
-        }
-        if (packages.length < 2) {
-            return;
-        }
-        for (int i = 0; i < packages.length; i++) {
-            File f1 = getFile(packages[i]);
-            for (int j = i + 1; j < packages.length; j++) {
-                File f2 = getFile(packages[j]);
-                if (f1.equals(f2.getParentFile()) || f2.equals(f1.getParentFile())) {
-                    throw new JoyceException(packages[i] + "与" + packages[j] + "是相互包含的关系，必须选择一个");
-                }
-            }
-        }
-    }
 
-    /**
-     * 根据路径获取对应文件
-     * @param packagePath
-     * @return
-     */
-    private File getFile(String packagePath) {
-        ClassLoader classLoader = getClassLoader();
-        String rePackageName = packagePath.replace(".", "/");
-        URL resource = classLoader.getResource(rePackageName);
-        return new File(resource.getFile());
-    }
 
-    private ClassLoader getClassLoader() {
-        return UrlFactory.class.getClassLoader();
-    }
 
 }
