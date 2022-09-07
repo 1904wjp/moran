@@ -1,10 +1,10 @@
 package com.moon.joyce.commons.factory.demo.base;
 
-import com.moon.joyce.commons.factory.demo.UrlFactory;
 import com.moon.joyce.example.functionality.entity.JoyceException;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Arrays;
@@ -65,13 +65,31 @@ public class BaseFactory {
         return set;
     }
 
-
+    /**
+     * 获取类方法
+     * @param loadClass
+     * @return
+     */
     protected Method[] getMethod(Class<?> loadClass) {
         return loadClass.getDeclaredMethods();
     }
 
+    /**
+     * 获取方法参数类型
+     * @param md
+     * @return
+     */
     protected Type[] getType(Method md){
         return md.getGenericParameterTypes();
+    }
+
+    /**
+     * 获取方法参数
+     * @param md
+     * @return
+     */
+    protected Parameter[] getParams(Method md){
+        return md.getParameters();
     }
 
     /**
@@ -108,6 +126,12 @@ public class BaseFactory {
         URL resource = classLoader.getResource(rePackageName);
         return new File(resource != null ? resource.getFile() : null);
     }
+
+    /**
+     * 获取类加载
+     * @param clazz
+     * @return
+     */
     protected ClassLoader getClassLoader(Class<?> clazz) {
         return clazz.getClassLoader();
     }
