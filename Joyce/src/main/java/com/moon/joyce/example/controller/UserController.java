@@ -371,6 +371,10 @@ public class UserController extends BaseController {
            /* if (sessionUsers.contains(dbUser)){
                 return error("用户已存在");
             }*/
+            boolean rs = fileService.writeJoyceConfig(user.getUsername(), null, false);
+            if (!rs){
+                return error("初始化用户文件失败");
+            }
             //设置当前登录人
             setSession(Constant.SESSION_USER,dbUser);
             //设置当前在线集合
@@ -382,10 +386,6 @@ public class UserController extends BaseController {
                     logger.info(username+"======>设置装配中");
                     setSession(getSessionUser().getId()+Constant.CURRENT_SETTING,currentSetting);
                 }
-            }
-            boolean rs = fileService.writeJoyceConfig(user.getUsername(), null, false);
-            if (!rs){
-                return error("初始化用户文件失败");
             }
             logger.info(username+"======>登录成功");
             setSession("index",0);
