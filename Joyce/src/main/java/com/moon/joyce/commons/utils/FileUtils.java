@@ -963,7 +963,7 @@ public class FileUtils implements Serializable {
      * @param flag
      * @return
      */
-    public static File updateFile(String filePath, boolean flag) {
+    public static boolean updateFile(String filePath, boolean flag) {
         return updateFile(createFile(filePath), flag);
     }
 
@@ -973,13 +973,19 @@ public class FileUtils implements Serializable {
      * @param flag
      * @return
      */
-    public static File updateFile(File file, boolean flag) {
+    public static boolean updateFile(File file, boolean flag) {
         String path = file.getPath();
         if (flag) {
-            deleteFile(file);
-            return createFile(path);
+            try {
+                deleteFile(file);
+                createNewFile(path,file.isDirectory());
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
-        return file;
+        return false;
     }
 
     /**

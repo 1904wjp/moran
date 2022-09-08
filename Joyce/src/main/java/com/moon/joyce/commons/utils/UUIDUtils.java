@@ -15,6 +15,7 @@ public class UUIDUtils implements Serializable {
     private UUIDUtils() throws JoyceException {
         throw JoyceExceptionUtils.exception("工具类无法实例化");
     }
+    private final static int DEF_LEN = 8;
     /**
      * 获得一个纯数字字母的字符串
      * @return
@@ -37,7 +38,7 @@ public class UUIDUtils implements Serializable {
      * @return
      */
     public static String getUUIDName(){
-        return getUUID(8);
+        return getUUID(DEF_LEN);
     }
 
 }
