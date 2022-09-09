@@ -1,7 +1,5 @@
 package com.moon.joyce.example.functionality.entity;
 
-import com.moon.joyce.commons.annotation.auto.Table;
-import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
