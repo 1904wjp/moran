@@ -68,9 +68,9 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
                 map.put(siteList.get(i),idList.get(i));
             }
             for (Map.Entry<String, String> entry : map.entrySet()) {
-                for (int i = 0; i < sources.size(); i++) {
-                    if (entry.getValue().equals(sources.get(i).getId().toString())){
-                        sourceMap.put(entry.getKey(),sources.get(i));
+                for (Source source : sources) {
+                    if (entry.getValue().equals(source.getId().toString())) {
+                        sourceMap.put(entry.getKey(), source);
                     }
                 }
             }
