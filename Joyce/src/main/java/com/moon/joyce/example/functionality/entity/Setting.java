@@ -25,14 +25,14 @@ public class Setting implements Serializable {
     /**
      * 其余的配置
      */
-    private Map<String,Object> map;
+    private Map map;
     public Setting() {
     }
     public Setting(DbBaseSetting dbBaseSetting, PackageInfo packageInfo) {
         this.dbBaseSetting = dbBaseSetting;
         this.packageInfo = packageInfo;
     }
-    public Setting(DbBaseSetting dbBaseSetting, PackageInfo packageInfo,Map map) {
+    public Setting(DbBaseSetting dbBaseSetting, PackageInfo packageInfo,Map<String,Object> map) {
         this.dbBaseSetting = dbBaseSetting;
         this.packageInfo = packageInfo;
         this.map = map;
