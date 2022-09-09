@@ -47,7 +47,6 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
 
     @Override
     public Album analyAlbumConfig(Album album) {
-
         Map<String, String> map = new HashMap<>();
         Map<String, Source> sourceMap = new HashMap<>();
         if (StringUtils.isNoneBlank(album.getSourceConfig())){
