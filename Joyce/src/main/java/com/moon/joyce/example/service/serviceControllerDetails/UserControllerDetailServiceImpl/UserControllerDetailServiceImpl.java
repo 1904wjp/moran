@@ -122,7 +122,8 @@ public class UserControllerDetailServiceImpl implements UserControllerDetailServ
             return R.error(Constant.INACTIVE_CODE);
         }
         //通过状态
-        if (user.getStatus().equals(Constant.USER_TYPE_VAILD_STATUS)||user.getStatus().equals(Constant.START_STATUS)) {
+        if (user.getStatus().equals(Constant.USER_TYPE_VAILD_STATUS)
+                ||user.getStatus().equals(Constant.START_STATUS)) {
             return R.success();}
         return R.error();
     }
