@@ -177,8 +177,12 @@ public class BaseController extends R {
     //关闭数据源
     public void shutdownDatasource(){
         if (Objects.nonNull(getCurrentSetting())){
-                logger.info("数据源关闭成功");
-            dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.REMOVE_DATASOURCE);
+            try {
+                dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.REMOVE_DATASOURCE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            logger.info("数据源关闭成功");
             return;
         }
          logger.info("数据源关闭失败");
@@ -190,14 +194,13 @@ public class BaseController extends R {
                  logger.info("当前为默认系统数据源,使用此方法接口结束之前需要使用‘shutdownDatasource()’方法结束，否则会出现数据源异常");
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
+                    dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.CREATE_DATASOURCE);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                dbBaseSettingService.switchDataSource(getCurrentSetting().getDbBaseSetting(), Constant.CREATE_DATASOURCE);
-                return;
+                logger.info("数据源开启成功,当前数据源:{}" , Objects.requireNonNull(getCurrentSetting()).getDbBaseSetting().getDataSourceName());
             }
         }
-        logger.info("当前数据源:" + Objects.requireNonNull(getCurrentSetting()).getDbBaseSetting().getDataSourceName());
     }
 
     /**
