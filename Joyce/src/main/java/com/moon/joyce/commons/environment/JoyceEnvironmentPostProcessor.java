@@ -2,7 +2,7 @@ package com.moon.joyce.commons.environment;
 
 
 import com.moon.joyce.commons.utils.JoyceExceptionUtils;
-import com.moon.joyce.example.functionality.entity.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 import lombok.SneakyThrows;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;

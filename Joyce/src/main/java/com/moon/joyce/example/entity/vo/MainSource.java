@@ -5,7 +5,7 @@ package com.moon.joyce.example.entity.vo;
  * @Date: 2022/1/27
  */
 
-import com.moon.joyce.example.entity.Source;
+import com.moon.joyce.example.entity.doma.Source;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

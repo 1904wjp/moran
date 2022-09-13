@@ -1,6 +1,6 @@
 package com.moon.joyce.commons.factory.inter;
 
-import com.moon.joyce.example.functionality.entity.Column;
+import com.moon.joyce.example.functionality.entity.doma.Column;
 
 import java.util.List;
 import java.util.Map;

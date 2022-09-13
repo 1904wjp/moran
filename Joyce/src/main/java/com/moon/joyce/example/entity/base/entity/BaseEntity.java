@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.commons.factory.enums.Type;
-import com.moon.joyce.example.functionality.entity.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 
 import java.io.Serializable;
 import java.util.Date;

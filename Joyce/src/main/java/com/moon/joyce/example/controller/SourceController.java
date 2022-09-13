@@ -1,9 +1,7 @@
 package com.moon.joyce.example.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.enums.RE;
@@ -11,11 +9,11 @@ import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.commons.utils.UUIDUtils;
-import com.moon.joyce.example.entity.Album;
-import com.moon.joyce.example.entity.Source;
+import com.moon.joyce.example.entity.doma.Album;
+import com.moon.joyce.example.entity.doma.Source;
 import com.moon.joyce.example.entity.vo.MainSource;
 import com.moon.joyce.example.entity.vo.PageVo;
-import com.moon.joyce.example.functionality.entity.Result;
+import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.entity.tundish.AlbumSource;
 import com.moon.joyce.example.functionality.enums.AlbumEnum;
 import com.moon.joyce.example.functionality.service.AlbumSourceService;

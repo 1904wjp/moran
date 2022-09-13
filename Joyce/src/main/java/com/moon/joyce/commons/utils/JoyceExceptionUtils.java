@@ -1,6 +1,6 @@
 package com.moon.joyce.commons.utils;
 
-import com.moon.joyce.example.functionality.entity.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 
 
 

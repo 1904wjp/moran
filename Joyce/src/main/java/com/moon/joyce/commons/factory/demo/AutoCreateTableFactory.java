@@ -11,14 +11,13 @@ import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.commons.factory.init.AutoCreateTableInit;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
-import com.moon.joyce.example.functionality.entity.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 ;
 import com.moon.joyce.commons.factory.inter.TableFactory;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 
 import java.io.File;
@@ -513,9 +512,9 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
      * 填充sqls
      * @param maps
      */
-    private void fillSqls(Map<String,List<com.moon.joyce.example.functionality.entity.Column> > maps) {
+    private void fillSqls(Map<String,List<com.moon.joyce.example.functionality.entity.doma.Column> > maps) {
         for (Map.Entry<TableEntity, List<ColumnEntity>> entry : map.entrySet()) {
-            List<com.moon.joyce.example.functionality.entity.Column> existColumns = null;
+            List<com.moon.joyce.example.functionality.entity.doma.Column> existColumns = null;
             if (maps.containsKey(entry.getKey().getName())){
                existColumns = maps.get(entry.getKey().getName());
             }
@@ -538,7 +537,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
      * @param columnEntities
      * @return
      */
-    private String[] selectCreateSql(TableEntity tableEntity, List<ColumnEntity> columnEntities, List<com.moon.joyce.example.functionality.entity.Column> existColumns) {
+    private String[] selectCreateSql(TableEntity tableEntity, List<ColumnEntity> columnEntities, List<com.moon.joyce.example.functionality.entity.doma.Column> existColumns) {
         String strategy = tableEntity.getStrategy();
         switch (strategy) {
             case "1":
@@ -643,8 +642,8 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
      * @param columnEntities
      * @return
      */
-    private String alterTable(TableEntity tableEntity, List<ColumnEntity> columnEntities, List<com.moon.joyce.example.functionality.entity.Column> existColumns) {
-        List<String> list = existColumns.stream().map(com.moon.joyce.example.functionality.entity.Column::getColumnName).collect(Collectors.toList());
+    private String alterTable(TableEntity tableEntity, List<ColumnEntity> columnEntities, List<com.moon.joyce.example.functionality.entity.doma.Column> existColumns) {
+        List<String> list = existColumns.stream().map(com.moon.joyce.example.functionality.entity.doma.Column::getColumnName).collect(Collectors.toList());
         List<ColumnEntity> differentList = getDifferentList(list, columnEntities);
         if (!differentList.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -709,7 +708,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
      * @param existColumns
      * @return
      */
-    private String[] modifyTable(TableEntity tableEntity, List<ColumnEntity> columnEntities, List<com.moon.joyce.example.functionality.entity.Column> existColumns){
+    private String[] modifyTable(TableEntity tableEntity, List<ColumnEntity> columnEntities, List<com.moon.joyce.example.functionality.entity.doma.Column> existColumns){
         List<String> list = new ArrayList<>();
         List<ColumnEntity> cbfd = getCommonButFileDifferentList(columnEntities, existColumns);
         if (!cbfd.isEmpty()) {
@@ -817,9 +816,9 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
      * @param list
      * @return
      */
-    private List<ColumnEntity> getCommonButFileDifferentList(List<ColumnEntity> columnEntities,List<com.moon.joyce.example.functionality.entity.Column> list){
+    private List<ColumnEntity> getCommonButFileDifferentList(List<ColumnEntity> columnEntities,List<com.moon.joyce.example.functionality.entity.doma.Column> list){
         List<ColumnEntity> columnEntityList = new ArrayList<>();
-        for (com.moon.joyce.example.functionality.entity.Column entity : list) {
+        for (com.moon.joyce.example.functionality.entity.doma.Column entity : list) {
             ColumnEntity columnEntity = new ColumnEntity();
             columnEntity.columnToColumnEntity(entity);
             columnEntityList.add(columnEntity);
@@ -842,7 +841,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
      * @return
      */
     @Override
-    public List<String> getSqls(Map<String ,List<com.moon.joyce.example.functionality.entity.Column>> maps) {
+    public List<String> getSqls(Map<String ,List<com.moon.joyce.example.functionality.entity.doma.Column>> maps) {
         try {
             //填充属性
             fillSqls(maps);
@@ -867,11 +866,11 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
      * @param columns
      * @param mapTableData
      */
-    public void exportSqlFile(List<com.moon.joyce.example.functionality.entity.Column> columns, List<Map<String, Object>> mapTableData, com.moon.joyce.example.functionality.entity.Column column,String path) {
+    public void exportSqlFile(List<com.moon.joyce.example.functionality.entity.doma.Column> columns, List<Map<String, Object>> mapTableData, com.moon.joyce.example.functionality.entity.doma.Column column, String path) {
         TableEntity tableEntity = new TableEntity();
         tableEntity.columnToTableEntity(column);
         List<ColumnEntity> columnEntities = new ArrayList<>();
-        for (com.moon.joyce.example.functionality.entity.Column c : columns) {
+        for (com.moon.joyce.example.functionality.entity.doma.Column c : columns) {
             ColumnEntity columnEntity = new ColumnEntity();
             columnEntity.columnToColumnEntity(c);
             logger.info("---------->{}",columnEntity);

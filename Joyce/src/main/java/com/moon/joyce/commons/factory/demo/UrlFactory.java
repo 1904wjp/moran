@@ -5,7 +5,6 @@ import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.factory.demo.base.BaseFactory;
 import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
 import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
-import com.moon.joyce.example.functionality.entity.JoyceException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -13,10 +12,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * @author: Joyce

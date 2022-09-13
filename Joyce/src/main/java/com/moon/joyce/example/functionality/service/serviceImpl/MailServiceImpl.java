@@ -1,6 +1,6 @@
 package com.moon.joyce.example.functionality.service.serviceImpl;
 
-import com.moon.joyce.example.functionality.entity.EmailData;
+import com.moon.joyce.example.functionality.entity.doma.EmailData;
 import com.moon.joyce.example.functionality.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

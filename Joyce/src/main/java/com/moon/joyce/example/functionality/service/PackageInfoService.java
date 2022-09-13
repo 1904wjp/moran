@@ -1,7 +1,7 @@
 package com.moon.joyce.example.functionality.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.moon.joyce.example.entity.PackageInfo;
+import com.moon.joyce.example.entity.doma.PackageInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

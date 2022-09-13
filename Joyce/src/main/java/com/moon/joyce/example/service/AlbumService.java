@@ -1,12 +1,8 @@
 package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.moon.joyce.example.entity.Album;
-import com.moon.joyce.example.entity.ChatRecord;
-import com.moon.joyce.example.entity.Source;
+import com.moon.joyce.example.entity.doma.Album;
 import com.moon.joyce.example.entity.vo.PageVo;
-
-import java.util.Map;
 
 /**
  * @author: Joyce

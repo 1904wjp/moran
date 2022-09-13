@@ -1,6 +1,6 @@
 package com.moon.joyce.commons.factory.entity;
 
-import com.moon.joyce.example.functionality.entity.Column;
+import com.moon.joyce.example.functionality.entity.doma.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

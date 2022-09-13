@@ -4,7 +4,7 @@ import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.enums.RE;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import com.moon.joyce.example.entity.vo.PageVo;
-import com.moon.joyce.example.functionality.entity.Result;
+import com.moon.joyce.example.functionality.entity.doma.Result;
 
 import java.util.List;
 import java.util.Objects;

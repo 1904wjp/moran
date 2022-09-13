@@ -4,8 +4,8 @@
     <sql id="projectColumns">
         p.id, p.create_by, p.create_time, p.delete_flag, p.update_by, p.update_time, p.project_name, p.descs, p.charge_person, p.user_id
     </sql>
-    <select id="getList" resultType="com.moon.joyce.example.entity.Project"
-            parameterType="com.moon.joyce.example.entity.Project">
+    <select id="getList" resultType="com.moon.joyce.example.entity.doma.Project"
+            parameterType="com.moon.joyce.example.entity.doma.Project">
         SELECT
         <include refid="projectColumns"/>
         FROM springboot.project p
@@ -21,7 +21,7 @@
         </if>
         ORDER BY p.id DESC
     </select>
-    <select id="getCount" resultType="java.lang.Integer" parameterType="com.moon.joyce.example.entity.Project">
+    <select id="getCount" resultType="java.lang.Integer" parameterType="com.moon.joyce.example.entity.doma.Project">
         SELECT COUNT(*)
         FROM springboot.project p
         WHERE delete_flag=0

@@ -1,7 +1,7 @@
 package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.moon.joyce.example.entity.UserType;
+import com.moon.joyce.example.entity.doma.UserType;
 
 /**
  * <p>

@@ -4,7 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidPooledConnection;
 import com.alibaba.druid.stat.DruidDataSourceStatManager;
 import com.moon.joyce.commons.utils.JoyceExceptionUtils;
-import com.moon.joyce.example.functionality.entity.DataSource;
+import com.moon.joyce.example.functionality.entity.doma.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

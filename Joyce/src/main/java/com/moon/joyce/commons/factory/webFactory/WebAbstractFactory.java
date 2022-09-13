@@ -4,11 +4,10 @@ package com.moon.joyce.commons.factory.webFactory;
 import com.moon.joyce.commons.factory.entity.AutoWriteClass;
 import com.moon.joyce.commons.factory.entity.Type;
 import com.moon.joyce.commons.utils.StringsUtils;
-import com.moon.joyce.example.functionality.entity.Column;
+import com.moon.joyce.example.functionality.entity.doma.Column;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

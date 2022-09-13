@@ -1,7 +1,6 @@
 package com.moon.joyce.commons.factory.entity;
 
-import com.moon.joyce.commons.factory.init.AutoCreateTableInit;
-import com.moon.joyce.example.functionality.entity.Column;
+import com.moon.joyce.example.functionality.entity.doma.Column;
 
 import java.util.Objects;
 

@@ -2,17 +2,13 @@ package com.moon.joyce.example.functionality.service.serviceImpl;
 
 import com.moon.joyce.dataSource.DbContextHolder;
 import com.moon.joyce.dataSource.DynamicDataSource;
-import com.moon.joyce.example.functionality.entity.DataSource;
-import com.moon.joyce.example.entity.DbBaseSetting;
+import com.moon.joyce.example.functionality.entity.doma.DataSource;
+import com.moon.joyce.example.entity.doma.DbBaseSetting;
 import com.moon.joyce.example.functionality.service.DataSourceService;
-import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @Author: XingDaoRong

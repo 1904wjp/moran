@@ -7,8 +7,7 @@ package com.moon.joyce.commons.factory.entity;
  * @describe:
  */
 
-import com.moon.joyce.commons.factory.enums.TableStrategy;
-import com.moon.joyce.example.functionality.entity.Column;
+import com.moon.joyce.example.functionality.entity.doma.Column;
 
 /**
  * 表实体类

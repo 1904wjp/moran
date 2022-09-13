@@ -2,7 +2,7 @@ package com.moon.joyce.interceptor;
 
 
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.entity.doma.User;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 

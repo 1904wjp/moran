@@ -10,15 +10,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.moon.joyce.commons.utils.ListsUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ResourceLoader;
 import com.moon.joyce.commons.utils.FileUtils;
-import com.moon.joyce.example.entity.SysMenu;
-import com.moon.joyce.example.functionality.entity.PageComponent;
+import com.moon.joyce.example.entity.doma.SysMenu;
+import com.moon.joyce.example.functionality.entity.doma.PageComponent;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.mapper.SysMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;

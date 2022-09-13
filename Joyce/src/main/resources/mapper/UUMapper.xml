@@ -14,7 +14,7 @@
         </if>
         )temp
     </select>
-    <select id="selectList" resultType="com.moon.joyce.example.entity.UU" parameterType="java.lang.Long">
+    <select id="selectList" resultType="com.moon.joyce.example.entity.doma.UU" parameterType="java.lang.Long">
         SELECT
         u.id,
         u.type,
@@ -30,7 +30,7 @@
             u.user_a_id = #{userId}
         </if>
     </select>
-    <select id="getFriend" resultType="com.moon.joyce.example.entity.UU">
+    <select id="getFriend" resultType="com.moon.joyce.example.entity.doma.UU">
         SELECT *
         FROM springboot.u_u u
         WHERE u.delete_flag = 0

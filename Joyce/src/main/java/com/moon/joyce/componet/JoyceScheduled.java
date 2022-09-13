@@ -3,7 +3,7 @@ package com.moon.joyce.componet;
 ;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
-import com.moon.joyce.example.entity.Source;
+import com.moon.joyce.example.entity.doma.Source;
 import com.moon.joyce.example.service.SourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;

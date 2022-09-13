@@ -1,7 +1,7 @@
 package com.moon.joyce.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moon.joyce.example.functionality.entity.Accounting;
+import com.moon.joyce.example.functionality.entity.doma.Accounting;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

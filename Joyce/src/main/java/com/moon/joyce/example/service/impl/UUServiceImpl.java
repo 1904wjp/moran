@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.example.entity.UU;
+import com.moon.joyce.example.entity.doma.UU;
 import com.moon.joyce.example.mapper.UUMapper;
 import com.moon.joyce.example.service.CommonService;
 import com.moon.joyce.example.service.UUService;

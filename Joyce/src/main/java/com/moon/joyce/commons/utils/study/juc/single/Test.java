@@ -1,6 +1,6 @@
 package com.moon.joyce.commons.utils.study.juc.single;
 
-import com.moon.joyce.example.functionality.entity.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 
 /**
  * @Author: XingDaoRong

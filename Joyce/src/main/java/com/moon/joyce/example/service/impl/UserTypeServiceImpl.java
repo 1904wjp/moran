@@ -2,15 +2,12 @@ package com.moon.joyce.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.annotation.RedisValueComponet;
-import com.moon.joyce.example.entity.UserType;
+import com.moon.joyce.example.entity.doma.UserType;
 import com.moon.joyce.example.mapper.UserTypeMapper;
-import com.moon.joyce.example.service.CommonService;
 
 
 import com.moon.joyce.example.service.UserTypeService;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
 
 /**
  * <p>

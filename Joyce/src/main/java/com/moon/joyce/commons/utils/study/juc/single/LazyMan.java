@@ -1,7 +1,7 @@
 package com.moon.joyce.commons.utils.study.juc.single;
 
 import com.moon.joyce.commons.utils.JoyceExceptionUtils;
-import com.moon.joyce.example.functionality.entity.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 import org.apache.commons.compress.utils.Lists;
 
 import java.lang.reflect.Constructor;

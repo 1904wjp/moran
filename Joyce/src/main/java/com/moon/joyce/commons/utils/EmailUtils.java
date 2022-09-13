@@ -1,7 +1,7 @@
 package com.moon.joyce.commons.utils;
 
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.example.functionality.entity.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.mail.*;

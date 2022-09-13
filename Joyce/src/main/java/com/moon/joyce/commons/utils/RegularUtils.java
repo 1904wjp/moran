@@ -1,10 +1,9 @@
 package com.moon.joyce.commons.utils;
 
-import com.moon.joyce.example.functionality.entity.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**

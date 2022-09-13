@@ -3,7 +3,7 @@
 <mapper namespace="com.moon.joyce.example.mapper.DbBaseSettingMapper">
 
 
-    <select id="getDbBaseSettings" resultType="com.moon.joyce.example.entity.DbBaseSetting">
+    <select id="getDbBaseSettings" resultType="com.moon.joyce.example.entity.doma.DbBaseSetting">
         SELECT
             a.id,
             a.create_by,

@@ -1,10 +1,9 @@
 package com.moon.joyce.example.functionality.service;
 
 import com.moon.joyce.commons.utils.FileUtils;
-import com.moon.joyce.example.functionality.entity.PageComponent;
+import com.moon.joyce.example.functionality.entity.doma.PageComponent;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

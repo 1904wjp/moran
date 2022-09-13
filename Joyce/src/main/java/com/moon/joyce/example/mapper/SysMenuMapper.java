@@ -1,7 +1,7 @@
 package com.moon.joyce.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moon.joyce.example.entity.SysMenu;
+import com.moon.joyce.example.entity.doma.SysMenu;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

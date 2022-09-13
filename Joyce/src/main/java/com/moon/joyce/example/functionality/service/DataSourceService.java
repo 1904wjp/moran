@@ -1,7 +1,7 @@
 package com.moon.joyce.example.functionality.service;
 
-import com.moon.joyce.example.entity.DbBaseSetting;
-import com.moon.joyce.example.functionality.entity.DataSource;
+import com.moon.joyce.example.entity.doma.DbBaseSetting;
+import com.moon.joyce.example.functionality.entity.doma.DataSource;
 
 /**
  * @Author: XingDaoRong

@@ -2,8 +2,8 @@ package com.moon.joyce.commons.utils;
 
 
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.example.functionality.entity.JoyceException;
-import com.moon.joyce.example.functionality.entity.PageComponent;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.PageComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;

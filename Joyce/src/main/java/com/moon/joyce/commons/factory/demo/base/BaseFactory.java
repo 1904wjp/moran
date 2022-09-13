@@ -1,6 +1,6 @@
 package com.moon.joyce.commons.factory.demo.base;
 
-import com.moon.joyce.example.functionality.entity.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 
 import java.io.File;
 import java.lang.reflect.Method;

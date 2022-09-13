@@ -1,8 +1,7 @@
 package com.moon.joyce.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moon.joyce.example.entity.DbBaseSetting;
-import com.moon.joyce.example.entity.PackageInfo;
+import com.moon.joyce.example.entity.doma.DbBaseSetting;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

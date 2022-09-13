@@ -2,7 +2,7 @@ package com.moon.joyce.applicationRunner;
 
 
 import com.moon.joyce.commons.factory.enums.TableStrategy;
-import com.moon.joyce.example.functionality.entity.Column;
+import com.moon.joyce.example.functionality.entity.doma.Column;
 import com.moon.joyce.example.functionality.service.ColumnsService;
 import com.moon.joyce.commons.factory.demo.AutoCreateTableFactory;
 import org.slf4j.Logger;

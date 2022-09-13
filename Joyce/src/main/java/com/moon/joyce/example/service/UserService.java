@@ -1,13 +1,11 @@
 package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.moon.joyce.commons.annotation.RedisValueComponet;
-import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>

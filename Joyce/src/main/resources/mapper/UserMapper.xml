@@ -6,7 +6,7 @@
      <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
  -->
     <!--先分页查询后对结果排序-->
-    <select id="getUsers" resultType="com.moon.joyce.example.entity.User">
+    <select id="getUsers" resultType="com.moon.joyce.example.entity.doma.User">
         SELECT *
         FROM springboot.user u
         WHERE u.delete_flag = 0

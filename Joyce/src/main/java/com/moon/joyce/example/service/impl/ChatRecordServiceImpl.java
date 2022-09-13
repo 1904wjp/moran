@@ -3,7 +3,7 @@ package com.moon.joyce.example.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.annotation.RedisValueComponet;
 import com.moon.joyce.commons.utils.DateUtils;
-import com.moon.joyce.example.entity.ChatRecord;
+import com.moon.joyce.example.entity.doma.ChatRecord;
 import com.moon.joyce.example.mapper.ChatRecordMapper;
 import com.moon.joyce.example.service.ChatRecordService;
 import com.moon.joyce.example.service.CommonService;

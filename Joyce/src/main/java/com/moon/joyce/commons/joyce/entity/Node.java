@@ -4,7 +4,7 @@ package com.moon.joyce.commons.joyce.entity;
 
 import com.moon.joyce.commons.joyce.entity.data.DataConstructor;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
-import com.moon.joyce.example.functionality.entity.JoyceException;
+import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 
 import java.io.Serializable;
 import java.util.Objects;

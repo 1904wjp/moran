@@ -1,6 +1,6 @@
 package com.moon.joyce.example.functionality.service;
 
-import com.moon.joyce.example.functionality.entity.EmailData;
+import com.moon.joyce.example.functionality.entity.doma.EmailData;
 
 /**
  * @author Xing Dao Rong

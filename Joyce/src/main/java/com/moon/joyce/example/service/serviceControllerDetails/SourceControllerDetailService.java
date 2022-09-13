@@ -1,9 +1,6 @@
 package com.moon.joyce.example.service.serviceControllerDetails;
 
-import com.moon.joyce.example.entity.Source;
-import com.moon.joyce.example.entity.User;
-import com.moon.joyce.example.functionality.entity.Result;
-import com.moon.joyce.example.functionality.entity.Setting;
+import com.moon.joyce.example.entity.doma.Source;
 
 /**
  * @author: Joyce

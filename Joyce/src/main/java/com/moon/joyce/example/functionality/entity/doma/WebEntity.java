@@ -1,8 +1,7 @@
-package com.moon.joyce.example.functionality.entity;
+package com.moon.joyce.example.functionality.entity.doma;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.moon.joyce.example.entity.PackageInfo;
 import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

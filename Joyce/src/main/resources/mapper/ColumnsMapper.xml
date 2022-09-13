@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moon.joyce.example.mapper.ColumnsMapper">
-    <select id="getColumns" resultType="com.moon.joyce.example.functionality.entity.Column">
+    <select id="getColumns" resultType="com.moon.joyce.example.functionality.entity.doma.Column">
         SELECT DISTINCT a.column_name              AS columnName,
                         a.column_comment           AS columnComment,
                         a.data_type                AS columnType,
@@ -21,7 +21,7 @@
             </if>
 
     </select>
-    <select id="getOne" resultType="com.moon.joyce.example.functionality.entity.Column">
+    <select id="getOne" resultType="com.moon.joyce.example.functionality.entity.doma.Column">
         SELECT table_name    AS tableName,
                table_comment AS tableComment
         FROM INFORMATION_SCHEMA.TABLES
@@ -31,7 +31,7 @@
           </if>
 
     </select>
-    <select id="getAllTables" resultType="com.moon.joyce.example.functionality.entity.Column">
+    <select id="getAllTables" resultType="com.moon.joyce.example.functionality.entity.doma.Column">
         SELECT table_name    AS tableName,
                table_comment AS tableComment
         FROM INFORMATION_SCHEMA.TABLES

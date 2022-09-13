@@ -1,11 +1,9 @@
 package com.moon.joyce.example.controller;
 
-import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.base.cotroller.BaseController;
-import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.vo.PageVo;
-import com.moon.joyce.example.functionality.entity.Accounting;
-import com.moon.joyce.example.functionality.entity.Result;
+import com.moon.joyce.example.functionality.entity.doma.Accounting;
+import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.service.AccountingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,10 +1,9 @@
-package com.moon.joyce.example.functionality.entity;
+package com.moon.joyce.example.functionality.entity.doma;
 
-import com.moon.joyce.example.entity.DbBaseSetting;
-import com.moon.joyce.example.entity.PackageInfo;
+import com.moon.joyce.example.entity.doma.DbBaseSetting;
+import com.moon.joyce.example.entity.doma.PackageInfo;
 
 import java.io.Serializable;
-import java.nio.file.Files;
 import java.util.Map;
 
 /**

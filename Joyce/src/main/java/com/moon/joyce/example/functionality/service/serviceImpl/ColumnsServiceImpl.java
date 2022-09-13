@@ -1,7 +1,7 @@
 package com.moon.joyce.example.functionality.service.serviceImpl;
 
 import com.moon.joyce.example.entity.vo.PageVo;
-import com.moon.joyce.example.functionality.entity.Column;
+import com.moon.joyce.example.functionality.entity.doma.Column;
 import com.moon.joyce.example.functionality.service.ColumnsService;
 import com.moon.joyce.example.mapper.ColumnsMapper;
 import org.slf4j.Logger;

@@ -3,8 +3,8 @@ package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.utils.R;
-import com.moon.joyce.example.entity.ChatRecord;
-import com.moon.joyce.example.functionality.entity.Result;
+import com.moon.joyce.example.entity.doma.ChatRecord;
+import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.service.ChatRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

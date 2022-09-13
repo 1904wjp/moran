@@ -3,7 +3,7 @@ package com.moon.joyce.example.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.annotation.RedisValueComponet;
-import com.moon.joyce.example.entity.Source;
+import com.moon.joyce.example.entity.doma.Source;
 import com.moon.joyce.example.mapper.SourceMapper;
 import com.moon.joyce.example.service.CommonService;
 import com.moon.joyce.example.service.SourceService;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * <p>

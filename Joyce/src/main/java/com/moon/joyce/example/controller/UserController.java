@@ -5,13 +5,13 @@ package com.moon.joyce.example.controller;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
-import com.moon.joyce.example.entity.ChatRecord;
-import com.moon.joyce.example.entity.UU;
-import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.entity.doma.ChatRecord;
+import com.moon.joyce.example.entity.doma.UU;
+import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.entity.vo.UserChartVo;
-import com.moon.joyce.example.functionality.entity.Result;
-import com.moon.joyce.example.functionality.entity.Setting;
+import com.moon.joyce.example.functionality.entity.doma.Result;
+import com.moon.joyce.example.functionality.entity.doma.Setting;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.ChatRecordService;
 import com.moon.joyce.example.service.UserService;
@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**

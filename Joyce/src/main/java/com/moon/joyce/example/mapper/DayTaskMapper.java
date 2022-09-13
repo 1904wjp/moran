@@ -1,7 +1,7 @@
 package com.moon.joyce.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moon.joyce.example.entity.DayTask;
+import com.moon.joyce.example.entity.doma.DayTask;
 
 import java.util.List;
 

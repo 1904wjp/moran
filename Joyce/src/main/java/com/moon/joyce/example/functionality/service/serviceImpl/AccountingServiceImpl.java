@@ -1,7 +1,7 @@
 package com.moon.joyce.example.functionality.service.serviceImpl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.moon.joyce.example.functionality.entity.Accounting;
+import com.moon.joyce.example.functionality.entity.doma.Accounting;
 import com.moon.joyce.example.functionality.service.AccountingService;
 import com.moon.joyce.example.mapper.AccountingMapper;
 import org.springframework.beans.factory.annotation.Autowired;

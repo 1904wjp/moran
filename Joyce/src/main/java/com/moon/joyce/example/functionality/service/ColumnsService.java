@@ -1,7 +1,7 @@
 package com.moon.joyce.example.functionality.service;
 
 import com.moon.joyce.example.entity.vo.PageVo;
-import com.moon.joyce.example.functionality.entity.Column;
+import com.moon.joyce.example.functionality.entity.doma.Column;
 
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.moon.joyce.example.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.moon.joyce.example.entity.Project;
+import com.moon.joyce.example.entity.doma.Project;
 
 
 import java.util.List;

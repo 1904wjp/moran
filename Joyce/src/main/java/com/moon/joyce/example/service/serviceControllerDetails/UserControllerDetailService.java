@@ -1,10 +1,8 @@
 package com.moon.joyce.example.service.serviceControllerDetails;
 
-import com.moon.joyce.example.entity.DbBaseSetting;
-import com.moon.joyce.example.entity.User;
-import com.moon.joyce.example.functionality.entity.Result;
-import com.moon.joyce.example.functionality.entity.Setting;
-import org.springframework.stereotype.Service;
+import com.moon.joyce.example.entity.doma.User;
+import com.moon.joyce.example.functionality.entity.doma.Result;
+import com.moon.joyce.example.functionality.entity.doma.Setting;
 
 /**
  * @author: Joyce

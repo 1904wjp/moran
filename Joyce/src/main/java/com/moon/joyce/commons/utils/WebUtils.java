@@ -1,7 +1,7 @@
 package com.moon.joyce.commons.utils;
 
-import com.moon.joyce.example.entity.PackageInfo;
-import com.moon.joyce.example.functionality.entity.Column;
+import com.moon.joyce.example.entity.doma.PackageInfo;
+import com.moon.joyce.example.functionality.entity.doma.Column;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,9 +2,9 @@ package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.utils.R;
-import com.moon.joyce.example.entity.UU;
-import com.moon.joyce.example.entity.User;
-import com.moon.joyce.example.functionality.entity.Result;
+import com.moon.joyce.example.entity.doma.UU;
+import com.moon.joyce.example.entity.doma.User;
+import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.service.UUService;
 import com.moon.joyce.example.service.UserService;
 import org.slf4j.Logger;

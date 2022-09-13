@@ -1,4 +1,4 @@
-package com.moon.joyce.example.functionality.entity;
+package com.moon.joyce.example.functionality.entity.doma;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

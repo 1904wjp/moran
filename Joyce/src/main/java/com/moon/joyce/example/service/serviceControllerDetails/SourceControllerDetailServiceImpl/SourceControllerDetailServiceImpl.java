@@ -1,7 +1,7 @@
 package com.moon.joyce.example.service.serviceControllerDetails.SourceControllerDetailServiceImpl;
 
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.example.entity.Source;
+import com.moon.joyce.example.entity.doma.Source;
 import com.moon.joyce.example.service.SourceService;
 import com.moon.joyce.example.service.serviceControllerDetails.SourceControllerDetailService;
 import org.springframework.beans.factory.annotation.Autowired;

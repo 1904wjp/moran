@@ -1,13 +1,10 @@
 package com.moon.joyce.example.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.moon.joyce.example.entity.User;
+import com.moon.joyce.example.entity.doma.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Author: XingDaoRong
