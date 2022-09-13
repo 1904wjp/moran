@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 /**
  * @author: Joyce
  * @autograph: Logic is justice
@@ -21,18 +23,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("accounting")
-@Table(name = "accounting",content = "记账表",strategy = TableStrategy.ADD)
+@Table(name = "accounting",content = "记账表")
 public class Accounting extends Page {
-  @Column(name = "income",type = Type.BIGINT,comment = "收入")
-  private Long income;
+  @Column(name = "income",type = Type.DECIMAL,comment = "收入")
+  private BigDecimal income;
 
-  @Column(name = "expenditure",type = Type.BIGINT,comment = "支出")
-  private Long expenditure;
+  @Column(name = "expenditure",type = Type.DECIMAL,comment = "支出")
+  private BigDecimal expenditure;
 
-  @Column(name = "budget",type = Type.BIGINT,comment = "预算")
-  private Long budget;
+  @Column(name = "budget",type = Type.DECIMAL,comment = "预算")
+  private BigDecimal budget;
 
-  @Column(name = "remark",type = Type.TEXT,length = "0",comment = "备注")
+  @Column(name = "remark",type = Type.VARCHAR,comment = "备注")
   private String remark;
 
   @TableField("user_id")

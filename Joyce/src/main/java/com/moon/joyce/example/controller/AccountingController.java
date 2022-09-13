@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -78,17 +79,17 @@ public class AccountingController extends BaseController {
         map.put("持有收益","0.00");
         map.put("日期", "0000-00-00");
         List<Accounting> accountings = accountingService.getDataByDate(type,date,getSessionUserId());
-        double incomeSum = 0.00;
-        double expenditureSum = 0.00;
+        BigDecimal incomeSum = new BigDecimal(0.00);
+        BigDecimal expenditureSum =new BigDecimal(0.00);
         for (Accounting accounting : accountings) {
-            incomeSum += accounting.getIncome();
-            expenditureSum += accounting.getExpenditure();
+            incomeSum = incomeSum.add(accounting.getIncome());
+            expenditureSum = expenditureSum.add(accounting.getExpenditure());
         }
         map.put("支出总和",String.valueOf(expenditureSum));
-        map.put("支出平均日值",String.valueOf(expenditureSum/accountings.size()));
+        map.put("支出平均日值",String.valueOf(expenditureSum.divide(new BigDecimal(accountings.size()))));
         map.put("收入总和",String.valueOf(incomeSum));
-        map.put("收入平均日值",String.valueOf(incomeSum/accountings.size()));
-        map.put("持有收益",String.valueOf(incomeSum-expenditureSum));
+        map.put("收入平均日值",String.valueOf(incomeSum.divide(new BigDecimal(accountings.size()))));
+        map.put("持有收益",String.valueOf(incomeSum.subtract(expenditureSum)));
         if ("0".equals(type)){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             map.put("日期",sdf.format(date));
