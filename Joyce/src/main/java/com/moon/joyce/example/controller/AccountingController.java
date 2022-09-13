@@ -9,6 +9,7 @@ import com.moon.joyce.example.functionality.entity.Result;
 import com.moon.joyce.example.functionality.service.AccountingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -70,6 +71,8 @@ public class AccountingController extends BaseController {
      * @param type
      * @return
      */
+    @ResponseBody
+    @PostMapping("/getData")
     public Result getData(String type,Date date){
         Map<String, String> map = new HashMap<>();
         map.put("支出总和","0.00");
