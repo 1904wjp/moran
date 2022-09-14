@@ -1,6 +1,5 @@
 package com.moon.joyce.example.functionality.entity.doma;
 
-import com.moon.joyce.example.entity.base.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

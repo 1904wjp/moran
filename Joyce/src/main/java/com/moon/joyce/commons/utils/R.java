@@ -2,7 +2,7 @@ package com.moon.joyce.commons.utils;
 
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.enums.RE;
-import com.moon.joyce.example.entity.base.entity.BaseEntity;
+import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 

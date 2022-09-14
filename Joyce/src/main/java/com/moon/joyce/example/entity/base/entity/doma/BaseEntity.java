@@ -1,4 +1,4 @@
-package com.moon.joyce.example.entity.base.entity;
+package com.moon.joyce.example.entity.base.entity.doma;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -28,7 +28,7 @@ public class BaseEntity implements Serializable {
     private String createBy;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Column(name="create_time",comment = "创建时间",length = "10000000000", type = Type.DATETIME)
+    @Column(name="create_time",comment = "创建时间", type = Type.DATETIME)
     @TableField(value = "create_time",fill = FieldFill.INSERT)
     private Date createTime;
 
@@ -42,15 +42,15 @@ public class BaseEntity implements Serializable {
     private Date updateTime;
 
     @TableLogic
-    @Column(name="delete_flag",comment = "删除标志", type = Type.INT,defaultValue = "0")
+    @Column(name="delete_flag",comment = "删除标志", type = Type.INT,defaultValue = "1")
     @TableField(value = "delete_flag")
     private Integer deleteFlag;
 
-    @Column(name = "create_ids",comment = "创建用户id",type = Type.BIGINT)
+    @Column(name = "create_ids",comment = "创建用户id",type = Type.BIGINT,length = "64")
     @TableField(value = "create_ids")
     private Long createIds;
 
-    @Column(name = "update_ids",comment = "修改用户id",type = Type.BIGINT)
+    @Column(name = "update_ids",comment = "修改用户id",type = Type.BIGINT,length = "64")
     @TableField(value = "update_ids")
     private Long updateIds;
 

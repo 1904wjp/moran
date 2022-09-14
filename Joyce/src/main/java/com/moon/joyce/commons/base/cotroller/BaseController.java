@@ -7,7 +7,7 @@ import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
 import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.doma.User;
-import com.moon.joyce.example.entity.base.entity.BaseEntity;
+import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 import com.moon.joyce.example.functionality.entity.doma.Setting;
 import com.moon.joyce.example.functionality.entity.doma.Uri;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;

@@ -3,7 +3,7 @@ package com.moon.joyce.example.entity.doma;
 import com.baomidou.mybatisplus.annotation.*;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.Table;
-import com.moon.joyce.example.entity.base.entity.Person;
+import com.moon.joyce.example.entity.base.entity.doma.Person;
 
 
 /**

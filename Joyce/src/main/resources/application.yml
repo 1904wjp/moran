@@ -17,17 +17,21 @@ server:
   max-http-header-size: 80KB
 #app相关信息
 app:
-  domain: localhost
+  domain: ${app.datasource.domain}
   urlValue: ${app.domain}:${server.port}
   url: http://${app.urlValue}
   name: Joyce
   version: 1.10
+  datasource:
+    domain: localhost
+    database: springboot
+    port: 3306
 #数据库数据源相关配置
 spring:
   aop:
      proxy-target-class: true #true表示cglib代理
   datasource:
-    url: jdbc:mysql://localhost:3306/springboot?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowLoadLocalInfile=true
+    url: jdbc:mysql://${app.domain}:${app.datasource.port}/${app.datasource.database}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowLoadLocalInfile=true
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: root

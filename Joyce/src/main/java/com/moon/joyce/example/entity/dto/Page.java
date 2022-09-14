@@ -1,7 +1,7 @@
 package com.moon.joyce.example.entity.dto;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.moon.joyce.example.entity.base.entity.BaseEntity;
+import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 
 
 

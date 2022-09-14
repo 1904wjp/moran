@@ -1,6 +1,6 @@
 package com.moon.joyce.example.functionality.entity.doma;
 
-import com.moon.joyce.example.entity.base.entity.BaseEntity;
+import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 
 /**
  * @author Joyce
