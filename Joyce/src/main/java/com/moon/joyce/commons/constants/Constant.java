@@ -327,8 +327,20 @@ public class Constant {
      */
     public static final String redisMap = "redisMap";
 
-    /**
-     * 方法
-     */
-    public static final String METHOD_GET = "GET";
+    //appid
+    public static final String APP_ID = "2021000117653093";
+    //应用私钥
+    public static final String APP_public_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo6ZSLw9wGzYDghnHYSy2vkS4eHI9dGjn1CORqTbXcvnmeXFpC6/5BVQIogW35FjC5GcvqaeHXKIuMmuoDBNbLFiWpx8b43AIjnhGHP6s2LN2Xc/amV5sjsffiz1EfwEhcv1t+cOVRhL1sRpE8F43faa8RiPC13IVAruprz55ajahgcUZ+G74Q3eF3zBe6iWTyaSONStyvcV9jOOumgN9a00gqU9CjCuIa6NNtu1VFRxV/TJbzHogSNByoMLxi53EYzVoWdRKnMPiXgMOQTA8tOamwSAUvLxlP9cxGsIK+A4rt1mfDc21sAuf7+1AcQvxnZ7yLLZ/bz3h8+SdTiTSNwIDAQAB";
+    public static final String CHARSET = "UTF-8";
+    // 支付宝公钥
+    public static final String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiamw+crJZvVbFFuJFavIj5Z+p3sGhYKAKuLgGFkMfnBt4h52caO7QLPuNwEc4R2MO8iziULhPK2Yif0oEpSzlCKMwsarq2kNPD5AcvhwEdPX8ZE5qnXt/wwtO3JgFXoZ/9byypyiWtMf9ULw8Y2GR7wh7U9yE85k3U5RNSlrO3LXUOpnXQSR4VUQX3WkgNfJDkz6cdVagab8zafrzm+l3gAKa9e3h9dkT7iwFo+OktYTqqv8e4vLMKx5zgGc7ghcmbD08X/XHifUQxKNT5puOPIo+AxO+KSmZVZkVlbDB0dqtF6MyDPxG5k9r9XF0veqXc+yJhzZKzm9tuEvYQiX9QIDAQAB";
+    //这是沙箱接口路径,正式路径为https://openapi.alipay.com/gateway.do
+    public static final String GATEWAY_URL ="https://openapi.alipaydev.com/gateway.do";
+    public static final String FORMAT = "JSON";
+    //签名方式
+    public static final String SIGN_TYPE = "RSA2";
+    //支付宝异步通知路径,付款完毕后会异步调用本项目的方法,必须为公网地址
+    public static final String NOTIFY_URL = "http://127.0.0.1/notifyUrl";
+    //支付宝同步通知路径,也就是当付款完毕后跳转本项目的页面,可以不是公网地址
+    public static final String RETURN_URL = "http://localhost:8080/returnUrl";
 }

@@ -19,13 +19,13 @@ function sourceSearch(){
  * @param type
  */
 function selectSource(type){
-    if (type==1){
+    if (type===1){
         $('#type').val(1);
         $("#uploadPicSourceBtn").css("background-color", "red");
         $("#uploadVidSourceBtn").css("background-color", "yellow");
         $('#sourceStatus').show();
     }
-    if (type==2){
+    if (type===2){
         $('#sourceStatus').hide();
         $('#type').val(3);
         $("#uploadPicSourceBtn").css("background-color", "blue");
@@ -41,16 +41,20 @@ function uploadSource(){
         var file = $("#pic_source_file")[0].files[0];
         uploadVideoFile(file,0,guid(),"/example/source/uploadVideoSource","/example/source/mergeVideoSource", $("#display_img_resource"));
     }else {
-        uploadFile($('#pic_source_file'),"/example/source/uploadSource",$("#display_img_resource"),"source_url");
+        uploadFile($('#pic_source_file'),"/example/source/uploadSource",$("#display_img_resource"),$('#source_url'));
     }
 
 }
 
 //保存资源
 function saveSource(){
+    var type = $("#type").val();
+    if (type == null){
+        type === 1;
+    }
     var data={
         id:$("#id").val(),
-        type:$("#type").val(),
+        type:type,
         url: $("#source_url").val(),
         sourceName: $("#sourceName").val(),
         sort: $("#sort").val(),

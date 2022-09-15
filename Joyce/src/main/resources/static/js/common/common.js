@@ -170,6 +170,7 @@ function uploadFile(file, restUrl, img, objUrl, size) {
             tips(data.rs, data.msg);
             if (data.rs){
                 img.attr("src",data.data);
+                objUrl.val(data.data);
             }
         }
     });

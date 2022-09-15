@@ -349,7 +349,7 @@ function resetSearch() {
 
 //上传用户图片
 function uploadUserPhoto() {
-    uploadFile($('#photo_file'), "/example/user/upload", $("#display_img"), "fileUrl");
+    uploadFile($('#photo_file'), "/example/user/upload", $("#display_img"), $('#fileUrl'));
 }
 
 //用户修改

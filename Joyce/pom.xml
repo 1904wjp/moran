@@ -19,6 +19,12 @@
     </properties>
 
     <dependencies>
+        <!--   支付宝支付的依赖     -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.16.2.ALL</version>
+        </dependency>
 
         <dependency>
             <groupId>org.jsoup</groupId>

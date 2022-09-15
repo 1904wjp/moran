@@ -40,7 +40,7 @@ public class HttpUtils {
      * @throws HttpRequest.HttpRequestException
      */
     public static HttpRequest get(final URL url) throws HttpRequest.HttpRequestException {
-        return new HttpRequest(url, Constant.METHOD_GET);
+        return new HttpRequest(url, "GET");
     }
     /**
      * get请求

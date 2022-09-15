@@ -61,4 +61,28 @@
             AND s.url LIKE CONCAT('%',#{url},'%')
         </if>
     </select>
+
+    <select id="getVideoByVPicId" resultType="com.moon.joyce.example.entity.doma.Source">
+        SELECT s1.id,
+               s1.create_by,
+               s1.create_time,
+               s1.delete_flag,
+               s1.update_by,
+               s1.update_time,
+               s1.source_name,
+               s1.type,
+               s1.url,
+               s1.sort,
+               s1.user_id,
+               s1.desc_content,
+               s1.apply_status,
+               s1.v_id,
+               s1.user_ids,
+               s1.create_ids,
+               s1.update_ids,
+               s2.real_url,
+               s2.url AS vUrl
+        FROM springboot.source s1 LEFT JOIN springboot.source s2 ON s1.v_id = s2.id
+        WHERE  s1.delete_flag = 0 AND s1.id = #{id}
+    </select>
 </mapper>

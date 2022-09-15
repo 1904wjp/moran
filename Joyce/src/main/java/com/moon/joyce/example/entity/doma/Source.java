@@ -71,4 +71,7 @@ public class Source  extends Page {
     @TableField(exist = false)
     private String vUrl;
 
+    @TableField("real_url")
+    private String realUrl;
+
 }

@@ -36,5 +36,10 @@ public interface SourceService extends IService<Source> {
      */
     Source getOne(Source source);
 
-
+    /**
+     * 获取视频信息
+     * @param id
+     * @return
+     */
+    Source getVideoInfo(Long id);
 }

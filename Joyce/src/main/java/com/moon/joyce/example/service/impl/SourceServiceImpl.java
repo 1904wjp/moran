@@ -57,5 +57,10 @@ public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> impleme
         return baseMapper.selectOne(wrapper);
     }
 
+    @Override
+    public Source getVideoInfo(Long id) {
+        return sourceMapper.getVideoByVPicId(id);
+    }
+
 
 }
