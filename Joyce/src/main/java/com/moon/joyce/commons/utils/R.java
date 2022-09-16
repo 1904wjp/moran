@@ -36,11 +36,37 @@ public class R  {
     /**
      * 返回结果
      * @param rsi
+     * @param re
+     * @param entity
+     * @return
+     */
+    public static Result dataResult(int rsi, RE re, BaseEntity entity){
+        return  dataResult(rsi,re.getCode(),entity);
+    }
+
+
+    /**
+     * 返回结果
+     * @param rsi
      * @param reCode
      * @return
      */
     public static Result dataResult(int rsi,int reCode){
         return dataResult(rsi,reCode,null);
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @param re
+     * @param data
+     * @return
+     */
+    public static Result dataResult(boolean rs,RE re,Object data,int i){
+        int rsi = 0;
+        if (rs){
+            rsi = 1;
+        }
+        return dataResult(rsi,re.getCode(),data);
     }
     /**
      * 返回结果
@@ -309,6 +335,17 @@ public class R  {
             return success(msg);
         }
         return error(msg);
+    }
+    /**
+     * 返回结果
+     * @param rs
+     * @return
+     */
+    public static Result dataResult(boolean rs,RE re,String msg){
+        if (rs){
+            return success(msg);
+        }
+        return error(re.getCode(),msg);
     }
     /**
      * 返回结果

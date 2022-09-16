@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
-    String name();
+    String name() default "";
     String content() default "";
     TableStrategy strategy() default TableStrategy.ADD;
     boolean isParent() default false;

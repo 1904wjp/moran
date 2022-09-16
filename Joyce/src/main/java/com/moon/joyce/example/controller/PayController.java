@@ -5,7 +5,7 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.moon.joyce.commons.utils.AlipayUtil;
 import com.moon.joyce.commons.utils.CommonUtils;
 import com.moon.joyce.commons.utils.UUIDUtils;
-import com.moon.joyce.example.functionality.entity.doma.ZFBFaceToFaceModel;
+import com.moon.joyce.example.functionality.entity.doma.GoodOrder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,13 +54,13 @@ public class PayController {
             //（必填）支付成功支付支付宝异步通知的接口地址
             String notifyUrl =commonUtils.getZFBinfoValue("NotifyUrl");
             //将参数放入实体对象中
-            ZFBFaceToFaceModel zfbFaceToFaceModel=new ZFBFaceToFaceModel();
-            zfbFaceToFaceModel.setOutTradeNo(outTradeNo);
-            zfbFaceToFaceModel.setSubject(subject);
-            zfbFaceToFaceModel.setTotalAmount(totalAmount);
-            zfbFaceToFaceModel.setNotifyUrl(notifyUrl);
+            GoodOrder goodOrder =new GoodOrder();
+            goodOrder.setOutTradeNo(outTradeNo);
+            goodOrder.setSubject(subject);
+            goodOrder.setTotalAmount(totalAmount);
+            goodOrder.setNotifyUrl(notifyUrl);
             //支付宝预下单
-            String json= AlipayUtil.ZFBPreorder(zfbFaceToFaceModel,DEV);
+            String json= AlipayUtil.ZFBPreorder(goodOrder,DEV);
             //解析json数据
             JSONObject jsonObject=JSONObject.parseObject(json);
             //得到alipay_trade_precreate_response数据后再强转JSONObject
@@ -82,10 +82,10 @@ public class PayController {
         try {
             //(必填)商户唯一订单编号
             String outTradeNo=request.getParameter("outTradeNo");
-            ZFBFaceToFaceModel zfbFaceToFaceModel=new ZFBFaceToFaceModel();
-            zfbFaceToFaceModel.setOutTradeNo(outTradeNo);
+            GoodOrder goodOrder =new GoodOrder();
+            goodOrder.setOutTradeNo(outTradeNo);
             //查询交易状态
-            String json=AlipayUtil.findZFB_trade(zfbFaceToFaceModel);
+            String json=AlipayUtil.findZFB_trade(goodOrder);
             System.out.println(json);
             JSONObject jsonObject=JSONObject.parseObject(json);
             JSONObject jsonobj_two=(JSONObject)jsonObject.get("alipay_trade_query_response");

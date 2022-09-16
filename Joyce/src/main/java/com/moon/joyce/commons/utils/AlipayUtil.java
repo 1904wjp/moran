@@ -9,8 +9,7 @@ import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
-import com.moon.joyce.commons.utils.CommonUtils;
-import com.moon.joyce.example.functionality.entity.doma.ZFBFaceToFaceModel;
+import com.moon.joyce.example.functionality.entity.doma.GoodOrder;
 
 /**
  * 支付宝面对面付款
@@ -19,10 +18,10 @@ import com.moon.joyce.example.functionality.entity.doma.ZFBFaceToFaceModel;
 public class AlipayUtil {
     /**
      * 支付宝预下单
-     * @param zfbFaceToFaceModel
+     * @param goodOrder
      * @return
      */
-    public static String ZFBPreorder(ZFBFaceToFaceModel zfbFaceToFaceModel,String dev) {
+    public static String ZFBPreorder(GoodOrder goodOrder, String dev) {
         try {
             CommonUtils commonUtils = new CommonUtils();
             /** 支付宝网关 **/
@@ -47,16 +46,16 @@ public class AlipayUtil {
             AlipayTradePrecreateModel model = new AlipayTradePrecreateModel();
 
             /** 商户订单号，商户自定义，需保证在商户端不重复，如：20200612000001 **/
-            model.setOutTradeNo(zfbFaceToFaceModel.getOutTradeNo());
+            model.setOutTradeNo(goodOrder.getOutTradeNo());
 
             /**订单标题 **/
-            model.setSubject(zfbFaceToFaceModel.getSubject());
+            model.setSubject(goodOrder.getSubject());
 
             /** 订单金额，精确到小数点后两位 **/
-            model.setTotalAmount(zfbFaceToFaceModel.getTotalAmount());
+            model.setTotalAmount(goodOrder.getTotalAmount());
 
             /** 订单描述 **/
-            model.setBody(zfbFaceToFaceModel.getBody());
+            model.setBody(goodOrder.getBody());
 
             /** 业务扩展参数 **/
             //ExtendParams extendParams = new ExtendParams();
@@ -77,7 +76,7 @@ public class AlipayUtil {
             request.setBizModel(model);
 
             /** 异步通知地址，以http或者https开头的，商户外网可以post访问的异步地址，用于接收支付宝返回的支付结果，如果未收到该通知可参考该文档进行确认：https://opensupport.alipay.com/support/helpcenter/193/201602475759 **/
-            request.setNotifyUrl(zfbFaceToFaceModel.getNotifyUrl());
+            request.setNotifyUrl(goodOrder.getNotifyUrl());
 
             /**第三方调用（服务商模式），传值app_auth_token后，会收款至授权app_auth_token对应商家账号，如何获传值app_auth_token请参考文档：https://opensupport.alipay.com/support/helpcenter/79/201602494631 **/
             //request.putOtherTextParam("app_auth_token", "传入获取到的app_auth_token值");
@@ -94,7 +93,7 @@ public class AlipayUtil {
         }
     }
 
-    public static String findZFB_trade(ZFBFaceToFaceModel zfbFaceToFaceModel) throws Exception{
+    public static String findZFB_trade(GoodOrder goodOrder) throws Exception{
         CommonUtils commonUtils = new CommonUtils();
         /** 支付宝网关 **/
         String URL = commonUtils.getZFBinfoValue("open_api_domain");
@@ -119,7 +118,7 @@ public class AlipayUtil {
 
         /** 注：交易号（TradeNo）与订单号（OutTradeNo）二选一传入即可，如果2个同时传入，则以交易号为准 **/
         /** 支付接口传入的商户订单号。如：2020061601290011200000140004 **/
-        model.setOutTradeNo(zfbFaceToFaceModel.getOutTradeNo());
+        model.setOutTradeNo(goodOrder.getOutTradeNo());
 
         /** 异步通知/查询接口返回的支付宝交易号，如：2020061622001473951448314322 **/
         //model.setTradeNo("2020061622001473951448314322");

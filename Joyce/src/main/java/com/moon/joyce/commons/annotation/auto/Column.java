@@ -14,13 +14,14 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
-    String name();
+    String name() default "";
     String length() default "64";
-    Type type();
+    Type type() default Type.VARCHAR;
     String comment() default "";
     boolean isKey() default false;
     boolean auto() default false;
     boolean isNotNull() default false;
     String defaultValue() default "NULL";
     boolean unique() default false;
+    boolean exist() default true;
 }

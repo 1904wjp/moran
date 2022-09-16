@@ -11,19 +11,19 @@ import java.util.List;
  * @desc
  */
 
-public class PageVo implements Serializable {
+public class PageVo<T> implements Serializable {
 
     private static final long serialVersionUID = 6864620675861590712L;
     //总数据条数
     private long total;
     //分页查询的数据集合
-    private List<?> rows;
+    private List<T> rows;
 
-    public PageVo(List<?> list, long total) {
+    public PageVo(List<T> list, long total) {
         this.rows = list;
         this.total = total;
     }
-    public PageVo(IPage<?> page){
+    public PageVo(IPage<T> page){
         this.rows = page.getRecords();
         this.total = page.getTotal();
     }
@@ -35,11 +35,11 @@ public class PageVo implements Serializable {
         this.total = total;
     }
 
-    public List<?> getRows() {
+    public List<T> getRows() {
         return rows;
     }
 
-    public void setRows(List<?> rows) {
+    public void setRows(List<T> rows) {
         this.rows = rows;
     }
 }

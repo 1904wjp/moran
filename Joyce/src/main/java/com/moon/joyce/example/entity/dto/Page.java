@@ -24,8 +24,14 @@ public class Page extends BaseEntity {
     /*@Transient*/
     private int pageNumber;
 
+    @TableField(exist = false)
+    private String search;
     public int getOffset() {
         return offset;
+    }
+
+    public static com.baomidou.mybatisplus.extension.plugins.pagination.Page getPage(Page page){
+        return new com.baomidou.mybatisplus.extension.plugins.pagination.Page(page.getOffset(), page.getPageNumber());
     }
 
     public void setOffset(int offset) {
@@ -38,5 +44,13 @@ public class Page extends BaseEntity {
 
     public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
     }
 }

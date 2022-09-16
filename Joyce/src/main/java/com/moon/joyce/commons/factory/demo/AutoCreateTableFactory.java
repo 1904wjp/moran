@@ -204,7 +204,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
                             continue;
                         }
                         TableEntity tableEntity = new TableEntity();
-                        setTableEntity(table,tableEntity);
+                        setTableEntity(table,tableEntity,loadClass);
                         //属性注解获取并且填充
                         Field[] fields = getFields(loadClass);
                         //储存属性的容器
@@ -221,7 +221,15 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
                             //检测列属性字段注解并且填充
                             Column column = field.getAnnotation(Column.class);
                             if (Objects.nonNull(column)) {
+                                if (!column.exist()) {
+                                    continue;
+                                }
+                            }
+                            if (Objects.nonNull(column)) {
                                 ColumnEntity columnEntity = new ColumnEntity();
+                                if (StringUtils.isBlank(column.name())){
+                                    columnEntity.setName(StringsUtils.toUnderScoreCase(field.getName()));
+                                }
                                 createColumnByColumnAn(columnEntity, column);
                                 list.add(AutoCreateTableInit.columnConfigRules(columnEntity));
                             } else {
@@ -261,10 +269,15 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
      * 设置属性
      * @param table
      * @param tableEntity
+     * @param loadClass
      * @return
      */
-    private void  setTableEntity(Table table ,TableEntity tableEntity){
-        tableEntity.setName(table.name());
+    private void  setTableEntity(Table table, TableEntity tableEntity, Class<?> loadClass){
+        if (StringUtils.isNoneBlank(table.name())){
+            tableEntity.setName(table.name());
+        }else {
+            tableEntity.setName(StringsUtils.camelToUnderline(loadClass.getSimpleName()).toLowerCase());
+        }
         tableEntity.setContent(table.content());
         tableEntity.setStrategy(table.strategy().getCode().toString());
         tableEntity = AutoCreateTableInit.tableEntityConfigRules(tableEntity);
@@ -427,7 +440,9 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
         columnEntity.setAuto(column.auto());
         columnEntity.setComment(column.comment());
         columnEntity.setKey(column.isKey());
-        columnEntity.setName(column.name());
+        if (StringUtils.isNoneBlank(column.name())){
+            columnEntity.setName(column.name());
+        }
         columnEntity.setLength(Long.valueOf(column.length()));
         columnEntity.setType(column.type().getStr());
         columnEntity.setNotNull(column.isNotNull());
