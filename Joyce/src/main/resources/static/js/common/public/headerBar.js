@@ -1,5 +1,4 @@
 $(function () {
-
     if ($(".main_type").val()!=3){
         $('#app_bar').hide();
     }
@@ -104,6 +103,26 @@ $(function () {
             }
         }
     }
+    /**
+     * 每过三十秒获取一次
+     */
+   /* setInterval(function() {
+        jQuery.ajax({
+            type: "GET",
+            url: "sessioncheck.php",
+            dataType:"json",
+            success:function(response){
+                if (response) {
+                    window.location.href = 'logout.php';
+                }
+                else {
+                    // Process the expected results...
+                }
+            }
+
+        });
+    }, 30000);
+*/
 });
 
 /**

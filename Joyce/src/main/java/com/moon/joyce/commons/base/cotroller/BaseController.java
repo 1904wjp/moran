@@ -5,9 +5,12 @@ import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.factory.demo.UrlFactory;
 import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
 import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
+import com.moon.joyce.commons.utils.HttpUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
+import com.moon.joyce.example.functionality.entity.doma.Auth;
+import com.moon.joyce.example.functionality.entity.doma.MySessionContext;
 import com.moon.joyce.example.functionality.entity.doma.Setting;
 import com.moon.joyce.example.functionality.entity.doma.Uri;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
@@ -17,13 +20,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import redis.clients.jedis.Jedis;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -67,12 +73,11 @@ public class BaseController extends R {
     public Set<User> sessionUsers = new CopyOnWriteArraySet<>();
     @Autowired
     private DbBaseSettingService dbBaseSettingService;
-
     //缓存
-    public static Jedis cache ;
+    protected static Jedis cache ;
     //缓存的聊天记录
-    public static String addChatRecords = "add_chatRecord";
-
+    protected static String addChatRecords = "add_chatRecord";
+    protected static  ConcurrentHashMap<Long, Auth> authMap = new ConcurrentHashMap<>();;
   //  public static Map<String,Object> redisMap = new HashMap<>();
     /**
      * 获得session
@@ -255,5 +260,40 @@ public class BaseController extends R {
             hashMap.put(uri.getName(),uri);
         }
        return hashMap;
+    }
+
+    /**
+     * 验证单点登录
+     * @param user
+     * @param request
+     * @return
+     */
+    protected int getAuthCode(User user ,  HttpServletRequest request){
+        MySessionContext myc = MySessionContext.getInstance();
+        Auth auth = authMap.get(user.getId());
+        if (Objects.isNull(auth)){
+            return 200;
+        }
+        HttpSession session = myc.getSession(request.getSession().getId());
+        if (Objects.isNull(session)){
+            return 200;
+        }
+        if (auth.getSessionId().equals(request.getSession().getId())){
+            return 200;
+        }
+        if (!auth.getIp().equals(HttpUtils.getIpAddress(request))){
+            return 500;
+        }
+        return 500;
+    }
+
+    /**
+     * 登录存入map
+     * @param user
+     * @param request
+     * @return
+     */
+    protected void authMapPut(User user ,  HttpServletRequest request){
+        authMap.put(user.getId(),new Auth(request.getSession().getId(),HttpUtils.getIpAddress(request)));
     }
 }

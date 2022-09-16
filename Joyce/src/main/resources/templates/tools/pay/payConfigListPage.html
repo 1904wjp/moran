@@ -1,0 +1,181 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>每日看板列表</title>
+</head>
+<div class="log">
+    <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
+
+<div  class="container-fluid" >
+    <div id="tables" >
+        <div class="content-body">
+            <div id="user_list_div">
+                <div class="container-fluid">
+                        <div id="toolbar-btn" class="btn-group pull-left" style="padding-bottom:10px;">
+                            <button id="btn_add" onclick="addDayTask()" type="button"
+                                    class="btn btn-primary btn-space">添加</button>
+                        </div>
+                        <div class="pull-right" id="query-form"  style="padding-bottom:10px;">
+                            <div class="col-md-3"  style="margin-right:5px;">
+                                <label>创建日期:</label>
+                                <input id="search" name="search" placeholder='输入关键字' type="text" v-model="search" class="form-control">
+                            </div>
+                            <div class="btn-group">
+                                <button id="btn_search" onclick="dayTaskSearch()" type="button"
+                                        class="btn btn-primary btn-space">搜索
+                                    <span class="fa fa-search" aria-hidden="true"></span>
+                                </button>
+                                <button id="btn_reset" onclick="resetSearch()" type="button"
+                                        class="btn btn-default btn-space">重置
+                                    <span class="fa fa-eraser" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                    <table id="dayTaskTable" data-mobile-responsive="true"
+                           class="mb-bootstrap-table text-nowrap"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="add_dayTask"  style="width: 35%" class="row row-centered">
+    <div class="well col-md-12 col-centered">
+        <form class="form-horizontal center-block" role="form"  method="get">
+            <legend>配置新增</legend>
+            <input id="addId" type="hidden"/>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="openApiDomain">网关名支付宝网关名</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="openApiDomain"  style="width: 50%" type="text" name="openApiDomain" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="openApiDomainDev">沙箱网关名支付宝网关名</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="openApiDomainDev"  style="width: 50%" type="text" name="openApiDomainDev" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="mcloudApiDomain">微云网关名支付宝网关名</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="mcloudApiDomain"  style="width: 50%" type="text" name="mcloudApiDomain" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="pid">此处请填写你的PID</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="pid"  style="width: 50%" type="text" name="pid" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="pidDev">沙箱pid</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="pidDev"  style="width: 50%" type="text" name="pidDev" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="appid">此处请填写你当面付的APPID</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="appid"  style="width: 50%" type="text" name="appid" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="appidDev">沙箱支付</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="appidDev"  style="width: 50%" type="text" name="appidDev" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="privateKey">RSA私钥</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="privateKey"  style="width: 50%" type="text" name="privateKey" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="publicKey">此处请填写你的应用公钥</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="publicKey"  style="width: 50%" type="text" name="publicKey" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="alipayPublicKey">SHA256withRsa对应支付宝公钥</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="alipayPublicKey"  style="width: 50%" type="text" name="alipayPublicKey" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="alipayPublicKeyDev">沙箱支付宝公匙</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="alipayPublicKeyDev"  style="width: 50%" type="text" name="alipayPublicKeyDev" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="signType">签名类型: RSA->SHA1withRsa,RSA2->SHA256withRsa</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="signType"  style="width: 50%" type="text" name="signType" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="maxQueryRetry">当面付最大查询次数</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="maxQueryRetry"  style="width: 50%" type="text" name="maxQueryRetry" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="queryDuration">当面付最大查询查询间隔（毫秒）</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="queryDuration"  style="width: 50%" type="text" name="queryDuration" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="maxCancelRetry">当面付最大撤销次数</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="maxCancelRetry"  style="width: 50%" type="text" name="maxCancelRetry" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="cancelDuration">当面付最大撤撤销间隔（毫秒）</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="cancelDuration"  style="width: 50%" type="text" name="cancelDuration" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="heartbeatDelay">交易保障线程第一次调度延迟和调度间隔（秒）</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="heartbeatDelay"  style="width: 50%" type="text" name="heartbeatDelay" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="heartbeatDuration">交易保障线程第一次调度间隔（秒）</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="heartbeatDuration"  style="width: 50%" type="text" name="heartbeatDuration" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="notifyUrl">异步通知url(注意拦截器是否拦截)</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="notifyUrl"  style="width: 50%" type="text" name="notifyUrl" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="status">使用状态(0:使用，1：未使用)</label>
+                <div  class="col-sm-4 ">
+                    <input class="form-control" id="status"  style="width: 50%" type="text" name="status" placeholder=""/>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="regist"> </label>
+                <div class="col-sm-5">
+                    <input class="btn btn-default pull-left"  type="button" onclick="saveDayTask()" value="确定"/>
+                    <a class="btn btn-default pull-right" onclick="cancel()">取消</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--菜单-->
+<input class="title" type="hidden" value="dayTask"/>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/tools/pay/payConfig.js}"></script>

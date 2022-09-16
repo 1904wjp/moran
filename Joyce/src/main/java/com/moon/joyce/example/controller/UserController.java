@@ -28,6 +28,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -347,7 +348,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/doLogin")
-    public Result loginUser(@RequestParam("username") String username,@RequestParam("password") String password){
+    public Result loginUser(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request){
         User user = new User();
         user.setUsername(username);
         user.setPassword(MD5Utils.getMD5Str(password));
@@ -367,6 +368,12 @@ public class UserController extends BaseController {
             if (!checkStatusResult.getRs()){
                 return checkStatusResult;
             }
+            int authCode = getAuthCode(dbUser, request);
+            if (authCode==200){
+                authMapPut(dbUser,request);
+            }else {
+                return error("该用户已登录");
+            }
            /* if (sessionUsers.contains(dbUser)){
                 return error("用户已存在");
             }*/
@@ -376,6 +383,7 @@ public class UserController extends BaseController {
             }
             //设置当前登录人
             setSession(Constant.SESSION_USER,dbUser);
+
             //设置当前在线集合
             sessionUsers.add(dbUser);
             //检测是否存在当前登录人的相关配置
@@ -590,6 +598,7 @@ public class UserController extends BaseController {
             removeCurrentSetting();
             removeSessionUser();
             sessionUsers.remove(getSessionUser());
+            authMap.remove(getSessionUserId());
             redisTemplate.opsForValue().set(Constant.SESSION_USER,sessionUsers,24, TimeUnit.HOURS);
         } catch (Exception e) {
             return error();
@@ -612,6 +621,7 @@ public class UserController extends BaseController {
         dbUser.setPassword("000000");
         return success(dbUser);
     }
+
 
 }
 
