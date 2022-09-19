@@ -41,13 +41,6 @@ public class SysMenuController extends BaseController {
 
     /***************************************************************************************************************************************************/
 
-    /**
-     * 菜单列表页面
-     */
-    @GetMapping("/getMenus")
-    public String  getMenusPage(){
-        return pagePrefix+"menu";
-    }
 
     /**
      * 菜单初始化
@@ -57,8 +50,9 @@ public class SysMenuController extends BaseController {
     @ResponseBody
     @RequestMapping("/getMenus")
     public Result  getMenus(){
-        List<SysMenu> menus = sysMenuService.getMenus(null);
-        return success(SysMenu.typeSettingSysMenu(menus));
+        List<SysMenu> menus = sysMenuService.getList(getSessionUserId());
+        List<SysMenu> sysMenus = SysMenu.typeSettingSysMenu(menus);
+        return success(sysMenus);
     }
 
     /**

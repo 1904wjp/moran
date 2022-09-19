@@ -35,4 +35,6 @@ public interface SysMenuService extends IService<SysMenu> {
      * @return
      */
     SysMenu getOne(SysMenu sysMenu);
+
+    List<SysMenu> getList(Long sessionUserId);
 }

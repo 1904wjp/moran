@@ -3,7 +3,7 @@ $(function () {
         $('#app_bar').hide();
     }
     var val = $('.title').val();
-    var menuList = [{
+   /* var menuList = [{
         id: 0,
         parentId: 0,
         val: "index",
@@ -52,14 +52,14 @@ $(function () {
         url: "/example/covid/map",
         name: "疫情数据",
         childs: []
-    },/*{
+    },/!*{
         id: 7,
         parentId: 0,
         val: "dayTask",
         url: "/example/dayTask/dayTaskListPage",
         name: "每日看板",
         childs: []example/source/addAlbumPage
-    },*/ {
+    },*!/ {
         id: 7,
         parentId: 0,
         val: "au",
@@ -73,36 +73,51 @@ $(function () {
         url: "/example/source/albumListPage",
         name: "相册",
         childs: []
-    } ];
-    let menu = $('#menu_bar');
-    for (i = 0, len = menuList.length; i < len; i++) {
-        if (menuList[i].parentId == 0) {
-            if (menuList[i].childs.length == 0) {
-                if (val == menuList[i].val) {
-                    menu.append(" <li class='active'><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a></li>");
-                } else {
-                    menu.append(" <li><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a></li>");
-                }
-            } else {
-                if (val == menuList[i].val) {
-                    let temp = " <li class='active'><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a><ul>";
-                    for (let j = 0; j < menuList[i].childs.length; j++) {
-                        temp = temp+"<li class='childs'><a href=\"" + menuList[menuList[i].childs[j]].url + " \">" + menuList[menuList[i].childs[j]].name + "</a></li>";
+    } ];*/
+    $.ajax({
+        url: '/example/sysMenu/getMenus',
+        type: 'GET',
+        dataType: 'json',
+    }).done(function (data) {
+        if (data.rs){
+            var menuList = data.data;
+            let menu = $('#menu_bar');
+            for (i = 0, len = menuList.length; i < len; i++) {
+                if (menuList[i].parentId == 0) {
+                    if (menuList[i].childs.length == 0) {
+                        if (val == menuList[i].val) {
+                            menu.append(" <li class='active'><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a></li>");
+                        } else {
+                            menu.append(" <li><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a></li>");
+                        }
+                    } else {
+                        if (val == menuList[i].val) {
+                            let temp = " <li class='active'><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a><ul>";
+                            for (let j = 0; j < menuList[i].childs.length; j++) {
+                                temp = temp+"<li class='childs'><a href=\"" + menuList[menuList[i].childs[j]].url + " \">" + menuList[menuList[i].childs[j]].name + "</a></li>";
+                            }
+                            temp = temp+"</ul></li>";
+                            menu.append(temp);
+                            $('.childs').show();
+                        } else {
+                            let temp = " <li><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a><ul>";
+                            for (let j = 0; j < menuList[i].childs.length; j++) {
+                                temp = temp+"<li class='child'><a href=\"" + menuList[menuList[i].childs[j]].url + " \">" + menuList[menuList[i].childs[j]].name + "</a></li>";
+                            }
+                            temp = temp+"</ul></li>";
+                            menu.append(temp);
+                        }
                     }
-                    temp = temp+"</ul></li>";
-                    menu.append(temp);
-                    $('.childs').show();
-                } else {
-                    let temp = " <li><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a><ul>";
-                    for (let j = 0; j < menuList[i].childs.length; j++) {
-                        temp = temp+"<li class='child'><a href=\"" + menuList[menuList[i].childs[j]].url + " \">" + menuList[menuList[i].childs[j]].name + "</a></li>";
-                    }
-                    temp = temp+"</ul></li>";
-                    menu.append(temp);
                 }
             }
+            //  appendVideo($("#index_video"),"index_v",data.data.url);
+        }else {
+            tips(data.rs,data.msg);
         }
-    }
+    }).fail(function () {
+        /*  alert("获取资源失败");*/
+    });
+
     /**
      * 每过三十秒获取一次
      */

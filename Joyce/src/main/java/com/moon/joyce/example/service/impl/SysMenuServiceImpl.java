@@ -8,6 +8,7 @@ import com.moon.joyce.example.mapper.SysMenuMapper;
 import com.moon.joyce.example.service.CommonService;
 import com.moon.joyce.example.service.SysMenuService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,8 @@ import java.util.Objects;
 @Service
 @RedisValueComponet("SysMenuService")
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> implements SysMenuService , CommonService {
-
+    @Autowired
+    private SysMenuMapper sysMenuMapper;
     @Override
     public List<SysMenu> getMenus(SysMenu menu) {
         QueryWrapper wrapper = new QueryWrapper();
@@ -71,5 +73,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
             wrapper.eq("menu_file_url",sysMenu.getFileUrl());
         }
         return baseMapper.selectOne(wrapper);
+    }
+
+    @Override
+    public List<SysMenu> getList(Long sessionUserId) {
+        return sysMenuMapper.getList(sessionUserId);
     }
 }

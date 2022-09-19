@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.moon.joyce.example.mapper.SysMenuMapper">
+    <select id="getList" resultType="com.moon.joyce.example.entity.doma.SysMenu">
+        SELECT sm.* FROM springboot.sys_menu sm
+         WHERE  sm.delete_flag = 0 AND  sm.id IN (SELECT utm.id FROM springboot.user_type_menu utm LEFT JOIN springboot.user_type ut ON utm.user_type_id = ut.id
+         WHERE utm.delete_flag = 0 AND ut.delete_flag = 0 AND ut.id IN (SELECT u.user_type_id FROM springboot.user u
+         WHERE u.delete_flag = 0 AND u.id = #{id}))
+    </select>
+</mapper>
