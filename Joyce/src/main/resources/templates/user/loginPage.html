@@ -112,6 +112,9 @@
                     }else{
                         localStorage.removeItem('keyPass');
                     }
+                    if(data.code === 206){
+                        alert(data.msg);
+                    }
                     toList("/main");
                 }else {
                     tips(data.rs,data.msg);

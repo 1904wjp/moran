@@ -106,23 +106,22 @@ $(function () {
     /**
      * 每过三十秒获取一次
      */
-   /* setInterval(function() {
+    setInterval(function() {
         jQuery.ajax({
             type: "GET",
-            url: "sessioncheck.php",
+            url: "/example/user/checkUser",
             dataType:"json",
-            success:function(response){
-                if (response) {
-                    window.location.href = 'logout.php';
-                }
-                else {
-                    // Process the expected results...
+            success:function(data){
+                console.log("定时任务执行成功",data.rs);
+                if (!data.rs) {
+                    if (data.msg!=null){
+                        alert(data.msg);
+                        toList("/index");
+                    }
                 }
             }
-
         });
     }, 30000);
-*/
 });
 
 /**

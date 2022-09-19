@@ -269,17 +269,18 @@ public class BaseController extends R {
      * @return
      */
     protected int getAuthCode(User user ,  HttpServletRequest request){
-        MySessionContext myc = MySessionContext.getInstance();
+       /* MySessionContext myc = MySessionContext.getInstance();*/
+        logger.info("--------------------->登录ip:"+HttpUtils.getIpAddress(request));
         Auth auth = authMap.get(user.getId());
         if (Objects.isNull(auth)){
             return 200;
         }
-        HttpSession session = myc.getSession(request.getSession().getId());
+      /*  HttpSession session = myc.getSession(request.getSession().getId());
         if (Objects.isNull(session)){
             return 200;
-        }
+        }*/
         if (auth.getSessionId().equals(request.getSession().getId())){
-            return 200;
+            return 206;
         }
         if (!auth.getIp().equals(HttpUtils.getIpAddress(request))){
             return 500;
