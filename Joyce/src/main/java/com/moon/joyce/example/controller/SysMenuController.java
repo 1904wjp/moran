@@ -55,6 +55,18 @@ public class SysMenuController extends BaseController {
      * @return
      */
     @ResponseBody
+    @RequestMapping("/getMenus")
+    public Result  getMenus(){
+        List<SysMenu> menus = sysMenuService.getMenus(null);
+        return success(SysMenu.typeSettingSysMenu(menus));
+    }
+
+    /**
+     * 菜单初始化
+     * @param
+     * @return
+     */
+    @ResponseBody
     @RequestMapping("/doGetMenus")
     public Result  doGetMenus(){
         List<SysMenu> menus = sysMenuService.getMenus(null);

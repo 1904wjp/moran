@@ -9,6 +9,10 @@ import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.commons.factory.enums.Type;
 import com.moon.joyce.example.entity.dto.Page;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 /**
  * <p>
@@ -50,6 +54,10 @@ public class SysMenu extends Page {
     @TableField("file_url")
    /* @Column(name = "file_url",columnDefinition = "varchar(32) COMMENT '文件地址'")*/
     private String fileUrl;
+
+    @Column(exist = false)
+    @TableField(exist = false)
+    private List<SysMenu> childSystems;
 
     public String getMenuType() {
         return menuType;
@@ -98,6 +106,52 @@ public class SysMenu extends Page {
     public void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
     }
+
+    public List<SysMenu> getChildSystems() {
+        return childSystems;
+    }
+
+    public void setChildSystems(List<SysMenu> childSystems) {
+        this.childSystems = childSystems;
+    }
+
+    /**
+     * 排版自定义
+     * @param sysMenus
+     * @return
+     */
+    public static List<SysMenu>  typeSettingSysMenu(List<SysMenu> sysMenus){
+        List<SysMenu> menus = new ArrayList<>();
+        List<SysMenu> menuList = sysMenus.stream().filter(x -> x.getParentId() == 0).collect(Collectors.toList());
+        menus.addAll(menuList);
+        addAll(menus,sysMenus);
+        return menus;
+    }
+
+    /**
+     * 添加菜单
+     * @param menus
+     * @param sysMenus
+     */
+    private static void addAll(List<SysMenu> menus, List<SysMenu> sysMenus) {
+        sysMenus.removeIf(sysMenu ->menus.stream().anyMatch(menu->menu.getId().equals(sysMenu.getId())));
+        for (SysMenu menu : menus) {
+            getChildSystemsMethod(menu,sysMenus);
+        }
+    }
+
+    private static void getChildSystemsMethod(SysMenu menu,List<SysMenu> sysMenus) {
+        List<SysMenu> childSystems = new ArrayList<>();
+        sysMenus.removeIf(x->x.getId().equals(menu.getId()));
+        for (SysMenu sysMenu : sysMenus) {
+            if (sysMenu.getParentId().equals(menu.getId())){
+                childSystems.add(sysMenu);
+                getChildSystemsMethod(sysMenu,sysMenus);
+            }
+        }
+        menu.setChildSystems(childSystems);
+    }
+
 
     @Override
     public String toString() {
