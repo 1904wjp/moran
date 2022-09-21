@@ -42,7 +42,7 @@ import java.util.zip.ZipOutputStream;
  * @date 2021/9/3 17:53
  * @desc 文件工具类
  */
-public class FileUtils implements Serializable {
+public class FileUtils extends org.apache.commons.io.FileUtils implements Serializable {
     private static final long serialVersionUID = 6813374997135795261L;
 
     private FileUtils() throws JoyceException {
@@ -924,9 +924,22 @@ public class FileUtils implements Serializable {
      * 创建新文件
      * @param path
      */
-    public static void createNewFile(String path, boolean isDir) {
+    public static File createNewFile(boolean isDel,String path, boolean isDir) {
+        File file = createFile(path);
+        if (isDel){
+            deleteFile(file);
+        }
+        createNewFile(file, isDir);
+        return file;
+    }
+    /**
+     * 创建新文件
+     * @param path
+     */
+    public static File createNewFile(String path, boolean isDir) {
         File file = createFile(path);
         createNewFile(file, isDir);
+        return file;
     }
 
     /**

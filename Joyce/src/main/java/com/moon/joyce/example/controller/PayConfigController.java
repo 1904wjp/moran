@@ -1,20 +1,24 @@
 package com.moon.joyce.example.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.enums.RE;
+import com.moon.joyce.commons.utils.FileUtils;
+import com.moon.joyce.commons.utils.MD5Utils;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.doma.PayConfig;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.service.PayConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +33,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/example/payConfig")
 public class PayConfigController extends BaseController {
+    @Value("${file.config.path}")
+    private String filePath;
     @Autowired
     private PayConfigService payConfigService;
 
@@ -54,19 +60,48 @@ public class PayConfigController extends BaseController {
         PayConfig config = null;
         try {
              config = payConfigService.getById(id);
+             config.setPrivateKey(null);
         } catch (Exception e) {
             e.printStackTrace();
             return getResult(false,RE.SELECT);
         }
-        return getResult(true,RE.SELECT);
+        return getResult(true,RE.SELECT,config);
     }
 
     @ResponseBody
-    @RequestMapping("/update")
+    @RequestMapping("/save")
     public Result getById(PayConfig payConfig){
         setBaseField(payConfig);
+        if (Objects.isNull(payConfig.getId())){
+            payConfig.setPrivateKeyPassword(MD5Utils.getMD5Str(payConfig.getPrivateKey()));
+        }
+        filePath = filePath + "/" + getSessionUserId() +"/"+ "privateKey.json";
+        FileUtils.createNewFile(true,filePath, false);
+        String text = "{\"key\":\""+payConfig.getPrivateKey()+"\"}";
+        FileUtils.writeFile(filePath,text);
+        payConfig.setPrivateKey(filePath);
         boolean rs = payConfigService.saveOrUpdate(payConfig);
         return getResult(rs, RE.ADDORUPDATE,payConfig);
+    }
+
+    @ResponseBody
+    @RequestMapping("/privateKey")
+    public Result getById(@RequestParam("password") String password,@RequestParam("id") Long id){
+        PayConfig payConfig = payConfigService.getById(id);
+        String text = "";
+        if (password.equals(payConfig.getPrivateKeyPassword())){
+           if (StringsUtils.isBlank(payConfig.getPrivateKey())){
+               File file = FileUtils.createFile(payConfig.getPrivateKey());
+               try {
+                   text = FileUtils.readFileToString(file, "utf-8");
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+               JSONObject jsonObject = JSON.parseObject(text);
+               text = jsonObject.get("key").toString();
+           }
+        }
+        return getResult(true, RE.SELECT,text);
     }
 
     @ResponseBody

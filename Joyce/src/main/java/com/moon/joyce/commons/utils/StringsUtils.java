@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * @date 2021/9/17 14:00
  * @desc 字符串工具类
  */
-public class StringsUtils  implements Serializable {
+public class StringsUtils  extends StringUtils implements Serializable {
     private static final long serialVersionUID = 3375173776417938676L;
 
     private StringsUtils() throws JoyceException {

@@ -65,6 +65,8 @@ public class PayConfig extends Page {
     private String notifyUrl;
     @Column(comment = "使用状态(0:使用，1：未使用)")
     private String status;
+    @Column(comment = "私匙修改查看需要钥匙")
+    private String privateKeyPassword;
     public static String usedStatus = "0";
     public static String unusedStatus = "1";
     public final static String CLASS_NAME = "PAYCONFIG";
