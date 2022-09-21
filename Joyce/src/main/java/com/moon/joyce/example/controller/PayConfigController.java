@@ -100,6 +100,8 @@ public class PayConfigController extends BaseController {
                JSONObject jsonObject = JSON.parseObject(text);
                text = jsonObject.get("key").toString();
            }
+        }else {
+            return error("密码错误");
         }
         return getResult(true, RE.SELECT,text);
     }
