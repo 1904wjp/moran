@@ -2,6 +2,7 @@ package com.moon.joyce.commons.base.cotroller;
 
 
 import com.moon.joyce.commons.constants.Constant;
+import com.moon.joyce.commons.enums.RE;
 import com.moon.joyce.commons.factory.demo.UrlFactory;
 import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
 import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
@@ -9,10 +10,7 @@ import com.moon.joyce.commons.utils.HttpUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
-import com.moon.joyce.example.functionality.entity.doma.Auth;
-import com.moon.joyce.example.functionality.entity.doma.MySessionContext;
-import com.moon.joyce.example.functionality.entity.doma.Setting;
-import com.moon.joyce.example.functionality.entity.doma.Uri;
+import com.moon.joyce.example.functionality.entity.doma.*;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

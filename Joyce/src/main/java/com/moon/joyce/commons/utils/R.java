@@ -5,6 +5,7 @@ import com.moon.joyce.commons.enums.RE;
 import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.doma.Result;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +33,6 @@ public class R  {
         }
         return dataResult(rsi,RE.UPDATE.getCode());
     }
-
     /**
      * 返回结果
      * @param rsi
@@ -43,8 +43,6 @@ public class R  {
     public static Result dataResult(int rsi, RE re, BaseEntity entity){
         return  dataResult(rsi,re.getCode(),entity);
     }
-
-
     /**
      * 返回结果
      * @param rsi
@@ -214,7 +212,6 @@ public class R  {
         }
         return error(errorMsg);
     }
-
     /**
      * 返回结果
      * @param rsi
@@ -226,7 +223,6 @@ public class R  {
         }
         return error(errorMsg);
     }
-
     /**
      * 返回结果
      * @param rsi
@@ -249,7 +245,6 @@ public class R  {
         }
         return error();
     }
-
     /**
      * 返回结果
      * @param rs
@@ -479,48 +474,30 @@ public class R  {
      * 失败的方法
      */
     public static Result error(Integer code,String msg,Boolean rs,Object data){
-        if (Objects.isNull(msg)){
             msg = getErrorMSG(code, msg);
-        }
         return new Result(code,msg,rs,data);
     }
     public static Result error(Integer code,String msg,Object data){
-        if (Objects.isNull(msg)){
-            msg = getErrorMSG(code, msg);
-        }
-        return new Result(code,msg,false,data);
+
+        return new Result(code,getErrorMSG(code, msg),false,data);
     }
     public static Result error(Integer code,String msg){
-        if (Objects.isNull(msg)){
-            msg = getErrorMSG(code, msg);
-        }
-        return new Result(code,msg,false);
+        return new Result(code,getErrorMSG(code, msg),false);
     }
     public static Result error(Integer code,String msg,Boolean rs){
-        if (Objects.isNull(msg)){
-            msg = getErrorMSG(code, msg);
-        }
-        return new Result(code,msg,rs);
+        return new Result(code,getErrorMSG(code, msg),rs);
     }
     public static Result error(Integer code,Boolean rs,Object data){
-        String msg =null;
-        msg = getErrorMSG(code, msg);
-        return new Result(code,msg,rs,data);
+        return new Result(code,getErrorMSG(code, null),rs,data);
     }
     public static Result error(Integer code,Object data){
-        String msg =null;
-        msg = getErrorMSG(code, msg);
-        return new Result(code,msg,false,data);
+        return new Result(code,getErrorMSGByCode(code),false,data);
     }
     public static Result error(Integer code,Boolean rs){
-        String msg =null;
-        msg = getErrorMSG(code, msg);
-        return new Result(code,msg,rs);
+        return new Result(code,getErrorMSGByCode(code),rs);
     }
     public static Result error(Integer code){
-        String msg =null;
-        msg = getErrorMSG(code, msg);
-        return new Result(code,msg,false);
+        return new Result(code,getErrorMSGByCode(code),false);
     }
     public static Result error(){
         return new Result(Constant.ERROR_CODE,Constant.CHINESE_ERROR_MESSAGE,false);
@@ -528,8 +505,15 @@ public class R  {
     public static Result error(String msg){
         return new Result(Constant.ERROR_CODE,msg,false);
     }
-
-
+    public static Result getResult(boolean rs, RE re, Object data){
+        return dataResult(rs, re,data,1);
+    }
+    public static Result getResult(boolean rs, int code, Object data){
+        return dataResult(rs,code,data);
+    }
+    public static Result getResult(boolean rs, RE re){
+        return dataResult(rs, re,null,1);
+    }
     /**
      * 设置默认error情况下的msg绑定
      * @param code
@@ -546,9 +530,19 @@ public class R  {
      * @return
      */
     private  static String getErrorMSG(Integer code,String msg){
+           if (StringUtils.isBlank(msg)){
+               msg = getErrorMSGByCode(code);
+           }
+        return msg;
+    }
+    private  static String getErrorMSGByCode(Integer code){
+        String msg = Constant.CHINESE_COMMON_ERROR_MESSAGE;
+        if (Objects.isNull(code)){
+            return msg;
+        }
             /**
              *错误
-            */
+             */
             if (Constant.ERROR_CODE.equals(code)){
                 msg=Constant.RESULT_ERROR_MSG;
             }

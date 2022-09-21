@@ -31,19 +31,23 @@ import java.util.Objects;
 public class PayConfigController extends BaseController {
     @Autowired
     private PayConfigService payConfigService;
+
     @RequestMapping("/payConfigListPage")
     public String payConfigListPage(){
         return "";
     }
+
     @RequestMapping("/payConfigPage")
     public String payConfigPage(){
         return "";
     }
+
     @ResponseBody
     @RequestMapping("/getPayConfigList")
     public PageVo<PayConfig> getPayConfigList(PayConfig payConfig){
        return payConfigService.getPage(payConfig);
     }
+
     @ResponseBody
     @RequestMapping("/{id}")
     public Result getById(@PathVariable Long id){
@@ -52,23 +56,25 @@ public class PayConfigController extends BaseController {
              config = payConfigService.getById(id);
         } catch (Exception e) {
             e.printStackTrace();
-            return dataResult(false,RE.SELECT,null,1);
+            return getResult(false,RE.SELECT);
         }
-        return dataResult(true,RE.SELECT,null,1);
+        return getResult(true,RE.SELECT);
     }
+
     @ResponseBody
     @RequestMapping("/update")
     public Result getById(PayConfig payConfig){
         setBaseField(payConfig);
         boolean rs = payConfigService.saveOrUpdate(payConfig);
-        return dataResult(rs, RE.ADDORUPDATE.getCode(),payConfig);
+        return getResult(rs, RE.ADDORUPDATE,payConfig);
     }
+
     @ResponseBody
     @RequestMapping("/del")
     public Result del(String ids){
         List<String> list = StringsUtils.strToList(ids);
         boolean b = payConfigService.removeByIds(list);
-        return dataResult(b,RE.DELETE,null,1);
+        return getResult(b,RE.DELETE);
     }
 
     /**
@@ -92,7 +98,7 @@ public class PayConfigController extends BaseController {
         PayConfig payConfig1 = payConfigService.getById(id);
         payConfig1.setStatus(PayConfig.usedStatus);
         boolean rs2 = payConfigService.saveOrUpdate(payConfig1);
-        return dataResult(rs1&&rs2,RE.UPDATE,null,1);
+        return getResult(rs1&&rs2,RE.UPDATE);
     }
 }
 
