@@ -2,10 +2,16 @@ package com.moon.joyce.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.moon.joyce.commons.base.cotroller.BaseController;
+import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.AlipayUtil;
 import com.moon.joyce.commons.utils.CommonUtils;
 import com.moon.joyce.commons.utils.UUIDUtils;
 import com.moon.joyce.example.functionality.entity.doma.GoodOrder;
+import com.moon.joyce.example.functionality.entity.doma.PayConfig;
+import com.moon.joyce.example.functionality.entity.doma.Setting;
+import com.moon.joyce.example.functionality.service.PayConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +23,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author: Joyce
@@ -26,7 +33,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/pay")
-public class PayController {
+public class PayController extends BaseController {
     private static final String DEV ="_dev";
     @RequestMapping("/payPage")
     public String getPayPage(){
@@ -44,7 +51,11 @@ public class PayController {
     public Map<String,Object> zFBPreorderAction(HttpServletRequest request, HttpServletResponse response){
         Map<String,Object> resultMap=new HashMap<String, Object>();
         try {
-            CommonUtils commonUtils=new CommonUtils();
+            PayConfig payConfig = getCurrentPayConfig();
+            if (Objects.isNull(payConfig)){
+                return resultMap;
+            }
+            /* CommonUtils commonUtils=new CommonUtils();*/
             //(必填)商户唯一订单编号
             String outTradeNo= UUIDUtils.getUUID();
             // (必填) 订单标题，粗略描述用户的支付目的。如“喜士多（浦东店）消费”
@@ -52,7 +63,7 @@ public class PayController {
             // (必填) 订单总金额，单位为元，不能超过1亿元
             String totalAmount = "100";
             //（必填）支付成功支付支付宝异步通知的接口地址
-            String notifyUrl =commonUtils.getZFBinfoValue("NotifyUrl");
+            String notifyUrl =payConfig.getNotifyUrl();
             //将参数放入实体对象中
             GoodOrder goodOrder =new GoodOrder();
             goodOrder.setOutTradeNo(outTradeNo);
@@ -60,7 +71,7 @@ public class PayController {
             goodOrder.setTotalAmount(totalAmount);
             goodOrder.setNotifyUrl(notifyUrl);
             //支付宝预下单
-            String json= AlipayUtil.ZFBPreorder(goodOrder,DEV);
+            String json= AlipayUtil.ZFBPreorder(goodOrder,payConfig);
             //解析json数据
             JSONObject jsonObject=JSONObject.parseObject(json);
             //得到alipay_trade_precreate_response数据后再强转JSONObject
@@ -80,12 +91,16 @@ public class PayController {
     public Map<String,Object> findZFB_tradeAction(HttpServletRequest request,HttpServletResponse response){
         Map<String,Object> resultMap=new HashMap<String, Object>();
         try {
+            PayConfig currentPayConfig = getCurrentPayConfig();
+            if (Objects.isNull(currentPayConfig)){
+                return resultMap;
+            }
             //(必填)商户唯一订单编号
             String outTradeNo=request.getParameter("outTradeNo");
             GoodOrder goodOrder =new GoodOrder();
             goodOrder.setOutTradeNo(outTradeNo);
             //查询交易状态
-            String json=AlipayUtil.findZFB_trade(goodOrder);
+            String json=AlipayUtil.findZFB_trade(goodOrder,currentPayConfig);
             System.out.println(json);
             JSONObject jsonObject=JSONObject.parseObject(json);
             JSONObject jsonobj_two=(JSONObject)jsonObject.get("alipay_trade_query_response");
@@ -129,9 +144,12 @@ public class PayController {
     @RequestMapping("/ZFBcallback")
     public void zFBcallback(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            CommonUtils commonUtils=new CommonUtils();
+            PayConfig payConfig = getCurrentPayConfig();
+            if (Objects.isNull(payConfig)){
+                return ;
+            }
             //支付宝公钥
-            String alipay_public_key=commonUtils.getZFBinfoValue("alipay_public_key"+DEV);
+            String alipay_public_key=payConfig.getAlipayPublicKey();
             PrintWriter out;
             out = response.getWriter();
             //获取支付宝POST过来反馈信息
@@ -170,6 +188,19 @@ public class PayController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private PayConfig getCurrentPayConfig(){
+        Setting sessionValue = (Setting) getSessionValue(getSessionUserId() + Constant.CURRENT_SETTING);
+        if (Objects.isNull(sessionValue)){
+            return null;
+        }
+        if (Objects.isNull(sessionValue.getMap())&&sessionValue.getMap().isEmpty()){
+            return null;
+        }
+        if (Objects.isNull(sessionValue.getMap().get(PayConfig.CLASS_NAME))){
+            return null;
+        }
+        return  (PayConfig) sessionValue.getMap().get(PayConfig.CLASS_NAME);
     }
 
 }

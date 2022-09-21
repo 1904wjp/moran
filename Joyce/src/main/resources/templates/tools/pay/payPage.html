@@ -30,6 +30,7 @@
       success: function (res) {
         //商户订单编号
         outTradeNo=res.outTradeNo;
+        console.log("-------------->",res);
         //创建订单二维码
         outputQRCod(res.qrcode,188,188);
         findZFB_trade();

@@ -83,7 +83,9 @@ public class SysMenu extends Page {
      */
     public static List<SysMenu>  typeSettingSysMenu(List<SysMenu> sysMenus){
         List<SysMenu> menus = new ArrayList<>();
-        List<SysMenu> menuList = sysMenus.stream().filter(x -> x.getParentId() == 0).collect(Collectors.toList());
+        List<SysMenu> menuList = sysMenus.stream()
+                .filter(x -> x.getParentId() == 0)
+                .collect(Collectors.toList());
         menus.addAll(menuList);
         return addAll(menus,sysMenus);
     }
@@ -134,10 +136,11 @@ public class SysMenu extends Page {
 
     public static List<SysMenu> sortSys(Map<Long,SysMenu> hashMap){
         List<Long> longs = new ArrayList<>(hashMap.keySet());
-        List<Object> collect = Arrays.stream(longs.toArray()).sorted().collect(Collectors.toList());
+        List<Object> collect = Arrays.stream(longs.toArray())
+                .sorted().collect(Collectors.toList());
         List<SysMenu> sysMenus = new ArrayList<>();
-        for (int i = 0; i < collect.size(); i++) {
-            sysMenus.add(hashMap.get(collect.get(i)));
+        for (Object o : collect) {
+            sysMenus.add(hashMap.get(o));
         }
         return sysMenus;
     }

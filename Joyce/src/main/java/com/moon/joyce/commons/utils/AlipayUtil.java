@@ -10,6 +10,7 @@ import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.moon.joyce.example.functionality.entity.doma.GoodOrder;
+import com.moon.joyce.example.functionality.entity.doma.PayConfig;
 
 /**
  * 支付宝面对面付款
@@ -21,20 +22,20 @@ public class AlipayUtil {
      * @param goodOrder
      * @return
      */
-    public static String ZFBPreorder(GoodOrder goodOrder, String dev) {
+    public static String ZFBPreorder(GoodOrder goodOrder, PayConfig config) {
         try {
-            CommonUtils commonUtils = new CommonUtils();
+
             /** 支付宝网关 **/
-            String URL = commonUtils.getZFBinfoValue("open_api_domain"+dev);
+            String URL = config.getOpenApiDomain();
 
             /** 应用id，如何获取请参考：https://opensupport.alipay.com/support/helpcenter/190/201602493024 **/
-            String APP_ID = commonUtils.getZFBinfoValue("appid"+dev);
+            String APP_ID = config.getAppid();
 
             /** 应用私钥，如何获取请参考：https://opensupport.alipay.com/support/helpcenter/207/201602469554 **/
-            String APP_PRIVATE_KEY = commonUtils.getZFBinfoValue("private_key");
+            String APP_PRIVATE_KEY = config.getPrivateKey();
 
             /** 支付宝公钥，如何获取请参考：https://opensupport.alipay.com/support/helpcenter/207/201602487431 **/
-            String ALIPAY_PUBLIC_KEY = commonUtils.getZFBinfoValue("alipay_public_key"+dev);
+            String ALIPAY_PUBLIC_KEY = config.getAlipayPublicKey();
 
             /** 初始化 **/
             AlipayClient alipayClient = new DefaultAlipayClient(URL, APP_ID, APP_PRIVATE_KEY, "json", "UTF-8", ALIPAY_PUBLIC_KEY, "RSA2");
@@ -93,19 +94,19 @@ public class AlipayUtil {
         }
     }
 
-    public static String findZFB_trade(GoodOrder goodOrder) throws Exception{
+    public static String findZFB_trade(GoodOrder goodOrder, PayConfig config) throws Exception{
         CommonUtils commonUtils = new CommonUtils();
         /** 支付宝网关 **/
-        String URL = commonUtils.getZFBinfoValue("open_api_domain");
+        String URL = config.getOpenApiDomain();
 
         /** 应用id，如何获取请参考：https://opensupport.alipay.com/support/helpcenter/190/201602493024 **/
-        String APP_ID = commonUtils.getZFBinfoValue("appid");
+        String APP_ID = config.getAppid();
 
         /** 应用私钥，如何获取请参考：https://opensupport.alipay.com/support/helpcenter/207/201602469554 **/
-        String APP_PRIVATE_KEY = commonUtils.getZFBinfoValue("private_key");
+        String APP_PRIVATE_KEY = config.getPrivateKey();
 
         /** 支付宝公钥，如何获取请参考：https://opensupport.alipay.com/support/helpcenter/207/201602487431 **/
-        String ALIPAY_PUBLIC_KEY = commonUtils.getZFBinfoValue("alipay_public_key");
+        String ALIPAY_PUBLIC_KEY = config.getAlipayPublicKey();
 
         /** 初始化 **/
         AlipayClient alipayClient = new DefaultAlipayClient(URL,APP_ID,APP_PRIVATE_KEY,"json","UTF-8",ALIPAY_PUBLIC_KEY,"RSA2");

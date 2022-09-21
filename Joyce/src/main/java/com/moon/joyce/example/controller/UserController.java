@@ -396,7 +396,7 @@ public class UserController extends BaseController {
             int flag = 0;
             if (authCode != 200) {
                 if (authCode == 206) {
-                    return error("该用户已登录");
+                    /*return error("该用户已登录");*/
                 } else {
                     if (Objects.nonNull(getSessionValue("flag"))){
                         if (Integer.parseInt(getSessionValue("flag").toString()) == 4){
@@ -431,7 +431,7 @@ public class UserController extends BaseController {
                 Setting currentSetting = userServiceControllerDetailService.checkData(getSessionUser().getId());
                 if (Objects.nonNull(currentSetting)) {
                     logger.info(username + "======>设置装配中");
-                    setSession(getSessionUser().getId() + Constant.CURRENT_SETTING, currentSetting);
+                    setSession(getSessionUserId() + Constant.CURRENT_SETTING, currentSetting);
                 }
             }
             //  清空次数
@@ -693,14 +693,18 @@ public class UserController extends BaseController {
     @ResponseBody
     @GetMapping("/checkUser")
     public Result checkUser() {
-        if (Objects.isNull(getSession())||Objects.isNull(getSessionUserId())||Objects.isNull(USER_SESSION_MAP.get(getSessionUserId()))){
+        try {
+            if (Objects.isNull(getSession())||Objects.isNull(getSessionUserId())||Objects.isNull(USER_SESSION_MAP.get(getSessionUserId()))){
+                return error();
+            }
+            String targSessionId = USER_SESSION_MAP.get(getSessionUserId());
+            logger.info("------------------------------------->{}::{}", targSessionId, getSession().getId());
+            if (!targSessionId.equals(getSession().getId())) {
+                removeSessionUser();
+                return error("此号在别处登录，您已下线");
+            }
+        } catch (Exception e) {
             return error();
-        }
-        String targSessionId = USER_SESSION_MAP.get(getSessionUserId());
-        logger.info("------------------------------------->{}::{}", targSessionId, getSession().getId());
-        if (!targSessionId.equals(getSession().getId())) {
-            removeSessionUser();
-            return error("此号在别处登录，您已下线");
         }
         return success();
     }
@@ -721,7 +725,6 @@ public class UserController extends BaseController {
         RequestCount requestCount = new RequestCount(1,new Date());
         IP_SESSION_MAP.put(key,requestCount);
     }
-
     }
 }
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.Table;
+import com.moon.joyce.commons.factory.enums.Type;
 import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 import com.moon.joyce.example.entity.dto.Page;
 import com.moon.joyce.example.entity.vo.PageVo;
@@ -38,13 +39,13 @@ public class PayConfig extends Page {
     private String appid;
     @Column(comment = "沙箱支付")
     private String appidDev;
-    @Column(comment = "RSA私钥")
+    @Column(comment = "RSA私钥",type = Type.TEXT)
     private String privateKey;
-    @Column(comment = "此处请填写你的应用公钥")
+    @Column(comment = "此处请填写你的应用公钥",type = Type.TEXT)
     private String publicKey;
-    @Column(comment = "SHA256withRsa对应支付宝公钥")
+    @Column(comment = "SHA256withRsa对应支付宝公钥",type = Type.TEXT)
     private String alipayPublicKey;
-    @Column(comment = "沙箱支付宝公匙")
+    @Column(comment = "沙箱支付宝公匙",type = Type.TEXT)
     private String alipayPublicKeyDev;
     @Column(comment = "签名类型: RSA->SHA1withRsa,RSA2->SHA256withRsa")
     private String signType;
@@ -66,4 +67,5 @@ public class PayConfig extends Page {
     private String status;
     public static String usedStatus = "0";
     public static String unusedStatus = "1";
+    public final static String CLASS_NAME = "PAYCONFIG";
 }

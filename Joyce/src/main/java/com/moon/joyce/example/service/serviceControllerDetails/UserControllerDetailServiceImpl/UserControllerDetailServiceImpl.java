@@ -7,17 +7,21 @@ import com.moon.joyce.example.entity.doma.DbBaseSetting;
 import com.moon.joyce.example.entity.doma.PackageInfo;
 import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.functionality.entity.doma.EmailData;
+import com.moon.joyce.example.functionality.entity.doma.PayConfig;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.entity.doma.Setting;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import com.moon.joyce.example.functionality.service.MailService;
 import com.moon.joyce.example.functionality.service.PackageInfoService;
+import com.moon.joyce.example.functionality.service.PayConfigService;
 import com.moon.joyce.example.service.UserService;
 import com.moon.joyce.example.service.serviceControllerDetails.UserControllerDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -43,6 +47,11 @@ public class UserControllerDetailServiceImpl implements UserControllerDetailServ
      */
     @Autowired
     private PackageInfoService  packageInfoService;
+    /**
+     * 支付接口
+     */
+    @Autowired
+    private PayConfigService payConfigService;
     /**
      * 注入邮件接口
      */
@@ -72,7 +81,17 @@ public class UserControllerDetailServiceImpl implements UserControllerDetailServ
         PackageInfo packageInfo = new PackageInfo();
         packageInfo.setApplyStatus(Constant.APPLY_STATUS);
         packageInfo.setUserId(userId);
-        return  new Setting(dbBaseSettingService.getMain(dbBaseSetting), packageInfoService.getMain(packageInfo));
+        Map<String, Object> map = new HashMap<>();
+        PayConfig payConfig = new PayConfig();
+        payConfig.setCreateIds(userId);
+        payConfig.setStatus(String.valueOf(Constant.UNDELETE_STATUS));
+        PayConfig dbPayConfig = payConfigService.getOne(payConfig);
+        if (Objects.nonNull(dbPayConfig)){
+            map.put(PayConfig.CLASS_NAME,dbPayConfig);
+        }
+        Setting setting = new Setting(dbBaseSettingService.getMain(dbBaseSetting), packageInfoService.getMain(packageInfo));
+        setting.setMap(map);
+        return  setting;
     }
 
     @Override

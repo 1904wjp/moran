@@ -13,12 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.util.Objects;
 
 /**
@@ -28,7 +22,7 @@ import java.util.Objects;
  * @describe:文件上传接口
  */
 @UriPri(name = "文件接口", pri = "/fileUpload")
-@RequestMapping("/fileUpload")
+@RequestMapping("/fileUpload/s")
 public class FileController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
