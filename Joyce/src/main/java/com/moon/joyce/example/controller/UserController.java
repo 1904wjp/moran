@@ -239,7 +239,6 @@ public class UserController extends BaseController {
 
     /**
      * 用户发送数据
-     *
      * @param id
      * @param msg
      */
@@ -285,7 +284,6 @@ public class UserController extends BaseController {
 
     /**
      * user数据保存方法
-     *
      * @param user
      * @return
      */
@@ -328,7 +326,6 @@ public class UserController extends BaseController {
 
     /**
      * 邮政验证
-     *
      * @param code
      * @returnc
      */
@@ -354,7 +351,6 @@ public class UserController extends BaseController {
 
     /**
      * 登录验证
-     *
      * @param username
      * @param password
      * @return
@@ -659,13 +655,16 @@ public class UserController extends BaseController {
     public Result toRemoveUser() {
         //移除会话数据存在的用户
         try {
-            removeCurrentSetting();
-            removeSessionUser();
-            sessionUsers.remove(getSessionUser());
-            authMap.remove(getSessionUserId());
+            if (Objects.isNull(getSessionUser())){
+                removeCurrentSetting();
+                removeSessionUser();
+                sessionUsers.remove(getSessionUser());
+                authMap.remove(getSessionUserId());
+            }
             redisTemplate.opsForValue().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
         } catch (Exception e) {
-            return error();
+            e.printStackTrace();
+            return success();
         }
         return success();
     }

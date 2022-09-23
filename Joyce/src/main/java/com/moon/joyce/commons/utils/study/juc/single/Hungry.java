@@ -1,6 +1,6 @@
 package com.moon.joyce.commons.utils.study.juc.single;
 
-import org.apache.commons.compress.utils.Lists;
+import org.python.google.common.collect.Lists;
 
 import java.util.List;
 

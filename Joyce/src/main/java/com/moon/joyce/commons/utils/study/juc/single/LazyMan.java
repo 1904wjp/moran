@@ -2,7 +2,7 @@ package com.moon.joyce.commons.utils.study.juc.single;
 
 import com.moon.joyce.commons.utils.JoyceExceptionUtils;
 import com.moon.joyce.example.functionality.entity.doma.JoyceException;
-import org.apache.commons.compress.utils.Lists;
+import org.python.google.common.collect.Lists;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

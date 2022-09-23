@@ -11,7 +11,7 @@ server:
   port: 9099
   servlet:
     session:
-      timeout: 1800s
+      timeout: 72000s
   tomcat:
     max-http-form-post-size: -1
   max-http-header-size: 80KB

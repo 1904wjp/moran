@@ -1,0 +1,78 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>测试</title>
+</head>
+<div class="layui-input-block">
+    <select name="gncode" id="gncode" style="width: 10%" onchange="testChange()"></select>
+    <div  id="text"></div>
+    <div  id="anstext"></div>
+    <input id="ans" type="button" value="答案" onclick="testAns()"/>
+</div>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script>
+    $(document).ready(function () {
+        $("#gncode").empty();
+        getTest();
+    });
+    /**
+     * 变换页面
+     */
+    function getTest() {
+        $('#text').css("background","white");
+        $('#anstext').css("background","white");
+        $.ajax({
+            url: '/test/getDocs',
+            type: 'GET',
+            dataType: 'json',
+        }).done(function (data) {
+            if(data.rs){
+                var text = "<option class ='option' value=\"\"></option>";
+                var res = data.data;
+                for (let i = 0; i<res.length; i++) {
+                   if ($(".option").length<=res.length+1){
+                       text+="<option class ='option' value=\""+res[i].name+"\">"+res[i].name+"</option>"
+                   }
+                }
+                $('#gncode').append(text);
+            }
+        }).fail(function () {
+        });
+    }
+    function testChange(){
+        $("#text").empty();
+        $("#anstext").empty();
+        var  name = $("#gncode").val();
+        $.ajax({
+            url: '/test/'+name,
+            type: 'GET',
+            dataType: 'json',
+        }).done(function (data) {
+            if(data.rs){
+                var res = data.data;
+                console.log("---------->",res);
+                for (let i = 0; i < res.l1.length; i++) {
+                    $("#text").append("<p id='p'>"+res.l1[i]+"</p></br>")
+                }
+            }
+        }).fail(function () {
+        });
+    }
+    function testAns(){
+        $("#anstext").empty();
+        var  name = $("#gncode").val();
+        $.ajax({
+            url: '/test/'+name,
+            type: 'GET',
+            dataType: 'json',
+        }).done(function (data) {
+            if(data.rs){
+                var res = data.data;
+                var text ;
+                for (let i = 0; i < res.l2.length; i++) {
+                    text +="<p id='ap'>("+(i+1)+")"+res.l2[i]+"</p></br>";
+                }
+                $("#anstext").append(text);
+            }
+        }).fail(function () {
+        });
+    }
+</script>
