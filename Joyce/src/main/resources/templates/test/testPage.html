@@ -9,6 +9,7 @@
 </div>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
 <script>
+    var sumAns = [];
     $(document).ready(function () {
         $("#gncode").empty();
         getTest();
@@ -37,6 +38,7 @@
         }).fail(function () {
         });
     }
+
     function testChange(){
         $("#text").empty();
         $("#anstext").empty();
@@ -48,14 +50,15 @@
         }).done(function (data) {
             if(data.rs){
                 var res = data.data;
-                console.log("---------->",res);
                 for (let i = 0; i < res.l1.length; i++) {
-                    $("#text").append("<p id='p'>"+res.l1[i]+"</p></br>")
+                    $("#text").append("<p id='p' align='center' style='font-size: 30px'>"+res.l1[i]+"</p></br>")
                 }
+                $("#text").append("<input id='an' align='center' type='text'/>");
             }
         }).fail(function () {
         });
     }
+
     function testAns(){
         $("#anstext").empty();
         var  name = $("#gncode").val();
@@ -66,13 +69,43 @@
         }).done(function (data) {
             if(data.rs){
                 var res = data.data;
-                var text ;
+                var text ="";
                 for (let i = 0; i < res.l2.length; i++) {
-                    text +="<p id='ap'>("+(i+1)+")"+res.l2[i]+"</p></br>";
+                    var an = conver(res.l2[i]);
+                    sumAns.push(an);
+                    text +="<span id='ap' align='center' style='font-size: 30px'>("+(i+1)+")"+an+"</span>";
+                    if ((i+1)%5==0){
+                        text+="</br>"
+                    }
                 }
-                $("#anstext").append(text);
+                var an = $('#an').val();
+                if(an!=null && an.length!==0){
+                    var error = "";
+                    for (let i = 0; i < an.length; i++) {
+                        if(sumAns[i]!==an.charAt(i)){
+                            error+="<p align='center' style='width: 80%'>第"+(i+1)+"答案:"+sumAns[i]+"------------->你的答案:"+an.charAt(i)+"</p>";
+                        }
+                    }
+                }
+                $("#anstext").append(text+"</br>"+error);
             }
         }).fail(function () {
         });
     }
+
+    function conver(str){
+        if(str.indexOf('A')!=-1){
+            return 'A';
+        }
+        if(str.indexOf('B')!=-1){
+            return 'B';
+        }
+        if(str.indexOf('C')!=-1){
+            return 'C';
+        }
+        if(str.indexOf('D')!=-1){
+            return 'D';
+        }
+    }
+
 </script>
