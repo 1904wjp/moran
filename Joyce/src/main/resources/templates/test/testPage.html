@@ -50,10 +50,15 @@
         }).done(function (data) {
             if(data.rs){
                 var res = data.data;
+                var text ="";
                 for (let i = 0; i < res.l1.length; i++) {
-                    $("#text").append("<p id='p' align='center' style='font-size: 30px'>"+res.l1[i]+"</p></br>")
+                    text += "<span id='p' align='center' style='font-size: 30px'>"+res.l1[i]+"</span></br>";
+                    if (res.l1[i].indexOf("D．")!==-1){
+                        text +="写出你的答案：<input class='anclass' align='center' type='text' value=''/></br>";
+                    }
                 }
-                $("#text").append("<input id='an' align='center' type='text'/>");
+               // console.log(text);
+                $("#text").append(text);
             }
         }).fail(function () {
         });
@@ -78,13 +83,20 @@
                         text+="</br>"
                     }
                 }
-                var an = $('#an').val();
+               /* var an = $('#an').val();
                 if(an!=null && an.length!==0){
                     var error = "";
                     for (let i = 0; i < an.length; i++) {
                         if(sumAns[i]!==an.charAt(i)){
                             error+="<p align='center' style='width: 80%'>第"+(i+1)+"答案:"+sumAns[i]+"------------->你的答案:"+an.charAt(i)+"</p>";
                         }
+                    }
+                }*/
+                var error = "";
+                var ac= document.getElementsByClassName('anclass');
+                for (let i = 0; i < ac.length; i++) {
+                    if(sumAns[i]!==ac[i].value){
+                        error+="<p align='center' style='width: 80%'>第"+(i+1)+"答案:"+sumAns[i]+"------------->你的答案:"+ac[i].value+"</p>";
                     }
                 }
                 $("#anstext").append(text+"</br>"+error);
