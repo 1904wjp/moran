@@ -5,7 +5,8 @@
     <select name="gncode" id="gncode" style="width: 10%" onchange="testChange()"></select>
     <div  id="text"></div>
     <div  id="anstext"></div>
-    <input id="ans" type="button" value="答案" onclick="testAns()"/>
+    <div  id="youans"></div>
+    <input id="sub" type="button" value="提交" onclick="testAns()"/> <input id="ans" type="button" value="答案" onclick="ans()"/>
 </div>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
 <script>
@@ -20,6 +21,7 @@
     function getTest() {
         $('#text').css("background","white");
         $('#anstext').css("background","white");
+        $('#youans').css("background","white");
         $.ajax({
             url: '/test/getDocs',
             type: 'GET',
@@ -66,6 +68,7 @@
 
     function testAns(){
         $("#anstext").empty();
+        $("#youans").empty();
         var  name = $("#gncode").val();
         $.ajax({
             url: '/test/'+name,
@@ -78,8 +81,8 @@
                 for (let i = 0; i < res.l2.length; i++) {
                     var an = conver(res.l2[i]);
                     sumAns.push(an);
-                    text +="<span id='ap' align='center' style='font-size: 30px'>("+(i+1)+")"+an+"</span>";
-                    if ((i+1)%5==0){
+                    text +="<span id='ap' style='font-size: 30px'>("+(i+1)+")"+an+"</span>";
+                    if ((i+1)%5===0){
                         text+="</br>"
                     }
                 }
@@ -93,31 +96,63 @@
                     }
                 }*/
                 var error = "";
+                var errorCount = 0;
                 var ac= document.getElementsByClassName('anclass');
                 for (let i = 0; i < ac.length; i++) {
-                    if(sumAns[i]!==ac[i].value){
+                    if(sumAns[i]!==ac[i].value || ac[i].value===''){
+                        errorCount++;
+                        ac[i].style.background = "pink";
                         error+="<p align='center' style='width: 80%'>第"+(i+1)+"答案:"+sumAns[i]+"------------->你的答案:"+ac[i].value+"</p>";
                     }
                 }
-                $("#anstext").append(text+"</br>"+error);
+                $("#anstext").append(text);
+                $("#youans").append("</br><h1>"+funk(errorCount)+"</h1>"+"</br>"+error);
+                $("#anstext").hide();
             }
         }).fail(function () {
         });
     }
 
+    function ans(){
+        $("#anstext").show();
+    }
+
     function conver(str){
-        if(str.indexOf('A')!=-1){
+        if(str.indexOf('A')!==-1){
             return 'A';
         }
-        if(str.indexOf('B')!=-1){
+        if(str.indexOf('B')!==-1){
             return 'B';
         }
-        if(str.indexOf('C')!=-1){
+        if(str.indexOf('C')!==-1){
             return 'C';
         }
-        if(str.indexOf('D')!=-1){
+        if(str.indexOf('D')!==-1){
             return 'D';
         }
     }
 
+    function funk(num){
+        if (num<=3){
+            return '你怎么这么菜，错了'+num+'个';
+        }
+        if (3<num&&num<=6){
+            return '太菜了，施主，你是猪吗，错了'+num+'个';
+        }
+        if (6<num&&num<=10){
+            return '别考了，回家养猪去吧，错了'+num+'个';
+        }
+        if (10<num&&num<=15){
+            return '猪，你听课了？错了'+num+'个';
+        }
+        if (15<num&&num<=20){
+            return '你简直连猪都不如，错了'+num+'个';
+        }
+        if (20<num&&num<=30){
+            return '不用考了，注定失败了，错了'+num+'个';
+        }
+        if (num==0){
+            return '考的不错!!!';
+        }
+    }
 </script>
