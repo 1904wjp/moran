@@ -19,6 +19,7 @@
      * 变换页面
      */
     function getTest() {
+        sumAns = [];
         $('#text').css("background","white");
         $('#anstext').css("background","white");
         $('#youans').css("background","white");
@@ -44,6 +45,7 @@
     function testChange(){
         $("#text").empty();
         $("#anstext").empty();
+        $('#youans').empty();
         var  name = $("#gncode").val();
         $.ajax({
             url: '/test/'+name,
