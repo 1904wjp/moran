@@ -45,14 +45,16 @@ public class TestController extends BaseController {
         File file = new File(path);
         int index = 0;
         List<File> mkdir = Arrays.stream(Objects.requireNonNull(file.listFiles())).collect(Collectors.toList());
+        Set<String> set = docs.stream().map(Doc::getName).collect(Collectors.toSet());
         for (int i = 0; i < mkdir.size(); i++) {
             Doc doc =null;
             if (mkdir.get(i).getName().endsWith("doc")||mkdir.get(i).getName().endsWith("docx")){
                 doc = new Doc(mkdir.get(i),++index);
-                docs.add(doc);
+                if (!set.contains(doc.getName())){
+                    docs.add(doc);
+                }
             }
         }
-        System.out.println("--------------->"+docs.toString());
         return success(docs);
     }
 
@@ -63,6 +65,7 @@ public class TestController extends BaseController {
     @ResponseBody
     @GetMapping("/{name}")
     public Result getDucs(@PathVariable("name") String name) {
+        Data<String> data = null;
         for (Doc doc : docs) {
             if (name.equals(doc.getName())){
                 String text = FileUtils.readWordDocx(doc.file.getAbsolutePath());
@@ -71,6 +74,7 @@ public class TestController extends BaseController {
                 String[] strs = text.split("\n");
                 List<String> ques = new ArrayList<>();
                 List<String> ans = new ArrayList<>();
+                List<String> simpleQues = new ArrayList<>();
                 int flag = 0;
                 for (String str : strs) {
                     if (str.contains(filter) || str.replace("\n","").trim().equals("")){
@@ -96,17 +100,31 @@ public class TestController extends BaseController {
                         }
                     }
                 }
-                Data<String> data = new Data<>(ques, ans);
+                for (String str : strs) {
+                    if (str.contains(filter) || str.replace("\n","").trim().equals("")){
+                        continue;
+                    }
+                    if (str.contains("三、简答题")){
+                        flag=3;
+                    }
+                    if (flag==3){
+                        simpleQues.add(str);
+                    }
+                }
+                 data = new Data<>(ques,ans,simpleQues);
                 return success(data);
             }
         }
+
         return error();
     }
     @lombok.Data
     @AllArgsConstructor
+    static
     class  Data<T>{
         private List<T> l1;
         private List<T> l2;
+        private List<T> l3;
     }
     @lombok.Data
     @NoArgsConstructor

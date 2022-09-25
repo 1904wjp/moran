@@ -6,6 +6,7 @@
     <div  id="text"></div>
     <div  id="anstext"></div>
     <div  id="youans"></div>
+    <div  id="ammm"></div>
     <input id="sub" type="button" value="提交" onclick="testAns()"/> <input id="ans" type="button" value="答案" onclick="ans()"/>
 </div>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
@@ -23,6 +24,7 @@
         $('#text').css("background","white");
         $('#anstext').css("background","white");
         $('#youans').css("background","white");
+        $('#ammm').css("background","white");
         $.ajax({
             url: '/test/getDocs',
             type: 'GET',
@@ -46,6 +48,7 @@
         $("#text").empty();
         $("#anstext").empty();
         $('#youans').empty();
+        $('#ammm').empty();
         var  name = $("#gncode").val();
         $.ajax({
             url: '/test/'+name,
@@ -58,7 +61,7 @@
                 for (let i = 0; i < res.l1.length; i++) {
                     text += "<span id='p' align='center' style='font-size: 30px'>"+res.l1[i]+"</span></br>";
                     if (res.l1[i].indexOf("D．")!==-1){
-                        text +="写出你的答案：<input class='anclass' align='center' type='text' value=''/></br>";
+                        text +="写出你的答案：<input class='anclass' align='center' type='text' value=''/></br></br>";
                     }
                 }
                // console.log(text);
@@ -71,6 +74,7 @@
     function testAns(){
         $("#anstext").empty();
         $("#youans").empty();
+        $('#ammm').empty();
         var  name = $("#gncode").val();
         $.ajax({
             url: '/test/'+name,
@@ -88,15 +92,6 @@
                         text+="</br>"
                     }
                 }
-               /* var an = $('#an').val();
-                if(an!=null && an.length!==0){
-                    var error = "";
-                    for (let i = 0; i < an.length; i++) {
-                        if(sumAns[i]!==an.charAt(i)){
-                            error+="<p align='center' style='width: 80%'>第"+(i+1)+"答案:"+sumAns[i]+"------------->你的答案:"+an.charAt(i)+"</p>";
-                        }
-                    }
-                }*/
                 var error = "";
                 var errorCount = 0;
                 var ac= document.getElementsByClassName('anclass');
@@ -110,6 +105,11 @@
                 $("#anstext").append(text);
                 $("#youans").append("</br><h1>"+funk(errorCount)+"</h1>"+"</br>"+error);
                 $("#anstext").hide();
+                var ammmm = "";
+                for (let i = 0; i < res.l3.length; i++) {
+                    ammmm += "<span id='p' align='center' style='font-size: 30px'>"+res.l3[i]+"</span></br>";
+                }
+                $('#ammm').append(ammmm);
             }
         }).fail(function () {
         });
