@@ -539,8 +539,7 @@ function addLoadingModal(msg) {
         "</div>\n" +
         "<h5 style=\"color:black\"> <strong>" + msg + "</strong> </h5>\n" +
         "</div>\n" +
-        "</div>"
-    )
+        "</div>");
     loading(true);
 }
 
