@@ -796,7 +796,6 @@ class Modal {
  * 删除
  * @param tableObj
  * @param delUrl
- * @param isToUrl
  * @param delUrl
  * @param toUrl
  */
