@@ -2,11 +2,10 @@ package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.utils.FileUtils;
-import com.moon.joyce.commons.utils.R;
-import com.moon.joyce.example.entity.doma.Article;
+
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
