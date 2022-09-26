@@ -2,6 +2,7 @@ package com.moon.joyce.example.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.moon.joyce.commons.annotation.url.MethodUrl;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.enums.RE;
@@ -99,6 +100,28 @@ public class SourceController extends BaseController {
         return pagePrefix + "playVideoPage";
     }
 
+
+
+    /**
+     * 上传多个文件
+     *
+     * @param files
+     * @return
+     */
+    @ResponseBody
+    @MethodUrl(name = "多文件上传", url = "/files")
+    @PostMapping("/files")
+    public Result uploadAlbum(@RequestParam("files") MultipartFile[] files) {
+        String paths = null;
+        try {
+            paths = fileService.uploadImgs(files);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return error("上传失败");
+        }
+        logger.info("上传相册的路径----》" + paths);
+        return dataResult(Objects.nonNull(paths), "上传失败", "上传成功", paths);
+    }
     /**
      * 相册列表页面
      *

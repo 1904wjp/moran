@@ -182,7 +182,7 @@ function saveAndUpload(){
     console.log("--",formData);
     addLoadingModal("请稍后...正在上传资源");
     $.ajax({
-        url: "/fileUpload/s/files",
+        url: "/example/source/files",
         type: "POST",
         //上传格式为formData
         data: formData,

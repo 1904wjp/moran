@@ -17,10 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: Joyce
@@ -61,8 +58,10 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album> implements
             List<Source> sources = new ArrayList<>(sourceService.listByIds(longs));
             List<String> idList = StringsUtils.strToList(jsonObject.get("ids").toString());
             List<String> siteList = StringsUtils.strToList(jsonObject.get("site").toString());
-            String bg = jsonObject.get("bg").toString();
-            album.setBackGround(bg);
+            if (Objects.nonNull(jsonObject.get("bg"))){
+                String bg = jsonObject.get("bg").toString();
+                album.setBackGround(bg);
+            }
             for (int i = 0; i < siteList.size(); i++) {
                 map.put(siteList.get(i),idList.get(i));
             }
