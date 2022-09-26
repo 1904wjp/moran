@@ -696,9 +696,9 @@ public class UserController extends BaseController {
             if (Objects.isNull(getSession())||Objects.isNull(getSessionUserId())||Objects.isNull(USER_SESSION_MAP.get(getSessionUserId()))){
                 return error();
             }
-            String targSessionId = USER_SESSION_MAP.get(getSessionUserId());
-            logger.info("------------------------------------->{}::{}", targSessionId, getSession().getId());
-            if (!targSessionId.equals(getSession().getId())) {
+            String targetSessionId = USER_SESSION_MAP.get(getSessionUserId());
+     //       logger.info("------------------------------------->{}::{}", targSessionId, getSession().getId());
+            if (!targetSessionId.equals(getSession().getId())) {
                 removeSessionUser();
                 return error("此号在别处登录，您已下线");
             }

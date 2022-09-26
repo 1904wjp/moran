@@ -259,6 +259,7 @@ public class SourceController extends BaseController {
     @ResponseBody
     @PostMapping("/saveSource")
     public Result addSource(Source source) {
+        setBaseField(source);
         source.setUserId(getSessionUserId());
         if (StringUtils.isNoneBlank(source.getSourceName())){
             source.setSourceName(UUIDUtils.getUUIDName());
@@ -273,22 +274,17 @@ public class SourceController extends BaseController {
             }
         }
         if (Objects.isNull(source.getId())) {
-            source.setCreateBy(getSessionUser().getUsername());
             source.setUserId(getSessionUser().getId());
-            source.setCreateTime(new Date());
-            source.setDeleteFlag(Constant.UNDELETE_STATUS);
             if (StringUtils.isNoneBlank(source.getVUrl())){
                 Source tempSource = new Source();
+                setBaseField(tempSource);
                 tempSource.setSourceName("v_"+source.getSourceName());
                 tempSource.setUrl(source.getVUrl());
                 tempSource.setType("2");
-                tempSource.setCreateBy(getSessionUser().getUsername());
                 tempSource.setUserId(getSessionUser().getId());
-                tempSource.setCreateTime(new Date());
                 if (Objects.nonNull(getSessionValue(getSessionUserId()+VIDEO_NAME).toString())){
                     tempSource.setRealUrl(getSessionValue(getSessionUserId()+VIDEO_NAME).toString());
                 }
-                tempSource.setDeleteFlag(Constant.UNDELETE_STATUS);
                 boolean b = sourceService.saveOrUpdate(tempSource);
                 if (b){
                     source.setType("3");
@@ -296,9 +292,7 @@ public class SourceController extends BaseController {
                 }
             }
         } else {
-            source.setUpdateBy(getSessionUser().getUsername());
             source.setUserId(getSessionUser().getId());
-            source.setUpdateTime(new Date());
         }
         boolean rs = sourceService.saveOrUpdate(source);
         return R.dataResult(rs);
