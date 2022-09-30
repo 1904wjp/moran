@@ -1,0 +1,199 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>测试</title>
+</head>
+<div class="layui-input-block">
+    <div class="modal fade" id="myform"  role="dialog" aria-labelledby="forgetPasswordLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="forgetModalLabel">
+                       <span id="title"></span>
+                    </h4>
+                </div>
+                <form id="my_form">
+                    <div id="myform_data"></div>
+                    <div class="modal-footer">
+                        <button id="sub" type="button"  onclick="save()" class="btn btn-primary ">提交</button>
+                        <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <button id="btn_add" onclick="show()" type="button" class="btn btn-primary btn-space">添加</button>
+    <div class="pull-right" id="query-form" style="padding-bottom:10px;">
+        <input name="searWord" placeholder='关键字' type="text"
+               style="float:left;width:150px;margin-right:5px;" v-model="searWord"
+               class="form-control"/>
+        <div class="btn-group">
+            <button id="btn_search" onclick="refreshSearch('passwordTable')" type="button" class="btn btn-primary btn-space">搜索
+                <span class="fa fa-search" aria-hidden="true"></span>
+            </button>
+            <button id="btn_reset" onclick="resetSearch()" type="button" class="btn btn-default btn-space">重置
+                <span class="fa fa-eraser" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+    <table id="passwordTable" data-mobile-responsive="true" class="mb-bootstrap-table text-nowrap"></table>
+</div>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script>
+    var sumAns = [];
+    $(document).ready(function () {
+        getPasswordTable();
+    });
+
+    function getPasswordTable() {
+        var obj = $('#passwordTable');
+        var url = '/example/password/getPage';
+        var queryObj = $('#query-form');
+        var columns = [{
+            checkbox: true
+        }, {
+            title: '序号',
+            formatter: function (value, row, index) {
+                return index + 1;
+            }
+        }, {
+            field: 'appName',
+            title: '应用名称',
+            sortables: true
+        }, {
+            field: 'username',
+            title: '账户',
+            sortables: true
+        }/*, {
+            field: 'password',
+            title: '密码',
+            sortables: true
+        }*/, {
+            field: 'version',
+            title: '版本',
+            sortables: true
+        }, {
+            field: 'isNewV',
+            title: '新旧版本',
+            sortables: true,
+            formatter: function (value, row, index) {
+                if (row.isNewV === 1) {
+                    return "<button class='btn-success'disabled='disabled'style='padding:3px; border:10px;'>最新版本</button>";
+                } else  {
+                    return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>旧版本</button>";
+                }
+            }
+        }, {
+            field: 'createTime',
+            title: '创建时间',
+            sortables: true
+        }, {
+            title: '操作',
+            align: 'center',
+            formatter: passwordOpFormatter//格式化输出
+        }];
+        tables(obj, url, queryObj, columns);
+    }
+
+
+    function getInfo(id) {
+        $('#sub').hide();
+        var myform = $('#myform_data');
+        myform.empty();
+        var data =[{lable:"应用",className:"appName"},
+            {lable:"账户",className:"username"},
+            {lable:"密码",className:"password"},
+            {lable:"备注",className:"remark"},
+            {lable:"创建时间",className:"createTime"},
+            {lable:"版本号",className:"version"},
+            {lable:"是否是最新版本",className:"isNewV"}
+        ];
+        append(myform,data);
+        $('#title').val("密码信息");
+        $.ajax({
+            url: '/example/password/'+id ,
+            type: 'GET',
+            dataType: 'json',
+        }).done(function (data) {
+           if (data.rs){
+               var res = data.data;
+                   $('.appName').val(res.appName);
+                   $('.username').val(res.username);
+                   $('.password').val(res.password);
+                   $('.remark').val(res.remark);
+                   $('.createTime').val(res.createTime);
+                   $('.version').val(res.version);
+                   $('.isNewV').val((res.isNewV===1?'是':'否'));
+                   $("#myform").modal('show');
+           }
+           tips(data.rs,data.msg);
+        }).fail(function () {
+        });
+    }
+
+    function append(myform,data){
+        $('#title').val("新增信息");
+        var html ="";
+        for (let i = 0; i < data.length; i++) {
+            var o = data[i];
+            html+= "<div style=\"margin-left: 22px;margin-top: 10px;\">\n" +o.lable+
+                "            <input type=\"text\" class=\""+o.className+"\" required=\"required\" placeholder=\"\"\n" +
+                "                         autoComplete=\"off\"/>\n" +
+                "        </div>";
+        }
+        console.log(html);
+        myform.append(html);
+    }
+
+
+    //操作按钮
+    function passwordOpFormatter(value, row, index) {
+        var actions = [];
+        actions.push('<a class="btn btn-success btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#queryModel"  onclick="getInfo(\'' + row.id + '\')"><i class="fa fa-adn"></i> 查看</a> ');
+        return actions.join('');
+    }
+
+    //忘记密码
+    function save() {
+        var data = {
+            appName:$('.appName').val(),
+            username:$('.username').val(),
+            password:$('.password').val(),
+            remark:$('.remark').val()
+        }
+        if (vailDate(data)){
+            Ewin.confirm({message: "确认提交数据？"}).on(function (e) {
+                if (!e) {
+                    return;
+                }
+                addLoadingModal('正在提交数据...请稍后');
+                $("#forgetPasswordModal").modal('hide');
+                $.ajax({
+                    url: '/example/password/save',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: data,
+                }).done(function (data) {
+                    loading(false)
+                    tips(data.rs,data.msg);
+                    if (data.rs) {
+                        $("#updatePasswordModal").modal('hide');
+                        toList("/example/password/getListPage");
+                    }
+                }).fail(function () {
+                    tips(false,data.msg)
+                });
+            });
+        }
+    }
+
+    function show(){
+        var myform = $('#myform_data');
+        myform.empty();
+        var data =[{lable:"应用",className:"appName"},
+            {lable:"账户",className:"username"},
+            {lable:"密码",className:"password"},
+            {lable:"备注",className:"remark"}];
+        append(myform,data);
+        $("#myform").modal('show');
+        $('#sub').show();
+    }
+</script>

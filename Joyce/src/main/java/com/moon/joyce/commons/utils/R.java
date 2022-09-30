@@ -52,6 +52,7 @@ public class R  {
     public static Result dataResult(int rsi,int reCode){
         return dataResult(rsi,reCode,null);
     }
+
     /**
      * 返回结果
      * @param rs
@@ -66,6 +67,17 @@ public class R  {
         }
         return dataResult(rsi,re.getCode(),data);
     }
+
+    /**
+     * 返回结果
+     * @param re
+     * @param data
+     * @return
+     */
+    public static Result dataResult(RE re,Object data,int i){
+        return dataResult(1,re.getCode(),data);
+    }
+
     /**
      * 返回结果
      * @param rsi
@@ -296,6 +308,7 @@ public class R  {
         }
         return dataResult(1,reCode,data);
     }
+
     /**
      * 返回结果
      * @param rs
@@ -507,6 +520,9 @@ public class R  {
     }
     public static Result getResult(boolean rs, RE re, Object data){
         return dataResult(rs, re,data,1);
+    }
+    public static Result getResult( RE re, Object data){
+        return dataResult(re,data,1);
     }
     public static Result getResult(boolean rs, int code, Object data){
         return dataResult(rs,code,data);

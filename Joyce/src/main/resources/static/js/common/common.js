@@ -792,6 +792,12 @@ class Modal {
     }
 }
 
+//刷新
+function refreshSearch(tableName) {
+    //刷新Table，Bootstrap Table 会自动执行重新查询
+    document.getElementById(tableName).bootstrapTable('refresh');
+}
+
 /**
  * 删除
  * @param tableObj

@@ -54,10 +54,20 @@ public class BaseEntity implements Serializable {
     @TableField(value = "update_ids")
     private Long updateIds;
 
+    public String getSearchWord() {
+        return searchWord;
+    }
+
+    public void setSearchWord(String searchWord) {
+        this.searchWord = searchWord;
+    }
+
     @TableField(exist = false)
     private Map<String,String> paramMap;
 
-
+    @Column(exist = false,comment = "查询关键字")
+    @TableField(exist = false)
+    private String searchWord;
     public Long getId() {
         return id;
     }

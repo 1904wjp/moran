@@ -36,5 +36,6 @@ public class Dict extends BaseEntity {
     @TableField(exist = false)
     private List<Lable> lables;
     @NotExist
+    @TableField(exist = false)
     private String type = "dict";
 }
