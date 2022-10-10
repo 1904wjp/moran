@@ -34,22 +34,22 @@ public class PasswordController extends BaseController {
 
     @ResponseBody
     @RequestMapping("/getPage")
-    public Result<PageVo<Password>> getList(Password password){
+    public PageVo<Password> getList(Password password){
          password.setCreateIds(getSessionUserId());
          password.setCreateIds(getSessionUserId());
          PageVo<Password> list = passwordService.getList(password);
-        return success(list);
+        return list;
     }
 
     @ResponseBody
-    @PostMapping("/{id}")
+    @GetMapping("/{id}")
     public Result getOne(@PathVariable Long id){
         Password password = passwordService.getById(id);
         StringBuilder pwd = new StringBuilder(password.getPassword());
         char[] chars = pwd.toString().toCharArray();
         pwd = new StringBuilder();
         for (char aChar : chars) {
-            pwd.append(String.valueOf((char) (aChar - 1)));
+            pwd.append((char) (aChar - 1));
         }
         password.setPassword(pwd.toString());
         return getResult(RE.SELECT,password);
@@ -73,7 +73,7 @@ public class PasswordController extends BaseController {
         char[] chars = pwd.toString().toCharArray();
         pwd = new StringBuilder();
         for (char aChar : chars) {
-            pwd.append(String.valueOf((char) (aChar + 1)));
+            pwd.append((char) (aChar + 1));
         }
         password.setPassword(pwd.toString());
         boolean b = passwordService.saveOrUpdate(password);

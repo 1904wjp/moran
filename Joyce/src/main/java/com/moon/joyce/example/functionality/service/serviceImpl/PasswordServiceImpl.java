@@ -34,8 +34,11 @@ public class PasswordServiceImpl extends ServiceImpl<PasswordMapper, Password> i
                     .or().like(Password::getUsername,password.getSearchWord())
                     .or().like(Password::getAppName,password.getSearchWord());
         }
+        queryWrapper.lambda().orderByDesc(Password::getVersion);
         com.baomidou.mybatisplus.extension.plugins.pagination.Page<Password> page = Page.getPage(password);
         IPage iPage = baseMapper.selectPage(page, queryWrapper);
+        Integer integer = baseMapper.selectCount(queryWrapper);
+        iPage.setTotal(integer);
         return new PageVo(iPage);
     }
 

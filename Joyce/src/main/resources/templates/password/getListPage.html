@@ -2,7 +2,7 @@
     <title>测试</title>
 </head>
 <div class="layui-input-block">
-    <div class="modal fade" id="myform"  role="dialog" aria-labelledby="forgetPasswordLabel" aria-hidden="true">
+    <div class="modal fade" id="myform"  role="dialog" aria-labelledby="password" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -22,11 +22,11 @@
     </div>
     <button id="btn_add" onclick="show()" type="button" class="btn btn-primary btn-space">添加</button>
     <div class="pull-right" id="query-form" style="padding-bottom:10px;">
-        <input name="searWord" placeholder='关键字' type="text"
+        <input name="searchWord" placeholder='关键字' type="text"
                style="float:left;width:150px;margin-right:5px;" v-model="searWord"
                class="form-control"/>
         <div class="btn-group">
-            <button id="btn_search" onclick="refreshSearch('passwordTable')" type="button" class="btn btn-primary btn-space">搜索
+            <button id="btn_search" onclick="refreshSearch()" type="button" class="btn btn-primary btn-space">搜索
                 <span class="fa fa-search" aria-hidden="true"></span>
             </button>
             <button id="btn_reset" onclick="resetSearch()" type="button" class="btn btn-default btn-space">重置
@@ -37,19 +37,22 @@
     <table id="passwordTable" data-mobile-responsive="true" class="mb-bootstrap-table text-nowrap"></table>
 </div>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
-<script>
+<script type="text/javascript">
     var sumAns = [];
     $(document).ready(function () {
         getPasswordTable();
     });
+    //刷新
+    function refreshSearch() {
+        //刷新Table，Bootstrap Table 会自动执行重新查询
+        $("#passwordTable").bootstrapTable('refresh');
+    }
 
     function getPasswordTable() {
         var obj = $('#passwordTable');
         var url = '/example/password/getPage';
         var queryObj = $('#query-form');
         var columns = [{
-            checkbox: true
-        }, {
             title: '序号',
             formatter: function (value, row, index) {
                 return index + 1;
@@ -59,18 +62,22 @@
             title: '应用名称',
             sortables: true
         }, {
+            field: 'uri',
+            title: 'ip地址',
+            sortables: true
+        }, {
             field: 'username',
             title: '账户',
             sortables: true
-        }/*, {
+        }, /*{
             field: 'password',
             title: '密码',
             sortables: true
-        }*/, {
+        }*//*, {
             field: 'version',
             title: '版本',
             sortables: true
-        }, {
+        },*/ {
             field: 'isNewV',
             title: '新旧版本',
             sortables: true,
@@ -81,11 +88,11 @@
                     return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>旧版本</button>";
                 }
             }
-        }, {
+        }/*, {
             field: 'createTime',
             title: '创建时间',
             sortables: true
-        }, {
+        }*/, {
             title: '操作',
             align: 'center',
             formatter: passwordOpFormatter//格式化输出
@@ -99,12 +106,14 @@
         var myform = $('#myform_data');
         myform.empty();
         var data =[{lable:"应用",className:"appName"},
+            {lable:"ip地址",className:"uri"},
             {lable:"账户",className:"username"},
             {lable:"密码",className:"password"},
             {lable:"备注",className:"remark"},
             {lable:"创建时间",className:"createTime"},
             {lable:"版本号",className:"version"},
-            {lable:"是否是最新版本",className:"isNewV"}
+            {lable:"是否是最新版本",className:"isNewV"},
+            {lable:"创建时间",className:"createTime"}
         ];
         append(myform,data);
         $('#title').val("密码信息");
@@ -116,6 +125,7 @@
            if (data.rs){
                var res = data.data;
                    $('.appName').val(res.appName);
+                   $('.uri').val(res.uri==null?'暂无':res.uri);
                    $('.username').val(res.username);
                    $('.password').val(res.password);
                    $('.remark').val(res.remark);
@@ -191,6 +201,7 @@
         var data =[{lable:"应用",className:"appName"},
             {lable:"账户",className:"username"},
             {lable:"密码",className:"password"},
+            {lable:"ip地址",className:"uri"},
             {lable:"备注",className:"remark"}];
         append(myform,data);
         $("#myform").modal('show');

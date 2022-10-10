@@ -33,7 +33,8 @@ public class Password extends Page {
     private String appName;
     @Column(comment = "是否是最新版[0:不是，1:是]",length = "1")
     private Integer isNewV;
-
+    @Column(comment = "ip地址")
+    private String uri;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

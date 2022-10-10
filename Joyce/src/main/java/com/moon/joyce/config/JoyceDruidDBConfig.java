@@ -3,6 +3,7 @@ package com.moon.joyce.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.dataSource.DynamicDataSource;
@@ -164,6 +165,7 @@ public class JoyceDruidDBConfig {
         //bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResource("classpath:mapper/*.xml"));
         //手动配置mybatis的mapper.xml资源路径,如果单纯使用注解方式,不需要配置该行
          bean.setMapperLocations(resolver.getResources(mapperLocations));
+        bean.setPlugins(new PaginationInterceptor[]{new PaginationInterceptor()});
         return bean.getObject();
     }
 
@@ -194,5 +196,7 @@ public class JoyceDruidDBConfig {
     public DataSourceTransactionManager transactionManager(DynamicDataSource dynamicDataSource) {
         return new DataSourceTransactionManager(dynamicDataSource);
     }
+
+
 
 }

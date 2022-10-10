@@ -1,6 +1,7 @@
 package com.moon.joyce;
 
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.moon.joyce.listeners.SessionListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,11 +37,13 @@ public class JoyceApplication {
         return LogManager.getLogger(this.getClass());
     }
 
+
     /**
      * springboot启动类
      * @param args
      */
     public static void main(String[] args) throws SQLException {
+
         SpringApplication.run(JoyceApplication.class, args);
         System.out.println("___________________________Joyce start successful___________________________");
     }
