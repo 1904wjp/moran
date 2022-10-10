@@ -208,7 +208,7 @@ function saveAndUpload(){
                         userId: 0,
                         map:{},
                         sourceUrls:urls
-                    }
+                    };
                     console.log(album);
                     Ewin.confirm({message: "确认提交数据源？"}).on(function (e) {
                         if (!e) {
@@ -221,6 +221,7 @@ function saveAndUpload(){
                             data: album,
                         }).done(function (data) {
                             tips(data.rs, data.msg);
+                            toList("/example/source/albumListPage");
                         }).fail(function () {
                             tips(false, data.msg)
                         });

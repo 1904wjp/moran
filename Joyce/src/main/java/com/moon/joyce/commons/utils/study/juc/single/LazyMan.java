@@ -51,4 +51,7 @@ public  class LazyMan{
         System.out.println(lazyMan+"::"+lazyMan1);
     }
 
+    public static void setLazyMan(LazyMan lazyMan) {
+        LazyMan.lazyMan = lazyMan;
+    }
 }
