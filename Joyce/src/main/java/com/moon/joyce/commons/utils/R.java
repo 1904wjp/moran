@@ -65,7 +65,7 @@ public class R  {
         if (rs){
             rsi = 1;
         }
-        return dataResult(rsi,re.getCode(),data);
+        return dataResult(rsi,re.getCode(),data,i);
     }
 
     /**
@@ -75,7 +75,7 @@ public class R  {
      * @return
      */
     public static Result dataResult(RE re,Object data,int i){
-        return dataResult(1,re.getCode(),data);
+        return dataResult(1,re.getCode(),data,i);
     }
 
     /**
@@ -85,7 +85,7 @@ public class R  {
      * @param data
      * @return
      */
-    public static Result dataResult(int rsi,int reCode,Object data){
+    public static Result dataResult(int rsi,int reCode,Object data,int i){
         String MSG = "";
         if (reCode== RE.ADD.getCode()){
             MSG = "添加";
@@ -304,9 +304,9 @@ public class R  {
      */
     public static Result dataResult(boolean rs,int reCode,Object data){
         if (!rs){
-            return dataResult(0,reCode,data);
+            return dataResult(0,reCode,data,0);
         }
-        return dataResult(1,reCode,data);
+        return dataResult(1,reCode,data,0);
     }
 
     /**

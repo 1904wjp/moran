@@ -3,6 +3,7 @@ package com.moon.joyce.example.functionality.entity.doma;
 import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.Table;
+import com.moon.joyce.commons.factory.enums.Type;
 import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 import com.moon.joyce.example.entity.dto.Page;
 import com.moon.joyce.example.entity.vo.PageVo;
@@ -26,6 +27,7 @@ public class Password extends Page {
     @Ids
     private String username;
     private String password;
+    @Column(comment = "备注",type = Type.TEXT)
     private String remark;
     @Column(comment = "版本号")
     private Integer version;
@@ -33,7 +35,7 @@ public class Password extends Page {
     private String appName;
     @Column(comment = "是否是最新版[0:不是，1:是]",length = "1")
     private Integer isNewV;
-    @Column(comment = "ip地址")
+    @Column(comment = "ip地址",length = "255")
     private String uri;
     @Override
     public boolean equals(Object o) {

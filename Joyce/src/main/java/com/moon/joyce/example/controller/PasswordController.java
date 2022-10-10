@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -64,9 +65,11 @@ public class PasswordController extends BaseController {
         int version = 0;
         if (count!=0){
             Password dbPwd = passwordService.getOne(password);
-            dbPwd.setIsNewV(0);
-            version = dbPwd.getVersion()+1;
-            passwordService.saveOrUpdate(dbPwd);
+            if (Objects.nonNull(dbPwd)){
+                dbPwd.setIsNewV(0);
+                version = dbPwd.getVersion()+1;
+                passwordService.saveOrUpdate(dbPwd);
+            }
         }
         password.setVersion(version);
         StringBuilder pwd = new StringBuilder(password.getPassword());

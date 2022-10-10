@@ -17,29 +17,10 @@ import java.util.Map;
  * @desc 基础类实体类
  */
 @Table(name = "基础类",isParent = true)
-public class BaseEntity implements Serializable {
+public class BaseEntity extends RootEntity implements Serializable {
     private static final long serialVersionUID = 9019164396662157010L;
    /* @Id*/
-    @Column(name="id",auto = true,comment = "主键", type = Type.BIGINT)
-    @TableId(value = "id",type = IdType.AUTO)
-    private Long id;
-    @Column(name="create_by",comment = "创建人", type = Type.VARCHAR)
-    @TableField("create_by")
-    private String createBy;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Column(name="create_time",comment = "创建时间", type = Type.DATETIME)
-    @TableField(value = "create_time",fill = FieldFill.INSERT)
-    private Date createTime;
-
-    @TableField("update_by")
-    @Column(name="update_by",comment = "更新人", type = Type.VARCHAR)
-    private String updateBy;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Column(name="update_time",comment = "更新时间",length = "0",type = Type.DATETIME)
-    @TableField(value = "update_time",fill = FieldFill.UPDATE)
-    private Date updateTime;
 
     @TableLogic
     @Column(name="delete_flag",comment = "删除标志", type = Type.INT,defaultValue = "1")
@@ -54,58 +35,28 @@ public class BaseEntity implements Serializable {
     @TableField(value = "update_ids")
     private Long updateIds;
 
+    @Column(comment = "参数表id",type = Type.BIGINT)
+    private Long addParamsId;
+
+    @Column(exist = false,comment = "参数")
+    @TableField(exist = false)
+    private AddParams addParams;
+
+    @Column(exist = false,comment = "vo参数")
+    @TableField(exist = false)
+    private Map<String,Object> voParams;
+
+    @Column(exist = false,comment = "查询关键字")
+    @TableField(exist = false)
+    private String searchWord;
+
+
     public String getSearchWord() {
         return searchWord;
     }
 
     public void setSearchWord(String searchWord) {
         this.searchWord = searchWord;
-    }
-
-    @TableField(exist = false)
-    private Map<String,String> paramMap;
-
-    @Column(exist = false,comment = "查询关键字")
-    @TableField(exist = false)
-    private String searchWord;
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 
     public Integer getDeleteFlag() {
@@ -116,12 +67,28 @@ public class BaseEntity implements Serializable {
         this.deleteFlag = deleteFlag;
     }
 
-    public Map<String, String> getParamMap() {
-        return paramMap;
+    public Long getAddParamsId() {
+        return addParamsId;
     }
 
-    public void setParamMap(Map<String, String> paramMap) {
-        this.paramMap = paramMap;
+    public void setAddParamsId(Long addParamsId) {
+        this.addParamsId = addParamsId;
+    }
+
+    public AddParams getAddParams() {
+        return addParams;
+    }
+
+    public void setAddParams(AddParams addParams) {
+        this.addParams = addParams;
+    }
+
+    public Map<String, Object> getVoParams() {
+        return voParams;
+    }
+
+    public void setVoParams(Map<String, Object> voParams) {
+        this.voParams = voParams;
     }
 
     public Long getCreateIds() {

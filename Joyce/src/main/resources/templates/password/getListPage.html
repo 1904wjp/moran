@@ -20,7 +20,7 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
-    <button id="btn_add" onclick="show()" type="button" class="btn btn-primary btn-space">添加</button>
+    <button id="btn_add" onclick="show('新增信息')" type="button" class="btn btn-primary btn-space">添加</button>
     <div class="pull-right" id="query-form" style="padding-bottom:10px;">
         <input name="searchWord" placeholder='关键字' type="text"
                style="float:left;width:150px;margin-right:5px;" v-model="searWord"
@@ -103,6 +103,7 @@
 
     function getInfo(id) {
         $('#sub').hide();
+        $('#forgetModalLabel').text("详细信息")
         var myform = $('#myform_data');
         myform.empty();
         var data =[{lable:"应用",className:"appName"},
@@ -115,7 +116,7 @@
             {lable:"是否是最新版本",className:"isNewV"},
             {lable:"创建时间",className:"createTime"}
         ];
-        append(myform,data);
+        append(myform,data,1);
         $('#title').val("密码信息");
         $.ajax({
             url: '/example/password/'+id ,
@@ -124,14 +125,14 @@
         }).done(function (data) {
            if (data.rs){
                var res = data.data;
-                   $('.appName').val(res.appName);
-                   $('.uri').val(res.uri==null?'暂无':res.uri);
-                   $('.username').val(res.username);
-                   $('.password').val(res.password);
-                   $('.remark').val(res.remark);
-                   $('.createTime').val(res.createTime);
-                   $('.version').val(res.version);
-                   $('.isNewV').val((res.isNewV===1?'是':'否'));
+                   $('.appName').text(res.appName);
+                   $('.uri').text(res.uri===' '?'暂无':res.uri);
+                   $('.username').text(res.username);
+                   $('.password').text(res.password);
+                   $('.remark').text(res.remark);
+                   $('.createTime').text(res.createTime);
+                   $('.version').text(res.version);
+                   $('.isNewV').text((res.isNewV===1?'是':'否'));
                    $("#myform").modal('show');
            }
            tips(data.rs,data.msg);
@@ -139,16 +140,27 @@
         });
     }
 
-    function append(myform,data){
+    function append(myform,data,is){
         $('#title').val("新增信息");
         var html ="";
-        for (let i = 0; i < data.length; i++) {
-            var o = data[i];
-            html+= "<div style=\"margin-left: 22px;margin-top: 10px;\">\n" +o.lable+
-                "            <input type=\"text\" class=\""+o.className+"\" required=\"required\" placeholder=\"\"\n" +
-                "                         autoComplete=\"off\"/>\n" +
-                "        </div>";
+        if(is==null){
+            for (let i = 0; i < data.length; i++) {
+                var o = data[i];
+                html+= "<div style=\"margin-left: 22px;margin-top: 10px;\">\n" +o.lable+
+                    "            :<input type=\"text\" class=\""+o.className+" in\" required=\"required\" placeholder=\"\"\n" +
+                    "                         autoComplete=\"off\"/>\n" +
+                    "        </div>";
+            }
+        }else {
+            for (let i = 0; i < data.length; i++) {
+                var o = data[i];
+                html+= "<div style=\"margin-left: 22px;margin-top: 10px;\">\n" +o.lable+
+                    "            :<span type=\"text\" class=\""+o.className+" in\""+
+                    "                         autoComplete=\"off\"/></span>\n" +
+                    "        </div>";
+            }
         }
+
         console.log(html);
         myform.append(html);
     }
@@ -165,6 +177,7 @@
     function save() {
         var data = {
             appName:$('.appName').val(),
+            uri:$('.uri').val(),
             username:$('.username').val(),
             password:$('.password').val(),
             remark:$('.remark').val()
@@ -195,7 +208,8 @@
         }
     }
 
-    function show(){
+    function show(text){
+        $('#forgetModalLabel').text(text)
         var myform = $('#myform_data');
         myform.empty();
         var data =[{lable:"应用",className:"appName"},
@@ -207,4 +221,5 @@
         $("#myform").modal('show');
         $('#sub').show();
     }
+
 </script>
