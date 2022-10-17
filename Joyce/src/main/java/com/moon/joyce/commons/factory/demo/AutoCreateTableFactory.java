@@ -5,8 +5,8 @@ import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.NotExist;
 import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.commons.factory.demo.base.BaseFactory;
-import com.moon.joyce.commons.factory.entity.ColumnEntity;
-import com.moon.joyce.commons.factory.entity.TableEntity;
+import com.moon.joyce.commons.factory.entity.auto.ColumnEntity;
+import com.moon.joyce.commons.factory.entity.auto.TableEntity;
 import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.commons.factory.init.AutoCreateTableInit;
 import com.moon.joyce.commons.utils.FileUtils;
@@ -194,8 +194,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
                     if (!filePath.endsWith(".class")) {
                         continue;
                     }
-                    String classPath = filePath.substring(filePath.indexOf("com"), filePath.indexOf(".class")).replace("\\", ".");
-                    Class<?> loadClass = classLoader.loadClass(classPath);
+                    Class<?> loadClass = laodClassByPath(filePath, classLoader, "com", "class");
                     if (loadClass.isAnnotationPresent(Table.class)) {
                         //类注解获取并且填充
                         Table table = loadClass.getAnnotation(Table.class);
@@ -589,6 +588,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
         if (Objects.isNull(columnEntities) || columnEntities.isEmpty()) {
             throw new JoyceException("在创建" + tableEntity.getName() + "的时候，该类无属性类，因此无法创建");
         }
+
         StringBuilder sb = new StringBuilder();
         sb.append("create table ");
         sb.append(" if not exists ");

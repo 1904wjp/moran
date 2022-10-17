@@ -22,7 +22,7 @@ import java.util.*;
  * @describe: 启动时运行自动床表
  */
 @Component
-public class AutoCreateTableRunner implements ApplicationRunner {
+public class BeforRunner implements ApplicationRunner {
     @Value("${auto.entity.package}")
     private String ps;
     @Value("${auto.source.dbName}")

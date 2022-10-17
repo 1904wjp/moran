@@ -1,6 +1,9 @@
-package com.moon.joyce.commons.factory.entity;
+package com.moon.joyce.commons.factory.entity.auto;
 
+import com.moon.joyce.commons.annotation.joyce.CreateEntity;
+import com.moon.joyce.commons.annotation.joyce.CreateFeild;
 import com.moon.joyce.example.functionality.entity.doma.Column;
+import lombok.Data;
 
 import java.util.Objects;
 
@@ -10,8 +13,11 @@ import java.util.Objects;
  * @date: 2022/05/14-- 20:27
  * @describe:
  */
-
+@CreateEntity
+@Data
 public class ColumnEntity{
+    @CreateFeild
+    private TableEntity tableEntity;
     /**
      * 列名
      */

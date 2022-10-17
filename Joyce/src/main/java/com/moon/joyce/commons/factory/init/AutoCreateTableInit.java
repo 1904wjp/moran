@@ -1,7 +1,8 @@
 package com.moon.joyce.commons.factory.init;
 
-import com.moon.joyce.commons.factory.entity.ColumnEntity;
-import com.moon.joyce.commons.factory.entity.TableEntity;
+
+import com.moon.joyce.commons.factory.entity.auto.ColumnEntity;
+import com.moon.joyce.commons.factory.entity.auto.TableEntity;
 import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 import org.apache.commons.lang3.StringUtils;
 

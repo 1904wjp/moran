@@ -1,5 +1,7 @@
 package com.moon.joyce.commons.factory.demo.base;
 
+import com.moon.joyce.commons.utils.FileUtils;
+import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 
 import java.io.File;
@@ -7,9 +9,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -31,7 +31,8 @@ public class BaseFactory {
     "char","Character",0};
     //下标基准
     private static final int INDEX = 1;
-
+    private static final String defParent ="com";
+    private static final String fileType ="class";
     /**
      * 获取类型的初始值
      * @param type
@@ -136,4 +137,81 @@ public class BaseFactory {
         return clazz.getClassLoader();
     }
 
+    /**
+     * 加载路径方法
+     * @param filePath
+     * @param classLoader
+     * @param start
+     * @param end
+     * @return
+     * @throws ClassNotFoundException
+     */
+    protected Class<?> laodClassByPath(String filePath,ClassLoader classLoader,String start ,String end) throws ClassNotFoundException {
+        start = Objects.isNull(start)?defParent:start;
+        end = Objects.isNull(end)?fileType:end;
+        String classPath = filePath.substring(filePath.indexOf(start), filePath.indexOf("."+end)).replace("\\", ".");
+        return  classLoader.loadClass(classPath);
+    }
+
+    List<File> list = new ArrayList<>();
+    /**
+     * 获取class文件集合
+     * @param file
+     * @return
+     */
+    protected List<File> getClassFile(File file){
+        File[] files = file.listFiles();
+        if (files==null){
+            return null;
+        }
+        for (File f : files) {
+            if (f.isFile()){
+                if (f.getAbsolutePath().endsWith("."+fileType)){
+                    list.add(f);
+                }
+            }else {
+              getClassFile(f);
+            }
+        }
+        return list;
+    }
+
+
+    /**
+     * 根据路径获取对应文件
+     * @param packagePath
+     * @return
+     */
+    private File getFile(String packagePath,ClassLoader classLoader) {
+        String rePackageName = packagePath.replace(".", "/");
+        URL resource = classLoader.getResource(rePackageName);
+        return new File(resource.getFile());
+    }
+    /**
+     * 获取class文件集合
+     * @param path
+     * @return
+     */
+    protected List<File> getClassFile(String path,ClassLoader classLoader){
+        return getClassFile(getFile(path,classLoader));
+    }
+    /**
+     * 获取class文件集合
+     * @param path
+     * @return
+     */
+    List<File> allList = new ArrayList<>();
+    protected List<File> getClassFileByPack(String path,ClassLoader classLoader){
+        List<String> paths = StringsUtils.strToList(path);
+        if (paths.isEmpty()){
+            return null;
+        }
+        for (String p : paths) {
+            List<File> classFile = getClassFile(p, classLoader);
+            if (classFile!=null){
+                allList.addAll(classFile);
+            }
+        }
+        return allList;
+    }
 }

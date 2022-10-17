@@ -4,9 +4,7 @@ package com.moon.joyce.commons.utils;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 import com.moon.joyce.example.functionality.entity.doma.PageComponent;
-import com.spire.pdf.FileFormat;
-import com.spire.pdf.PdfDocument;
-import com.spire.pdf.widget.PdfPageCollection;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hwpf.extractor.WordExtractor;
@@ -1449,13 +1447,13 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
 
         File[] fs = getSplitFiles(docPath);
         System.out.println(docPath);
-        com.spire.doc.Document document = new com.spire.doc.Document(docPath + "test0.docx");
+       /* com.spire.doc.Document document = new Document(docPath + "test0.docx");
 
         for (int i = 1; i < fs.length; i++) {
             document.insertTextFromFile(docPath + "test" + i + ".docx", com.spire.doc.FileFormat.Docx_2013);
         }
         //第四步：对合并的doc进行保存2
-        document.saveToFile(desPath);
+        document.saveToFile(desPath);*/
         return true;
     }
 
