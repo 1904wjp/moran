@@ -3,12 +3,12 @@
 <mapper namespace="com.moon.joyce.example.mapper.UUMapper">
     <select id="getListByType" resultType="java.lang.Long">
         SELECT temp.userId FROM
-        (SELECT a.user_b_id AS userId FROM u_u a
+        (SELECT a.user_b_id AS userId FROM springboot.u_u a
         WHERE a.user_a_id = #{userId}
         <if test="type!=null and type!=''">AND a.type = #{type}
         </if>
         UNION
-        SELECT b.user_a_id AS userId FROM u_u b
+        SELECT b.user_a_id AS userId FROM springboot.u_u b
         WHERE b.user_b_id = #{userId}
         <if test="type!=null and type!=''">AND b.type = #{type}
         </if>

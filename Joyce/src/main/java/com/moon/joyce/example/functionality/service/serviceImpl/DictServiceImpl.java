@@ -42,7 +42,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
                 if (Objects.isNull(d)){
                     continue;
                 }
-                d.setLables(lableService.getlables(new DictAndLable(d.getId(),null,d.getType())));
+                d.setLables(lableService.getlables(new DictAndLable(d.getId(),null)));
                 list.add(d);
             }
         }

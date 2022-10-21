@@ -12,5 +12,10 @@ import java.util.List;
  */
 @Mapper
 public interface LableMapper extends BaseMapper<Lable> {
+    /**
+     * 查询所有的标签
+     * @param dictAndLable
+     * @return
+     */
     List<Lable> getList(DictAndLable dictAndLable);
 }

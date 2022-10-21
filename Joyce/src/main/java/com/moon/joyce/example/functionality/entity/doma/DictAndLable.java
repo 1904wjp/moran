@@ -33,7 +33,4 @@ public class DictAndLable extends BaseEntity {
     @Column(name = "lable_id",type = Type.VARCHAR,comment = "标签id")
     private Long lableId;
 
-    public DictAndLable(Long dictId, Long lableId, String type) {
-        super();
-    }
 }

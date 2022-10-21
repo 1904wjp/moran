@@ -14,5 +14,10 @@ import java.util.List;
 
 @Service
 public interface LableService extends IService<Lable> {
+    /**
+     * 查询所有的标签
+     * @param dictAndLable
+     * @return
+     */
     List<Lable> getlables(DictAndLable dictAndLable);
 }
