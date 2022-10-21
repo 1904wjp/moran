@@ -101,6 +101,12 @@ function tables(tabObj, url, queryObj, columns) {
                 }
             });
             return param;
+        }, iconSize: 'outline',
+        toolbar: '#sliderToolbar',
+        icons: {
+            refresh: 'glyphicon-repeat',
+            toggle: 'glyphicon-list-alt',
+            columns: 'glyphicon-list'
         },
         columns: columns
     });
