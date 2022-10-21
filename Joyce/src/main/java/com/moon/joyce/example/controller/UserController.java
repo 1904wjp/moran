@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/example/user")
 public class UserController extends BaseController {
 
+    private User user;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 /*********************************************************************************************************************************************/
     /**************全局变量***********************/

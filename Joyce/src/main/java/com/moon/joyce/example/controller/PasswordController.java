@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 import java.util.Objects;
 
@@ -34,8 +35,10 @@ public class PasswordController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping("/getPage")
-    public PageVo<Password> getList(Password password){
+    @GetMapping("/getPage")
+    public  PageVo<Password> getList(Password password, @RequestParam int pageNumber,@RequestParam int offset){
+         password.setOffset(offset);
+         password.setPageNumber(pageNumber);
          password.setCreateIds(getSessionUserId());
          password.setCreateIds(getSessionUserId());
          PageVo<Password> list = passwordService.getList(password);

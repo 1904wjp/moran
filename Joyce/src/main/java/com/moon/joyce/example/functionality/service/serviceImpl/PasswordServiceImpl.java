@@ -35,11 +35,10 @@ public class PasswordServiceImpl extends ServiceImpl<PasswordMapper, Password> i
                     .or().like(Password::getAppName,password.getSearchWord());
         }
         queryWrapper.lambda().orderByDesc(Password::getVersion);
-        com.baomidou.mybatisplus.extension.plugins.pagination.Page<Password> page = Page.getPage(password);
-        IPage iPage = baseMapper.selectPage(page, queryWrapper);
         Integer integer = baseMapper.selectCount(queryWrapper);
-        iPage.setTotal(integer);
-        return new PageVo(iPage);
+        queryWrapper.last(" limit "+password.getOffset()+", "+password.getPageNumber());
+        List<Password> passwords = baseMapper.selectList(queryWrapper);
+        return new PageVo(passwords,integer);
     }
 
     @Override

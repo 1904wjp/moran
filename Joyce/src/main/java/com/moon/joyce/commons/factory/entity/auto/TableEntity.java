@@ -1,4 +1,4 @@
-package com.moon.joyce.commons.factory.entity;
+package com.moon.joyce.commons.factory.entity.auto;
 
 /**
  * @author: Joyce
@@ -7,11 +7,15 @@ package com.moon.joyce.commons.factory.entity;
  * @describe:
  */
 
+import com.moon.joyce.commons.annotation.joyce.CreateEntity;
 import com.moon.joyce.example.functionality.entity.doma.Column;
+import lombok.Data;
 
 /**
  * 表实体类
  */
+@CreateEntity
+@Data
 public class TableEntity{
     /**
      * 表名
