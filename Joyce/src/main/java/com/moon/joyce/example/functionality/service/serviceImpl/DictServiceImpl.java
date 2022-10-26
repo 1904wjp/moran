@@ -30,10 +30,10 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     public List<Dict> getDicts(Dict dict) {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         if (Objects.nonNull(dict.getCode())){
-            wrapper.eq("code",dict.getCode());
+            wrapper.lambda().eq(Dict::getCode,dict.getCode());
         }
         if (Objects.nonNull(dict.getName())){
-            wrapper.eq("name",dict.getName());
+            wrapper.lambda().like(Dict::getName,dict.getName());
         }
         List<Dict> dicts = baseMapper.selectList(wrapper);
         List<Dict> list = new ArrayList<>();
@@ -71,10 +71,10 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     public Dict getOne(Dict dict) {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         if (Objects.nonNull(dict.getCode())){
-            wrapper.eq("code",dict.getCode());
+            wrapper.lambda().eq(Dict::getCode,dict.getCode());
         }
         if (Objects.nonNull(dict.getName())){
-            wrapper.eq("name",dict.getName());
+            wrapper.lambda().like(Dict::getName,dict.getName());
         }
         return baseMapper.selectOne(wrapper);
     }

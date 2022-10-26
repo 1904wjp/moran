@@ -1,5 +1,5 @@
 <head class="paneBar" th:replace="/common/public/header::header(~{::title})">
-    <title>测试</title>
+    <title>密码信息</title>
 </head>
 <div class="layui-input-block">
     <div class="modal fade" id="myform"  role="dialog" aria-labelledby="password" aria-hidden="true">
@@ -61,11 +61,11 @@
             field: 'appName',
             title: '应用名称',
             sortables: true
-        }, {
+        }/*, {
             field: 'uri',
             title: 'ip地址',
             sortables: true
-        }, {
+        }*/, {
             field: 'username',
             title: '账户',
             sortables: true
@@ -100,7 +100,7 @@
         tables(obj, url, queryObj, columns);
     }
 
-
+    //获取详细信息
     function getInfo(id) {
         $('#sub').hide();
         $('#forgetModalLabel').text("详细信息")
@@ -126,7 +126,18 @@
            if (data.rs){
                var res = data.data;
                    $('.appName').text(res.appName);
-                   $('.uri').text(res.uri===' '?'暂无':res.uri);
+                   if(res.uri===null){
+                       $('.uri').html('暂无');
+                   }else if (res.uri.indexOf(",")===-1){
+                      var arry = res.uri.split(",");
+                      var html ="";
+                      for (let i = 0; i < arry.length; i++) {
+                          html+='<a href="'+arry[i]+'">'+res.uri+'</a></br>';
+                      }
+                    $('.uri').html(html);
+                  }else {
+                      $('.uri').html((res.uri===' ')?'暂无':'<a href="'+res.uri+'">'+res.uri+'</a>');
+                  }
                    $('.username').text(res.username);
                    $('.password').text(res.password);
                    $('.remark').text(res.remark);
@@ -160,11 +171,16 @@
                     "        </div>";
             }
         }
-
-        console.log(html);
         myform.append(html);
     }
 
+   function  appendParams(myform){
+       var html = "<div style=\"margin-left: 22px;margin-top: 10px;\"> <input type=\"text\" class='appendParamsName'/>" +
+                   "            :<input type=\"text\" class=\"appendParams\" required=\"required\" placeholder=\"\"\n" +
+                   "                         autoComplete=\"off\"/>\n" +
+                   "        </div>";
+       myform.append(html);
+   }
 
     //操作按钮
     function passwordOpFormatter(value, row, index) {
@@ -208,6 +224,10 @@
         }
     }
 
+    /**
+     * 展现信息
+     * @param text
+     */
     function show(text){
         $('#forgetModalLabel').text(text)
         var myform = $('#myform_data');
@@ -218,8 +238,14 @@
             {lable:"ip地址",className:"uri"},
             {lable:"备注",className:"remark"}];
         append(myform,data);
+        myform.append("<button type=\"button\"  id='append_params' class=\"btn btn-primary pull-right\">新增</button>")
         $("#myform").modal('show');
         $('#sub').show();
     }
+
+    $("#append_params").click(function() {
+        var myform = $('#myform_data');
+        append(myform)
+    });
 
 </script>
