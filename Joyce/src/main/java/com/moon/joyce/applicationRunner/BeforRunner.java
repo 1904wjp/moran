@@ -19,7 +19,7 @@ import java.util.*;
  * @author: Joyce
  * @autograph: Logic is justice
  * @date: 2022/05/14-- 1:11
- * @describe: 启动时运行自动床表
+ * @describe: 启动时运行自动创建表
  */
 @Component
 public class BeforRunner implements ApplicationRunner {
