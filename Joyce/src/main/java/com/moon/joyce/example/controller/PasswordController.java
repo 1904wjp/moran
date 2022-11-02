@@ -39,8 +39,6 @@ public class PasswordController extends BaseController {
     public  PageVo<Password> getList(Password password, @RequestParam int pageNumber,@RequestParam int offset){
          password.setOffset(offset);
          password.setPageNumber(pageNumber);
-         password.setCreateIds(getSessionUserId());
-         password.setCreateIds(getSessionUserId());
          PageVo<Password> list = passwordService.getList(password);
         return list;
     }

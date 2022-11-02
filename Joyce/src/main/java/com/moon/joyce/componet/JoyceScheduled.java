@@ -1,6 +1,6 @@
 package com.moon.joyce.componet;
 
-;
+
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.doma.Source;
