@@ -6,11 +6,14 @@ import com.moon.joyce.commons.enums.RE;
 import com.moon.joyce.commons.factory.demo.UrlFactory;
 import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
 import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
+import com.moon.joyce.commons.utils.CommonUtils;
 import com.moon.joyce.commons.utils.HttpUtils;
 import com.moon.joyce.commons.utils.R;
+import com.moon.joyce.example.entity.base.entity.doma.AddParams;
 import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 import com.moon.joyce.example.functionality.entity.doma.*;
+import com.moon.joyce.example.functionality.service.AddParamsService;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +78,9 @@ public class BaseController extends R {
     protected static Jedis cache ;
     //缓存的聊天记录
     protected static String addChatRecords = "add_chatRecord";
-    protected static  ConcurrentHashMap<Long, Auth> authMap = new ConcurrentHashMap<>();;
+    protected static  ConcurrentHashMap<Long, Auth> authMap = new ConcurrentHashMap<>();
+    @Autowired
+    private AddParamsService addParamsService;
   //  public static Map<String,Object> redisMap = new HashMap<>();
     /**
      * 获得session
@@ -295,4 +300,20 @@ public class BaseController extends R {
     protected void authMapPut(User user ,  HttpServletRequest request){
         authMap.put(user.getId(),new Auth(request.getSession().getId(),HttpUtils.getIpAddress(request)));
     }
+
+    /**
+     * 获取参数
+     * @param baseEntity
+     * @return
+     */
+    protected BaseEntity getParam(BaseEntity baseEntity){
+        if (CommonUtils.allNonNull(baseEntity,baseEntity.getAddParamsId())){
+            AddParams params = addParamsService.getParams(baseEntity.getAddParamsId());
+            if (CommonUtils.allNonNull(params,params.getParams(),params.getParamsMap())){
+                baseEntity.setAddParams(params);
+            }
+        }
+        return baseEntity;
+    }
+
 }
