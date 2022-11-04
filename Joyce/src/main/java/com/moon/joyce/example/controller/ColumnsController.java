@@ -65,10 +65,13 @@ public class ColumnsController extends BaseController {
         }
         /* Column table = columnsService.getColumn.js(tableName,dbName);*/
         List<Column> columns = columnsService.getColumns(tableName, dbName);
-        columns.stream().filter(x -> "NO".equals(x.getIsNull()) && Objects.isNull(x.getDefaultValue())).forEach(x -> x.setDefaultValue("默认值不为空"));
+        if (Objects.isNull(columns)) {
+            return R.error("该表无数据或者不存在");
+        }
         if (columns.isEmpty()) {
             return R.error("该表无数据或者不存在");
         }
+        columns.stream().filter(x -> "NO".equals(x.getIsNull()) && Objects.isNull(x.getDefaultValue())).forEach(x -> x.setDefaultValue("默认值不为空"));
         List<Column> columns1 = new ArrayList<>();
         tableName = columns.get(0).getTableName().substring(columns.get(0).getTableName().indexOf("_") + 1);
         for (Column column : columns) {

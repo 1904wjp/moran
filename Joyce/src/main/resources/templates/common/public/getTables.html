@@ -11,7 +11,9 @@
         <input type="hide" id="tableName" th:value="${tableName}"/>
         <div id="column_table2"></div>
         <div><span id="count"></span> <input id="pro_page" type="button" value="上一页" onclick="getTableDataPage(0)"/>
-            <input id="next_page" type="button" value="下一页" onclick="getTableDataPage(1)"/> <input id="page" style="width: 5%"/> <input id="switch" type="button" value="跳转" onclick="getTableDataPage(2)"/>
+            <input id="next_page" type="button" value="下一页" onclick="getTableDataPage(1)"/>
+            <input id="page" style="width: 5%"/>
+            <input id="switch" type="button" value="跳转" onclick="getTableDataPage(2)"/>
         </div>
     </div>
 </div>
@@ -118,14 +120,13 @@
                         $.each(arry[0], function (key, values) {
                             html += "<td>" + key + "</td>\n";
                         });
-                        html += "</tr>\n";
-
+                        html += "<td>操作</td></tr>\n";
                         $.each(arry, function (key, values) {
                             html += "<tr>\n";
                             $.each(values, function (k, v) {
                                 html += "<td>" + v + "</td>\n";
                             });
-                            html += "</tr>\n";
+                            html += "<td>修改 删除</td></tr>\n";
                         });
                         html = html + "</table>";
                     }

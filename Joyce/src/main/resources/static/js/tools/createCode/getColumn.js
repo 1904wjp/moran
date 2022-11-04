@@ -1,5 +1,13 @@
 $().ready(function (){
     $('#download').hide();
+    getDatabaseNames();
+});
+
+/**
+ * 获取数据库名称
+ */
+function getDatabaseNames(){
+    addLoadingModal("查询中...请稍后");
     $.ajax({
         url: '/example/columns/getAllDataBases',
         type: 'POST',
@@ -7,7 +15,7 @@ $().ready(function (){
     }).done(function (data) {
         loading(false);
         if (data.rs){
-            console.log("cccc")
+            $('#dbName option').remove();
             $('#dbName').append('<option value="">请选择表</option>');
             for (let i = 0; i < data.data.length; i++) {
                 $('#dbName').append("<option value=\""+data.data[i]+"\">"+data.data[i]+"</option>");
@@ -18,7 +26,7 @@ $().ready(function (){
     }).fail(function (){
         tips(false,data.msg);
     });
-});
+}
 
 /**
  * 获取对应表名
@@ -38,6 +46,7 @@ function getTablesByDatabaseName(){
         }).done(function (data) {
             loading(false);
             if (data.rs){
+                $('#tableName option').remove();
                 $('#tableName').append('<option value="">请选择表</option>');
                  for (let i = 0; i < data.data.length; i++) {
                     $('#tableName').append("<option value=\""+data.data[i].tableName+"\">"+data.data[i].tableName+"("+data.data[i].tableComment+")"+"</option>");
