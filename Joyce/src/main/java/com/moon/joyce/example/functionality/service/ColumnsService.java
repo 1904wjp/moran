@@ -68,5 +68,13 @@ public interface ColumnsService {
      */
     List<String> getDataBaseNames();
 
+    /**
+     * 获取表信息
+     * @param tableName
+     * @param dbName
+     * @param pageNumber
+     * @param offset
+     * @return
+     */
     PageVo getMapTableDataPage(String tableName, String dbName, int pageNumber, int offset);
 }

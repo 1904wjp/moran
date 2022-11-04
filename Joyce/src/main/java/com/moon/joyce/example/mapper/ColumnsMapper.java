@@ -47,6 +47,10 @@ public interface ColumnsMapper {
      */
     int getCount(@Param("tableName") String tableName, @Param("dbName") String dbName);
 
+    /**
+     * 获取数据库名称
+     * @return
+     */
     @Select("SHOW DATABASES")
     List<String> getDataBases();
 }
