@@ -92,11 +92,11 @@ public class ColumnsController extends BaseController {
         Map<String, String> map = new HashMap<>();
         String className = StringsUtils.getClassName(columns1.get(0).getTableName());
         map.put("entity", path+className + ".java");
-        map.put("Controller",  path+className + "Controller.java");
+     /*   map.put("Controller",  path+className + "Controller.java");
         map.put("Service",  path+className + "Service.java");
         map.put("ServiceImpl",  path+className + "ServiceImpl.java");
         map.put("Mapper",  path+className + "Mapper.java");
-        map.put("Mapperxml",  path+className + "Mapper.xml");
+        map.put("Mapperxml",  path+className + "Mapper.xml");*/
         setSession(getSessionUser().getUsername() + "webFile", map);
         logger.info("创建：" + columns1.get(0).getTableName());
         shutdownDatasource();

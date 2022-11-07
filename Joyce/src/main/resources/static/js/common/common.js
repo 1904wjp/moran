@@ -380,7 +380,7 @@ function notBlank(str) {
  * @returns {boolean}
  */
 function notNull(obj) {
-    if (null != obj && obj != undefined) {
+    if (null != obj && obj !=='') {
         return true;
     }
     return false;

@@ -15,7 +15,7 @@
                     <label class="col-sm-2 control-label" for="dbName">数据库名称</label>
                     <div  class="col-sm-8    ">
                         <!--<input class="form-control" id="dbName" type="text" name="dbName" placeholder="请输入database名称"   required="required" onchange=" getTablesByDatabaseName()"/>-->
-                        <select class="form-control" id="dbName" ondblclick="getDatabaseNames()"></select>
+                        <select class="form-control" id="dbName" ondblclick="getDatabaseNames()" onchange="getTablesByDatabaseName()"></select>
                     </div>
                 </div>
 

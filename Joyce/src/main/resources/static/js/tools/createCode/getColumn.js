@@ -3,6 +3,7 @@ $().ready(function (){
     getDatabaseNames();
 });
 
+
 /**
  * 获取数据库名称
  */
@@ -49,7 +50,11 @@ function getTablesByDatabaseName(){
                 $('#tableName option').remove();
                 $('#tableName').append('<option value="">请选择表</option>');
                  for (let i = 0; i < data.data.length; i++) {
-                    $('#tableName').append("<option value=\""+data.data[i].tableName+"\">"+data.data[i].tableName+"("+data.data[i].tableComment+")"+"</option>");
+                    var comment ="";
+                    if (notNull(data.data[i].tableComment)){
+                        comment = "("+data.data[i].tableComment+")";
+                    }
+                    $('#tableName').append("<option value=\""+data.data[i].tableName+"\">"+data.data[i].tableName+comment+"</option>");
                   }
             }else {
                 tips(data.rs,data.msg);
