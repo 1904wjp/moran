@@ -33,7 +33,7 @@ function getDatabaseNames(){
  * 获取对应表名
  */
 function getTablesByDatabaseName(){
-        $('#tableName')[0].options.length=0;
+       /* $('#tableName')[0].options.length=0;*/
         addLoadingModal("查询中...请稍后");
         let  data = {
             databaseName:$('#dbName').val()
@@ -43,19 +43,34 @@ function getTablesByDatabaseName(){
             type: 'POST',
             dataType: 'json',
             data: data,
-
         }).done(function (data) {
             loading(false);
             if (data.rs){
-                $('#tableName option').remove();
-                $('#tableName').append('<option value="">请选择表</option>');
+                $('#tableName div').remove();
+                var res = data.data;
+                var array = [];
+                for (let i = 0; i < res.length; i++) {
+                    var comment ="";
+                    if (notNull(res[i].tableComment)){
+                        comment = "("+res[i].tableComment+")";
+                    }
+                    array.push({
+                        "name":res[i].tableName+comment,
+                        "value":res[i].tableName
+                    });
+                }
+                $("#tableNameDiv").wxSelect({
+                    data:array
+                });
+               // console.log(array);
+               /* $('#tableName').append('<option value="">请选择表</option>');
                  for (let i = 0; i < data.data.length; i++) {
                     var comment ="";
                     if (notNull(data.data[i].tableComment)){
                         comment = "("+data.data[i].tableComment+")";
                     }
                     $('#tableName').append("<option value=\""+data.data[i].tableName+"\">"+data.data[i].tableName+comment+"</option>");
-                  }
+                  }*/
             }else {
                 tips(data.rs,data.msg);
             };
