@@ -125,7 +125,12 @@ public class ColumnsController extends BaseController {
     @ResponseBody
     @RequestMapping("/getAllDataBases")
     public Result selectTablesByDatabase() {
-        startupDatasource();
+        try {
+            startupDatasource();
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
+            return success("自定义数据库连接有误，返回主数据库");
+        }
         List<String> dataBaseNames = columnsService.getDataBaseNames();
         shutdownDatasource();
         return R.dataResult(!dataBaseNames.isEmpty(),"该数据库无数据或者连接有误",dataBaseNames);
