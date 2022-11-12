@@ -551,6 +551,7 @@ function autoFill() {
  * 显示表格
  */
 function tableStructure() {
+    loading(true);
     /* var dbName = $('#dbName').children('option:selected').val();
      var tableName = $('#tableName').children('option:selected').val();*/
     var dbName = $('#dbName').val();
@@ -604,10 +605,13 @@ function tableStructure() {
                     html = html + "</table>";
                 }
                 obj.append(html);
+                loading(false);
             } else {
+                loading(false);
                 tips(data.rs, data.msg)
             }
         }).fail(function () {
+            loading(false);
             tips(false, data.msg)
         });
     }
