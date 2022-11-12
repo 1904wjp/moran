@@ -550,15 +550,20 @@ function autoFill() {
 /**
  * 显示表格
  */
-$('#tableName').change(function () {
-    var dbName = $('#dbName').children('option:selected').val();
-    var tableName = $('#tableName').children('option:selected').val();
+function tableStructure() {
+    /* var dbName = $('#dbName').children('option:selected').val();
+     var tableName = $('#tableName').children('option:selected').val();*/
+    var dbName = $('#dbName').val();
+    var tableName = $('#tableName').val();
+    if (tableName.indexOf("(")>=0){
+        tableName = tableName.substring(0,tableName.indexOf("("));
+    }
     if (!isBlank(tableName) && !isBlank(dbName)) {
         var data = {
             dbName: dbName,
             tableName: tableName
         }
-        console.log("h========>",data);
+        console.log("h========>", data);
         $.ajax({
             url: '/example/columns/getColumns',
             type: 'POST',
@@ -602,11 +607,10 @@ $('#tableName').change(function () {
             } else {
                 tips(data.rs, data.msg)
             }
-            ;
         }).fail(function () {
             tips(false, data.msg)
         });
     }
-});
+}
 
 

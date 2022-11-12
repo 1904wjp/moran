@@ -1,5 +1,8 @@
 package com.moon.joyce.commons.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -68,4 +71,8 @@ public class ListsUtils<E> {
         });
         return builder.substring(0,builder.length()-1);
     }
+
+    public  static  JSONArray listToJSONArray(List list){
+        return JSONArray.parseArray(JSON.toJSONString(list));
+        }
 }
