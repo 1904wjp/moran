@@ -546,6 +546,43 @@ function autoFill() {
     $('#databaseType').val("mysql");
 }
 
+//生成对应的类
+function inputColumns() {
+    var tableName = $('#tableName').val();
+    if (tableName.indexOf("(")>=0){
+        tableName = tableName.substring(0,tableName.indexOf("("));
+    }
+    var data = {
+        "tableName": tableName,
+        "dbName": $('#dbName').val()
+    }
+
+    if (vailDate(data)) {
+        Ewin.confirm({message: "确认要提交数据？"}).on(function (e) {
+            if (!e) {
+                return;
+            }
+            addLoadingModal("正在创建数据...请稍后")
+            $.ajax({
+                url: '/example/columns/getColumns',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+
+            }).done(function (data) {
+                loading(false);
+                if (data.rs) {
+                    $('#download').show();
+                    tips(data.rs, data.msg)
+                } else {
+                    tips(data.rs, data.msg)
+                }
+            }).fail(function () {
+                tips(false, data.msg)
+            });
+        });
+    }
+}
 
 /**
  * 显示表格

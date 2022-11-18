@@ -444,40 +444,6 @@ function isBlank(value) {
 }
 
 
-//生成对应的类
-function inputColumns() {
-    var data = {
-        "tableName": $('#tableName').val(),
-        "dbName": $('#dbName').val()
-    }
-
-    if (vailDate(data)) {
-        Ewin.confirm({message: "确认要提交数据？"}).on(function (e) {
-            if (!e) {
-                return;
-            }
-            addLoadingModal("正在创建数据...请稍后")
-            $.ajax({
-                url: '/example/columns/getColumns',
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-
-            }).done(function (data) {
-                loading(false);
-                if (data.rs) {
-                    $('#download').show();
-                    tips(data.rs, data.msg)
-                } else {
-                    tips(data.rs, data.msg)
-                }
-            }).fail(function () {
-                tips(false, data.msg)
-            });
-        });
-    }
-
-}
 
 
 /**
@@ -561,6 +527,14 @@ function loading(bool) {
     }
 }
 
+class Loading{
+     msg(msg){
+         addLoadingModal(msg);
+     }
+     close(){
+         loading(false);
+     }
+}
 /**
  * 转换中文字符串
  * @param str
