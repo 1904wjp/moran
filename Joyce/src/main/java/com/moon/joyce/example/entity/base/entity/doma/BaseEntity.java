@@ -10,6 +10,7 @@ import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Xing Dao Rong
@@ -124,6 +125,6 @@ public class BaseEntity extends RootEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Integer.parseInt(String.valueOf(this.id % 16));
+        return Objects.hash(deleteFlag, createIds, updateIds, addParamsId, addParams, voParams, searchWord);
     }
 }
