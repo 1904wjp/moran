@@ -33,6 +33,13 @@ public class PasswordController extends BaseController {
         return "/password/getListPage";
     }
 
+    /**
+     * 分页密码
+     * @param password
+     * @param pageNumber
+     * @param offset
+     * @return
+     */
     @ResponseBody
     @GetMapping("/getPage")
     public  PageVo<Password> getList(Password password, @RequestParam int pageNumber,@RequestParam int offset){
@@ -42,6 +49,11 @@ public class PasswordController extends BaseController {
         return list;
     }
 
+    /**
+     * 获取一条详细信息
+     * @param id
+     * @return
+     */
     @ResponseBody
     @GetMapping("/{id}")
     public Result getOne(@PathVariable Long id){
@@ -56,6 +68,11 @@ public class PasswordController extends BaseController {
         return getResult(RE.SELECT,password);
     }
 
+    /**
+     * 保存一条数据
+     * @param password
+     * @return
+     */
     @ResponseBody
     @PostMapping("/save")
     public Result save(Password password){

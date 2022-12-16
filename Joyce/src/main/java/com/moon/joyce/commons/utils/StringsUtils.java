@@ -398,7 +398,6 @@ public class StringsUtils  extends StringUtils implements Serializable {
         ActiveXComponent ax = null;
         try {
             ax = new ActiveXComponent("Sapi.SpVoice");
-
             // 运行时输出语音内容
             Dispatch spVoice = ax.getObject();
             // 音量 0-100
@@ -407,15 +406,11 @@ public class StringsUtils  extends StringUtils implements Serializable {
             ax.setProperty("Rate", new Variant(-4));
             // 执行朗读
             Dispatch.call(spVoice, "Speak", new Variant(text));
-
             // 下面是构建文件流把生成语音文件
-
             ax = new ActiveXComponent("Sapi.SpFileStream");
             Dispatch spFileStream = ax.getObject();
-
             ax = new ActiveXComponent("Sapi.SpAudioFormat");
             Dispatch spAudioFormat = ax.getObject();
-
             // 设置音频流格式
             Dispatch.put(spAudioFormat, "Type", new Variant(22));
             // 设置文件输出流格式
@@ -430,18 +425,47 @@ public class StringsUtils  extends StringUtils implements Serializable {
             Dispatch.put(spVoice, "Rate", new Variant(-4));
             // 开始朗读
             Dispatch.call(spVoice, "Speak", new Variant(text));
-
             // 关闭输出文件
             Dispatch.call(spFileStream, "Close");
             Dispatch.putRef(spVoice, "AudioOutputStream", null);
-
             spAudioFormat.safeRelease();
             spFileStream.safeRelease();
             spVoice.safeRelease();
             ax.safeRelease();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 加密
+     * @param password
+     * @return
+     */
+    public static String encryptionPassword(String password){
+       int len =  password.length();
+        char[] chars = password.toCharArray();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < chars.length; i++) {
+           int condiment = (len-i)%7;
+           builder.append(chars[i]).append(condiment);
+        }
+        return builder.toString();
+    }
+
+    /**
+     * 解密
+     * @param password
+     * @return
+     */
+    public static String decryptPassword(String password){
+        char[] chars = password.toCharArray();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < chars.length; i++) {
+           if (i%2==0){
+               builder.append(chars[i]);
+           }
+        }
+        return builder.toString();
     }
 }

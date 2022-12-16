@@ -1,4 +1,4 @@
-$(function () {
+ $(function () {
     if ($(".main_type").val()!=3){
         $('#app_bar').hide();
     }
