@@ -96,6 +96,7 @@ public class DbBaseSettingServiceImpl extends ServiceImpl<DbBaseSettingMapper, D
         if (Objects.isNull(dbBaseSetting)){
             return false;
         }
+       // dbBaseSetting.setPassword(StringsUtils.decryptPassword(dbBaseSetting.getPassword()));
         DataSource dataSource = new DataSource(dbBaseSetting.getDataSourceName(), dbBaseSetting.getUrl(), dbBaseSetting.getUsername(), dbBaseSetting.getPassword(), dbBaseSetting.getTempCode(), dbBaseSetting.getDatabaseType(), dbBaseSetting.getDriverName());
 
         if (Constant.TEST_DATASOURCE.equals(type)){

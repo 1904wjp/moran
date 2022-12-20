@@ -53,4 +53,5 @@ public class Page extends BaseEntity {
     public void setSearch(String search) {
         this.search = search;
     }
+
 }

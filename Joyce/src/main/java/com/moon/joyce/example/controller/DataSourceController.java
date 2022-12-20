@@ -77,6 +77,7 @@ public class DataSourceController extends BaseController {
     public Result saveDbBaseSetting(DbBaseSetting dbBaseSetting) {
         dbBaseSetting.setUserId(getSessionUser().getId());
         dbBaseSetting.setApplyStatus(Constant.APPLY_STATUS);
+       // dbBaseSetting.setPassword(StringsUtils.encryptionPassword(dbBaseSetting.getPassword()));
         setBaseField(dbBaseSetting);
         if (Objects.isNull(dbBaseSetting.getId())) {
             dbBaseSetting.setApplyStatus(0);
