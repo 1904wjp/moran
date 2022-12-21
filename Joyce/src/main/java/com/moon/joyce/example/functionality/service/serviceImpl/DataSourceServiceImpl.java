@@ -56,7 +56,7 @@ public class DataSourceServiceImpl implements DataSourceService {
      @Override
      public boolean testDateSource(DataSource dataSource){
          logger.info("启动测试指定数据源:"+dataSource.getDataSourceName());
-         return dynamicDataSource.testDatasource(dataSource.getDataSourceName(), dataSource.getDriver(), dataSource.getUrl(), dataSource.getUserName(), dataSource.getPassWord());
+         return dynamicDataSource.testDatasourceByDataSource(dataSource);
      }
 
     @Override

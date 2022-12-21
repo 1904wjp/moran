@@ -34,7 +34,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
             if (dynamicTargetDataSources2.containsKey(datasource)) {
                 log.info("---当前数据源：" + datasource + "---");
             } else {
-                log.info("不存在的数据源：");
+                log.warn("无法寻找到该数据源：");
                 return null;
 //       throw new ADIException("不存在的数据源："+datasource,500);
             }
@@ -57,6 +57,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
                 Class.forName(driveClass);
                 DriverManager.getConnection(url, username, password);// 相当于连接数据库
             } catch (Exception e) {
+                logger.warn("数据库信息填写有误");
                 return false;
             }
 //            HikariDataSource druidDataSource = new HikariDataSource();
@@ -126,16 +127,22 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
                     DruidDataSourceStatManager.removeDataSource(druidDataSource);
                     setTargetDataSources(dynamicTargetDataSources2);// 将map赋值给父类的TargetDataSources
                     super.afterPropertiesSet();// 将TargetDataSources中的连接信息放入resolvedDataSources管理
-                    logger.info(datasourceName+"数据源删除成功");
+                    logger.warn(datasourceName+"数据源删除成功");
                     return true;
                 }
             }
-            logger.info(datasourceName+"数据源删除失败");
+            logger.warn(datasourceName+"数据源删除失败");
             return false;
         }
-            logger.info(datasourceName+"数据源删除失败");
+            logger.warn(datasourceName+"数据源删除失败");
             return false;
     }
+
+    // 测试数据源连接是否有效
+    public boolean testDatasourceByDataSource(DataSource dataSource) {
+       return testDatasource(dataSource.getDataSourceName(),dataSource.getDriver(), dataSource.getUrl(), dataSource.getUserName(),dataSource.getPassWord());
+    }
+
 
     // 测试数据源连接是否有效
     public boolean testDatasource(String dataSourceName, String driveClass, String url, String username, String password) {
@@ -262,17 +269,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
      * @param dataSource
      */
     private  boolean createDataSource(DataSource dataSource) {
-        String datasourceId = dataSource.getDataSourceName();
-        log.info("准备创建数据源"+datasourceId);
-        String databaseType = dataSource.getDatabaseType();
-        String username = dataSource.getUserName();
-        String password = dataSource.getPassWord();
-        String url = dataSource.getUrl();
-        String driveClass = dataSource.getDriver();
-        if(testDatasource(dataSource.getDataSourceName(),driveClass,url,username,password)) {
-            boolean result = this.createDataSource(datasourceId, driveClass, url, username, password, databaseType);
+        log.info("准备创建数据源"+dataSource.getDataSourceName());
+        if(testDatasourceByDataSource(dataSource)) {
+            boolean result = this.createDataSourceBySource(dataSource);
             if(!result) {
-             throw JoyceExceptionUtils.exception("数据源"+datasourceId+"配置正确，但是创建失败");
+             throw JoyceExceptionUtils.exception("数据源"+dataSource.getDataSourceName()+"配置正确，但是创建失败");
             }else {
                 return true;
             }

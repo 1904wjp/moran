@@ -555,14 +555,14 @@ function inputColumns() {
     var data = {
         "tableName": tableName,
         "dbName": $('#dbName').val()
-    }
+    };
 
     if (vailDate(data)) {
         Ewin.confirm({message: "确认要提交数据？"}).on(function (e) {
             if (!e) {
                 return;
             }
-            addLoadingModal("正在创建数据...请稍后")
+            addLoadingModal("正在创建数据...请稍后");
             $.ajax({
                 url: '/example/columns/getColumns',
                 type: 'POST',
