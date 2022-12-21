@@ -48,7 +48,7 @@ public class DataSourceServiceImpl implements DataSourceService {
                 }
                 //切换到改数据源
                 DbContextHolder.setDataSource(dataSource.getDataSourceName());
-                 logger.info("数据源确定完成:"+dbBaseSetting.getDataSourceName());
+                 logger.info("数据源切换完成:"+dbBaseSetting.getDataSourceName());
                 return true;
 
     }
