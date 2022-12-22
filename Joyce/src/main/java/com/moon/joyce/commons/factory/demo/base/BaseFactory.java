@@ -1,10 +1,12 @@
 package com.moon.joyce.commons.factory.demo.base;
 
+import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
@@ -214,4 +216,133 @@ public class BaseFactory {
         }
         return allList;
     }
+
+    /**
+     * 获取类所有属性
+     * @param loadClass
+     * @return
+     */
+    protected Field[] getFields(Class<?> loadClass) {
+        Field[] fields = loadClass.getDeclaredFields();
+        Class<?> superclass = loadClass.getSuperclass();
+        while (Objects.nonNull(superclass)) {
+          Field[] superclassFields = superclass.getDeclaredFields();
+          fields = addFields(fields, superclassFields);
+          superclass = superclass.getSuperclass();
+        }
+        return fields;
+    }
+
+    /**
+     * 自动创建工厂专用获取类所有属性
+     * @param loadClass
+     * @return
+     */
+    protected Field[] getFieldsByAutoCreate(Class<?> loadClass) {
+        Field[] fields = loadClass.getDeclaredFields();
+        Class<?> superclass = loadClass.getSuperclass();
+        while (Objects.nonNull(superclass)) {
+            if (Objects.nonNull(superclass.getAnnotation(Table.class))) {
+                Field[] superclassFields = superclass.getDeclaredFields();
+                fields = addFields(fields, superclassFields);
+            }
+            superclass = superclass.getSuperclass();
+        }
+        return fields;
+    }
+
+    /**
+     * 获取类所有属性
+     * @param loadClass
+     * @return
+     */
+    protected Method[] getMethods(Class<?> loadClass) {
+        Method[] methods = loadClass.getDeclaredMethods();
+        Class<?> superclass = loadClass.getSuperclass();
+        while (Objects.nonNull(superclass)) {
+            Method[] method2s = superclass.getDeclaredMethods();
+            methods =  addMethods(methods,method2s);
+            superclass = superclass.getSuperclass();
+        }
+        return methods;
+    }
+
+    /**
+     * 获取类所有属性
+     * @param loadClass
+     * @return
+     */
+    protected Method getMethod(Class<?> loadClass,String methodName)  {
+        Method method = null;
+        try {
+         method = loadClass.getMethod(methodName);
+        if (method!=null){
+            return method;
+        }
+        Class<?> superclass = loadClass.getSuperclass();
+        while (Objects.nonNull(superclass)) {
+              method = superclass.getMethod(methodName);
+             if (method!=null){
+                break;
+             }
+            superclass = superclass.getSuperclass();
+        }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return method;
+    }
+
+
+    /**
+     * 计算总属性集合
+     * @param fs1
+     * @param fs2
+     * @return
+     */
+    private Field[] addFields(Field[] fs1, Field[] fs2) {
+        if (Objects.isNull(fs1) || fs1.length == 0) {
+            return fs2;
+        }
+        if (Objects.isNull(fs2) || fs2.length == 0) {
+            return fs1;
+        }
+        Field[] fields = new Field[fs1.length + fs2.length];
+        int index = 0;
+        for (int i = 0; i < fields.length; i++) {
+            if (i < fs1.length) {
+                fields[i] = fs1[i];
+            } else {
+                fields[i] = fs2[index++];
+            }
+        }
+        return fields;
+    }
+
+    /**
+     * 计算总方法集合
+     * @param fs1
+     * @param fs2
+     * @return
+     */
+    private Method[] addMethods(Method[] fs1, Method[] fs2) {
+        if (Objects.isNull(fs1) || fs1.length == 0) {
+            return fs2;
+        }
+        if (Objects.isNull(fs2) || fs2.length == 0) {
+            return fs1;
+        }
+        Method[] fields = new Method[fs1.length + fs2.length];
+        int index = 0;
+        for (int i = 0; i < fields.length; i++) {
+            if (i < fs1.length) {
+                fields[i] = fs1[i];
+            } else {
+                fields[i] = fs2[index++];
+            }
+        }
+        return fields;
+    }
+
+
 }

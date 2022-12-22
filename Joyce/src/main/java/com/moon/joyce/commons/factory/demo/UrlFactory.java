@@ -155,14 +155,22 @@ public class UrlFactory extends BaseFactory {
         return flag;
     }
 
-    private String getSelfClassValue(Type type) {
-        Class<?> clazz = type.getClass();
-        Field[] fields = clazz.getDeclaredFields();
+    public String getSelfClassValue(Class type) {
+       // Class<?> clazz = type.getClass();
+        Field[] fields = getFields(type);
         StringBuilder sb = new StringBuilder("{");
+        Set<String> set = new HashSet<>();
+        for (Method method : getMethods(type)) {
+            set.add(method.getName());
+        }
         for (Field field : fields) {
             String name = field.getName();
+            String setMethodName =  "set"+name.substring(0,1).toUpperCase()+name.substring(1);
+            if (!set.contains(setMethodName)){
+                continue;
+            }
             String tp = field.getType().getSimpleName();
-            if (clazz.isArray()){
+            if (type.isArray()){
                 return "\""+name+"\" = []";
             }
             sb.append(getInitValue(name,tp));

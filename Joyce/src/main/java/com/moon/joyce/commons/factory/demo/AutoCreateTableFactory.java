@@ -204,7 +204,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
                         TableEntity tableEntity = new TableEntity();
                         setTableEntity(table,tableEntity,loadClass);
                         //属性注解获取并且填充
-                        Field[] fields = getFields(loadClass);
+                        Field[] fields = getFieldsByAutoCreate(loadClass);
                         //储存属性的容器
                         List<ColumnEntity> list = new ArrayList<>();
                         List<Field> idsField = new ArrayList<>();
@@ -386,48 +386,8 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
         return null;
     }
 
-    /**
-     * 获取类所有属性
-     * @param loadClass
-     * @return
-     */
-    private Field[] getFields(Class<?> loadClass) {
-        Field[] fields = loadClass.getDeclaredFields();
-        Class<?> superclass = loadClass.getSuperclass();
-        while (Objects.nonNull(superclass)) {
-            if (Objects.nonNull(superclass.getAnnotation(Table.class))) {
-                Field[] superclassFields = superclass.getDeclaredFields();
-                fields = addFields(fields, superclassFields);
-            }
-            superclass = superclass.getSuperclass();
-        }
-        return fields;
-    }
 
-    /**
-     * 计算总属性集合
-     * @param fs1
-     * @param fs2
-     * @return
-     */
-    private Field[] addFields(Field[] fs1, Field[] fs2) {
-        if (Objects.isNull(fs1) || fs1.length == 0) {
-            return fs2;
-        }
-        if (Objects.isNull(fs2) || fs2.length == 0) {
-            return fs1;
-        }
-        Field[] fields = new Field[fs1.length + fs2.length];
-        int index = 0;
-        for (int i = 0; i < fields.length; i++) {
-            if (i < fs1.length) {
-                fields[i] = fs1[i];
-            } else {
-                fields[i] = fs2[index++];
-            }
-        }
-        return fields;
-    }
+
 
     /**
      * 根据column注解创建实体类
