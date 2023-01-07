@@ -29,6 +29,7 @@ public class PasswordServiceImpl extends ServiceImpl<PasswordMapper, Password> i
     @Override
     public  PageVo getList(Password password) {
         QueryWrapper<Password> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Password::getCreateIds,password.getCreateIds());
         if (StringsUtils.isNoneBlank(password.getSearchWord())){
             queryWrapper.lambda().like(Password::getRemark,password.getSearchWord())
                     .or().like(Password::getUsername,password.getSearchWord())
@@ -38,6 +39,15 @@ public class PasswordServiceImpl extends ServiceImpl<PasswordMapper, Password> i
         Integer integer = baseMapper.selectCount(queryWrapper);
         queryWrapper.last(" limit "+password.getOffset()+", "+password.getPageNumber());
         List<Password> passwords = baseMapper.selectList(queryWrapper);
+        if (!passwords.isEmpty()){
+            for (Password pwds : passwords) {
+                if (StringsUtils.isNoneBlank(pwds.getTwoPassword())){
+                    pwds.setIsPassword(1);
+                }
+                pwds.setPassword("暂不显示");
+                pwds.setTwoPassword("暂不显示");
+            }
+        }
         return new PageVo(passwords,integer);
     }
 

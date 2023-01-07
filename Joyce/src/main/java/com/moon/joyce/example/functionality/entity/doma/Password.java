@@ -1,5 +1,6 @@
 package com.moon.joyce.example.functionality.entity.doma;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.Table;
@@ -37,6 +38,11 @@ public class Password extends Page {
     private Integer isNewV;
     @Column(comment = "ip地址",length = "255")
     private String uri;
+    @Column(comment = "二级密码")
+    private String twoPassword;
+    @Column(comment = "是否有二级密码",exist = false)
+    @TableField(exist = false)
+    private Integer isPassword;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

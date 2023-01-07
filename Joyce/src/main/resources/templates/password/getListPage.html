@@ -1,19 +1,43 @@
 <head class="paneBar" th:replace="/common/public/header::header(~{::title})">
     <title>密码信息</title>
+    <style type="text/css">
+        .hide {
+            display: none;
+        }
+    </style>
 </head>
 <div class="layui-input-block">
-    <div class="modal fade" id="myform"  role="dialog" aria-labelledby="password" aria-hidden="true">
+    <div class="modal fade" id="myform" role="dialog" aria-labelledby="password" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="width: 30%;">
                     <h4 class="modal-title" id="forgetModalLabel">
-                       <span id="title"></span>
+                        <span id="title"></span>
                     </h4>
                 </div>
                 <form id="my_form">
                     <div id="myform_data"></div>
                     <div class="modal-footer">
-                        <button id="sub" type="button"  onclick="save()" class="btn btn-primary ">提交</button>
+                        <button id="sub" type="button" onclick="save()" class="btn btn-primary ">提交</button>
+                        <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="twoPasswordForm" role="dialog" aria-labelledby="password" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="width: 30%;">
+                    <h4 class="modal-title" id="twoPasswordTitle">
+                        <span id="twoPassword"></span>
+                    </h4>
+                </div>
+                <form id="two_password_form">
+                    <div id="twoPaasswordForm_data"></div>
+                    <div class="modal-footer">
+                        <button id="sub_two_password" type="button" onclick="check()" class="btn btn-primary ">提交
+                        </button>
                         <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
                     </div>
                 </form>
@@ -42,6 +66,7 @@
     $(document).ready(function () {
         getPasswordTable();
     });
+
     //刷新
     function refreshSearch() {
         //刷新Table，Bootstrap Table 会自动执行重新查询
@@ -84,7 +109,7 @@
             formatter: function (value, row, index) {
                 if (row.isNewV === 1) {
                     return "<button class='btn-success'disabled='disabled'style='padding:3px; border:10px;'>最新版本</button>";
-                } else  {
+                } else {
                     return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>旧版本</button>";
                 }
             }
@@ -100,105 +125,181 @@
         tables(obj, url, queryObj, columns);
     }
 
+    //查询是否有二级密码
+    function checkTwoPassword(rowStr) {
+        /* console.log(JSON.stringify( row))*/
+        var str = rowStr.split('~');
+        if (str[1] === '1') {
+            $.ajax({
+                url: '/example/password/checkTwoPasswordIsEx/' + str[0],
+                type: 'GET',
+                dataType: 'json',
+            }).done(function (data) {
+                if (data.rs) {
+                    getInfo(str[0]);
+                } else {
+                    $('#twoPasswordTitle').text("请输入二级密码")
+                    var myform = $('#twoPaasswordForm_data');
+                    myform.empty();
+                    var data = [{lable: "", className: "hide", id: "twoPasswordId", value: str[0]},
+                        {lable: "密码", className: "password", id: "twoPasswordValue"}];
+                    append(myform, data);
+                    //myform.append("<button type=\"button\"  id='append_params' class=\"btn btn-primary pull-right\">新增</button>")
+                    $("#twoPasswordForm").modal('show');
+                    $('#sub_two_password').show();
+                }
+                tips(data.rs, data.msg);
+            }).fail(function () {
+            });
+        } else {
+            getInfo(str[0]);
+        }
+    }
+
+    function check() {
+        var data = {
+            "twoPassword": $('#twoPasswordValue').val(),
+            "id": $('#twoPasswordId').val()
+        }
+        $.ajax({
+            url: '/example/password/check',
+            type: 'POST',
+            dataType: 'json',
+            data: data
+        }).done(function (data) {
+            if (data.rs) {
+                $("#twoPasswordForm").modal('hide');
+                getInfo($('#twoPasswordId').val());
+            }
+            tips(data.rs, data.msg);
+        }).fail(function () {
+        });
+    }
+
     //获取详细信息
     function getInfo(id) {
         $('#sub').hide();
         $('#forgetModalLabel').text("详细信息")
         var myform = $('#myform_data');
         myform.empty();
-        var data =[{lable:"应用",className:"appName"},
-            {lable:"ip地址",className:"uri"},
-            {lable:"账户",className:"username"},
-            {lable:"密码",className:"password"},
-            {lable:"备注",className:"remark"},
-            {lable:"创建时间",className:"createTime"},
-            {lable:"版本号",className:"version"},
-            {lable:"是否是最新版本",className:"isNewV"},
-            {lable:"创建时间",className:"createTime"}
+        var data = [{lable: "应用", className: "appName"},
+            {lable: "ip地址", className: "uri"},
+            {lable: "账户", className: "username"},
+            {lable: "密码", className: "password"},
+            {lable: "备注", className: "remark"},
+            {lable: "创建时间", className: "createTime"},
+            {lable: "版本号", className: "version"},
+            {lable: "是否是最新版本", className: "isNewV"},
+            {lable: "创建时间", className: "createTime"}
         ];
-        append(myform,data,1);
+        append(myform, data, 1);
         $('#title').val("密码信息");
         $.ajax({
-            url: '/example/password/'+id ,
+            url: '/example/password/' + id,
             type: 'GET',
             dataType: 'json',
         }).done(function (data) {
-           if (data.rs){
-               var res = data.data;
-                   $('.appName').text(res.appName);
-                   if(res.uri===null){
-                       $('.uri').html('暂无');
-                   }else if (res.uri.indexOf(",")===-1){
-                      var arry = res.uri.split(",");
-                      var html ="";
-                      for (let i = 0; i < arry.length; i++) {
-                          html+='<a href="'+arry[i]+'">'+res.uri+'</a></br>';
-                      }
+            if (data.rs) {
+                var res = data.data;
+                $('.appName').text(res.appName);
+                if (res.uri === null) {
+                    $('.uri').html('暂无');
+                } else if (res.uri.indexOf(",") === -1) {
+                    var arry = res.uri.split(",");
+                    var html = "";
+                    for (let i = 0; i < arry.length; i++) {
+                        html += '<a href="' + arry[i] + '">' + res.uri + '</a></br>';
+                    }
                     $('.uri').html(html);
-                  }else {
-                      $('.uri').html((res.uri===' ')?'暂无':'<a href="'+res.uri+'">'+res.uri+'</a>');
-                  }
-                   $('.username').text(res.username);
-                   $('.password').text(res.password);
-                   $('.remark').text(res.remark);
-                   $('.createTime').text(res.createTime);
-                   $('.version').text(res.version);
-                   $('.isNewV').text((res.isNewV===1?'是':'否'));
-                   $("#myform").modal('show');
-           }
-           tips(data.rs,data.msg);
+                } else {
+                    $('.uri').html((res.uri === ' ') ? '暂无' : '<a href="' + res.uri + '">' + res.uri + '</a>');
+                }
+                $('.username').text(res.username);
+                $('.password').text(res.password);
+                $('.remark').text(res.remark);
+                $('.createTime').text(res.createTime);
+                $('.version').text(res.version);
+                $('.isNewV').text((res.isNewV === 1 ? '是' : '否'));
+                $("#myform").modal('show');
+            }
+            tips(data.rs, data.msg);
         }).fail(function () {
         });
     }
 
-    function append(myform,data,is){
+    function append(myform, data, is) {
         $('#title').val("新增信息");
-        var html ="";
-        if(is==null){
+        var html = "";
+        if (is == null) {
             for (let i = 0; i < data.length; i++) {
                 var o = data[i];
-                html+= "<div style=\"margin-left: 22px;margin-top: 10px;\">\n" +o.lable+
-                    "            :<input type=\"text\" class=\""+o.className+" in\" required=\"required\" placeholder=\"\"\n" +
-                    "                         autoComplete=\"off\"/>\n" +
+                html += "<div   style=\"margin-left: 22px;margin-top: 10px;\">\n" + o.lable;
+                if (notNull(o.lable)) {
+                    html += "            :";
+                }
+                html += "<input type=\"text\" class=\"" + o.className + " in\" required=\"required\" placeholder=\"\"\n";
+                if (o.id != null) {
+                    html += " id=\"" + o.id + "\" ";
+                }
+                if (o.name != null) {
+                    html += " name=\"" + o.name + "\" ";
+                }
+                if (o.value != null && o.value != '') {
+                    html += " value=\"" + o.value + "\" ";
+                }
+                html += "  autoComplete=\"off\"/>\n" +
                     "        </div>";
+
             }
-        }else {
+        } else {
             for (let i = 0; i < data.length; i++) {
                 var o = data[i];
-                html+= "<div style=\"margin-left: 22px;margin-top: 10px;width: 30%\">\n" +o.lable+
-                    "            :<span type=\"text\" class=\""+o.className+" in\""+
-                    "                         autoComplete=\"off\"/></span>\n" +
+                html += "<div  style=\"margin-left: 22px;margin-top: 10px;width: 30%\">\n" + o.lable;
+                if (notNull(o.lable)) {
+                    html += "            :";
+                }
+                html += "<span type=\"text\" class=\"" + o.className + " in\" ";
+                if (o.id != null) {
+                    html += " id=\"" + o.id + "\" ";
+                }
+                if (o.name != null) {
+                    html += " name=\"" + o.name + "\" ";
+                }
+                html += "                         autoComplete=\"off\"/></span>\n" +
                     "        </div>";
             }
         }
+        //console.log(html)
         myform.append(html);
     }
 
-   function  appendParams(myform){
-       var html = "<div style=\"margin-left: 22px;margin-top: 10px;\"> <input type=\"text\" class='appendParamsName'/>" +
-                   "            :<input type=\"text\" class=\"appendParams\" required=\"required\" placeholder=\"\"\n" +
-                   "                         autoComplete=\"off\"/>\n" +
-                   "        </div>";
-       myform.append(html);
-   }
+    function appendParams(myform) {
+        var html = "<div style=\"margin-left: 22px;margin-top: 10px;\"> <input type=\"text\" class='appendParamsName'/>" +
+            "            :<input type=\"text\" class=\"appendParams\" required=\"required\" placeholder=\"\"\n" +
+            "                         autoComplete=\"off\"/>\n" +
+            "        </div>";
+        myform.append(html);
+    }
 
     //操作按钮
     function passwordOpFormatter(value, row, index) {
         var actions = [];
-        actions.push('<a class="btn btn-success btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#queryModel"  onclick="getInfo(\'' + row.id + '\')"><i class="fa fa-adn"></i> 查看</a> ');
+        //console.log(row)
+        actions.push('<a class="btn btn-success btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#queryModel"  onclick="checkTwoPassword(\'' + row.id + '~' + row.isPassword + '\')"><i class="fa fa-adn"></i> 查看</a> ');
         return actions.join('');
     }
 
     //忘记密码
     function save() {
         var data = {
-            appName:$('.appName').val(),
-            uri:$('.uri').val(),
-            username:$('.username').val(),
-            password:$('.password').val(),
-            remark:$('.remark').val()
+            appName: $('.appName').val(),
+            uri: $('.uri').val(),
+            username: $('.username').val(),
+            password: $('.password').val(),
+            remark: $('.remark').val(),
+            twoPassword: $('.twoPassword').val()
         }
-        if (vailDate(data)){
+        if (vailDate(data)) {
             Ewin.confirm({message: "确认提交数据？"}).on(function (e) {
                 if (!e) {
                     return;
@@ -212,13 +313,13 @@
                     data: data,
                 }).done(function (data) {
                     loading(false)
-                    tips(data.rs,data.msg);
+                    tips(data.rs, data.msg);
                     if (data.rs) {
                         $("#updatePasswordModal").modal('hide');
                         toList("/example/password/getListPage");
                     }
                 }).fail(function () {
-                    tips(false,data.msg)
+                    tips(false, data.msg)
                 });
             });
         }
@@ -228,22 +329,23 @@
      * 展现信息
      * @param text
      */
-    function show(text){
+    function show(text) {
         $('#forgetModalLabel').text(text)
         var myform = $('#myform_data');
         myform.empty();
-        var data =[{lable:"应用",className:"appName"},
-            {lable:"账户",className:"username"},
-            {lable:"密码",className:"password"},
-            {lable:"ip地址",className:"uri"},
-            {lable:"备注",className:"remark"}];
-        append(myform,data);
-        myform.append("<button type=\"button\"  id='append_params' class=\"btn btn-primary pull-right\">新增</button>")
+        var data = [{lable: "应用", className: "appName"},
+            {lable: "账户", className: "username"},
+            {lable: "密码", className: "password"},
+            {lable: "二级密码", className: "twoPassword"},
+            {lable: "ip地址", className: "uri"},
+            {lable: "备注", className: "remark"}];
+        append(myform, data);
+        //myform.append("<button type=\"button\"  id='append_params' class=\"btn btn-primary pull-right\">新增</button>")
         $("#myform").modal('show');
         $('#sub').show();
     }
 
-    $("#append_params").click(function() {
+    $("#append_params").click(function () {
         var myform = $('#myform_data');
         append(myform)
     });
