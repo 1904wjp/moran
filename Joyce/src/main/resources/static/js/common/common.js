@@ -694,13 +694,17 @@ function uploadVideoFile(file, i, uuid, url, mergeUrl, img) {
             form = '';
             /* 失败后，每2秒继续传一次分片文件 */
             var setIntervalFuc = setInterval(function () {
-                uploadVideoFile(file, i, uuid, url, mergeUrl, img)
+                uploadVideoFile(file, i, uuid, url, mergeUrl, img);
             }, 2000);
             //达到一定错误数量停止
             if (count === 10) {
                 clearInterval(setIntervalFuc);
                 loading(false);
                 tips(data.rs, data.msg);
+                var setIntervalFuc2 = setInterval(function () {
+                    location.reload();
+                }, 2000);
+                clearInterval(setIntervalFuc2);
             }
         } else if (data.code === 200) {
             tips(data.rs, data.msg);

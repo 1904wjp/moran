@@ -134,11 +134,13 @@ public class SourceController extends BaseController {
         }
         List<String> list = StringsUtils.strToList(ids);
         List<Source> sources= sourceService.getByIds(list);
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.addAll(list);
         String msg1 ="";
         String msg2 ="";
         for (Source source : sources) {
             if (source.getVId()!=null){
-                list.add(source.getVId().toString());
+                arrayList.add(source.getVId()+"");
             }
             if (source.getApplyStatus().equals(1)){
                 msg1+="主页应用:"+source.getSourceName()+",";
@@ -158,7 +160,7 @@ public class SourceController extends BaseController {
             msg+="不能删除，请解除应用后删除！";
             return error(msg);
         }
-        boolean del = sourceService.removeByIds(list);
+        boolean del = sourceService.removeByIds(arrayList);
         return dataResult(del, Constant.ERROR_CODE);
     }
 
@@ -324,7 +326,7 @@ public class SourceController extends BaseController {
     public Result addSource(Source source) {
         setBaseField(source);
         source.setUserId(getSessionUserId());
-        if (StringUtils.isNoneBlank(source.getSourceName())){
+        if (StringUtils.isBlank(source.getSourceName())){
             source.setSourceName(UUIDUtils.getUUIDName());
         }
         if (!sourceServiceControllerDetailService.check(source)) {
