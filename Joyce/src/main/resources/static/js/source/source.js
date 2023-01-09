@@ -126,6 +126,7 @@ function saveSource(){
                 $("#sourceName").val('');
                 $("#sort").val('');
                 $('#descContent').val('');
+                $('#display_img_resource').attr("src","");
                /* $("#applyStatus option:selected").val('');*/
                 $("#src_video").empty();
             }
