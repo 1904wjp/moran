@@ -42,4 +42,12 @@ public interface SourceService extends IService<Source> {
      * @return
      */
     Source getVideoInfo(Long id);
+
+    /**
+     * 根据id查询集合
+     * @param ids
+     * @param sessionUserId
+     * @return
+     */
+    List<Source> getByIds(List<String> ids);
 }

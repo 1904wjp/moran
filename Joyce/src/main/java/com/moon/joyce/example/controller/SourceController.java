@@ -95,12 +95,72 @@ public class SourceController extends BaseController {
      * 播放资源
      * @return
      */
-    @RequestMapping("/playVideoPage")
-    public String playVideoPage(){
-        return pagePrefix + "playVideoPage";
+    @RequestMapping("/playSourcePage/{id}/{sourceName}")
+    public String playVideoPage(@PathVariable Long id,@PathVariable String sourceName,ModelMap map){
+        map.addAttribute("id",id);
+        map.addAttribute("sourceName",sourceName);
+        return pagePrefix + "playSourcePage";
     }
 
 
+    /**
+     * 下载文件
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping("/downloadFile/{id}")
+    public void downloadFile(HttpServletResponse response,@PathVariable String id) throws IOException {
+        Source source = sourceService.getById(id);
+        if (source==null){
+            return;
+        }
+        if (source.getType().equals("3")){
+            Source vSource = sourceService.getById(source.getVId());
+            source.setRealUrl(vSource.getRealUrl());
+        }
+        FileUtils.download(source.getRealUrl(),response);
+    }
+
+    /**
+     * 下载文件
+     * @throws IOException
+     */
+    @ResponseBody
+    @Transactional
+    @RequestMapping("/deleteSource")
+    public Result deleteSource(@RequestParam String ids) {
+        if (StringUtils.isBlank(ids)) {
+            return error(Constant.NULL_CODE);
+        }
+        List<String> list = StringsUtils.strToList(ids);
+        List<Source> sources= sourceService.getByIds(list);
+        String msg1 ="";
+        String msg2 ="";
+        for (Source source : sources) {
+            if (source.getVId()!=null){
+                list.add(source.getVId().toString());
+            }
+            if (source.getApplyStatus().equals(1)){
+                msg1+="主页应用:"+source.getSourceName()+",";
+            }
+            if (source.getApplyStatus().equals(4)){
+                msg1+="相册应用:"+source.getSourceName()+",";
+            }
+        }
+        String msg ="";
+        if (!msg1.equals("")){
+            msg+=msg1;
+        }
+        if (!msg2.equals("")){
+            msg+=msg2;
+        }
+        if (!msg.equals("")){
+            msg+="不能删除，请解除应用后删除！";
+            return error(msg);
+        }
+        boolean del = sourceService.removeByIds(list);
+        return dataResult(del, Constant.ERROR_CODE);
+    }
 
     /**
      * 上传多个文件
@@ -213,7 +273,7 @@ public class SourceController extends BaseController {
             source.setUrl(x);
             source.setSourceName(UUIDUtils.getUUIDName());
             setBaseField(source);
-            source.setApplyStatus(3);
+            source.setApplyStatus(4);
             source.setType("0");
             source.setDescContent("盒型相册");
             source.setUserId(getSessionUserId());
@@ -248,6 +308,9 @@ public class SourceController extends BaseController {
         source.setApplyStatus(0);
         source.setUserId(getSessionUser().getId());
         List<Source> list = sourceService.getList(source);
+        for (Source s : list) {
+            s.setVUrl("https://www.baidu.com");
+        }
         long total = sourceService.getCount(source);
         return new PageVo(list, total);
     }
@@ -272,6 +335,13 @@ public class SourceController extends BaseController {
             if (!b) {
                 return R.error();
             }
+        }
+        if (source.getType().equals("0")||StringUtils.isBlank(source.getType())){
+            Object sessionValue = getSessionValue(getSessionUserId() + "pic");
+            if (sessionValue!=null){
+                source.setRealUrl(sessionValue.toString());
+            }
+
         }
         if (Objects.isNull(source.getId())) {
             source.setUserId(getSessionUser().getId());
@@ -346,7 +416,9 @@ public class SourceController extends BaseController {
     public Result uploadSource(@RequestParam(value = "file", required = true) MultipartFile file) {
         String filePath = null;
         try {
-            filePath = fileService.uploadImg(file);
+            Map<String, String> map = fileService.uploadImg(file);
+            filePath = map.get("v");
+            setSession(getSessionUserId()+"pic",map.get("r"));
         } catch (Exception e) {
             return error("上传异常");
         }
@@ -449,7 +521,7 @@ public class SourceController extends BaseController {
     @GetMapping("/playVideo/{id}")
     public void play(HttpServletRequest request, HttpServletResponse response,@PathVariable Long id) throws IOException {
         response.reset();
-        Source source = sourceService.getVideoInfo(id);
+            Source source = sourceService.getVideoInfo(id);
         File file = new File(source.getRealUrl());
         long fileLength = file.length();
         // 随机读文件

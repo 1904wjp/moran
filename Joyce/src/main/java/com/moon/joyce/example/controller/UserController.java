@@ -641,7 +641,7 @@ public class UserController extends BaseController {
     public Result uploadImg(@RequestParam("file") MultipartFile file) {
         String filePath = null;
         try {
-            filePath = fileService.uploadImg(file);
+            filePath = fileService.uploadImg(file).get("v");
         } catch (Exception e) {
             return error("上传失败");
         }

@@ -106,7 +106,7 @@ function applyDataSource(id) {
 /**
  * 删除数据源信息
  */
-function deleteSource(id) {
+function deleteSource() {
     var ids = getIds($("#dbTable"));
     var data = {
         "ids": ids

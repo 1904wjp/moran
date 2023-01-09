@@ -21,7 +21,7 @@ public interface FileService {
      * @param file
      * @return
      */
-    String uploadImg(MultipartFile file);
+    Map<String,String> uploadImg(MultipartFile file);
 
     /**
      * 图片上传

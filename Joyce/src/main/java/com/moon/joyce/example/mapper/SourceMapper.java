@@ -36,4 +36,11 @@ public interface SourceMapper extends BaseMapper<Source> {
      * @return
      */
     Source getVideoByVPicId(Long id);
+
+    /**
+     * 根据ids查询集合
+     * @param ids
+     * @return
+     */
+    List<Source> getByIds(List<String> ids);
 }

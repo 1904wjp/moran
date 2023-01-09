@@ -1,0 +1,85 @@
+
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>播放资源</title>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/source/reset.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/source/core.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/source/willesPlay.css}"/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="willesPlay">
+                <div class="playHeader">
+                    <div class="videoName" th:text="${sourceName}"></div>
+                    <<input id="id" type="hidden" th:value="${id}"/>
+                </div>
+                <div class="playContent">
+                    <div class="turnoff">
+                        <ul>
+                            <li><a href="javascript:;" title="喜欢" class="glyphicon glyphicon-heart-empty"></a></li>
+                            <li><a href="javascript:;" title="关灯"
+                                   class="btnLight on glyphicon glyphicon-sunglasses"></a></li>
+                            <li><a href="javascript:;" title="分享" class="glyphicon glyphicon-share"></a></li>
+                        </ul>
+                    </div>
+                    <!--<video width="100%" height="100%" id="playVideo">
+                        <source id="video" src=""
+                                type="video/mp4"></source>
+                        当前浏览器不支持 video直接播放,请联系管理员
+                    </video>-->
+                    <video  id="video" src="###" width="100%" height="90%"></video>
+                    <div class="playTip glyphicon glyphicon-play"></div>
+                </div>
+                <div class="playControll">
+                    <div class="playPause playIcon"></div>
+                    <div class="timebar">
+                        <span class="currentTime">0:00:00</span>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
+                                 aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                        </div>
+                        <span class="duration">0:00:00</span>
+                    </div>
+                    <div class="otherControl">
+                        <span class="volume glyphicon glyphicon-volume-down"></span>
+                        <span class="fullScreen glyphicon glyphicon-fullscreen"></span>
+                        <div class="volumeBar">
+                            <div class="volumewrap">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuemin="0"
+                                         aria-valuemax="100" style="width: 8px;height: 40%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display:none;">
+    <script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
+    <script>
+     /*   var _hmt = _hmt || [];*/
+        (function () {
+            var id = $('#id').val();
+            if(id==null){
+                toList("/example/source");
+            }
+            $("#video").attr("src","/example/source/playVideo/"+id);
+
+           /* var hm = document.createElement("script");
+            var id = document.getElementById('id').value;
+            if (id==null){
+                toList("/example/source");
+            }
+            hm.src = "/example/source/playVideo/"+id;
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);*/
+        })();
+    </script>
+</div>
+<script type="text/javascript" th:src="@{/static/js/source/source.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/source/willesPlay.js}"></script>
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+

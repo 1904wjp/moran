@@ -55,15 +55,14 @@ public class FileServiceImpl implements FileService {
     @Resource
     private ResourceLoader resourceLoader;
     @Override
-    public String uploadImg(MultipartFile file) {
-        String path = null;
+    public  Map<String,String> uploadImg(MultipartFile file) {
+        Map<String,String> map = null;
         try {
-            path = FileUtils.fileUpLoad(file, sysPath, access);
+            map = FileUtils.fileUpLoad(file, sysPath, access);
         } catch (Exception e) {
             logger.error("文件上传异常:"+e.getMessage());
         }
-        logger.info("文件:{}正在上传,访问路径为：{}",sysPath+file.getName(),path);
-        return   path;
+        return   map;
     }
 
     @Override
@@ -198,7 +197,7 @@ public class FileServiceImpl implements FileService {
             MultipartFile toMultipartFile = new MockMultipartFile("file",picFile.getName(),"application/json;charset=UTF-8", IOUtils.toByteArray(fileInput));
             toMultipartFile.getInputStream();
             fileInput.close();
-            String picPath = FileUtils.fileUpLoad(toMultipartFile, sysPath, access);
+            String picPath = FileUtils.fileUpLoad(toMultipartFile, sysPath, access).get("v");
             picFile.delete();
             map.put(FileUtils.vp,picPath);
         } catch (IOException e) {

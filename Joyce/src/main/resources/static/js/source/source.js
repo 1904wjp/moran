@@ -13,6 +13,45 @@ $().ready(function () {
 function sourceSearch(){
     $('#sourceTable').bootstrapTable("refresh");
 }
+//复位
+function resetSearch() {
+    $('#query-form').find('[name]').each(function () {
+        $(this).val('');
+    });
+}
+
+
+//删除id为ids的数据集合
+function deleteSourceFuc() {
+    var ids = getIds($("#sourceTable"));
+    if (ids != '' && ids != null) {
+        var data = {"ids": ids};
+        Ewin.confirm(
+            {message: "确认要删除选择的数据吗？"
+            }).on(
+            function (e) {
+                if (!e) {
+                    return;
+                }
+                $.ajax({
+                    url: '/example/source/deleteSource',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: data,
+                }).done(function (data) {
+                    if (data.rs) {
+                        toastr.success(data.msg);
+                        toList('/example/source/sourceListPage');
+                    }else {
+                        toastr.error(data.msg);
+                    }
+                }).fail(function () {
+                    tips(false,data.msg)
+
+                });
+            });
+    }
+}
 /**
 /**
  * 选择上传类型
@@ -20,7 +59,7 @@ function sourceSearch(){
  */
 function selectSource(type){
     if (type===1){
-        $('#type').val(1);
+        $('#type').val(0);
         $("#uploadPicSourceBtn").css("background-color", "red");
         $("#uploadVidSourceBtn").css("background-color", "yellow");
         $('#sourceStatus').show();
@@ -52,6 +91,7 @@ function saveSource(){
     if (type == null){
         type === 1;
     }
+    console.log("----------->",type);
     var data={
         id:$("#id").val(),
         type:type,
@@ -127,9 +167,15 @@ function getSourceTables() {
                      '<img style="width: 420px;height: 220px;margin: auto 12%" src="'+ row.url + '"/>' +
                      '</div>';
             }else {
-             image ='<div>' +
-                    '<img style="width: 420px;height: 220px;margin: auto 12%" src="'+ row.url + '" onclick="'+seeVideo(row)+'"/>' +
-                    '<span   class="glyphicon glyphicon-play-circle" style="color: white; margin-left: -40%;">' +
+             image ='<div>' ;
+                 if(row.type==='3'){
+                    image+='<a href="/example/source/playSourcePage/'+row.id+'/'+row.sourceName+'">' ;
+                 }
+                image+= '<img style="width: 420px;height: 220px;margin: auto 12%" src="'+ row.url +'"/>';
+                 if (row.type==='3'){
+                     image+='</a>';
+                 }
+                image+='<span   class="glyphicon glyphicon-play-circle" style="color: white; margin-left: -40%;">' +
                     '</span>' +
                     '</div>';
             }
@@ -137,16 +183,31 @@ function getSourceTables() {
         },
         sortables: true
     }, {
-        field: 'status',
-        title: '账号状态',
+        field: 'createTime',
+        title: '资源类型',
         sortables: true,
         formatter: function (value, row, index) {
-            if (row.status === '1') {
-                return "<button class='btn-success'disabled='disabled'style='padding:3px; border:10px;'>应用</button>";
-            } else if (row.status === '2') {
+            if (row.type == '0') {
+                return "<button class='btn-success'disabled='disabled'style='padding:3px; border:10px;'>图片</button>";
+            } else if (row.type == '3') {
+                return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>视频</button>";
+            }
+        }
+    }, {
+        field: 'createTime',
+        title: '应用类型',
+        sortables: true,
+        formatter: function (value, row, index) {
+            if (row.applyStatus == 0) {
+                return "<button class='btn-success'disabled='disabled'style='padding:3px; border:10px;'>普通</button>";
+            } else if (row.applyStatus == 1) {
+                return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>主页</button>";
+            } else if (row.applyStatus == 2) {
+                return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>主页选项</button>";
+            }else if (row.applyStatus == 3) {
                 return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>备用</button>";
-            } else {
-                return "<button class='btn-secondary'disabled='disabled'style='padding:3px; border:10px;'>未知</button>";
+            }else if (row.applyStatus == 4) {
+                return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>相册</button>";
             }
         }
     }, {
@@ -166,6 +227,12 @@ function getSourceTables() {
 }
 
 /**
+ * 转资源列表
+ */
+function sourceList() {
+    toList('/example/source/sourceListPage');
+}
+/**
  * 按钮
  * @param value
  * @param row
@@ -174,16 +241,14 @@ function getSourceTables() {
  */
 function sourceOpFormatter(value,row,index){
     var actions = [];
-    actions.push('<a class="btn btn-primary btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#editModal" onclick="editUserFuc(\'' + row.id + '\')"><i class="fa fa-edit"></i> 应用</a> ');
+    actions.push('<a class="btn btn-primary btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#editModal" onclick="downloadFile(\'' + row.id + '\')"><i class="fa fa-edit"></i> 下载</a> ');
     return  actions.join('');
 }
 
 /**
- * 打开弹窗播放视频
- * @param row
+ * 下载
+ * @param id
  */
-function seeVideo(row){
-    Modal.show($('#video_modal'));
-  /*  Modal.hide($('#video_modal'));*/
-    $('#v_source').attr("src",row.vurl);
+function downloadFile(id){
+    toList("/example/source/downloadFile/"+id);
 }

@@ -120,7 +120,7 @@ public class UEditorController extends BaseController {
     @ResponseBody
     @RequestMapping("/upload")
     public JSONObject upload(@RequestParam(value = "editormd-image-file", required = true) MultipartFile file){
-        String imgUrl = fileService.uploadImg(file);
+        String imgUrl = fileService.uploadImg(file).get("v");
         JSONObject res = new JSONObject();
         //给editormd进行回调
         res.put("url", imgUrl);

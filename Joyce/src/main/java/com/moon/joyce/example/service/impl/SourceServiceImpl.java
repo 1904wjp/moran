@@ -3,6 +3,7 @@ package com.moon.joyce.example.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.annotation.RedisValueComponet;
+import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.example.entity.doma.Source;
 import com.moon.joyce.example.mapper.SourceMapper;
 import com.moon.joyce.example.service.CommonService;
@@ -60,6 +61,11 @@ public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> impleme
     @Override
     public Source getVideoInfo(Long id) {
         return sourceMapper.getVideoByVPicId(id);
+    }
+
+    @Override
+    public List<Source> getByIds(List<String> ids) {
+        return sourceMapper.getByIds(ids);
     }
 
 

@@ -67,7 +67,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
      * @param file
      * @return
      */
-    public static String fileUpLoad(MultipartFile file, String sysPath, String access) {
+    public static Map<String,String> fileUpLoad(MultipartFile file, String sysPath, String access) {
         if (Objects.isNull(file) || StringUtils.isBlank(sysPath) || StringUtils.isBlank(access)) {
             return null;
         }
@@ -84,13 +84,17 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
         }
         try {
             //将上传的文件file写入文件filepath
-            file.transferTo(new File(path + File.separator + fileName));
+            File f1 = new File(path + File.separator + fileName);
+            file.transferTo(f1);
+            HashMap<String, String> pathMap = new HashMap<>();
+            pathMap.put("r",f1.getPath());
+            pathMap.put("v",StringUtils.isNoneBlank(fileName) ? "/static/1" + access + now + "/" + fileName : null);
+            return pathMap;
         } catch (IOException e) {
             e.printStackTrace();
             deleteFile(filepath);
         }
-        //将请求文件的相对路径返回
-        return StringUtils.isNoneBlank(fileName) ? "/static/1" + access + now + "/" + fileName : null;
+        return null;
     }
 
     /**
@@ -337,6 +341,48 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
         return new ZipOutputStream(response.getOutputStream());
     }
 
+    /**
+     * 直接下载文件
+     * @param path
+     * @param response
+     * @return
+     */
+    public static HttpServletResponse download(String path, HttpServletResponse response) {
+
+        try {
+            // path是指欲下载的文件的路径。
+            File file = new File(path);
+            // 取得文件名。
+            String filename = file.getName();
+            // 以流的形式下载文件。
+            InputStream fis = new BufferedInputStream(new FileInputStream(path));
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+            // 清空response
+            response.reset();
+            // 设置response的Header
+            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
+            response.addHeader("Content-Length", "" + file.length());
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/octet-stream");
+            toClient.write(buffer);
+            toClient.flush();
+            toClient.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return response;
+    }
+
+
+    /**
+     * 压缩文件并且下载
+     * @param zipName
+     * @param response
+     * @param map
+     * @throws IOException
+     */
     public static void downloadZip(String zipName, HttpServletResponse response, Map<String, String> map) throws IOException {
         ZipOutputStream out = null;
         out = FileUtils.getZipObj(zipName, response);
