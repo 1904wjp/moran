@@ -41,7 +41,8 @@ function deleteSourceFuc() {
                 }).done(function (data) {
                     if (data.rs) {
                         toastr.success(data.msg);
-                        toList('/example/source/sourceListPage');
+                        sourceSearch();
+                      /*  toList('/example/source/sourceListPage');*/
                     }else {
                         toastr.error(data.msg);
                     }

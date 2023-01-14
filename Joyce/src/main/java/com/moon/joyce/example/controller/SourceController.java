@@ -308,6 +308,7 @@ public class SourceController extends BaseController {
     @GetMapping("/getList")
     public PageVo getList(Source source) {
         source.setSType(0);
+        source.setCreateIds(getSessionUser().getId());
         source.setUserId(getSessionUser().getId());
         List<Source> list = sourceService.getList(source);
         List<Source> sources = new ArrayList<>();

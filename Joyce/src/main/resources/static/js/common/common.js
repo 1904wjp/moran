@@ -646,6 +646,7 @@ function getInitL2D() {
  * @param uuid
  */
 function uploadVideoFile(file, i, uuid, url, mergeUrl, img) {
+    console.log('视频上传中')
     var fileType = file.name.substr(file.name.indexOf("\.")).toLowerCase();
     if (fileType != ".mp4") {
         tips("", "格式必须为mp4");
