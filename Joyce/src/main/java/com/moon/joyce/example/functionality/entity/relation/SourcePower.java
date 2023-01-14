@@ -17,8 +17,6 @@ import lombok.Data;
 @TableName("source_power")
 @Table(content = "资源下载权限")
 public class SourcePower extends BaseEntity {
-    @Column(comment = "用户id",type = Type.BIGINT)
-    private Long userId;
     @Column(comment = "资源id",type = Type.BIGINT)
     private Long sourceId;
     @Column(comment = "权限等级[0:查看;1:查看和下载]",type = Type.BIGINT,length = "1")

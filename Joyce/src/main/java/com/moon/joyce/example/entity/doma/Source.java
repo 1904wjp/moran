@@ -2,6 +2,7 @@ package com.moon.joyce.example.entity.doma;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.NotExist;
 import com.moon.joyce.commons.annotation.auto.Table;
@@ -74,4 +75,14 @@ public class Source  extends Page {
     @TableField("real_url")
     private String realUrl;
 
+    @Column(exist = false)
+    @TableField(exist = false)
+    private Integer powerLevel;
+
+    @Column(comment = "是否公开[0:不公开;1:公开]")
+    private Integer isPub;
+
+    @Column(exist = false,comment = "查询类型[0:资源页面;1:main页面]")
+    @TableField(exist = false)
+    private Integer sType;
 }

@@ -42,7 +42,6 @@ public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> impleme
     @Override
     public Source getOne(Source source) {
         QueryWrapper<Source> wrapper = new QueryWrapper<>();
-        wrapper.eq("delete_flag",source.getDeleteFlag());
         if (Objects.nonNull(source.getApplyStatus())){
             wrapper.eq("apply_status",source.getApplyStatus());
         }

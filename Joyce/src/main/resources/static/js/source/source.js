@@ -242,7 +242,10 @@ function sourceList() {
  */
 function sourceOpFormatter(value,row,index){
     var actions = [];
-    actions.push('<a class="btn btn-primary btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#editModal" onclick="downloadFile(\'' + row.id + '\')"><i class="fa fa-edit"></i> 下载</a> ');
+    if (row.powLevel==1){
+        actions.push('<a class="btn btn-primary btn-sm" href="javascript:void(0)" data-toggle="modal" ' +
+            'data-target="#editModal" onclick="downloadFile(\'' + row.id + '\')"><i class="fa fa-edit"></i> 下载</a> ');
+    }
     return  actions.join('');
 }
 

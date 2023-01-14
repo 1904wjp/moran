@@ -18,17 +18,29 @@
                s.v_id,
                s.user_id,
                u.username,
-               s2.url AS vUrl
+               s2.url AS vUrl,
+            <if test="sType==0">
+                sp.power_level AS powerLevel,
+            </if>
+               s.is_pub
              FROM springboot.source s
              LEFT JOIN springboot.user u
              ON s.user_id = u.id
              LEFT JOIN springboot.source s2
              ON s.v_id = s2.id
+             <if test="sType==0">
+                LEFT JOIN springboot.source_power sp
+                ON sp.source_id = s.id
+             </if>
              WHERE s.delete_flag = 0
                AND s.type != '2'
-            <if test="userId!=null">
-                AND s.user_id = #{userId}
-            </if>
+               <if test="sType==0">
+                   AND sp.create_ids = #{createIds}
+                   AND sp.delete_flag = 0
+               </if>
+               <if test="sType==1">
+                   AND s.create_ids = #{createIds}
+               </if>
             <if test="username!=null and username!=''">
                  AND u.username LIKE CONCAT('%',#{username},'%')
              </if>
@@ -41,9 +53,11 @@
                 OR   AND s.create_by LIKE CONCAT('%',#{searchWord},'%'))
             </if>
             ORDER BY s.sort,s.update_time,s.id DESC
+        <if test="sType==1">
             <if test="offset!=null and  pageNumber!=null  and pageNumber!=0 ">
                 LIMIT #{offset}, #{pageNumber}
             </if>
+        </if>
 
     </select>
 

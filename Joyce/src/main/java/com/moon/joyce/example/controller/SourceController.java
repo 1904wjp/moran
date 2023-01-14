@@ -307,10 +307,24 @@ public class SourceController extends BaseController {
     @ResponseBody
     @GetMapping("/getList")
     public PageVo getList(Source source) {
-        source.setApplyStatus(0);
+        source.setSType(0);
         source.setUserId(getSessionUser().getId());
         List<Source> list = sourceService.getList(source);
-        for (Source s : list) {
+        List<Source> sources = new ArrayList<>();
+        sources.addAll(list);
+        for (int i = 0; i < list.size(); i++) {
+            Source s = list.get(i);
+            if (s.getCreateIds().equals(getSessionUserId())){
+                s.setPowerLevel(1);
+            }else {
+                if (s.getIsPub()!=null){
+                    if (s.getIsPub().equals(0)){
+                       if (s.getPowerLevel()==null){
+                            sources.remove(s);
+                       }
+                    }
+                }
+            }
             s.setVUrl("https://www.baidu.com");
         }
         long total = sourceService.getCount(source);
@@ -360,6 +374,7 @@ public class SourceController extends BaseController {
                 boolean b = sourceService.saveOrUpdate(tempSource);
                 if (b){
                     source.setType("3");
+                    source.setApplyStatus(0);
                     source.setVId(tempSource.getId());
                 }
             }
@@ -435,12 +450,13 @@ public class SourceController extends BaseController {
     @RequestMapping("/getSourceImage")
     public Result doProjectMainPage() {
         Source source = new Source();
-        source.setDeleteFlag(Constant.UNDELETE_STATUS);
         source.setType("0");
         source.setUserId(getSessionUserId());
+        source.setCreateIds(getSessionUserId());
         source.setApplyStatus(Constant.APPLY_STATUS);
         Source dbSource = sourceService.getOne(source);
         source.setApplyStatus(Constant.SPARE_STATUS);
+        source.setSType(1);
         List<Source> list = sourceService.getList(source);
         if (Objects.nonNull(dbSource) && !list.isEmpty()) {
             MainSource mainSource = new MainSource(1L, dbSource, list);
