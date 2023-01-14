@@ -325,7 +325,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
 
 
     /**
-     * 返回主键集合
+     * 返回ids注解集合
      * @param fields
      * @return
      */
@@ -352,7 +352,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
         }
         //检测Ids中的属性是否有重复元素，有的话也会报错
         if (Arrays.stream(keys).collect(Collectors.toSet()).size() != keys.length) {
-            throw new JoyceException("Ids注解中存在相同属性");
+            throw new JoyceException("注解Ids."+type+"中存在相同属性");
         }
         for (String key : keys) {
             for (Field field : fields) {
@@ -497,7 +497,6 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
     private void fillSqls(Map<String,List<com.moon.joyce.example.functionality.entity.doma.Column> > maps) {
         for (Map.Entry<TableEntity, List<ColumnEntity>> entry : map.entrySet()) {
             List<com.moon.joyce.example.functionality.entity.doma.Column> existColumns = null;
-
             if (maps.containsKey(entry.getKey().getName())){
                existColumns = maps.get(entry.getKey().getName());
             }
@@ -553,10 +552,10 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
      * @return
      */
     private String createTableSql(TableEntity tableEntity, List<ColumnEntity> columnEntities) {
+        int isHaveKey = 0;
         if (Objects.isNull(columnEntities) || columnEntities.isEmpty()) {
             throw new JoyceException("在创建" + tableEntity.getName() + "的时候，该类无属性类，因此无法创建");
         }
-
         StringBuilder sb = new StringBuilder();
         sb.append("create table ");
         sb.append(" if not exists ");
@@ -599,6 +598,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
 
             if (column.getKey()) {
                 sb.append(" primary key ");
+                isHaveKey = 1;
             }
 
             if (StringUtils.isNoneBlank(column.getComment())) {
@@ -616,6 +616,9 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
             newSb.append(" COMMENT = '").append(tableEntity.getContent()).append("'");
         }
         newSb.append(" ROW_FORMAT = Dynamic");
+        if (isHaveKey==0){
+            System.out.println(tableEntity.getName()+"类创建时，未发现主键");
+        }
         return newSb.toString();
     }
 
