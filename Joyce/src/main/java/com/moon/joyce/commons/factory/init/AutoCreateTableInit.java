@@ -62,7 +62,7 @@ public class AutoCreateTableInit {
             }
         }
         if (types.size()!=lengths.size()){
-            throw new JoyceException("auto.def.type 与 auto.def.length 配置异常,请查看joyce.properties配置文件");
+            throw new JoyceException("auto.def.type 与 auto.def.length 配置异常(类型需要配上对应默认长度),请查看joyce.properties配置文件");
         }
 
         for (Map.Entry<String, Object> type : types.entrySet()) {

@@ -188,77 +188,86 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
         File[] files = dir.listFiles();
         if (files.length!=0){
             for (File file : files) {
-                if (file.isFile()) {
-                    String filePath = file.getAbsolutePath();
-                    if (!filePath.endsWith(".class")) {
-                        continue;
-                    }
-                    Class<?> loadClass = laodClassByPath(filePath, classLoader, "com", "class");
-                    if (loadClass.isAnnotationPresent(Table.class)) {
-                        //类注解获取并且填充
-                        Table table = loadClass.getAnnotation(Table.class);
-                        if (table.isParent()) {
-                            logger.warn(loadClass + "为被继承类，无法扫描到map容器中");
-                            continue;
-                        }
-                        TableEntity tableEntity = new TableEntity();
-                        setTableEntity(table,tableEntity,loadClass);
-                        //属性注解获取并且填充
-                        Field[] fields = getFieldsByAutoCreate(loadClass);
-                        //储存属性的容器
-                        List<ColumnEntity> list = new ArrayList<>();
-                        List<Field> idsField = new ArrayList<>();
-                        for (Field field : fields) {
-                            //检测上是否有无关数据库的属性字段注解
-                            NotExist notExist = field.getAnnotation(NotExist.class);
-                            if (Objects.nonNull(notExist)) {
-                                if (notExist.require()) {
-                                    continue;
-                                }
-                            }
-                            //检测列属性字段注解并且填充
-                            Column column = field.getAnnotation(Column.class);
-                            if (Objects.nonNull(column)) {
-                                if (!column.exist()) {
-                                    continue;
-                                }
-                            }
-                            if (Objects.nonNull(column)) {
-                                ColumnEntity columnEntity = new ColumnEntity();
-                                if (StringUtils.isBlank(column.name())){
-                                    columnEntity.setName(StringsUtils.toUnderScoreCase(field.getName()));
-                                }
-                                createColumnByColumnAn(columnEntity, column);
-                                list.add(AutoCreateTableInit.columnConfigRules(columnEntity));
-                            } else {
-                                idsField.add(field);
-                            }
-                        }
-                        //检测是否有ids注解是否存在
-                        boolean rs = isHaveIds(fields);
-                        if (rs) {
-                            List<ColumnEntity> tableEntityList = getTableEntitySuperList(fields, idsField);
-                            list.addAll(tableEntityList);
-                        }
-                        List<ColumnEntity> newList = new ArrayList<>();
-                        if (!list.isEmpty()){
-                            for (ColumnEntity columnEntity : list) {
-                                if (Objects.isNull(columnEntity)) {
-                                    continue;
-                                }
-                                ColumnEntity newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
-                                newList.add(newColumnEntity);
-                            }
-                        }
-                        if (Objects.nonNull(checkRepeatColumnEntity(newList))) {
-                            throw new JoyceException("存在如下相同属性，无法创建:" + checkRepeatColumnEntity(newList));
-                        }
-                        map.put(tableEntity, newList);
-                    }
-                }
+                fillMapByFile(file,classLoader);
                 if (file.isDirectory()) {
                     fillMap(file, classLoader);
                 }
+            }
+        }
+    }
+
+    /**
+     * 通过文件对map填充
+     * @param file
+     * @param classLoader
+     */
+    private void fillMapByFile(File file, ClassLoader classLoader) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+        if (file.isFile()) {
+            String filePath = file.getAbsolutePath();
+            if (!filePath.endsWith(".class")) {
+                return;
+            }
+            Class<?> loadClass = laodClassByPath(filePath, classLoader, "com", "class");
+            if (loadClass.isAnnotationPresent(Table.class)) {
+                //类注解获取并且填充
+                Table table = loadClass.getAnnotation(Table.class);
+                if (table.isParent()) {
+                    logger.warn(loadClass + "为被继承类，无法扫描到map容器中");
+                    return;
+                }
+                TableEntity tableEntity = new TableEntity();
+                setTableEntity(table,tableEntity,loadClass);
+                //属性注解获取并且填充
+                Field[] fields = getFieldsByAutoCreate(loadClass);
+                //储存属性的容器
+                List<ColumnEntity> list = new ArrayList<>();
+                List<Field> idsField = new ArrayList<>();
+                for (Field field : fields) {
+                    //检测上是否有无关数据库的属性字段注解
+                    NotExist notExist = field.getAnnotation(NotExist.class);
+                    if (Objects.nonNull(notExist)) {
+                        if (notExist.require()) {
+                            continue;
+                        }
+                    }
+                    //检测列属性字段注解并且填充
+                    Column column = field.getAnnotation(Column.class);
+                    if (Objects.nonNull(column)) {
+                        if (!column.exist()) {
+                            continue;
+                        }
+                    }
+                    if (Objects.nonNull(column)) {
+                        ColumnEntity columnEntity = new ColumnEntity();
+                        if (StringUtils.isBlank(column.name())){
+                            columnEntity.setName(StringsUtils.toUnderScoreCase(field.getName()));
+                        }
+                        createColumnByColumnAn(columnEntity, column);
+                        list.add(AutoCreateTableInit.columnConfigRules(columnEntity));
+                    } else {
+                        idsField.add(field);
+                    }
+                }
+                //检测是否有ids注解是否存在
+                boolean rs = isHaveIds(fields);
+                if (rs) {
+                    List<ColumnEntity> tableEntityList = getTableEntitySuperList(fields, idsField);
+                    list.addAll(tableEntityList);
+                }
+                List<ColumnEntity> newList = new ArrayList<>();
+                if (!list.isEmpty()){
+                    for (ColumnEntity columnEntity : list) {
+                        if (Objects.isNull(columnEntity)) {
+                            continue;
+                        }
+                        ColumnEntity newColumnEntity = (ColumnEntity) BeanUtils.cloneBean(columnEntity);
+                        newList.add(newColumnEntity);
+                    }
+                }
+                if (Objects.nonNull(checkRepeatColumnEntity(newList))) {
+                    throw new JoyceException("存在如下相同属性，无法创建:" + checkRepeatColumnEntity(newList));
+                }
+                map.put(tableEntity, newList);
             }
         }
     }
@@ -488,6 +497,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
     private void fillSqls(Map<String,List<com.moon.joyce.example.functionality.entity.doma.Column> > maps) {
         for (Map.Entry<TableEntity, List<ColumnEntity>> entry : map.entrySet()) {
             List<com.moon.joyce.example.functionality.entity.doma.Column> existColumns = null;
+
             if (maps.containsKey(entry.getKey().getName())){
                existColumns = maps.get(entry.getKey().getName());
             }
@@ -503,7 +513,6 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
             }
         }
     }
-
     /**
      * 自动选取策略创建
      * @param tableEntity
