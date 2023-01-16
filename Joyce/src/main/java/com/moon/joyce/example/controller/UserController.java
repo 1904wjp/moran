@@ -1,6 +1,9 @@
 package com.moon.joyce.example.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
@@ -218,7 +221,14 @@ public class UserController extends BaseController {
         collect.addAll(longs);
         List<Long> collect1 = collect.stream().distinct().collect(Collectors.toList());
         List<User> allFriends = userService.getAllFriendsByIds(collect1);
-        Set<Long> sessionUserIdSet = Arrays.stream((User[]) Objects.requireNonNull(redisTemplate.opsForValue().get(Constant.SESSION_USER))).map(User::getId).collect(Collectors.toSet());
+        Object o = redisTemplate.opsForValue().get(Constant.SESSION_USER);
+        assert o != null;
+        List<User> users = JSON.parseArray(JSON.toJSONString(o), User.class);
+        for (User user1 : users) {
+            System.out.println(user1.getUsername());
+        }
+        System.out.println(">>>>>>>>>>>>"+ users.toString());
+        Set<Long> sessionUserIdSet =users.stream().map(User::getId).collect(Collectors.toSet());
         List<UserChartVo> userChartVos = new ArrayList<>();
         Set<Long> set = new HashSet<>();
         if (Objects.nonNull(allFriends)) {
@@ -260,14 +270,16 @@ public class UserController extends BaseController {
         chatRecord.setBNickname(bUser.getNickname());
         chatRecord.setUserAName(getSessionUserName());
         chatRecord.setUserBName(bUser.getUsername());
-        Object obj = getRedisValueOperation().get(addChatRecords);
+        boolean flag = false;
+        List<Object> dBChatRecords = JSON.parseArray(Objects.requireNonNull(getRedisValueOperation().get(addChatRecords)).toString(), Object.class);
         List<ChatRecord> chatRecords = new ArrayList<>();
-        if (Objects.isNull(obj) || !redisTemplate.hasKey(addChatRecords)) {
+        if (Objects.isNull(dBChatRecords) || !redisTemplate.hasKey(addChatRecords)) {
             getRedisValueOperation().set(addChatRecords, chatRecords, 24, TimeUnit.DAYS);
         } else if (getExpireTime(addChatRecords) < 1) {
             logger.info("==========>正在存入数据" + redisTemplate.opsForValue().getOperations().getExpire(addChatRecords));
             boolean rs = true;
             if (!chatRecords.isEmpty()) {
+                flag = true;
                 rs = chatRecordService.saveBatch(chatRecords);
             }
             if (!rs) {
@@ -276,11 +288,13 @@ public class UserController extends BaseController {
             redisTemplate.delete(addChatRecords);
             getRedisValueOperation().set(addChatRecords, chatRecords, 24, TimeUnit.DAYS);
         } else {
-            chatRecords = (List<ChatRecord>) obj;
+            for (Object dBChatRecord : dBChatRecords) {
+                chatRecords.add((ChatRecord) dBChatRecord);
+            }
         }
         chatRecords.add(chatRecord);
-        redisTemplate.opsForValue().set(addChatRecords, chatRecords);
-        return dataResult(true, "发送失败", "发送成功");
+        redisTemplate.opsForValue().set(addChatRecords, (Object)chatRecords);
+        return dataResult(flag, "发送失败", "发送成功");
     }
 
     /**

@@ -304,6 +304,12 @@
                 if (!e) {
                     return;
                 }
+                var t1 = $('.twoPassword').val()
+                var t2 = $('.twoPassword2').val()
+                if (t1!=t2){
+                    tips(false, '二级密码不一致');
+                    return;
+                }
                 addLoadingModal('正在提交数据...请稍后');
                 $("#forgetPasswordModal").modal('hide');
                 $.ajax({
@@ -315,8 +321,8 @@
                     loading(false)
                     tips(data.rs, data.msg);
                     if (data.rs) {
-                        $("#updatePasswordModal").modal('hide');
-                        toList("/example/password/getListPage");
+                        $("#myform").modal('hide');
+                        getPasswordTable();
                     }
                 }).fail(function () {
                     tips(false, data.msg)
@@ -337,8 +343,10 @@
             {lable: "账户", className: "username"},
             {lable: "密码", className: "password"},
             {lable: "二级密码", className: "twoPassword"},
+            {lable: "请再次输入二级密码", className: "twoPassword2"},
             {lable: "ip地址", className: "uri"},
-            {lable: "备注", className: "remark"}];
+            {lable: "备注", className: "remark"}
+        ];
         append(myform, data);
         //myform.append("<button type=\"button\"  id='append_params' class=\"btn btn-primary pull-right\">新增</button>")
         $("#myform").modal('show');
