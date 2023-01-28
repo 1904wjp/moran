@@ -198,7 +198,7 @@ public class UserController extends BaseController {
     @GetMapping("/sessionUsers")
     public Result getSessionUsers(@RequestParam String nickname) {
         String cacheFriends = UUController.uniqueListSum;
-        List<UU> uus = (List<UU>) redisTemplate.opsForValue().get(cacheFriends);
+        List<UU> uus = (List<UU>) getRedisValueOperation().get(cacheFriends);
         List<Long> longs = new ArrayList<>();
         if (Objects.nonNull(uus)) {
             List<UU> collect = uus.stream().filter(x -> x.getResultStr().equals("0")
@@ -221,7 +221,7 @@ public class UserController extends BaseController {
         collect.addAll(longs);
         List<Long> collect1 = collect.stream().distinct().collect(Collectors.toList());
         List<User> allFriends = userService.getAllFriendsByIds(collect1);
-        Object o = redisTemplate.opsForValue().get(Constant.SESSION_USER);
+        Object o = getRedisValueOperation().get(Constant.SESSION_USER);
         assert o != null;
         List<User> users = JSON.parseArray(JSON.toJSONString(o), User.class);
         for (User user1 : users) {
@@ -274,9 +274,9 @@ public class UserController extends BaseController {
         List<Object> dBChatRecords = JSON.parseArray(Objects.requireNonNull(getRedisValueOperation().get(addChatRecords)).toString(), Object.class);
         List<ChatRecord> chatRecords = new ArrayList<>();
         if (Objects.isNull(dBChatRecords) || !redisTemplate.hasKey(addChatRecords)) {
-            getRedisValueOperation().set(addChatRecords, chatRecords, 24, TimeUnit.DAYS);
+            getRedisValueOperation().set(addChatRecords, JSON.toJSONString(chatRecords), 24, TimeUnit.DAYS);
         } else if (getExpireTime(addChatRecords) < 1) {
-            logger.info("==========>正在存入数据" + redisTemplate.opsForValue().getOperations().getExpire(addChatRecords));
+            logger.info("==========>正在存入数据" + getRedisValueOperation().getOperations().getExpire(addChatRecords));
             boolean rs = true;
             if (!chatRecords.isEmpty()) {
                 flag = true;
@@ -286,14 +286,14 @@ public class UserController extends BaseController {
                 return error("信息保存异常");
             }
             redisTemplate.delete(addChatRecords);
-            getRedisValueOperation().set(addChatRecords, chatRecords, 24, TimeUnit.DAYS);
+            getRedisValueOperation().set(addChatRecords, JSON.toJSONString(chatRecords), 24, TimeUnit.DAYS);
         } else {
             for (Object dBChatRecord : dBChatRecords) {
                 chatRecords.add((ChatRecord) dBChatRecord);
             }
         }
         chatRecords.add(chatRecord);
-        redisTemplate.opsForValue().set(addChatRecords, (Object)chatRecords);
+        getRedisValueOperation().set(addChatRecords, JSON.toJSONString(chatRecords));
         return dataResult(flag, "发送失败", "发送成功");
     }
 
@@ -455,7 +455,7 @@ public class UserController extends BaseController {
             logger.info(username + "======>登录成功");
             USER_SESSION_MAP.put(getSessionUserId(), getSession().getId());
             setSession("index", 0);
-            redisTemplate.opsForValue().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
+            getRedisValueOperation().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
             String msg = Constant.RESULT_SUCCESS_MSG;
             int code = Constant.SUCCESS_CODE;
             if (flag != 0) {
@@ -636,7 +636,7 @@ public class UserController extends BaseController {
         if (updateById) {
             userService.updateById(user);
             sessionUsers.remove(getSessionUser());
-            redisTemplate.opsForValue().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
+            getRedisValueOperation().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
             removeSessionUser();
             return success();
         }
@@ -676,7 +676,7 @@ public class UserController extends BaseController {
                 sessionUsers.remove(getSessionUser());
                 authMap.remove(getSessionUserId());
             }
-            redisTemplate.opsForValue().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
+            getRedisValueOperation().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
         } catch (Exception e) {
             e.printStackTrace();
             return success();

@@ -47,24 +47,21 @@ public class ChatRecordController extends BaseController {
         String r_chatRecords = "chatRecords"+getSessionUserId()+userBId;
         String r_chatRecords_list = "chatRecordsList"+getSessionUserId()+userBId;
         List<ChatRecord> chatRecords = new ArrayList<>();
-        List<Object> chatRecordObjs = JSON.parseArray(Objects.requireNonNull(redisTemplate.opsForValue().get(addChatRecords)).toString(),Object.class);
-        for (Object chatRecordObj : chatRecordObjs) {
-            chatRecords.add((ChatRecord) chatRecordObj);
-        }
-        if (redisTemplate.opsForValue().getOperations().getExpire(r_chatRecords_list)>0
-                && Objects.nonNull(redisTemplate.opsForValue().get(r_chatRecords_list))
+        System.out.println(".......................");
+        if (getRedisValueOperation().getOperations().getExpire(r_chatRecords_list)>0
+                && Objects.nonNull(getRedisValueOperation().get(r_chatRecords_list))
                 && (Objects.isNull(chatRecords) || chatRecords.isEmpty())){
-            return success(redisTemplate.opsForValue().get(r_chatRecords_list));
+            return success(getRedisValueOperation().get(r_chatRecords_list));
         }
 
         List<ChatRecord> rChatRecords = new ArrayList<>();
-        List<Object> rObjects =   JSON.parseArray( redisTemplate.opsForValue().get(r_chatRecords).toString(),Object.class);
+        List<Object> rObjects =   JSON.parseArray( getRedisValueOperation().get(r_chatRecords).toString(),Object.class);
         for (Object rObject : rObjects) {
             rChatRecords.add((ChatRecord) rObject);
         }
         if (Objects.isNull(rChatRecords)){
             rChatRecords=chatRecordService.getAll(new ChatRecord(getSessionUser().getId(), userBId));
-            redisTemplate.opsForValue().set(r_chatRecords,rChatRecords,24, TimeUnit.HOURS);
+            getRedisValueOperation().set(r_chatRecords,rChatRecords,24, TimeUnit.HOURS);
             if (rChatRecords.isEmpty()){
                 return success(rChatRecords);
             }
@@ -72,7 +69,7 @@ public class ChatRecordController extends BaseController {
 
         if (Objects.nonNull(chatRecords)){
             List<ChatRecord> finalRChatRecords = new ArrayList<>();
-            List<Object> finalRChatRecordObjs=  JSON.parseArray( redisTemplate.opsForValue().get(r_chatRecords).toString(),Object.class);
+            List<Object> finalRChatRecordObjs=  JSON.parseArray( getRedisValueOperation().get(r_chatRecords).toString(),Object.class);
             for (Object finalRChatRecordObj : finalRChatRecordObjs) {
                 chatRecords.add((ChatRecord) finalRChatRecordObj);
             }
@@ -83,7 +80,7 @@ public class ChatRecordController extends BaseController {
             for (ChatRecord chatRecord : chatRecords) {
                   rChatRecords.add(chatRecord);
             }
-            getRedisValueOperation().set(r_chatRecords_list,rChatRecords);
+            getRedisValueOperation().set(r_chatRecords_list,JSON.toJSONString(rChatRecords));
         }
 
         return R.dataResult(!rChatRecords.isEmpty(),rChatRecords);

@@ -69,7 +69,7 @@ public class UUController extends BaseController {
         String  uniqueListSend = UU.uniqueAppend+"MSGlIST_SEND"+getSessionUserId();
         //被申请好友接收的存储列表
         String  uniqueList = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
-        List<UU> sendList = (List<UU>) redisTemplate.opsForValue().get(uniqueListSend);
+        List<UU> sendList = (List<UU>) getRedisValueOperation().get(uniqueListSend);
         List<UU> uus = (List<UU>) getRedisValueOperation().get(uniqueList);
         if (Objects.isNull(uus)){
             if (getExpireTime(uniqueList)<1){
@@ -104,8 +104,8 @@ public class UUController extends BaseController {
                 }
             }
         }
-        redisTemplate.opsForValue().set(uniqueListSum,sendList,30,TimeUnit.DAYS);
-        redisTemplate.opsForValue().set(uniqueListSend,sendList,30,TimeUnit.DAYS);
+        getRedisValueOperation().set(uniqueListSum,sendList,30,TimeUnit.DAYS);
+        getRedisValueOperation().set(uniqueListSend,sendList,30,TimeUnit.DAYS);
         return R.success(sendList);
     }
 
@@ -130,7 +130,7 @@ public class UUController extends BaseController {
         uu.setUserFileUrlB(dbBUser.getFileUrl());
         uu.setDeleteFlag(0);
         uu.setType("1");
-        
+
         List<UU> list = (List<UU>)getRedisValueOperation().get(uniqueList);
         List<UU> list2 = (List<UU>)getRedisValueOperation().get(uniqueList2);
         List<UU> sendList = (List<UU>)getRedisValueOperation().get(uniqueListSend);
@@ -177,7 +177,7 @@ public class UUController extends BaseController {
             expireTime = 60*60*24*30;
         }
         getRedisValueOperation().set(uniqueList,uus,expireTime,TimeUnit.SECONDS);
-        List<UU> sendList = (List<UU>)redisTemplate.opsForValue().get(uniqueListSend);
+        List<UU> sendList = (List<UU>)getRedisValueOperation().get(uniqueListSend);
         if (Objects.nonNull(sendList)){
             for (int i = 0; i < sendList.size(); i++) {
                 if (sendList.get(i).getUserAId().equals(uu.getUserAId())&&sendList.get(i).getUserBId().equals(uu.getUserBId())){
@@ -187,7 +187,7 @@ public class UUController extends BaseController {
                 }
             }
         }
-        redisTemplate.opsForValue().set(uniqueListSend,sendList,expireTime,TimeUnit.SECONDS);
+        getRedisValueOperation().set(uniqueListSend,sendList,expireTime,TimeUnit.SECONDS);
         return R.dataResult(isAgree==0,"已拒绝","添加成功");
     }
 
@@ -198,18 +198,18 @@ public class UUController extends BaseController {
         modelAndView.addObject("id",id);
         return modelAndView;
     }
-    
-    
-    
+
+
+
     private void sendAddFriendMessage(String listStr,List<UU> list,UU uu){
         List<UU> friendApplys = new ArrayList<>();
         long expireTime = getExpireTime(listStr);
         if (Objects.isNull(list)){
             friendApplys.add(uu);
             logger.info("建立好友申请列表");
-            redisTemplate.opsForValue().set(listStr,friendApplys,30, TimeUnit.DAYS);
+            getRedisValueOperation().set(listStr,friendApplys,30, TimeUnit.DAYS);
         }
-            friendApplys =(List<UU>) redisTemplate.opsForValue().get(listStr);
+            friendApplys =(List<UU>) getRedisValueOperation().get(listStr);
 
         List<UU> uus = friendApplys.stream().filter(x ->
                 x.getUserAId().equals(getSessionUserId())
