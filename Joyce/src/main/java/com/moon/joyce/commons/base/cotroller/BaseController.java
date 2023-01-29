@@ -258,7 +258,7 @@ public class BaseController extends R {
         Map<MethodUrlEntity, UrlPriEntity> map = UrlFactory.init(ps);
         for (Map.Entry<MethodUrlEntity, UrlPriEntity> entry : map.entrySet()) {
             Uri uri = new Uri();
-            uri.setName(entry.getValue().getName()+entry.getKey().getName());
+            uri.setName(entry.getValue().getName()+"_"+entry.getKey().getName());
             uri.setUrl(entry.getValue().getPri()+entry.getKey().getUrl());
             uri.setParams(entry.getKey().getParams());
             hashMap.put(uri.getName(),uri);

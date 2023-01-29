@@ -4,6 +4,8 @@ package com.moon.joyce.example.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.moon.joyce.commons.annotation.url.MethodUrl;
+import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
@@ -41,6 +43,7 @@ import java.util.stream.Collectors;
  * @since 2021-09-01
  */
 @Controller
+@UriPri(name = "用户相关接口", pri = "/example/user")
 @RequestMapping("/example/user")
 public class UserController extends BaseController {
 
@@ -136,11 +139,11 @@ public class UserController extends BaseController {
 
     /**
      * 查看页面
-     *
      * @param id
      * @param map
      * @return
      */
+    @MethodUrl(url = "/queryUser/{id}",name = "查看user页面")
     @GetMapping("/queryUser/{id}")
     public String queryUserPage(@PathVariable("id") Long id, ModelMap map) {
         User dbUser = userService.getById(id);
@@ -150,12 +153,12 @@ public class UserController extends BaseController {
 
     /**
      * 编辑页面
-     *
      * @param id
      * @param map
      * @return
      */
     @Transactional
+    @MethodUrl(url = "/editUser/{id}",name = "编辑user页面")
     @GetMapping("/editUser/{id}")
     public String updateUserPage(@PathVariable Long id, ModelMap map) {
     /* if (!id.equals( getSessionUser().getId())){
@@ -174,6 +177,7 @@ public class UserController extends BaseController {
      *
      * @return
      */
+    @MethodUrl(url = "/websocket",name = "聊天页面")
     @RequestMapping("/websocket")
     public String indexPage(ModelMap map) {
         User sessionUser = getSessionUser();
@@ -195,6 +199,7 @@ public class UserController extends BaseController {
      * @return
      */
     @ResponseBody
+    @MethodUrl(url = "/sessionUsers",name = "好友")
     @GetMapping("/sessionUsers")
     public Result getSessionUsers(@RequestParam String nickname) {
         String cacheFriends = UUController.uniqueListSum;
@@ -255,6 +260,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @Transactional
+    @MethodUrl(url = "/sendTo",name = "用户发送数据")
     @PostMapping("/sendTo")
     public Result sendTo(@RequestParam("id") Long id, @RequestParam("msg") String msg) {
         ChatRecord chatRecord = new ChatRecord();

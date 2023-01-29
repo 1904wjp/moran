@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @date 2021/9/3 9:06
  * @desc 返回Result类型
  */
-public class Result<T> implements Serializable {
+public class Result implements Serializable {
     private static final long serialVersionUID = 8667410620705660507L;
     /**
      * 状态码
@@ -28,7 +28,6 @@ public class Result<T> implements Serializable {
      */
     private Object data;
 
-    private T t;
 
     public Integer getCode() {
         return code;
@@ -80,13 +79,6 @@ public class Result<T> implements Serializable {
         this.msg = msg;
     }
 
-    public T getT() {
-        return t;
-    }
-
-    public void setT(T t) {
-        this.t = t;
-    }
 
     public Result(Integer code, String msg, Object data) {
         this.code = code;

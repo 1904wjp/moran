@@ -47,7 +47,6 @@ public class ChatRecordController extends BaseController {
         String r_chatRecords = "chatRecords"+getSessionUserId()+userBId;
         String r_chatRecords_list = "chatRecordsList"+getSessionUserId()+userBId;
         List<ChatRecord> chatRecords = new ArrayList<>();
-        System.out.println(".......................");
         if (getRedisValueOperation().getOperations().getExpire(r_chatRecords_list)>0
                 && Objects.nonNull(getRedisValueOperation().get(r_chatRecords_list))
                 && (Objects.isNull(chatRecords) || chatRecords.isEmpty())){

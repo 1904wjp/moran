@@ -24,6 +24,7 @@ public class BaseFactory {
     //类型信息
     protected Object[] typeName = {
     "byte","Byte",0,
+    "String","String","",
     "short","Short",0,
     "int","Integer",0,
     "long","Long",0L,
@@ -33,8 +34,8 @@ public class BaseFactory {
     "char","Character",0};
     //下标基准
     private static final int INDEX = 1;
-    private static final String defParent ="com";
-    private static final String fileType ="class";
+    protected static final String defParent ="com";
+    protected static final String fileType ="class";
     /**
      * 获取类型的初始值
      * @param type

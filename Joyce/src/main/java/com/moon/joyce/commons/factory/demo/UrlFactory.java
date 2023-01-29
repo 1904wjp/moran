@@ -6,6 +6,7 @@ import com.moon.joyce.commons.factory.demo.base.BaseFactory;
 import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
 import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -19,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author: Joyce
  * @autograph: Logic is justice
  * @date: 2022/08/29-- 15:14
- * @describe:
+ * @describe:接口工厂
  */
 public class UrlFactory extends BaseFactory {
     private static Map<MethodUrlEntity, UrlPriEntity> map;
@@ -42,8 +43,8 @@ public class UrlFactory extends BaseFactory {
      * @return
      */
     public static Map<MethodUrlEntity, UrlPriEntity> init(String ps) {
-        UrlFactory instance = getInstance();
         if (Objects.isNull(map)) {
+            UrlFactory instance = getInstance();
             //初始化
             map = new ConcurrentHashMap<>();
             //扫描包
@@ -86,10 +87,10 @@ public class UrlFactory extends BaseFactory {
             for (File file : files) {
                 if (file.isFile()) {
                     String filePath = file.getAbsolutePath();
-                    if (!filePath.endsWith(".class")) {
+                    if (!filePath.endsWith("."+fileType)) {
                         continue;
                     }
-                    String classPath = filePath.substring(filePath.indexOf("com"), filePath.indexOf(".class")).replace("\\", ".");
+                    String classPath = filePath.substring(filePath.indexOf(defParent), filePath.indexOf("."+fileType)).replace("\\", ".");
                     Class<?> loadClass = classLoader.loadClass(classPath);
                     if (!loadClass.isAnnotationPresent(UriPri.class)) {
                         continue;
@@ -101,23 +102,32 @@ public class UrlFactory extends BaseFactory {
 
                     UrlPriEntity urlPriEntity = new UrlPriEntity(ulrPri.name(), ulrPri.pri());
                     Method[] method = getMethod(loadClass);
+                    StringBuilder  params = new StringBuilder();
+                    boolean rs;
                     for (Method md : method) {
                         MethodUrl methodUrl = md.getAnnotation(MethodUrl.class);
-                        StringBuilder  params = new StringBuilder();
                         String p = "";
                         if (Objects.isNull(methodUrl)) {
                             continue;
                         }
-                        Parameter[] parameters = getParameters(md);
-                        for (Parameter parameter : parameters) {
-                            Class<?> type = parameter.getType();
-                            boolean rs = isSimpleClass(type);
+                        for (Parameter parameter : getParameters(md)) {
+                            rs = isSimpleClass(parameter.getType());
                             if (rs){
-                                params.append("\"").append(parameter.getName()).append("\"=").append(getTypeValue(type.getTypeName())).append(",");
-                            }else if (type.isArray()){
-                                params.append("\"").append(parameter.getName()).append("\"=").append("[],");
+                                if (parameter.getType().toString().contains("MultipartFile")){
+                                    params.append("\"").append(parameter.getName()).append("\":").append("\"文件\"");
+                                }else {
+                                    params.append("\"").append(parameter.getName()).append("\":").append(getTypeValue(parameter.getType().getTypeName())).append(",");
+                                }
+                            }else if (parameter.getType().isArray()){
+                                //文件类型数组
+                                if (parameter.getType().toString().contains("MultipartFile")){
+                                    params.append("\"").append(parameter.getName()).append("\":").append("[\"文件1\",\"文件2\"]");
+                                }else {
+                                    params.append("\"").append(parameter.getName()).append("\":").append("[],");
+                                }
+
                             }else {
-                                params.append("\"").append(parameter.getName()).append(":{").append(getSelfClassValue(type)).append("},");
+                                params.append(getSelfClassValue(parameter.getType()));
                             }
                         }
                         p = params.substring(0,params.length());
@@ -130,7 +140,7 @@ public class UrlFactory extends BaseFactory {
             }
         }
     }
-
+    //获取方法里的参数信息
     private Parameter[] getParameters(Method md) {
         return md.getParameters();
     }
@@ -144,10 +154,16 @@ public class UrlFactory extends BaseFactory {
         return "\"" + name + "\"" + "=" + getTypeValue(type) + ",";
     }
 
+    /**
+     * 是否是基本包装类型
+     * @param type
+     * @return
+     */
     private boolean isSimpleClass(Type type){
         boolean flag = false;
         for (String allType : getAllTypes()) {
-            if (type.getTypeName().equals(allType)){
+           // System.out.println("............"+type.getTypeName());
+            if (type.getTypeName().contains(allType)){
                 flag = true;
                 break;
             }
@@ -171,11 +187,15 @@ public class UrlFactory extends BaseFactory {
             }
             String tp = field.getType().getSimpleName();
             if (type.isArray()){
-                return "\""+name+"\" = []";
+                return "\""+name+"\" : []";
             }
-            sb.append(getInitValue(name,tp));
+            sb.append(getInitValue(name,tp).replace("=",":"));
         }
-        return sb.substring(0,sb.length())+"}";
+        String sbStr = sb.toString();
+        if (sbStr.contains(",")){
+            sbStr =   sbStr.substring(0, sb.length() - 1);
+        }
+        return sbStr+"}";
     }
 
 

@@ -12,11 +12,10 @@ import lombok.NoArgsConstructor;
  * @date: 2022/08/29-- 16:18
  * @describe:
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Uri extends BaseEntity {
+public class Uri {
     private String name;
     private String remark;
     private String url;
