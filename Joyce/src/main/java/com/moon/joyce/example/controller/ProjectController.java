@@ -11,6 +11,7 @@ import com.moon.joyce.example.entity.doma.Project;
 import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.doma.Result;
+import com.moon.joyce.example.functionality.entity.doma.Uri;
 import com.moon.joyce.example.service.ProjectService;
 import com.moon.joyce.example.service.UserService;
 import org.slf4j.Logger;

@@ -113,7 +113,7 @@ public class BaseFactory {
             for (int j = i + 1; j < packages.length; j++) {
                 File f2 = getFile(packages[j],clazz);
                 if (f1.equals(f2.getParentFile()) || f2.equals(f1.getParentFile())) {
-                    throw new JoyceException(packages[i] + "与" + packages[j] + "是相互包含的关系，必须选择一个");
+                    throw new JoyceException(packages[i] + "与" + packages[j] + "是相互包含的关系，选择一个即可");
                 }
             }
         }
@@ -156,13 +156,16 @@ public class BaseFactory {
         return  classLoader.loadClass(classPath);
     }
 
-    List<File> list = new ArrayList<>();
+    List<File> list ;
     /**
      * 获取class文件集合
      * @param file
      * @return
      */
     protected List<File> getClassFile(File file){
+        if (list==null){
+           list = new ArrayList<>();
+        }
         File[] files = file.listFiles();
         if (files==null){
             return null;

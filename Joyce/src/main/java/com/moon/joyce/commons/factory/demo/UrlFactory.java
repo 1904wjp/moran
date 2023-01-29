@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author: Joyce
  * @autograph: Logic is justice
  * @date: 2022/08/29-- 15:14
- * @describe:接口工厂
+ * @describe: 接口工厂
  */
 public class UrlFactory extends BaseFactory {
     private static Map<MethodUrlEntity, UrlPriEntity> map;
@@ -37,14 +37,14 @@ public class UrlFactory extends BaseFactory {
     }
 
     /**
-     * 获取工厂实例
+     * 初始化容器
      * @param ps
      * @return
      */
     public static Map<MethodUrlEntity, UrlPriEntity> init(String ps) {
         if (Objects.isNull(map)) {
-            UrlFactory instance = getInstance();
             //初始化
+            UrlFactory instance = getInstance();
             map = new ConcurrentHashMap<>();
             //扫描包
             instance.scannerPackage(ps);
@@ -112,9 +112,9 @@ public class UrlFactory extends BaseFactory {
                     Method[] method = getMethod(loadClass);
                     StringBuilder  params = new StringBuilder();
                     boolean rs;
+                    String p="";
                     for (Method md : method) {
                         MethodUrl methodUrl = md.getAnnotation(MethodUrl.class);
-                        String p = "";
                         if (Objects.isNull(methodUrl)) {
                             continue;
                         }
@@ -139,7 +139,11 @@ public class UrlFactory extends BaseFactory {
                                 }
                             }
                         }
-                        MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(),params.toString());
+                        p= params.toString();
+                        if (params.toString().contains(",")){
+                           p= params.substring(0,params.length()-1);
+                        }
+                        MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(),p);
                         map.put(methodUrlEntity, urlPriEntity);
                     }
                 } else {
@@ -148,6 +152,7 @@ public class UrlFactory extends BaseFactory {
             }
         }
     }
+
     //获取方法里的参数信息
     private Parameter[] getParameters(Method md) {
         return md.getParameters();
@@ -179,6 +184,11 @@ public class UrlFactory extends BaseFactory {
         return flag;
     }
 
+    /**
+     * 自定义类属性编辑
+     * @param type
+     * @return
+     */
     public String getSelfClassValue(Class type) {
        // Class<?> clazz = type.getClass();
         Field[] fields = getFields(type);
@@ -208,7 +218,4 @@ public class UrlFactory extends BaseFactory {
         }
         return sbStr+"}";
     }
-
-
-
 }

@@ -44,7 +44,7 @@ public class JoyceScheduled {
         for (File f : files) {
             boolean rs = StringsUtils.listIsContainsStr(f.getPath().replace("\\","/").replace(filePath, "/static/"), list);
             if (!rs){
-                System.out.println(f.getName()+"需要删除");
+                logger.warn(f.getName()+"需要删除");
             }
         }
 

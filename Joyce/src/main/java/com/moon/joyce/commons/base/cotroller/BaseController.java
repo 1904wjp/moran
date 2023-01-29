@@ -79,6 +79,7 @@ public class BaseController extends R {
     //缓存的聊天记录
     protected static String addChatRecords = "add_chatRecord";
     protected static  ConcurrentHashMap<Long, Auth> authMap = new ConcurrentHashMap<>();
+    private static Map<String, Uri> uriMap;
     @Autowired
     private AddParamsService addParamsService;
   //  public static Map<String,Object> redisMap = new HashMap<>();
@@ -254,16 +255,18 @@ public class BaseController extends R {
      * @return
      */
     public Map<String, Uri> getMap() {
-        Map<String, Uri> hashMap = new HashMap<>();
-        Map<MethodUrlEntity, UrlPriEntity> map = UrlFactory.init(ps);
-        for (Map.Entry<MethodUrlEntity, UrlPriEntity> entry : map.entrySet()) {
-            Uri uri = new Uri();
-            uri.setName(entry.getValue().getName()+"_"+entry.getKey().getName());
-            uri.setUrl(entry.getValue().getPri()+entry.getKey().getUrl());
-            uri.setParams(entry.getKey().getParams());
-            hashMap.put(uri.getName(),uri);
-        }
-       return hashMap;
+       if (uriMap==null){
+           uriMap = new HashMap<>();
+           Map<MethodUrlEntity, UrlPriEntity> map = UrlFactory.init(ps);
+           for (Map.Entry<MethodUrlEntity, UrlPriEntity> entry : map.entrySet()) {
+               Uri uri = new Uri();
+               uri.setName(entry.getValue().getName()+"_"+entry.getKey().getName());
+               uri.setUrl(entry.getValue().getPri()+entry.getKey().getUrl());
+               uri.setParams(entry.getKey().getParams());
+               uriMap.put(uri.getName(),uri);
+           }
+       }
+       return uriMap;
     }
 
     /**
