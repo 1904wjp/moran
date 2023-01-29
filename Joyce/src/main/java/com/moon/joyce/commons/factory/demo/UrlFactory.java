@@ -6,7 +6,6 @@ import com.moon.joyce.commons.factory.demo.base.BaseFactory;
 import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
 import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -54,7 +53,7 @@ public class UrlFactory extends BaseFactory {
     }
 
     /**
-     * 扫描指定文件
+     * 扫描指定文件夹
      * @param packagePath
      */
     private void scannerPackage(String packagePath) {
@@ -71,6 +70,10 @@ public class UrlFactory extends BaseFactory {
         }
     }
 
+    /**
+     * 扫描文件
+     * @param aPackage
+     */
     private void scanner(String aPackage) {
         File dir = getFile(aPackage,this.getClass());
         ClassLoader classLoader = getClassLoader(this.getClass());
@@ -81,6 +84,12 @@ public class UrlFactory extends BaseFactory {
         }
     }
 
+    /**
+     * 填充属性
+     * @param dir
+     * @param classLoader
+     * @throws ClassNotFoundException
+     */
     private void fillMap(File dir, ClassLoader classLoader) throws ClassNotFoundException {
         File[] files = dir.listFiles();
         if (files.length != 0) {
@@ -99,7 +108,6 @@ public class UrlFactory extends BaseFactory {
                     if (Objects.isNull(ulrPri)) {
                         continue;
                     }
-
                     UrlPriEntity urlPriEntity = new UrlPriEntity(ulrPri.name(), ulrPri.pri());
                     Method[] method = getMethod(loadClass);
                     StringBuilder  params = new StringBuilder();
@@ -125,13 +133,13 @@ public class UrlFactory extends BaseFactory {
                                 }else {
                                     params.append("\"").append(parameter.getName()).append("\":").append("[],");
                                 }
-
                             }else {
-                                params.append(getSelfClassValue(parameter.getType()));
+                                if (!getSelfClassValue(parameter.getType()).equals("{}")){
+                                    params.append(getSelfClassValue(parameter.getType()));
+                                }
                             }
                         }
-                        p = params.substring(0,params.length());
-                        MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(),p);
+                        MethodUrlEntity methodUrlEntity = new MethodUrlEntity(methodUrl.name(), methodUrl.url(),params.toString());
                         map.put(methodUrlEntity, urlPriEntity);
                     }
                 } else {
@@ -174,11 +182,14 @@ public class UrlFactory extends BaseFactory {
     public String getSelfClassValue(Class type) {
        // Class<?> clazz = type.getClass();
         Field[] fields = getFields(type);
-        StringBuilder sb = new StringBuilder("{");
         Set<String> set = new HashSet<>();
         for (Method method : getMethods(type)) {
             set.add(method.getName());
         }
+        if (fields.length==0){
+            return "";
+        }
+        StringBuilder sb = new StringBuilder("{");
         for (Field field : fields) {
             String name = field.getName();
             String setMethodName =  "set"+name.substring(0,1).toUpperCase()+name.substring(1);
