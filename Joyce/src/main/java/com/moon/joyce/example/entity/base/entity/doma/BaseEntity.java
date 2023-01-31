@@ -181,9 +181,4 @@ public class BaseEntity  implements Serializable {
         }
         return ((BaseEntity) obj1).id.toString().equals(((BaseEntity) obj2).id.toString());
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(deleteFlag, createIds, updateIds, addParamsId, addParams, voParams, searchWord);
-    }
 }

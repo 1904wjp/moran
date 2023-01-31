@@ -226,10 +226,12 @@ public class UserController extends BaseController {
         collect.addAll(longs);
         List<Long> collect1 = collect.stream().distinct().collect(Collectors.toList());
         List<User> allFriends = userService.getAllFriendsByIds(collect1);
+        Set<Long> sessionUserIdSet = new HashSet<>();
         Object o = getRedisValueOperation().get(Constant.SESSION_USER);
-        assert o != null;
-        List<User> users = JSON.parseArray(JSON.toJSONString(o), User.class);
-        Set<Long> sessionUserIdSet =users.stream().map(User::getId).collect(Collectors.toSet());
+        if (o!=null){
+            sessionUserIdSet = JSON.parseArray(JSON.toJSONString(o), User.class).stream()
+                    .map(User::getId).collect(Collectors.toSet());
+        }
         List<UserChartVo> userChartVos = new ArrayList<>();
         Set<Long> set = new HashSet<>();
         if (Objects.nonNull(allFriends)) {
@@ -444,7 +446,25 @@ public class UserController extends BaseController {
             //设置当前登录人
             setSession(Constant.SESSION_USER, dbUser);
             //设置当前在线集合
-            sessionUsers.add(dbUser);
+            Object o = getRedisValueOperation().get(Constant.SESSION_USER);
+            if (o!=null){
+                sessionUsers =  JSON.parseArray(JSON.toJSONString(o),User.class);
+                if (sessionUsers.isEmpty()){
+                    sessionUsers.add(getSessionUser());
+                }else {
+                    int sflag = 0;
+                    for (User sessionUser : sessionUsers) {
+                        if (sessionUser.equals(getSessionUser())){
+                            sflag = 1;
+                            break;
+                        }
+                    }
+                    if (sflag == 0){
+                        sessionUsers.add(getSessionUser());
+                    }
+                }
+            }
+
             //检测是否存在当前登录人的相关配置
             if (!user.getStatus().equals(Constant.USER_TYPE_INVAILD_STATUS)) {
                 Setting currentSetting = userServiceControllerDetailService.checkData(getSessionUser().getId());
@@ -643,7 +663,7 @@ public class UserController extends BaseController {
         boolean updateById = userService.updateById(user);
         if (updateById) {
             userService.updateById(user);
-            sessionUsers.remove(getSessionUser());
+            sessionUsersRmCurrentUser();
             getRedisValueOperation().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
             removeSessionUser();
             return success();
@@ -681,16 +701,10 @@ public class UserController extends BaseController {
             if (Objects.isNull(getSessionUser())){
                 removeCurrentSetting();
                 removeSessionUser();
-                sessionUsers.remove(getSessionUser());
+                sessionUsersRmCurrentUser();
                 authMap.remove(getSessionUserId());
             }
             getRedisValueOperation().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
-            Object o = getRedisValueOperation().get(Constant.SESSION_USER);
-            assert o != null;
-            List<User> users = JSON.parseArray(JSON.toJSONString(o), User.class);
-            for (User user1 : users) {
-                logger.info("------------------------>{}",user1.getUsername());
-            }
         } catch (Exception e) {
             e.printStackTrace();
             return success();

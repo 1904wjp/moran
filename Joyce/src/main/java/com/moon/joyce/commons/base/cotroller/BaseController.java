@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -71,7 +72,7 @@ public class BaseController extends R {
     @Value("$(command.clear)")
     public  String c_clear;
     //sessionMap
-    public Set<User> sessionUsers = new CopyOnWriteArraySet<>();
+    public List<User> sessionUsers = new CopyOnWriteArrayList<>();
     @Autowired
     private DbBaseSettingService dbBaseSettingService;
     //缓存
@@ -320,4 +321,17 @@ public class BaseController extends R {
         return baseEntity;
     }
 
+    /**
+     * sessionUsers容器移除当前登录人
+     */
+    protected  void sessionUsersRmCurrentUser(){
+       if (!sessionUsers.isEmpty()){
+           for (int i = 0; i < sessionUsers.size(); i++) {
+               if (sessionUsers.get(i).equals(getSessionUser())){
+                   sessionUsers.remove(sessionUsers.get(i));
+                   break;
+               }
+           }
+       }
+    }
 }
