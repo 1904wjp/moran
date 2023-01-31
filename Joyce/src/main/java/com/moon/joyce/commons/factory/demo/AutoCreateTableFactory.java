@@ -53,7 +53,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
     private static AutoCreateTableFactory autoCreateTableFactory = null;
     //配置信息的容器
     private static Map<String, ColumnEntity> defMap = null;
-
+    private static boolean switchFlag = true;
     /**
      * 获取实例
      * @return

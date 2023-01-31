@@ -72,7 +72,47 @@ public class ListsUtils<E> {
         return builder.substring(0,builder.length()-1);
     }
 
+    /**
+     * list转成jsonArray
+     * @param list
+     * @return
+     */
     public  static  JSONArray listToJSONArray(List list){
         return JSONArray.parseArray(JSON.toJSONString(list));
         }
+
+    /**
+     * 集合参数存在且不为空
+      * @param list
+     * @return
+     */
+    public static boolean objArraysArgsNotNull(List list){
+        if (!objArrayisEmpty(list)){
+            return false;
+        }
+        boolean flag = true;
+        for (Object o : list) {
+            if (o==null){
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * 数组为空
+     * @param list
+     * @return
+     */
+    public static boolean objArrayisEmpty(List list){
+        if (list==null){
+            return false;
+        }
+        if (list.isEmpty()){
+            return false;
+        }
+        return true;
+    }
+
 }

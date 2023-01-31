@@ -71,7 +71,7 @@ public class UUController extends BaseController {
         String  uniqueList = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
         List<UU> sendList = (List<UU>) getRedisValueOperation().get(uniqueListSend);
         List<UU> uus = (List<UU>) getRedisValueOperation().get(uniqueList);
-        if (Objects.isNull(uus)){
+       /* if (Objects.isNull(uus)){
             if (getExpireTime(uniqueList)<1){
                 List<UU> collect = uus.stream().filter(x -> x.getResultStr().equals("0") && x.getIsSendMan().equals("1")).collect(Collectors.toList());
                 boolean rs = uuService.saveBatch(collect);
@@ -80,7 +80,7 @@ public class UUController extends BaseController {
                 }
                 redisTemplate.delete(uniqueList);
             }
-        }
+        }*/
         if (Objects.isNull(sendList) && Objects.nonNull(uus)){
             sendList = uus;
         }
@@ -139,6 +139,7 @@ public class UUController extends BaseController {
            l1 = list.stream().filter(x -> x.getUserAId().equals(getSessionUserId()) && x.getUserBId().equals(uu.getUserBId()) && x.getResultStr().equals("0")).collect(Collectors.toList());
         }
 
+
         if (Objects.nonNull(list2)){
              l1.addAll(list2.stream().filter(x -> x.getUserAId().equals(getSessionUserId()) && x.getUserBId().equals(uu.getUserBId()) && x.getResultStr().equals("0")).collect(Collectors.toList()));
         }
@@ -156,12 +157,12 @@ public class UUController extends BaseController {
 
     /**
      * 是否同意好友
-     * @param isAgree
+     * @param isAgree 0：同意 1：拒绝
      * @return
      */
     @ResponseBody
     @RequestMapping("/agreeFriend")
-    public Result agreeFriend(@RequestParam("id") Long userAId,@RequestParam("type") Integer isAgree){ ;
+    public Result agreeFriend(@RequestParam("id") Long userAId,@RequestParam("type") Integer isAgree){
           String  uniqueList = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
           String  uniqueListSend = UU.uniqueAppend+"MSGlIST_SEND"+getSessionUserId();
         List<UU> uus = (List<UU>) getRedisValueOperation().get(uniqueList);
@@ -187,8 +188,32 @@ public class UUController extends BaseController {
                 }
             }
         }
+        List<UU> appList = (List<UU>)getRedisValueOperation().get(uniqueList);
+        if (Objects.nonNull(appList)){
+            for (int i = 0; i < appList.size(); i++) {
+                if (appList.get(i).getUserAId().equals(uu.getUserAId())&&appList.get(i).getUserBId().equals(uu.getUserBId())){
+                    appList.remove(appList.get(i));
+                    appList.add(uu);
+                }
+            }
+        }
+        boolean rs = false;
+        if (isAgree==0){
+            UU uu1 = new UU();
+            setBaseField(uu1);
+            uu1.setUserAId(userAId);
+            User userA = userService.getById(userAId);
+            uu1.setUsernameA(userA.getUsername());
+            uu1.setUserBId(getSessionUserId());
+            uu1.setUsernameB(getSessionUserName());
+            rs = uuService.saveOrUpdate(uu1);
+        }
         getRedisValueOperation().set(uniqueListSend,sendList,expireTime,TimeUnit.SECONDS);
-        return R.dataResult(isAgree==0,"已拒绝","添加成功");
+        getRedisValueOperation().set(uniqueList,appList,expireTime,TimeUnit.SECONDS);
+        if (isAgree==1){
+           return success("已拒绝申请好友");
+        }
+        return R.dataResult(rs,"添加失败" ,"添加成功");
     }
 
     @RequestMapping("/webrtc/{id}.html")

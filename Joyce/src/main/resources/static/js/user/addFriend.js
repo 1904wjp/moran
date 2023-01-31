@@ -10,18 +10,18 @@ function getApplicationFriendFuc() {
         var str = "";
         if (data.rs) {
             if (data.data.length != 0) {
-
+                $('#applyFriendList').empty();
                 for (let i = 0; i < data.data.length; i++) {
                     var userInfo = "";
-                    if (data.data[i].isSendMan === '0'){
+                   /* if (data.data[i].isSendMan === '0'){
                        userInfo = "<span><img  style='width: 10%' src=" + data.data[i].userFileUrlB + "/></span>" +
                         " <span>" + data.data[i].usernameB +
                         "</span> <span>" + data.data[i].createTime + "</span>";
-                    }else {
+                    }else {*/
                         userInfo = "<span><img  style='width: 10%' src=" + data.data[i].userFileUrlA + "/></span>" +
                         " <span>" + data.data[i].usernameA +
                         "</span> <span>" + data.data[i].createTime + "</span>";
-                    }
+                    //}
                     str = str + "<li class=\"list-group-item\">" +userInfo;
                     if (data.data[i].resultStr === '2') {
                         if (data.data[i].isSendMan === '0') {
@@ -34,7 +34,7 @@ function getApplicationFriendFuc() {
                     }
                     if (data.data[i].resultStr == '0') {
                         str = str +
-                            "<span class='pull-right'>同意</span>";
+                            "<span class='pull-right'>已同意</span>";
                     }
                     if (data.data[i].resultStr == '1') {
                         str = str +
@@ -91,6 +91,7 @@ function agree(id) {
         data: data,
     }).done(function (data) {
         tips(data.rs, data.msg);
+        getApplicationFriendFuc();
     }).fail(function () {
         tips(false, ajaxFailMsg)
     });
@@ -112,6 +113,7 @@ function disagree(id) {
         data: data,
     }).done(function (data) {
         tips(data.rs, data.msg);
+        getApplicationFriendFuc();
     }).fail(function () {
         tips(false, ajaxFailMsg)
     });

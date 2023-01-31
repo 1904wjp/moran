@@ -2,7 +2,9 @@ package com.moon.joyce.example.controller;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
+import com.moon.joyce.commons.utils.ListsUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.doma.ChatRecord;
 import com.moon.joyce.example.functionality.entity.doma.Result;
@@ -17,6 +19,7 @@ import org.thymeleaf.util.ListUtils;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +39,7 @@ public class ChatRecordController extends BaseController {
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
     /**
-     * 获取所有用户的聊天记录
+     * 获取对应用户的聊天记录
      * @param userBId
      * @return
      */
@@ -52,11 +55,13 @@ public class ChatRecordController extends BaseController {
                 && (Objects.isNull(chatRecords) || chatRecords.isEmpty())){
             return success(getRedisValueOperation().get(r_chatRecords_list));
         }
-
         List<ChatRecord> rChatRecords = new ArrayList<>();
-        List<Object> rObjects =   JSON.parseArray( getRedisValueOperation().get(r_chatRecords).toString(),Object.class);
+        List<Object> rObjects =  new ArrayList<>();
+        if (getRedisValueOperation().get(r_chatRecords)!=null){
+            rObjects =  JSON.parseArray( getRedisValueOperation().get(r_chatRecords).toString(),Object.class);
+        }
         for (Object rObject : rObjects) {
-            rChatRecords.add((ChatRecord) rObject);
+            rChatRecords.add(JSONObject.parseObject(rObject.toString(), ChatRecord.class));
         }
         if (Objects.isNull(rChatRecords)){
             rChatRecords=chatRecordService.getAll(new ChatRecord(getSessionUser().getId(), userBId));
@@ -65,12 +70,11 @@ public class ChatRecordController extends BaseController {
                 return success(rChatRecords);
             }
         }
-
-        if (Objects.nonNull(chatRecords)){
+        if (ListsUtils.objArraysArgsNotNull(Arrays.asList(chatRecords, getRedisValueOperation().get(r_chatRecords)))){
             List<ChatRecord> finalRChatRecords = new ArrayList<>();
             List<Object> finalRChatRecordObjs=  JSON.parseArray( getRedisValueOperation().get(r_chatRecords).toString(),Object.class);
             for (Object finalRChatRecordObj : finalRChatRecordObjs) {
-                chatRecords.add((ChatRecord) finalRChatRecordObj);
+                chatRecords.add(JSONObject.parseObject(finalRChatRecordObj.toString(),ChatRecord.class));
             }
             chatRecords = chatRecords.stream().filter(x -> !ListUtils.contains(finalRChatRecords, x) && (
                     (x.getUserAId().equals(getSessionUserId()) && (x.getUserBId().equals(userBId))) || (
@@ -81,8 +85,7 @@ public class ChatRecordController extends BaseController {
             }
             getRedisValueOperation().set(r_chatRecords_list,JSON.toJSONString(rChatRecords));
         }
-
-        return R.dataResult(!rChatRecords.isEmpty(),rChatRecords);
+        return R.dataResult(!rChatRecords.isEmpty(),"暂无消息","获取消息记录成功",rChatRecords);
     }
 }
 

@@ -93,6 +93,7 @@ public class UrlFactory extends BaseFactory {
     private void fillMap(File dir, ClassLoader classLoader) throws ClassNotFoundException {
         File[] files = dir.listFiles();
         if (files.length != 0) {
+            Set<String> nameSet = null;
             for (File file : files) {
                 if (file.isFile()) {
                     String filePath = file.getAbsolutePath();
@@ -119,23 +120,31 @@ public class UrlFactory extends BaseFactory {
                             continue;
                         }
                         for (Parameter parameter : getParameters(md)) {
+                            nameSet = new HashSet<>();
                             rs = isSimpleClass(parameter.getType());
                             if (rs){
                                 if (parameter.getType().toString().contains("MultipartFile")){
                                     params.append("\"").append(parameter.getName()).append("\":").append("\"文件\"");
                                 }else {
-                                    params.append("\"").append(parameter.getName()).append("\":").append(getTypeValue(parameter.getType().getTypeName())).append(",");
+                                    if (nameSet.isEmpty()||!nameSet.contains(parameter.getName())){
+                                        params.append("\"").append(parameter.getName()).append("\":").append(getTypeValue(parameter.getType().getTypeName())).append(",");
+                                        nameSet.add(parameter.getName());
+                                    }
                                 }
                             }else if (parameter.getType().isArray()){
                                 //文件类型数组
                                 if (parameter.getType().toString().contains("MultipartFile")){
                                     params.append("\"").append(parameter.getName()).append("\":").append("[\"文件1\",\"文件2\"]");
                                 }else {
-                                    params.append("\"").append(parameter.getName()).append("\":").append("[],");
+                                    if (nameSet.isEmpty()||!nameSet.contains(parameter.getName())){
+                                        params.append("\"").append(parameter.getName()).append("\":").append("[],");
+                                        nameSet.add(parameter.getName());
+                                    }
                                 }
                             }else {
-                                if (!getSelfClassValue(parameter.getType()).equals("{}")){
+                                if (!getSelfClassValue(parameter.getType()).equals("{}")&&(nameSet.isEmpty()||!nameSet.contains(parameter.getName()))){
                                     params.append(getSelfClassValue(parameter.getType()));
+                                    nameSet.add(parameter.getName());
                                 }
                             }
                         }

@@ -50,6 +50,7 @@ public class ProjectController extends BaseController {
      * 获取项目页面
      * @return
      */
+    //@MethodUrl(name = "获取项目页面",url = "/projectListPage")
     @RequestMapping("/projectListPage")
     public String getDayTaskPage(ModelMap map){
         List<User> userList = userService.getUserList(null);
@@ -63,7 +64,7 @@ public class ProjectController extends BaseController {
      * @return
      */
     @ResponseBody
-    @MethodUrl(name = "获取全部项目信息路径",url = "/getList")
+    //@MethodUrl(name = "获取全部项目信息路径",url = "/getList")
     @RequestMapping("/getList")
     public PageVo getProjects(Project project){
         List<Project> list = projectService.getList(project);
@@ -77,8 +78,9 @@ public class ProjectController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/saveprojects")
-    public Result saveprojects(Project project){
+    //@MethodUrl(name = "保存项目信息",url = "/saveProjects")
+    @RequestMapping("/saveProjects")
+    public Result saveProjects(Project project){
         if (Objects.isNull(project.getId())){
             project.setCreateBy(getSessionUser().getUsername());
             project.setCreateTime(new Date());
@@ -97,6 +99,7 @@ public class ProjectController extends BaseController {
      * @return
      */
     @ResponseBody
+    //@MethodUrl(name = "获取项目信息",url = "/getProjects")
     @RequestMapping("/getProjects")
     public Result getprojects(@RequestParam Long id){
         Project project = projectService.getById(id);
@@ -112,6 +115,7 @@ public class ProjectController extends BaseController {
      * @return
      */
     @ResponseBody
+    //@MethodUrl(name = "删除项目信息",url = "/delProjects")
     @RequestMapping("/delProjects")
     public Result delProjects(@RequestParam String ids) {
         List<String> list = StringsUtils.strToList(ids);
@@ -120,10 +124,11 @@ public class ProjectController extends BaseController {
     }
 
     /**
-     * 所有接口
+     * 根据名称查询接口
      * @return
      */
     @ResponseBody
+    //@MethodUrl(name = "根据名称查询接口",url = "/getUri/{key}")
     @RequestMapping("/getUri/{key}")
     public Result getProjectUri(@PathVariable String key){
         return R.dataResult(!getMap().isEmpty(),getMap().get(key));
@@ -134,6 +139,7 @@ public class ProjectController extends BaseController {
      * @return
      */
     @ResponseBody
+    //@MethodUrl(name = "所有接口",url = "/getUri")
     @RequestMapping("/getUri")
     public Result getProjectUriMap(){
         return R.dataResult(!getMap().isEmpty(),getMap());

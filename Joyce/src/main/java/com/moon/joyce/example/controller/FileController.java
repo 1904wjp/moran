@@ -35,7 +35,7 @@ public class FileController extends BaseController {
      * @return
      */
     @ResponseBody
-    @MethodUrl(name = "多文件上传", url = "/files")
+    //@MethodUrl(name = "多文件上传", url = "/files")
     @PostMapping("/files")
     public Result uploadAlbum(@RequestParam("files") MultipartFile[] files) {
         String paths = null;

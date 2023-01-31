@@ -143,7 +143,7 @@ public class UserController extends BaseController {
      * @param map
      * @return
      */
-    @MethodUrl(url = "/queryUser/{id}",name = "查看user页面")
+    //@MethodUrl(url = "/queryUser/{id}",name = "查看user页面")
     @GetMapping("/queryUser/{id}")
     public String queryUserPage(@PathVariable("id") Long id, ModelMap map) {
         User dbUser = userService.getById(id);
@@ -158,7 +158,7 @@ public class UserController extends BaseController {
      * @return
      */
     @Transactional
-    @MethodUrl(url = "/editUser/{id}",name = "编辑user页面")
+    //@MethodUrl(url = "/editUser/{id}",name = "编辑user页面")
     @GetMapping("/editUser/{id}")
     public String updateUserPage(@PathVariable Long id, ModelMap map) {
     /* if (!id.equals( getSessionUser().getId())){
@@ -177,7 +177,7 @@ public class UserController extends BaseController {
      *
      * @return
      */
-    @MethodUrl(url = "/websocket",name = "聊天页面")
+    //@MethodUrl(url = "/websocket",name = "聊天页面")
     @RequestMapping("/websocket")
     public String indexPage(ModelMap map) {
         User sessionUser = getSessionUser();
@@ -199,7 +199,7 @@ public class UserController extends BaseController {
      * @return
      */
     @ResponseBody
-    @MethodUrl(url = "/sessionUsers",name = "好友")
+    //@MethodUrl(url = "/sessionUsers",name = "好友")
     @GetMapping("/sessionUsers")
     public Result getSessionUsers(@RequestParam String nickname) {
         String cacheFriends = UUController.uniqueListSum;
@@ -229,10 +229,6 @@ public class UserController extends BaseController {
         Object o = getRedisValueOperation().get(Constant.SESSION_USER);
         assert o != null;
         List<User> users = JSON.parseArray(JSON.toJSONString(o), User.class);
-        for (User user1 : users) {
-            System.out.println(user1.getUsername());
-        }
-        System.out.println(">>>>>>>>>>>>"+ users.toString());
         Set<Long> sessionUserIdSet =users.stream().map(User::getId).collect(Collectors.toSet());
         List<UserChartVo> userChartVos = new ArrayList<>();
         Set<Long> set = new HashSet<>();
@@ -277,13 +273,18 @@ public class UserController extends BaseController {
         chatRecord.setUserAName(getSessionUserName());
         chatRecord.setUserBName(bUser.getUsername());
         boolean flag = false;
-        List<Object> dBChatRecords = JSON.parseArray(Objects.requireNonNull(getRedisValueOperation().get(addChatRecords)).toString(), Object.class);
+        addChatRecords ="chatRecords"+getSessionUserId()+id;
+        List<Object> dBChatRecords = new ArrayList<>();
+        if (getRedisValueOperation().get(addChatRecords)!=null){
+            dBChatRecords = JSON.parseArray(getRedisValueOperation().get(addChatRecords).toString(), Object.class);
+        }
         List<ChatRecord> chatRecords = new ArrayList<>();
         if (Objects.isNull(dBChatRecords) || !redisTemplate.hasKey(addChatRecords)) {
             getRedisValueOperation().set(addChatRecords, JSON.toJSONString(chatRecords), 24, TimeUnit.DAYS);
-        } else if (getExpireTime(addChatRecords) < 1) {
-            logger.info("==========>正在存入数据" + getRedisValueOperation().getOperations().getExpire(addChatRecords));
-            boolean rs = true;
+       }
+//        else if (getExpireTime(addChatRecords) < 1) {
+//            logger.info("==========>正在存入数据" + getRedisValueOperation().getOperations().getExpire(addChatRecords));
+           /* boolean rs = true;
             if (!chatRecords.isEmpty()) {
                 flag = true;
                 rs = chatRecordService.saveBatch(chatRecords);
@@ -291,16 +292,17 @@ public class UserController extends BaseController {
             if (!rs) {
                 return error("信息保存异常");
             }
-            redisTemplate.delete(addChatRecords);
-            getRedisValueOperation().set(addChatRecords, JSON.toJSONString(chatRecords), 24, TimeUnit.DAYS);
-        } else {
+            redisTemplate.delete(addChatRecords);*/
+ //           getRedisValueOperation().set(addChatRecords, JSON.toJSONString(chatRecords), 24, TimeUnit.DAYS);
+//        }
+        else {
             for (Object dBChatRecord : dBChatRecords) {
-                chatRecords.add((ChatRecord) dBChatRecord);
+                chatRecords.add(JSONObject.parseObject(dBChatRecord.toString(),ChatRecord.class));
             }
         }
         chatRecords.add(chatRecord);
         getRedisValueOperation().set(addChatRecords, JSON.toJSONString(chatRecords));
-        return dataResult(flag, "发送失败", "发送成功");
+        return dataResult(true, "发送失败", "发送成功");
     }
 
     /**
@@ -342,7 +344,7 @@ public class UserController extends BaseController {
             setSession(Constant.SESSION_USER, user);
             return success();
         }
-        return error(Constant.ERROR_CODE, false);
+        return error(Constant.ERROR_CODE);
     }
 
     /**
@@ -683,6 +685,12 @@ public class UserController extends BaseController {
                 authMap.remove(getSessionUserId());
             }
             getRedisValueOperation().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
+            Object o = getRedisValueOperation().get(Constant.SESSION_USER);
+            assert o != null;
+            List<User> users = JSON.parseArray(JSON.toJSONString(o), User.class);
+            for (User user1 : users) {
+                logger.info("------------------------>{}",user1.getUsername());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return success();
