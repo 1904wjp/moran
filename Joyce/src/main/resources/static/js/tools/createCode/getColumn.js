@@ -29,12 +29,12 @@ function getDatabaseNames(){
                 }
                 $("#dbNameDiv").wxSelect({
                     data:array
-                });
+                },0);
             }else {
                 tips(data.rs,data.msg);
             };
         }).fail(function (){
-            tips(false,data.msg);
+            tips(false,ajaxFailMsg);
         });
     }else {
         getTablesByDatabaseName();
@@ -74,7 +74,7 @@ function getTablesByDatabaseName(){
                 }
                 $("#tableNameDiv").wxSelect({
                     data:array
-                });
+                },0);
             }else {
                 tips(data.rs,data.msg);
             };

@@ -77,4 +77,6 @@ public interface ColumnsService {
      * @return
      */
     PageVo getMapTableDataPage(String tableName, String dbName, int pageNumber, int offset);
+
+    List<Column> selectAllTables2(String databaseName);
 }

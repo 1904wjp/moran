@@ -35,8 +35,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
             if (StringUtils.isNotEmpty(menu.getMenuName())){
                 wrapper.like("menu_name",menu.getMenuName());
             }
-            if (StringUtils.isNotEmpty(menu.getMenuUrl())){
-                wrapper.like("menu_url",menu.getMenuUrl());
+            if (StringUtils.isNotEmpty(menu.getUrl())){
+                wrapper.like("menu_url",menu.getUrl());
             }
             if (Objects.nonNull(menu.getParentId())){
                 wrapper.like("parent_id",menu.getParentId());
@@ -63,8 +63,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
         if (StringUtils.isNoneBlank(sysMenu.getMenuName())){
             wrapper.eq("menu_name",sysMenu.getMenuName());
         }
-        if (StringUtils.isNoneBlank(sysMenu.getMenuUrl())){
-            wrapper.eq("menu_url",sysMenu.getMenuUrl());
+        if (StringUtils.isNoneBlank(sysMenu.getUrl())){
+            wrapper.eq("menu_url",sysMenu.getUrl());
         }
         if (Objects.nonNull(sysMenu.getMenuOrder())){
             wrapper.eq("menu_menu_order",sysMenu.getMenuOrder());

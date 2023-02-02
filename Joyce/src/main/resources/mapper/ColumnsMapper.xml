@@ -46,4 +46,20 @@
     <select id="getCount" resultType="java.lang.Integer">
         SELECT count(*) FROM ${dbName}.${tableName}
     </select>
+    <select id="getAllTables2" resultType="com.moon.joyce.example.functionality.entity.doma.Column">
+        SELECT DISTINCT a.column_name              AS columnName,
+                        a.column_comment           AS columnComment,
+                        a.data_type                AS columnType,
+                        a.IS_NULLABLE              AS isNull,
+                        a.COLUMN_KEY               AS isKey,
+                        a.COLUMN_DEFAULT           AS defaultValue,
+                        a.table_name               AS tableName,
+                        a.CHARACTER_MAXIMUM_LENGTH AS columnLength,
+                        b.table_comment            AS tableComment,
+                        b.AUTO_INCREMENT           AS autoIncrement
+        FROM information_schema.columns a
+        RIGHT JOIN information_schema.tables b
+        ON a.table_name = b.table_name
+        WHERE  b.table_schema = #{dbName}
+    </select>
 </mapper>

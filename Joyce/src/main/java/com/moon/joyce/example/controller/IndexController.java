@@ -124,7 +124,7 @@ public class IndexController extends BaseController {
         String filePathName = confPath + user.getUsername() + "_config.xml";
         //加载配置文件
         Setting setting = new Setting();
-        fileService.writeJoyceConfig(user.getUsername(),null,false);
+        fileService.writeJoyceConfig(user.getUsername(),null);
         Map<String, Object> map = new HashMap<>();
         File file = new File(filePathName);
         if (file.exists()){

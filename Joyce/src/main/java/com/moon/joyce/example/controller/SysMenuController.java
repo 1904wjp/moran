@@ -66,8 +66,8 @@ public class SysMenuController extends BaseController {
         List<SysMenu> menus = sysMenuService.getMenus(null);
         ArrayList<SysMenuVo> sysMenuVos = new ArrayList<>();
         for (SysMenu menu : menus) {
-            if (StringUtils.isBlank(menu.getMenuUrl())){
-                menu.setMenuUrl("#");
+            if (StringUtils.isBlank(menu.getUrl())){
+                menu.setUrl("#");
             }
             SysMenuVo sysMenuVo = new SysMenuVo();
             BeanUtils.copyProperties(menu,sysMenuVo);
@@ -134,7 +134,7 @@ public class SysMenuController extends BaseController {
         List<SysMenu> menus = sysMenuService.getMenus(sysMenu);
         List<SysMenu> setMenus = new ArrayList<>();
         for (SysMenu menu : menus) {
-            if (StringUtils.isNotEmpty(menu.getMenuUrl())){
+            if (StringUtils.isNotEmpty(menu.getUrl())){
                 setMenus.add(menu);
             }
         }

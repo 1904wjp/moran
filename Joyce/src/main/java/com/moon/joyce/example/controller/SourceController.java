@@ -82,13 +82,32 @@ public class SourceController extends BaseController {
     }
 
     /**
+     * 编辑sql页面
+     * @return
+     */
+    @RequestMapping("/editSqlPage")
+    public String editSqlPage() {
+        return pagePrefix + "editSqlPage";
+    }
+    /**
      * 资源列表页面
-     *
      * @return
      */
     @RequestMapping("/sourceListPage")
     public String sourceListPage() {
         return pagePrefix + "sourceListPage";
+    }
+
+    /**
+     * 下载文件
+     * @throws IOException
+     */
+    @ResponseBody
+    @Transactional
+    @RequestMapping("/getEditSqlData")
+    public Result getEditSqlData() {
+        String[] strings = {"SELECT","FROM","WHERE","DELETE"};
+        return dataResult(true, strings);
     }
 
     /**
@@ -166,8 +185,7 @@ public class SourceController extends BaseController {
 
     /**
      * 上传多个文件
-     *
-     * @param files
+      * @param files
      * @return
      */
     @ResponseBody
@@ -186,7 +204,6 @@ public class SourceController extends BaseController {
     }
     /**
      * 相册列表页面
-     *
      * @return
      */
     @RequestMapping("/albumListPage")

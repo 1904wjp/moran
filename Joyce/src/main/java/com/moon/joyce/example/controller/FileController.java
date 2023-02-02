@@ -30,8 +30,7 @@ public class FileController extends BaseController {
 
     /**
      * 上传多个文件
-     *
-     * @param files
+      * @param files
      * @return
      */
     @ResponseBody
@@ -51,8 +50,7 @@ public class FileController extends BaseController {
 
     /**
      * 文件上传
-     *
-     * @param file
+      * @param file
      * @return
      */
     @ResponseBody

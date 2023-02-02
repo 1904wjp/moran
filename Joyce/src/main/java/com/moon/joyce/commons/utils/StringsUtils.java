@@ -29,8 +29,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 字符串转集合
-     *
-     * @param str
+      * @param str
      * @return
      */
     public static List<String> strToList(String str) {
@@ -45,8 +44,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 集合转字符
-     *
-     * @param list
+      * @param list
      * @return
      */
     public static String listToStr(List list) {
@@ -56,8 +54,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 集合是否含有某个字符串
-     *
-     * @param str
+      * @param str
      * @param list
      * @return
      */
@@ -112,8 +109,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 下划线转转驼峰
-     *
-     * @param str
+      * @param str
      * @return
      */
     public static String getUp(String str) {
@@ -133,8 +129,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 驼峰法转下划线
-     *
-     * @param line 源字符串
+      * @param line 源字符串
      * @return 转换后的字符串
      */
     public static String camelToUnderline(String line) {
@@ -166,8 +161,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 修改方法
-     *
-     * @param strs
+      * @param strs
      * @param tableName
      */
     private static void updateMethod(String[] strs, String tableName) {
@@ -183,8 +177,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 增添方法
-     *
-     * @param strs
+      * @param strs
      * @param tableName
      */
     private static void insertMethod(String[] strs, String tableName) {
@@ -205,8 +198,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * sql改成java类型
-     *
-     * @param str
+      * @param str
      * @return
      */
     public static String changeType(String str) {
@@ -219,8 +211,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 获取实体类
-     *
-     * @param str
+      * @param str
      * @return
      */
     public static String getClass(String str) {
@@ -236,8 +227,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 获取名字
-     *
-     * @param tableName
+      * @param tableName
      * @return
      */
     public static String getClassName(String tableName) {
@@ -246,8 +236,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 转换类型
-     *
-     * @param type
+      * @param type
      * @return
      */
     public static String changeType2(String type) {
@@ -263,8 +252,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 拼接字符
-     *
-     * @param prefix
+      * @param prefix
      * @param strs
      * @param suffix
      * @param g
@@ -290,8 +278,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 拼接字符
-     *
-     * @param strs
+      * @param strs
      * @param g
      * @return
      */
@@ -301,8 +288,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 截取文件名
-     *
-     * @param fileName
+      * @param fileName
      * @return
      */
     public static String substringFileName(String fileName) {
@@ -314,7 +300,6 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 字符串转时间
-     *
      * @return
      */
     public static Date stringToDate(String dateStr, String pattern) {
@@ -330,7 +315,6 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 字符串转时间
-     *
      * @return
      */
     public static Date stringToDate(String dateStr) {
@@ -346,8 +330,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 随机获取数字字符串
-     *
-     * @param len
+      * @param len
      * @return
      */
     public static String randNumber(int len) {
@@ -361,8 +344,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 字符串集合转其他
-     *
-     * @param list
+      * @param list
      * @return
      */
     public static List<Long> strListToOther(List<String> list) {
@@ -375,8 +357,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 字符匹配多个
-     *
-     * @param strs
+      * @param strs
      * @return
      */
     public static boolean equals(String... strs) {
@@ -395,8 +376,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 字符匹配多个
-     *
-     * @param strs
+      * @param strs
      * @return
      */
     public static boolean equalsIgnoreCase(String... strs) {
@@ -415,8 +395,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 语音转换
-     *
-     * @param text
+      * @param text
      */
     public static void textToSpeech(String text,String path) {
         ActiveXComponent ax = null;
@@ -463,8 +442,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 加密
-     *
-     * @param password
+      * @param password
      * @return
      */
     public static String encryptionPassword(String password) {
@@ -484,8 +462,7 @@ public class StringsUtils extends StringUtils implements Serializable {
 
     /**
      * 解密
-     *
-     * @param password
+      * @param password
      * @return
      */
     public static String decryptPassword(String password) {

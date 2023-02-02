@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -143,6 +144,16 @@ public class ColumnsController extends BaseController {
         List<Column> tables = columnsService.selectAllTables(databaseName);
         shutdownDatasource();
         return R.dataResult(!tables.isEmpty(),"该数据库无数据或者连接有误",tables);
+    }
+
+    @ResponseBody
+    @RequestMapping("/getAllTables2")
+    public Result selectTablesByDatabase2(String databaseName) {
+        startupDatasource();
+        List<Column> tables = columnsService.selectAllTables2(databaseName);
+        Map<String, List<Column>> collect = tables.stream().collect(Collectors.groupingBy(Column::getTableName));
+        shutdownDatasource();
+        return R.dataResult(!collect.isEmpty(),"该数据库无数据或者连接有误",collect);
     }
 
     @ResponseBody

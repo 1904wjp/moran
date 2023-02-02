@@ -48,7 +48,6 @@ public class DataSourceController extends BaseController {
 
     /**
      * 包页面
-     *
      * @return
      */
     @RequestMapping("/packagePage")
@@ -58,7 +57,6 @@ public class DataSourceController extends BaseController {
 
     /**
      * 数据源页面
-     *
      * @return
      */
     @RequestMapping("/dbPage")
@@ -68,8 +66,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 保存数据库
-     *
-     * @param dbBaseSetting
+      * @param dbBaseSetting
      * @return
      */
     @ResponseBody
@@ -98,8 +95,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 查询数据源
-     *
-     * @param id
+      * @param id
      * @return
      */
     @ResponseBody
@@ -111,8 +107,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 删除数据源数据
-     *
-     * @param ids
+      * @param ids
      * @return
      */
     @ResponseBody
@@ -132,8 +127,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 切换数据源数据
-     *
-     * @param id
+      * @param id
      * @return
      */
     @ResponseBody
@@ -158,8 +152,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 数据源数据列表
-     *
-     * @param dbBaseSetting
+      * @param dbBaseSetting
      * @return
      */
     @ResponseBody
@@ -173,8 +166,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 保存包
-     *
-     * @param aPackageInfo
+      * @param aPackageInfo
      * @return
      */
     @ResponseBody
@@ -192,8 +184,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 删除包
-     *
-     * @param ids
+      * @param ids
      * @return
      */
     @ResponseBody
@@ -216,8 +207,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 查询包
-     *
-     * @param id
+      * @param id
      * @return
      */
     @ResponseBody
@@ -229,8 +219,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 设为应用包
-     *
-     * @param id
+      * @param id
      * @return
      */
     @ResponseBody
@@ -255,8 +244,7 @@ public class DataSourceController extends BaseController {
 
     /**
      * 包列表
-     *
-     * @param packageInfo
+      * @param packageInfo
      * @return
      */
     @ResponseBody

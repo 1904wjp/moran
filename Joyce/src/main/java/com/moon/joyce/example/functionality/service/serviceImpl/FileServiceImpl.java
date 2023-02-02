@@ -10,7 +10,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.moon.joyce.commons.utils.DateUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
+import com.moon.joyce.commons.utils.UUIDUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -93,7 +96,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public boolean writeJoyceConfig(String username, Map<String, List<PageComponent>> map,boolean flag) {
+    public boolean writeJoyceConfig(String username, Map<String, List<PageComponent>> map) {
         //文件全路径
         String filePathName = confPath + username + "_config.xml";
         File file = new File(filePathName);
@@ -105,16 +108,17 @@ public class FileServiceImpl implements FileService {
             logger.info("文件：{}，初始化配置开始", filePathName);
             Map<String, List<PageComponent>> initMap = new HashMap<>();
             QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
-            wrapper.isNotNull("menu_url");
+            wrapper.lambda().isNotNull(SysMenu::getName);
             List<SysMenu> sysMenus = sysMenuMapper.selectList(wrapper);
             List<PageComponent> pageComponents = new ArrayList<>();
             for (SysMenu sysMenu : sysMenus) {
                 Map<String, String> params = new HashMap<>();
                 params.put(Constant.FONTSIZE_DEFAULT_NAME, Constant.FONTSIZE_DEFAULT_SIZE);
                 params.put(Constant.FILE_DEFAULT_SET_NAME, Constant.FILE_DEFAULT_URL);
+                params.put("first_login_date_"+ UUIDUtils.getUUID(), DateUtils.dateForMat("s",new Date()));
                 PageComponent pageComponent =
                         PageComponent.builder()
-                        .name(sysMenu.getMenuName())
+                        .name(sysMenu.getName())
                         .params(params)
                         .backgroundType(Constant.BACKGROUND_DEFAULT_TYPE)
                         .backgroundColor(Constant.BACKGROUND_DEFAULT_COLOR)
@@ -126,14 +130,10 @@ public class FileServiceImpl implements FileService {
             map = initMap;
             logger.info("文件：{}初始化配置结束",filePathName);
         }
-        if (!file.exists()){
-            flag = true;
-        }
-        if (!map.isEmpty() && flag ){
+        if (!map.isEmpty() && !file.exists() ){
             FileUtils.deleteFile(filePathName);
             FileUtils.writeConfigXml(filePathName,map);
         }
-
         if (FileUtils.fileExist(file,60) && !readJoyceConfig(username).isEmpty()){
             return true;
         }

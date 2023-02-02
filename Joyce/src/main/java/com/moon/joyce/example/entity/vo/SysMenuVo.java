@@ -23,7 +23,7 @@ public class SysMenuVo implements Serializable {
 
     private String menuName;
 
-    private String menuUrl;
+    private String url;
 
     private Long menuOrder;
 

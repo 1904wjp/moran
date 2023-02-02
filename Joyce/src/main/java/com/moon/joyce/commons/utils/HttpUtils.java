@@ -37,8 +37,7 @@ public class HttpUtils {
 
     /**
      * get请求
-     *
-     * @param url
+      * @param url
      * @return
      * @throws HttpRequest.HttpRequestException
      */
@@ -48,8 +47,7 @@ public class HttpUtils {
 
     /**
      * get请求
-     *
-     * @param url
+      * @param url
      * @return
      * @throws HttpRequest.HttpRequestException
      */

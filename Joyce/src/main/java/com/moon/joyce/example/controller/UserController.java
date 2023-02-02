@@ -109,7 +109,6 @@ public class UserController extends BaseController {
 
     /**
      * 注册页面
-     *
      * @return
      */
     @GetMapping("/regist")
@@ -119,7 +118,6 @@ public class UserController extends BaseController {
 
     /**
      * 注册结果页面
-     *
      * @return
      */
     @GetMapping("/statusResult")
@@ -129,7 +127,6 @@ public class UserController extends BaseController {
 
     /**
      * 登录页面
-     *
      * @return
      */
     @GetMapping("/login")
@@ -174,7 +171,6 @@ public class UserController extends BaseController {
 
     /**
      * 聊天页面
-     *
      * @return
      */
     //@MethodUrl(url = "/websocket",name = "聊天页面")
@@ -194,8 +190,7 @@ public class UserController extends BaseController {
 
     /**
      * 好友
-     *
-     * @param nickname
+      * @param nickname
      * @return
      */
     @ResponseBody
@@ -248,7 +243,7 @@ public class UserController extends BaseController {
         if (StringUtils.isNoneBlank(nickname)) {
             userChartVos = userChartVos.stream().filter(x -> x.getNickname().equals(nickname)).collect(Collectors.toList());
         }
-        return success(userChartVos);
+                                               return success(userChartVos);
     }
 
     /**
@@ -439,7 +434,7 @@ public class UserController extends BaseController {
            /* if (sessionUsers.contains(dbUser)){
                 return error("用户已存在");
             }*/
-            boolean rs = fileService.writeJoyceConfig(user.getUsername(), null, false);
+            boolean rs = fileService.writeJoyceConfig(user.getUsername(), null);
             if (!rs) {
                 return error("初始化用户文件失败");
             }
@@ -498,8 +493,7 @@ public class UserController extends BaseController {
 
     /**
      * 获取所有用户数据
-     *
-     * @param user
+      * @param user
      * @return
      */
     @ResponseBody
@@ -510,7 +504,6 @@ public class UserController extends BaseController {
 
     /**
      * 删除某个user
-     *
      * @return
      */
     @ResponseBody
@@ -530,7 +523,6 @@ public class UserController extends BaseController {
 
     /**
      * 冻结某个user
-     *
      * @return
      */
     @ResponseBody
@@ -554,7 +546,6 @@ public class UserController extends BaseController {
 
     /**
      * 恢复某个冻结的user
-     *
      * @return
      */
     @ResponseBody
@@ -575,8 +566,7 @@ public class UserController extends BaseController {
 
     /**
      * 编辑user的数据
-     *
-     * @param id
+      * @param id
      * @return
      */
     @ResponseBody
@@ -593,7 +583,6 @@ public class UserController extends BaseController {
 
     /**
      * 忘记密码
-     *
      * @return
      */
     @ResponseBody
@@ -613,8 +602,7 @@ public class UserController extends BaseController {
 
     /**
      * 检查验证码修改密码验证
-     *
-     * @param emailCode
+      * @param emailCode
      * @param email
      * @param newPassword
      * @return
@@ -638,8 +626,7 @@ public class UserController extends BaseController {
 
     /**
      * 输入新密码
-     *
-     * @param newPassword
+      * @param newPassword
      * @param password
      * @param id
      * @return
@@ -673,8 +660,7 @@ public class UserController extends BaseController {
 
     /**
      * 文件上传
-     *
-     * @param file
+      * @param file
      * @return
      */
     @ResponseBody

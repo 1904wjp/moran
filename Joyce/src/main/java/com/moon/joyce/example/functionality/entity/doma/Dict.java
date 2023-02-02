@@ -25,12 +25,14 @@ import java.util.List;
 @Table(name = "dict",content = "字典表")
 @TableName(value = "dict")
 public class Dict extends BaseEntity {
-    @Column(name = "code",type = Type.VARCHAR,comment = "字典代码")
+    @Column(comment = "字典代码")
     private String code;
-    @Column(name = "name",type = Type.VARCHAR,comment = "名称")
+    @Column(comment = "名称")
     private String name;
-    @Column(name = "value",type = Type.TEXT,comment = "内容")
+    @Column(type = Type.TEXT,comment = "内容")
     private String value;
+    @Column(comment = "场景")
+    private String scene;
     //标签
     @NotExist
     @TableField(exist = false)

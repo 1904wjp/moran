@@ -90,5 +90,10 @@ public class ColumnsServiceImpl implements ColumnsService {
         return new PageVo(columnsMapper.getMapData(tableName, dbName, pageNumber, offset),columnsMapper.getCount(tableName,dbName));
     }
 
+    @Override
+    public List<Column> selectAllTables2(String databaseName) {
+        return columnsMapper.getAllTables2(databaseName);
+    }
+
 
 }

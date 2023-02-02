@@ -1,8 +1,9 @@
 (function($){
+	var oldVal='';
 	$.fn.extend({
 		//插件名称；
 		_wx_ison: false,
-		wxSelect:function(options){
+		wxSelect:function(options,isBlank){
 			var defaults = {
 				data: [],
 				height:240
@@ -67,8 +68,14 @@
 						var val = $(_this).find("input").val().trim()
 						,dataSelect = []
 						,data = options.data;
-						console.log(val);
+						//console.log(val);
 						if(val != ""){
+							if (isBlank===1){
+								var valArray = val.split(" ");
+								val = valArray[valArray.length-1];
+								valArray.pop();
+								oldVal = valArray.join(" ");
+							}
 							for(var i in data){
 								if(data[i]['name'].indexOf(val) != -1){
 									dataSelect.push(data[i]);
@@ -83,6 +90,9 @@
 					$(_this).find("input").eq(0).on("input",input);
 					$(_this).find(".dataList").on("click","li",function(){
 						var val = $(this).text();
+						if (isBlank===1){
+							val =oldVal+" " + $(this).text();
+						}
 						var data = $(this).attr("value");
 						if(val != ""){
 							$(_this).find(".wx-input").val(val).attr("data-value",data);
@@ -92,7 +102,7 @@
 					if(!$.fn._wx_ison){
 						$(document).on("click",function(event){
 							var e = event || window.event;
-							e.stopPropagation();	
+							e.stopPropagation();
 							var flag = true
 							,tag = $(".input-Selector")
 							,target = $(e.target);
@@ -109,7 +119,7 @@
 						$(_this).find(".dataList").html("");
 						var html = "";
 						for(var i = 0; i<data.length;i++){
-							 html += "<li value="+data[i].value+">"+data[i].name+"</li>"
+							 html += "<li value="+data[i].value+">"+data[i].name+"</li>";
 						}
 						$(_this).find(".dataList").append(html);
 						$(_this).find(".dataList li").css({

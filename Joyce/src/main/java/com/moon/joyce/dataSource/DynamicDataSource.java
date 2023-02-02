@@ -175,15 +175,13 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         this.debug = debug;
     }
 
-    /**
-     * @return the debug
+    /*     * @return the debug
      */
     public boolean isDebug() {
         return debug;
     }
 
-    /**
-     * @return the dynamicTargetDataSources
+    /*     * @return the dynamicTargetDataSources
      */
     public Map<Object, Object> getDynamicTargetDataSources() {
         return dynamicTargetDataSources;
@@ -197,8 +195,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         this.dynamicTargetDataSources = dynamicTargetDataSources;
     }
 
-    /**
-     * @return the dynamicDefaultTargetDataSource
+    /*     * @return the dynamicDefaultTargetDataSource
      */
     public Object getDynamicDefaultTargetDataSource() {
         return dynamicDefaultTargetDataSource;

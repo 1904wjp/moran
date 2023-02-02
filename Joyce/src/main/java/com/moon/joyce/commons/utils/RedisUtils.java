@@ -70,8 +70,7 @@ public class RedisUtils {
     }
 
     /**
-     *
-     * @param jedis 缓存对象
+      * @param jedis 缓存对象
      * @param code 验证码
      * @param uniqueAppend 唯一拼接
      * @param maxCount 最大次数

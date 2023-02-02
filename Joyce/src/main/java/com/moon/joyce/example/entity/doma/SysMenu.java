@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Joyce
@@ -43,8 +43,8 @@ public class SysMenu extends Page {
     /*   @Column(name = "menu_name",columnDefinition = "varchar(12) COMMENT '菜单名称'")*/
     private String name;
 
-    @Column(comment = "菜单连接")
-    private String menuUrl;
+   /* @Column(comment = "菜单连接")
+    private String menuUrl;*/
 
     @Column(comment = "菜单链接", type = Type.VARCHAR)
    /* @Column(name = "menu_url",columnDefinition = "varchar(12) COMMENT '菜单地址'")*/

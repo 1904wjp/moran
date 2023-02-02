@@ -31,6 +31,15 @@ public interface ColumnsMapper {
      */
     List<Column> getAllTables(String databaseName);
 
+
+    /**
+     * 查询所有表信息
+     * @param databaseName
+     * @return
+     */
+    List<Column> getAllTables2(String databaseName);
+
+
     /**
      * 查询特定表中的数据
      * @param tableName
