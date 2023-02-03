@@ -5,7 +5,8 @@ $().ready(function (){
 var map = new Map();
 var arr = [];
 var tempArr =[];
-
+var sqlTableColumns = [];
+var set = new Set();
 /**
  * 获取sql关键字
  */
@@ -60,20 +61,6 @@ function getTablesByDatabaseName2(){
             // $('#tableName div').remove();
             var res = data.data;
             map.set(dbName,res);
-            /* var array = [];
-            for (let i = 0; i < res.length; i++) {
-               var comment ="";
-                if (notNull(res[i].tableComment)){
-                    comment = "("+res[i].tableComment+")";
-                }
-                array.push({
-                    "name":res[i].tableName+comment,
-                    "value":res[i].tableName
-                });
-            }
-              $("#tableNameDiv").wxSelect({
-                data:array
-            });*/
         }else {
             tips(data.rs,data.msg);
         };
@@ -84,17 +71,15 @@ function getTablesByDatabaseName2(){
 
 $("input[name=x-sql]").keydown(function(e){
    // console.log(e.keyCode);
+    var text =  $(this).val();
     //按下点触发
     if (e.keyCode===190 || e.keyCode===110){
-        var text =  $(this).val();
        // var lastChar = text.substr(-1);
         //console.log(lastChar);
             var sqlArr = text.split(/[ ,.]/);
             var lastChar = sqlArr[sqlArr.length-1];
-            var tableMap = new Map();
-            tableMap= map.get('zm_ccsp_so');
-            var sqlTableColumns = [];
-            var set = new Set();
+             sqlTableColumns = [];
+             set.clear();
         for (let i = 0; i < sqlArr.length; i++) {
             //console.log(sqlArr[i],lastChar)
             if (sqlArr[i]===lastChar){
@@ -107,9 +92,9 @@ $("input[name=x-sql]").keydown(function(e){
        // console.log(set)
         for (let setKey of set) {
            //console.log('tableMap',tableMap)
-            var newMap = objToStrMap(tableMap).get(setKey);
+            var newMap = objToStrMap(map.get('zm_ccsp_so')).get(setKey);
             if (null!=newMap){
-                if (newMap.length!=0){
+                if (newMap.length!==0){
                     for (let i = 0; i < newMap.length; i++) {
                         sqlTableColumns.push({'name':newMap[i].columnName,'value':newMap[i].columnName});
                     }
@@ -121,7 +106,7 @@ $("input[name=x-sql]").keydown(function(e){
         },".");
     }
     //按下点空格
-    if (e.keyCode===32){
+    if (e.keyCode===32 ){
         $(".data-select").wxSelect({
             data:tempArr
         }," ");
