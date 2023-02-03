@@ -29,7 +29,7 @@ function getDatabaseNames(){
                 }
                 $("#dbNameDiv").wxSelect({
                     data:array
-                },0);
+                },'0');
             }else {
                 tips(data.rs,data.msg);
             };
@@ -74,7 +74,7 @@ function getTablesByDatabaseName(){
                 }
                 $("#tableNameDiv").wxSelect({
                     data:array
-                },0);
+                },'0');
             }else {
                 tips(data.rs,data.msg);
             };

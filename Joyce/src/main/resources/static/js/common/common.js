@@ -868,3 +868,4 @@ var ajaxHttp = function (options) {
     options.token = localStorage.getItem('access_token');
     HttpRequest(options);
 }
+

@@ -1,27 +1,34 @@
 (function($){
-	var oldVal='';
+	var options2;
 	$.fn.extend({
-		//插件名称；
+		//插件名称；isBlank是切割符号，若为'0'则不切割
 		_wx_ison: false,
 		wxSelect:function(options,isBlank){
+			//console.log("isBlank:",isBlank);
+			options2 = options;
+		//	console.log("options1:",options2.data);
 			var defaults = {
 				data: [],
 				height:240
 			};
-			var options = $.extend(defaults,options);
-
+			var options = $.extend(defaults,options2);
+			console.log("options2:",options.data);
 			return this.each(function(){
 				//创建元素
 				var _this = this,
 					w = $(_this).width() || $(_this).find("input").width();
-					if(!$(_this).attr("data-bind")){
+					var flag = !$(_this).attr("data-bind");
+					if (isBlank!=='0'){
+						flag = true;
+					}
+					if(flag){
 						init();
+						//console.log("options:",options.data);
 						renders(options.data);
 					}
 
 				function init(){
 					$(_this).attr("data-bind",true);
-
 					$(_this).append("<span class='wxSelect_bottom'></span>")
 					$(_this).find(".wxSelect_bottom").css({
 						width:"24px",
@@ -70,14 +77,16 @@
 						,data = options.data;
 						//console.log(val);
 						if(val != ""){
-							if (isBlank===1){
-								var valArray = val.split(" ");
+							if (isBlank!=='0'){
+								var valArray = val.split(isBlank);
 								val = valArray[valArray.length-1];
+								console.log(valArray)
+								console.log(isBlank)
 								valArray.pop();
 								oldVal = valArray.join(" ");
 							}
 							for(var i in data){
-								if(data[i]['name'].indexOf(val) != -1){
+								if(data[i]['name'].indexOf(val) !== -1){
 									dataSelect.push(data[i]);
 								}
 							}
@@ -90,7 +99,7 @@
 					$(_this).find("input").eq(0).on("input",input);
 					$(_this).find(".dataList").on("click","li",function(){
 						var val = $(this).text();
-						if (isBlank===1){
+						if (isBlank!='0'){
 							val =oldVal+" " + $(this).text();
 						}
 						var data = $(this).attr("value");
