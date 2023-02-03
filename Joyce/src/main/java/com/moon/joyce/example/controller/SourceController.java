@@ -99,15 +99,101 @@ public class SourceController extends BaseController {
     }
 
     /**
-     * 下载文件
+     * sql关键字
      * @throws IOException
      */
     @ResponseBody
     @Transactional
     @RequestMapping("/getEditSqlData")
     public Result getEditSqlData() {
-        String[] strings = {"SELECT","FROM","WHERE","DELETE"};
-        return dataResult(true, strings);
+      //  String[] strings = {"SELECT","FROM","WHERE","DELETE","UPDATE","SET","AND","LEFT JOIN","RIGHT JOIN","ON","GROUP BY"};
+        String keyWord = "ADD\tALL\tALTER\n" +
+                "ANALYZE\tAND\tAS\n" +
+                "ASC\tASENSITIVE\tBEFORE\n" +
+                "BETWEEN\tBIGINT\tBINARY\n" +
+                "BLOB\tBOTH\tBY\n" +
+                "CALL\tCASCADE\tCASE\n" +
+                "CHANGE\tCHAR\tCHARACTER\n" +
+                "CHECK\tCOLLATE\tCOLUMN\n" +
+                "CONDITION\tCONNECTION\tCONSTRAINT\n" +
+                "CONTINUE\tCONVERT\tCREATE\n" +
+                "CROSS\tCURRENT_DATE\tCURRENT_TIME\n" +
+                "CURRENT_TIMESTAMP\tCURRENT_USER\tCURSOR\n" +
+                "DATABASE\tDATABASES\tDAY_HOUR\n" +
+                "DAY_MICROSECOND\tDAY_MINUTE\tDAY_SECOND\n" +
+                "DEC\tDECIMAL\tDECLARE\n" +
+                "DEFAULT\tDELAYED\tDELETE\n" +
+                "DESC\tDESCRIBE\tDETERMINISTIC\n" +
+                "DISTINCT\tDISTINCTROW\tp\n" +
+                "DOUBLE\tDROP\tDUAL\n" +
+                "EACH\tELSE\tELSEIF\n" +
+                "ENCLOSED\tESCAPED\tEXISTS\n" +
+                "EXIT\tEXPLAIN\tFALSE\n" +
+                "FETCH\tFLOAT\tFLOAT4\n" +
+                "FLOAT8\tFOR\tFORCE\n" +
+                "FOREIGN\tFROM\tFULLTEXT\n" +
+                "GOTO\tGRANT\tGROUP\n" +
+                "HAVING\tHIGH_PRIORITY\tHOUR_MICROSECOND\n" +
+                "HOUR_MINUTE\tHOUR_SECOND\tIF\n" +
+                "IGNORE\tIN\tINDEX\n" +
+                "INFILE\tINNER\tINOUT\n" +
+                "INSENSITIVE\tINSERT\tINT\n" +
+                "INT1\tINT2\tINT3\n" +
+                "INT4\tINT8\tINTEGER\n" +
+                "INTERVAL\tINTO\tIS\n" +
+                "ITERATE\tJOIN\tKEY\n" +
+                "KEYS\tKILL\tLABEL\n" +
+                "LEADING\tLEAVE\tLEFT\n" +
+                "LIKE\tLIMIT\tLINEAR\n" +
+                "LINES\tLOAD\tLOCALTIME\n" +
+                "LOCALTIMESTAMP\tLOCK\tLONG\n" +
+                "LONGBLOB\tLONGTEXT\tLOOP\n" +
+                "LOW_PRIORITY\tMATCH\tMEDIUMBLOB\n" +
+                "MEDIUMINT\tMEDIUMTEXT\tMIDDLEINT\n" +
+                "MINUTE_MICROSECOND\tMINUTE_SECOND\tMOD\n" +
+                "MODIFIES\tNATURAL\tNOT\n" +
+                "NO_WRITE_TO_BINLOG\tNULL\tNUMERIC\n" +
+                "ON\tOPTIMIZE\tOPTION\n" +
+                "OPTIONALLY\tOR\tORDER\n" +
+                "OUT\tOUTER\tOUTFILE\n" +
+                "PRECISION\tPRIMARY\tPROCEDURE\n" +
+                "PURGE\tRAID0\tRANGE\n" +
+                "READ\tREADS\tREAL\n" +
+                "REFERENCES\tREGEXP\tRELEASE\n" +
+                "RENAME\tREPEAT\tREPLACE\n" +
+                "REQUIRE\tRESTRICT\tRETURN\n" +
+                "REVOKE\tRIGHT\tRLIKE\n" +
+                "SCHEMA\tSCHEMAS\tSECOND_MICROSECOND\n" +
+                "SELECT\tSENSITIVE\tSEPARATOR\n" +
+                "SET\tSHOW\tSMALLINT\n" +
+                "SPATIAL\tSPECIFIC\tSQL\n" +
+                "SQLEXCEPTION\tSQLSTATE\tSQLWARNING\n" +
+                "SQL_BIG_RESULT\tSQL_CALC_FOUND_ROWS\tSQL_SMALL_RESULT\n" +
+                "SSL\tSTARTING\tSTRAIGHT_JOIN\n" +
+                "TABLE\tTERMINATED\tTHEN\n" +
+                "TINYBLOB\tTINYINT\tTINYTEXT\n" +
+                "TO\tTRAILING\tTRIGGER\n" +
+                "TRUE\tUNDO\tUNION\n" +
+                "UNIQUE\tUNLOCK\tUNSIGNED\n" +
+                "UPDATE\tUSAGE\tUSE\n" +
+                "USING\tUTC_DATE\tUTC_TIME\n" +
+                "UTC_TIMESTAMP\tVALUES\tVARBINARY\n" +
+                "VARCHAR\tVARCHARACTER\tVARYING\n" +
+                "WHEN\tWHERE\tWHILE\n" +
+                "WITH\tWRITE\tX509\n" +
+                "XOR\tYEAR_MONTH\tZEROFILL" ;
+        String[] strings = keyWord.split("\t|\n");
+        List<String> list = new ArrayList<>(Arrays.asList(strings));
+        List<String> list2 = new ArrayList<>();
+        for (String s : list) {
+            String str = s.toLowerCase();
+            if (str != null) {
+                list2.add(str);
+            }
+        }
+        list.addAll(list2);
+        list = new ArrayList<>(new HashSet<>(list));
+        return dataResult(true, list);
     }
 
     /**

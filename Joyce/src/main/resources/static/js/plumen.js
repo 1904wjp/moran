@@ -12,7 +12,7 @@
 				height:240
 			};
 			var options = $.extend(defaults,options2);
-			console.log("options2:",options.data);
+		//	console.log("options2:",options.data);
 			return this.each(function(){
 				//创建元素
 				var _this = this,
@@ -80,8 +80,6 @@
 							if (isBlank!=='0'){
 								var valArray = val.split(isBlank);
 								val = valArray[valArray.length-1];
-								console.log(valArray)
-								console.log(isBlank)
 								valArray.pop();
 								oldVal = valArray.join(" ");
 							}
