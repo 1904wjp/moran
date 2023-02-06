@@ -69,6 +69,22 @@ function getTablesByDatabaseName2(){
     });
 }
 
+$("input[name=exe]").click(function () {
+    let  data = {
+        sql:$("input[name=x-sql]").val()
+    }
+    $.ajax({
+        url: '/example/db/executeSimpleSql',
+        type: 'GET',
+        dataType: 'json',
+        data: data,
+    }).done(function (data) {
+        tips(data.rs);
+    }).fail(function (){
+        tips(false,data.msg);
+    });
+});
+
 $("input[name=x-sql]").keydown(function(e){
    // console.log(e.keyCode);
     var text =  $(this).val();

@@ -7,6 +7,7 @@ import com.moon.joyce.example.mapper.ColumnsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +57,20 @@ public class ColumnsServiceImpl implements ColumnsService {
         for (String sql : sqls) {
             jdbcTemplate.execute(sql);
         }
+    }
+
+    @Override
+    public Object execute(String sql) {
+        if (sql.contains("select")||sql.contains("SELECT")){
+            return  jdbcTemplate.queryForList(sql);
+        }
+        if (sql.contains("update")||sql.contains("UPDATE")||
+            sql.equals("delete")||sql.equals("DELETE")||
+            sql.equals("insert")|| sql.equals("INSERT")){
+            jdbcTemplate.execute(sql);
+            return 1;
+        }
+        return null;
     }
 
     @Override

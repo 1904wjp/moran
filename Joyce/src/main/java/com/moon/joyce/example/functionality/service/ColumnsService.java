@@ -40,6 +40,12 @@ public interface ColumnsService {
     void execute(List<String> list);
 
     /**
+     * 执行sql
+     * @param sql
+     * @return
+     */
+    Object execute(String sql);
+    /**
      *  查询表数据
      * @param tableName
      * @return

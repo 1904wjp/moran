@@ -9,6 +9,7 @@ import com.moon.joyce.example.entity.doma.PackageInfo;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.entity.doma.Setting;
+import com.moon.joyce.example.functionality.service.ColumnsService;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import com.moon.joyce.example.functionality.service.PackageInfoService;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +47,8 @@ public class DataSourceController extends BaseController {
     @Autowired
     private PackageInfoService packageInfoService;
 
+    @Autowired
+    private ColumnsService columnsService;
     /**
      * 包页面
      * @return
@@ -91,6 +94,21 @@ public class DataSourceController extends BaseController {
             return R.success("数据源保存成功", dbBaseSetting);
         }
         return R.error("数据源保存失败");
+    }
+
+    /**
+     * 查询数据源
+     * @param sql
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/executeSimpleSql")
+    public Result executeSimpleSql(String sql) {
+        startupDatasource();
+        Object obj = columnsService.execute(sql);
+
+        logger.info("sql执行---》{}",obj.toString());
+        return null;
     }
 
     /**
