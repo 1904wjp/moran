@@ -43,7 +43,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class BaseController extends R {
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     //app链接
     @Value("${app.url}")
     public String appUrl;
@@ -192,10 +192,10 @@ public class BaseController extends R {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            logger.info("数据源关闭成功");
+            logger.warn("数据源关闭成功");
             return;
         }
-         logger.info("数据源关闭失败");
+         logger.warn("数据源关闭失败");
     }
 
     //开启数据源
