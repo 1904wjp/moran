@@ -149,7 +149,7 @@ public class BaseFactory {
      * @return
      * @throws ClassNotFoundException
      */
-    protected Class<?> laodClassByPath(String filePath,ClassLoader classLoader,String start ,String end) throws ClassNotFoundException {
+    protected Class<?> loadClassByPath(String filePath,ClassLoader classLoader,String start ,String end) throws ClassNotFoundException {
         start = Objects.isNull(start)?defParent:start;
         end = Objects.isNull(end)?fileType:end;
         String classPath = filePath.substring(filePath.indexOf(start), filePath.indexOf("."+end)).replace("\\", ".");
@@ -304,7 +304,7 @@ public class BaseFactory {
      * @param fs2
      * @return
      */
-    private Field[] addFields(Field[] fs1, Field[] fs2) {
+    public static Field[] addFields(Field[] fs1, Field[] fs2) {
         if (Objects.isNull(fs1) || fs1.length == 0) {
             return fs2;
         }
@@ -318,6 +318,27 @@ public class BaseFactory {
                 fields[i] = fs1[i];
             } else {
                 fields[i] = fs2[index++];
+            }
+        }
+        return fields;
+    }
+    /**
+     * 计算总属性集合
+     * @param fs1
+     * @param fs2
+     * @return
+     */
+    public static  Field[] addFields(Field[] fs1, Field fs2) {
+        if (Objects.isNull(fs2) ) {
+            return fs1;
+        }
+        Field[] fields = new Field[fs1.length + 1];
+        int index = 0;
+        for (int i = 0; i < fields.length; i++) {
+            if (i < fs1.length) {
+                fields[i] = fs1[i];
+            } else {
+                fields[i] = fs2;
             }
         }
         return fields;

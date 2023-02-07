@@ -35,7 +35,7 @@ public class AutoCreate extends BaseFactory implements TableFactory {
             ClassLoader classLoader = getClassLoader();
             Class<?> aClass = null;
             try {
-                aClass = laodClassByPath(file.getAbsolutePath(), classLoader, null, null);
+                aClass = loadClassByPath(file.getAbsolutePath(), classLoader, null, null);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -62,7 +62,7 @@ public class AutoCreate extends BaseFactory implements TableFactory {
             ClassLoader classLoader = getClassLoader();
             Class<?> aClass = null;
             try {
-                aClass = laodClassByPath(file.getAbsolutePath(), classLoader, null, null);
+                aClass = loadClassByPath(file.getAbsolutePath(), classLoader, null, null);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }

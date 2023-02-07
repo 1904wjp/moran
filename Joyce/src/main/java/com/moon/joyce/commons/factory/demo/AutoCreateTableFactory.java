@@ -207,7 +207,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
             if (!filePath.endsWith(".class")) {
                 return;
             }
-            Class<?> loadClass = laodClassByPath(filePath, classLoader, "com", "class");
+            Class<?> loadClass = loadClassByPath(filePath, classLoader, "com", "class");
             if (loadClass.isAnnotationPresent(Table.class)) {
                 //类注解获取并且填充
                 Table table = loadClass.getAnnotation(Table.class);
@@ -403,7 +403,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
      * @param columnEntity
      * @param column
      */
-    private ColumnEntity createColumnByColumnAn(ColumnEntity columnEntity, Column column) {
+    private void createColumnByColumnAn(ColumnEntity columnEntity, Column column) {
         columnEntity.setAuto(column.auto());
         columnEntity.setComment(column.comment());
         columnEntity.setKey(column.isKey());
@@ -421,7 +421,6 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
         if (column.isKey()) {
             columnEntity.setNotNull(true);
         }
-        return columnEntity;
     }
 
     /**
