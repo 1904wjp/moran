@@ -8,7 +8,7 @@ import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.moon.joyce.commons.utils.CommonUtils;
 
-import java.util.Properties;
+
 
 /**
  * 支付宝面对面付款
