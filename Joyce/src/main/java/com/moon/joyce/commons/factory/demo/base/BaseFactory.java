@@ -1,7 +1,6 @@
 package com.moon.joyce.commons.factory.demo.base;
 
 import com.moon.joyce.commons.annotation.auto.Table;
-import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.functionality.entity.doma.JoyceException;
 
