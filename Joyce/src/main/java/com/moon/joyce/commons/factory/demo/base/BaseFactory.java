@@ -58,7 +58,7 @@ public class BaseFactory {
      * @return
      */
     protected Set<String> getAllTypes(){
-        HashSet<String> set = new HashSet<>();
+        Set<String> set = new HashSet<>();
         for (int i = 0; i < typeName.length; i++) {
             if ((i+ INDEX)%3 == 0){
                 continue;
@@ -327,12 +327,11 @@ public class BaseFactory {
      * @param fs2
      * @return
      */
-    public static  Field[] addFields(Field[] fs1, Field fs2) {
+    public static  Field[] addField(Field[] fs1, Field fs2) {
         if (Objects.isNull(fs2) ) {
             return fs1;
         }
         Field[] fields = new Field[fs1.length + 1];
-        int index = 0;
         for (int i = 0; i < fields.length; i++) {
             if (i < fs1.length) {
                 fields[i] = fs1[i];

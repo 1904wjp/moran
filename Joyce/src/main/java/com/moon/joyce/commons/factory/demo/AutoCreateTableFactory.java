@@ -897,7 +897,9 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
             for (Object value : map.values()) {
                 logger.info("------------>{}",columnEntities.get(index).getType());
                 if (StringsUtils.equalsIgnoreCase(columnEntities.get(index).getType(),"varchar","text","char","datetime")||Objects.isNull(columnEntities.get(index).getType())){
-                    builder.append("'").append(value).append("'");
+                    builder.append("'")
+                            .append(value)
+                            .append("'");
                 }else {
                     builder.append(value);
                 }
