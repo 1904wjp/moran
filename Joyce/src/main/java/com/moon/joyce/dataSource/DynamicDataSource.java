@@ -57,7 +57,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
                 Class.forName(driveClass);
                 DriverManager.getConnection(url, username, password);// 相当于连接数据库
             } catch (Exception e) {
-                logger.warn("数据库信息填写有误");
+                logger.error("数据库信息填写有误");
                 return false;
             }
 //            HikariDataSource druidDataSource = new HikariDataSource();
@@ -152,7 +152,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
             logger.info("该数据源:"+dataSourceName+"可正常运行");
             return true;
         } catch (Exception e) {
-            logger.info("该数据源:"+dataSourceName+"无法正常运行,Exception:"+e);
+            logger.error("该数据源:"+dataSourceName+"无法正常运行,Exception:"+e);
             return false;
         }
     }
@@ -219,7 +219,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         log.info("正在检查数据源："+datasourceId);
         Map<Object, Object> dynamicTargetDataSources2 = this.dynamicTargetDataSources;
         if (dynamicTargetDataSources2.containsKey(datasourceId)) {
-            log.info("数据源"+datasourceId+"之前已经创建，准备测试数据源是否正常...");
+            log.warn("数据源"+datasourceId+"之前已经创建，准备测试数据源是否正常...");
             //DataSource druidDataSource = (DataSource) dynamicTargetDataSources2.get(datasourceId);
             DruidDataSource druidDataSource = (DruidDataSource) dynamicTargetDataSources2.get(datasourceId);
             boolean rightFlag = true;
@@ -237,9 +237,9 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
             } catch (Exception e) {
                 log.error(e.getMessage(),e); //把异常信息打印到日志文件
                 rightFlag = false;
-                log.info("缓存数据源"+datasourceId+"已失效，准备删除...");
+                log.warn("缓存数据源"+datasourceId+"已失效，准备删除...");
                 if(delDatasources(datasourceId)) {
-                    log.info("缓存数据源删除成功");
+                    log.warn("缓存数据源删除成功");
                 } else {
                     log.warn("缓存数据源删除失败");
                 }
@@ -249,10 +249,10 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
                 }
             }
             if(rightFlag) {
-                log.info("不需要重新创建数据源");
+                log.warn("不需要重新创建数据源");
                 return;
             } else {
-                log.info("准备重新创建数据源...");
+                log.warn("准备重新创建数据源...");
                 createDataSource(dataSource);
                 log.info("重新创建数据源完成");
             }

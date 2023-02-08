@@ -33,6 +33,6 @@ public class DbContextHolder {
      */
     public static void deleteDataSource(){
         contextHolder.remove();
-        log.info("移除对应数据源，切回主数据源");
+        log.warn("移除对应数据源，切回主数据源");
     }
 }

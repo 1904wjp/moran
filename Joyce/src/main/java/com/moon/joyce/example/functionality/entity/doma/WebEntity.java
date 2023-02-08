@@ -133,5 +133,6 @@ public class WebEntity extends BaseEntity   {
     /**
      * 过滤集合
      */
+    @TableField(exist = false)
     List<String> filterColumnNames;
 }

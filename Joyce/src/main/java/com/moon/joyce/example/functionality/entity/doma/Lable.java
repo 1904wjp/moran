@@ -31,4 +31,6 @@ public class Lable extends BaseEntity {
     @TableField(value = "code")
     @Column(name = "code",type = Type.VARCHAR,comment = "标签代码")
     private String code;
+    @Column(comment = "使用类型")
+    private String type;
 }
