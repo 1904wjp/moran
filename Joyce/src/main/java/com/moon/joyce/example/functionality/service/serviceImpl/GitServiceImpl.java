@@ -1,6 +1,7 @@
 package com.moon.joyce.example.functionality.service.serviceImpl;
 
 import com.moon.joyce.dataSource.DbContextHolder;
+import com.moon.joyce.example.entity.doma.GitInfo;
 import com.moon.joyce.example.functionality.service.GitService;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
@@ -95,5 +96,15 @@ public class GitServiceImpl implements GitService {
                 git.close();
             }
         }
+    }
+
+    @Override
+    public void gitClone(GitInfo gitInfo) {
+        gitClone(gitInfo.getProPath(),gitInfo.getUsername(),gitInfo.getPassword(),gitInfo.getRemoteUR());
+    }
+
+    @Override
+    public void CommitCode(GitInfo gitInfo) {
+        gitClone(gitInfo.getProPath(),gitInfo.getUsername(),gitInfo.getPassword(),gitInfo.getRemoteUR());
     }
 }
