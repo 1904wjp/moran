@@ -392,6 +392,32 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
         }
     }
 
+
+    /**
+     * 压缩文件并且下载
+     * @param zipName
+     * @param response
+     * @param filePath
+     * @throws IOException
+     */
+    public static void downloadZip(String zipName, HttpServletResponse response,String filePath ) throws IOException {
+        File file = new File(filePath);
+        ZipOutputStream out = null;
+        out = FileUtils.getZipObj(zipName, response);
+        if (file.isDirectory()){
+            File[] files = file.listFiles();
+            if (files.length!=0){
+                for (File f : files) {
+                    doCompress(f, out);
+                    response.flushBuffer();
+                }
+            }
+        }else if (file.isFile()){
+            doCompress(filePath,out);
+        }
+
+    }
+
     /**
      * 文件压缩
      * @param srcFile 目录或者单个文件
@@ -412,9 +438,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
     public static void doCompress(String filelName, ZipOutputStream out) throws IOException {
         File file = createFile(filelName);
         doCompress(file, out);
-        if (file.exists()) {
-            file.delete();
-        }
     }
 
     public static void doCompress(File file, ZipOutputStream out) throws IOException {
@@ -1096,6 +1119,29 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
         return false;
     }
 
+
+    /**
+     * 删除文件
+     * @param path
+     * @return
+     */
+    public static void deleteFileOrDir(String path) {
+        File file = new File(path);
+        deleteFileOrDir(file);
+    }
+    /**
+     * 删除文件
+     * @param file
+     * @return
+     */
+    public static void deleteFileOrDir(File file) {
+        if (file.isFile()){
+            deleteFile(file);
+        }else if (file.isDirectory()){
+            deleteFileDir(file);
+        }
+    }
+
     /**
      * 规定时间类检测文件是否完成
      * @param path
@@ -1516,18 +1562,20 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
     public static void clearFiles(String workspaceRootPath){
         File file = new File(workspaceRootPath);
         if(file.exists()){
-            deleteFile2(file);
+            deleteFileDir(file);
         }
     }
-    public static void deleteFile2(File file){
+    public static void deleteFileDir(File file){
         if(file.isDirectory()){
             File[] files = file.listFiles();
             for(int i=0; i<files.length; i++){
-                deleteFile2(files[i]);
+                deleteFileDir(files[i]);
             }
         }
         file.delete();
     }
+
+
 
 }
 
