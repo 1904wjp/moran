@@ -357,17 +357,20 @@
             <version>6.0</version>
         </dependency>
 
+        <!--java操作git-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.12.0.202106070339-r</version>
         </dependency>
-     <!--   &lt;!&ndash;反射工具&ndash;&gt;
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.11</version>
-        </dependency>-->
+
+
+        <!--   &lt;!&ndash;反射工具&ndash;&gt;
+           <dependency>
+               <groupId>org.reflections</groupId>
+               <artifactId>reflections</artifactId>
+               <version>0.9.11</version>
+           </dependency>-->
 
     </dependencies>
 

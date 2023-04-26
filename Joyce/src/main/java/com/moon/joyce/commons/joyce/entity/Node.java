@@ -27,8 +27,14 @@ public class Node<T> implements DataConstructor<T>, Serializable {
 
     public Node() { }
 
+
+
     public Node<T> node() {
         return this.first.next;
+    }
+
+    public  Node(T value) {
+        this.value = value;
     }
 
     /**
