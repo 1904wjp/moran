@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Table;
+import com.moon.joyce.example.entity.dto.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ import java.io.File;
 @NoArgsConstructor
 @TableName("git_info")
 @Table(content = "git用户信息")
-public class GitInfo {
+public class GitInfo extends Page {
     @Column(exist = false)
     @TableField(exist = false)
     private String proName;
