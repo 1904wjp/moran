@@ -380,9 +380,6 @@ public class StringsUtils extends StringUtils implements Serializable {
      * @return
      */
     public static boolean equalsIgnoreCase(String... strs) {
-        if (strs.length < 2) {
-            throw new JoyceException("长度大于等于2");
-        }
         boolean flag = false;
         for (int i = 1; i < strs.length; i++) {
             if (strs[0].equalsIgnoreCase(strs[i])) {
