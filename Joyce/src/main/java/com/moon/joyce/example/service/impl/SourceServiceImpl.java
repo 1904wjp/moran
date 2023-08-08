@@ -1,5 +1,6 @@
 package com.moon.joyce.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.annotation.RedisValueComponet;
@@ -27,6 +28,7 @@ import java.util.Objects;
 @Service
 @RedisValueComponet("SourceService")
 public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> implements SourceService , CommonService {
+    ObjectWrapper<Source> objectWrapper = new ObjectWrapper<>();
     @Autowired
     private SourceMapper sourceMapper;
     @Override
@@ -41,20 +43,20 @@ public class SourceServiceImpl extends ServiceImpl<SourceMapper, Source> impleme
 
     @Override
     public Source getOne(Source source) {
-        QueryWrapper<Source> wrapper = new QueryWrapper<>();
+        objectWrapper.flash();
         if (Objects.nonNull(source.getApplyStatus())){
-            wrapper.eq("apply_status",source.getApplyStatus());
+            objectWrapper.wrapper.eq(Source::getApplyStatus,source.getApplyStatus());
         }
         if (StringUtils.isNoneBlank(source.getSourceName())){
-            wrapper.eq("source_name",source.getSourceName());
+            objectWrapper.wrapper.eq(Source::getSourceName,source.getSourceName());
         }
         if (Objects.nonNull(source.getUserId())){
-            wrapper.eq("user_id",source.getUserId());
+            objectWrapper.wrapper.eq(Source::getUserId,source.getUserId());
         }
         if (Objects.nonNull(source.getType())){
-            wrapper.eq("type",source.getType());
+            objectWrapper.wrapper.eq(Source::getType,source.getType());
         }
-        return baseMapper.selectOne(wrapper);
+        return baseMapper.selectOne(objectWrapper.wrapperi);
     }
 
     @Override

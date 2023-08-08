@@ -7,6 +7,7 @@ import com.moon.joyce.example.service.serviceControllerDetails.SourceControllerD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -25,10 +26,10 @@ public class SourceControllerDetailServiceImpl implements SourceControllerDetail
         source.setApplyStatus(Constant.APPLY_STATUS);
         source.setUserId(source.getUserId());
         source.setType(source.getType());
-        Source one = sourceService.getOne(source);
-        if (Objects.nonNull(one)) {
-            one.setApplyStatus(Constant.SPARE_STATUS);
-            return sourceService.saveOrUpdate(one);
+        List<Source> list = sourceService.getList(source);
+        if (!list.isEmpty()) {
+            list.forEach(x->x.setApplyStatus(Constant.SPARE_STATUS));
+            return sourceService.saveOrUpdateBatch(list);
         }
         return true;
     }
