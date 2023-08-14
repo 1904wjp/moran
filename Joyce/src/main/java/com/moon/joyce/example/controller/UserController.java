@@ -243,7 +243,7 @@ public class UserController extends BaseController {
         if (StringUtils.isNoneBlank(nickname)) {
             userChartVos = userChartVos.stream().filter(x -> x.getNickname().equals(nickname)).collect(Collectors.toList());
         }
-                                               return success(userChartVos);
+        return success(userChartVos);
     }
 
     /**

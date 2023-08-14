@@ -179,6 +179,7 @@ file:
   temp: ${file.prefix}:/${app.name}/temp
   config:
     path: ${file.prefix}:/${app.name}/files/config/
+    ueColorFileName: ${file.config.path}/ue_color_file/theme
   upload:
     access: /static/source/
     relative: ${file.upload.access}**

@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.util.ListUtils;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -49,6 +51,8 @@ public class FileServiceImpl implements FileService {
     private String access;
     @Value("${file.config.path}")
     private String confPath;
+    @Value("${file.config.ueColorFileName}")
+    private String ueColorFileName;
     @Value("${file.temp}")
     private  String fileUploadTempDir;
     @Value("${file.upload.path}")
@@ -111,8 +115,15 @@ public class FileServiceImpl implements FileService {
             wrapper.lambda().isNotNull(SysMenu::getName);
             List<SysMenu> sysMenus = sysMenuMapper.selectList(wrapper);
             List<PageComponent> pageComponents = new ArrayList<>();
+            Map<String, String> params;
             for (SysMenu sysMenu : sysMenus) {
-                Map<String, String> params = new HashMap<>();
+                params = new HashMap<>();
+                if (sysMenu.getId().equals(6L)){
+                    List<File> colorFiles = FileUtils.getFilesByMkdirPath(ueColorFileName);
+                    String str = colorFiles.stream().map(File::getName).collect(Collectors.toList()).toString();
+                    String colors = str.replace("[", "").replace("]", "").replace(".css","");
+                    params.put("ueColor",colors);
+                }
                 params.put(Constant.FONTSIZE_DEFAULT_NAME, Constant.FONTSIZE_DEFAULT_SIZE);
                 params.put(Constant.FILE_DEFAULT_SET_NAME, Constant.FILE_DEFAULT_URL);
                 params.put("first_login_date_"+ UUIDUtils.getUUID(), DateUtils.dateForMat("s",new Date()));
