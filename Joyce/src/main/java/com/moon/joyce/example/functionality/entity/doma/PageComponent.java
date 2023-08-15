@@ -17,6 +17,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 public class PageComponent {
+    private Long id;
     private String name;
     private Map<String,String> params;
     private String backgroundUrl;

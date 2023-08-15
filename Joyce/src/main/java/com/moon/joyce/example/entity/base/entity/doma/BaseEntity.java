@@ -18,7 +18,7 @@ import java.util.Objects;
  * @desc 基础类实体类
  */
 @Table(name = "基础类",isParent = true)
-public class BaseEntity  implements Serializable {
+public class BaseEntity  extends RootEntity{
     private static final long serialVersionUID = 9019164396662157010L;
    /* @Id*/
 

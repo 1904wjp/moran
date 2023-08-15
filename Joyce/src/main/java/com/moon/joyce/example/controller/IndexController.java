@@ -121,10 +121,10 @@ public class IndexController extends BaseController {
 
         User user = getSessionUser();
         //文件内容
-        String filePathName = confPath + user.getUsername() + "_config.xml";
+        String filePathName = confPath + user.getId() + "_config.xml";
         //加载配置文件
         Setting setting = new Setting();
-        fileService.writeJoyceConfig(user.getUsername(),null);
+        fileService.writeJoyceConfig(user.getId().toString(),null);
         Map<String, Object> map = new HashMap<>();
         File file = new File(filePathName);
         if (file.exists()){

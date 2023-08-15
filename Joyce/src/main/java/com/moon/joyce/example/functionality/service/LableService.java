@@ -20,4 +20,11 @@ public interface LableService extends IService<Lable> {
      * @return
      */
     List<Lable> getlables(DictAndLable dictAndLable);
+
+    /**
+     * 根据条件lale查询合适的
+     * @param lable
+     * @return
+     */
+    Lable getOne(Lable lable);
 }

@@ -4,13 +4,14 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 自定义获取指定sessionId的session
  */
 public class MySessionContext {
     private static MySessionContext instance;
-    private HashMap mymap;
+    private Map mymap;
 
     private MySessionContext() {
         mymap = new HashMap();

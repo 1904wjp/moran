@@ -343,4 +343,9 @@ public class Constant {
     public static final String NOTIFY_URL = "http://127.0.0.1/notifyUrl";
     //支付宝同步通知路径,也就是当付款完毕后跳转本项目的页面,可以不是公网地址
     public static final String RETURN_URL = "http://localhost:8080/returnUrl";
+
+    /**
+     * ue配置
+     */
+    public static final String SETTING_UE_FILE = "settingUeFile";
 }

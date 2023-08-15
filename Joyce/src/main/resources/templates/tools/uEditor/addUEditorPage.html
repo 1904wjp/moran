@@ -70,59 +70,75 @@
 <script type="text/javascript">
     var testEditor;
     $(function () {
-        testEditor = editormd("article_content_info", {
-            width: "95%",
-            height: 400,
-            syncScrolling: "single",
-            path: "/static/editor/lib/",
-            saveHTMLToTextarea: true,    // 保存 HTML 到 Textarea
-            emoji: true,
-            theme: "dark",//工具栏主题
-            previewTheme: "dark",//预览主题
-            editorTheme: "pastel-on-dark",//编辑主题
-            tex: true,                   // 开启科学公式TeX语言支持，默认关闭
-            flowChart: true,             // 开启流程图支持，默认关闭
-            sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
-            /*fullscreen: true,    */       //全屏开启
-            //图片上传
-            imageUpload: true,
-            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL: "/example/uedit/upload",
-            onload: function () {
-              //  console.log('onload', this);
-            },
-            /*指定需要显示的功能按钮*/
-            toolbarIcons: function () {
-                return ["undo", "redo", "|",
-                    "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
-                    "h1", "h2", "h3", "h4", "h5", "h6", "|",
-                    "list-ul", "list-ol", "hr", "|",
-                    "link", "reference-link", "image", "code", "preformatted-text",
-                    "code-block", "table", "datetime", "emoji", "html-entities", "pagebreak", "|",
-                    "goto-line", "watch", "preview", "fullscreen", "clear", "search", "|",
-                    "help", "info", "releaseIcon", "index"]
-            },
-
-            /*自定义功能按钮，下面我自定义了2个，一个是发布，一个是返回首页*/
-            toolbarIconTexts: {
-                releaseIcon: "<span id='article_save_btn' bgcolor=\"gray\">发布</span>",
-                index: "<span bgcolor=\"red\">返回</span>",
-            },
-
-            /*给自定义按钮指定回调函数*/
-            toolbarHandlers: {
-                releaseIcon: function () {
-                    //表单提交
-                    /* mdEditorForm.method = "post";
-                     mdEditorForm.action = "/example/uedit/saveArticle";//提交至服务器的路径
-                     mdEditorForm.submit();*/
-                    $("#add_article_info").modal('show');
+        $.ajax({
+            url: '/example/uedit/setting',
+            type: 'POST',
+            dataType: 'json'
+        }).done(function (data) {
+            if (data.rs) {
+                var  editorTheme = "pastel-on-dark";
+                var params = data.data.params;
+                editorTheme = params.ueColor.split(",")[params.off].replace(/\s+/g,"");
+                console.log("---》",editorTheme)
+                testEditor = editormd("article_content_info", {
+                width: "95%",
+                height: 400,
+                syncScrolling: "single",
+                path: "/static/editor/lib/",
+                saveHTMLToTextarea: true,    // 保存 HTML 到 Textarea
+                emoji: true,
+                theme: "dark",//工具栏主题
+                previewTheme: "dark",//预览主题
+                editorTheme: editorTheme,//编辑主题
+                tex: true,                   // 开启科学公式TeX语言支持，默认关闭
+                flowChart: true,             // 开启流程图支持，默认关闭
+                sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
+                /*fullscreen: true,    */       //全屏开启
+                //图片上传
+                imageUpload: true,
+                imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL: "/example/uedit/upload",
+                onload: function () {
+                  //  console.log('onload', this);
                 },
-                index: function () {
-                    toList("/example/uedit/uEditorListPage");
+                /*指定需要显示的功能按钮*/
+                toolbarIcons: function () {
+                    return ["undo", "redo", "|",
+                        "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
+                        "h1", "h2", "h3", "h4", "h5", "h6", "|",
+                        "list-ul", "list-ol", "hr", "|",
+                        "link", "reference-link", "image", "code", "preformatted-text",
+                        "code-block", "table", "datetime", "emoji", "html-entities", "pagebreak", "|",
+                        "goto-line", "watch", "preview", "fullscreen", "clear", "search", "|",
+                        "help", "info", "releaseIcon", "index"]
+                },
+
+                /*自定义功能按钮，下面我自定义了2个，一个是发布，一个是返回首页*/
+                toolbarIconTexts: {
+                    releaseIcon: "<span id='article_save_btn' bgcolor=\"gray\">发布</span>",
+                    index: "<span bgcolor=\"red\">返回</span>",
+                },
+
+                /*给自定义按钮指定回调函数*/
+                toolbarHandlers: {
+                    releaseIcon: function () {
+                        //表单提交
+                        /* mdEditorForm.method = "post";
+                         mdEditorForm.action = "/example/uedit/saveArticle";//提交至服务器的路径
+                         mdEditorForm.submit();*/
+                        $("#add_article_info").modal('show');
+                    },
+                    index: function () {
+                        toList("/example/uedit/uEditorListPage");
+                    }
                 }
-            }
         });
+    } else {
+             tips(data.rs,data.msg)
+            }
+            }).fail(function () {
+                tips(false,data.msg)
+            });
     });
     window.onbeforeunload = function () {
     }

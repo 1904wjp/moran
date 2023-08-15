@@ -2,12 +2,17 @@ package com.moon.joyce.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
+import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.doma.Article;
 import com.moon.joyce.example.entity.vo.PageVo;
+import com.moon.joyce.example.functionality.entity.doma.Lable;
+import com.moon.joyce.example.functionality.entity.doma.PageComponent;
 import com.moon.joyce.example.functionality.entity.doma.Result;
+import com.moon.joyce.example.functionality.entity.doma.Setting;
 import com.moon.joyce.example.functionality.service.FileService;
+import com.moon.joyce.example.functionality.service.LableService;
 import com.moon.joyce.example.functionality.service.UEditorService;
 import com.moon.joyce.example.service.UUService;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -43,6 +49,8 @@ public class UEditorController extends BaseController {
     private UEditorService uEditorService;
     @Autowired
     private UUService uuService;
+    @Autowired
+    private LableService lableService;
     /**
      * 博客编辑主页
      * @return
@@ -157,5 +165,35 @@ public class UEditorController extends BaseController {
         List<String> list = StringsUtils.strToList(ids);
         boolean del = uEditorService.removeByIds(list);
         return R.dataResult(del,"删除失败","删除成功");
+    }
+    /**
+     * 界面设置
+     * @param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/setting")
+    public Result setting(){
+        Setting setting = (Setting) getSessionValue(getSessionUserId() + Constant.CURRENT_SETTING);
+        Map<String, Object> map = setting.getMap();
+        Map<String, List<PageComponent>> settingUeFile = (Map<String, List<PageComponent>> )map.get(Constant.SETTING_UE_FILE);
+        List<PageComponent> init_page_config = settingUeFile.get("init_page_config");
+        PageComponent pc = null;
+        for (PageComponent pageComponent : init_page_config) {
+            if (pageComponent.getId().equals(6L)){
+                pc = pageComponent;
+                Lable lable = new Lable();
+                lable.setCreateIds(getSessionUserId());
+                lable.setType("ue");
+                Lable dbLable= lableService.getOne(lable);
+                String code = "0";
+                if (dbLable!=null){
+                    code = dbLable.getCode();
+                }
+                pc.getParams().put("off",code);
+                break;
+            }
+        }
+        return R.dataResult(Objects.nonNull(pc),pc);
     }
 }

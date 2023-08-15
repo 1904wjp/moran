@@ -28,6 +28,40 @@ public class StringsUtils extends StringUtils implements Serializable {
     }
 
     /**
+     * 字符替换
+     * 格式：替换字符-目标字符
+     * 多个用,隔开
+     * @param strs
+     * @param oldAndTarget
+     * @return
+     */
+    public static String replaceAll(String strs,String oldAndTarget){
+        List<String> list = strToList(oldAndTarget);
+        for (String str : list) {
+            String[] splits = str.split("-");
+            strs = strs.replace(splits[0],splits[1]);
+        }
+        return strs;
+    };
+
+    /**
+     * 字符替换
+     *  格式：替换字符-目标字符
+     *  多个用,隔开
+     * @param strs
+     * @param old
+     * @param target
+     * @return
+     */
+    public static String replaceAll(String strs,String old,String target){
+        List<String> list = strToList(old);
+        for (String str : list) {
+            strs =  strs.replace(str,target);
+        }
+        return strs;
+    };
+
+    /**
      * 字符串转集合
       * @param str
      * @return

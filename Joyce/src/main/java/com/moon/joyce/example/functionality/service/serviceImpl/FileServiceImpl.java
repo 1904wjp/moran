@@ -42,11 +42,11 @@ import java.util.stream.Collectors;
  */
 @Service
 public class FileServiceImpl implements FileService {
-    private Logger logger =  LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${file.upload.path}")
     private String sysPath;
-/*    @Value("${file.upload.relative}")
-    private String relationImg;*/
+    /*    @Value("${file.upload.relative}")
+        private String relationImg;*/
     @Value("${file.upload.access}")
     private String access;
     @Value("${file.config.path}")
@@ -54,9 +54,14 @@ public class FileServiceImpl implements FileService {
     @Value("${file.config.ueColorFileName}")
     private String ueColorFileName;
     @Value("${file.temp}")
-    private  String fileUploadTempDir;
+    private String fileUploadTempDir;
     @Value("${file.upload.path}")
-    private  String fileUploadDir ;
+    private String fileUploadDir;
+
+
+    //ueCss文件名称统计
+    static String ueCssFileNameArrayStr;
+
     @Autowired
     private SysMenuMapper sysMenuMapper;
     @Resource
@@ -92,17 +97,17 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Map <String, List<PageComponent>> readJoyceConfig(String username) {
-        String filePathName = confPath + username + "_config.xml";
+    public Map <String, List<PageComponent>> readJoyceConfig(String userId) {
+        String filePathName = confPath + userId + "_config.xml";
         logger.info("正在读取{}文件",filePathName);
         Map<String, List<PageComponent>> map = FileUtils.readXmlConfig(filePathName);
         return map;
     }
 
     @Override
-    public boolean writeJoyceConfig(String username, Map<String, List<PageComponent>> map) {
+    public boolean writeJoyceConfig(String userId, Map<String, List<PageComponent>> map) {
         //文件全路径
-        String filePathName = confPath + username + "_config.xml";
+        String filePathName = confPath + userId + "_config.xml";
         File file = new File(filePathName);
         if (!file.getParentFile().exists()){
             file.getParentFile().mkdirs();
@@ -119,16 +124,21 @@ public class FileServiceImpl implements FileService {
             for (SysMenu sysMenu : sysMenus) {
                 params = new HashMap<>();
                 if (sysMenu.getId().equals(6L)){
-                    List<File> colorFiles = FileUtils.getFilesByMkdirPath(ueColorFileName);
-                    String str = colorFiles.stream().map(File::getName).collect(Collectors.toList()).toString();
-                    String colors = str.replace("[", "").replace("]", "").replace(".css","");
-                    params.put("ueColor",colors);
+                    if (Objects.isNull(ueCssFileNameArrayStr)){
+                        List<File> colorFiles = FileUtils.getFilesByMkdirPath(ueColorFileName);
+                        ueCssFileNameArrayStr = StringsUtils.replaceAll(colorFiles.stream().
+                                map(File::getName)
+                                .collect(Collectors.toList())
+                                .toString(),"[,],.css","");
+                    }
+                    params.put("ueColor",ueCssFileNameArrayStr);
                 }
                 params.put(Constant.FONTSIZE_DEFAULT_NAME, Constant.FONTSIZE_DEFAULT_SIZE);
                 params.put(Constant.FILE_DEFAULT_SET_NAME, Constant.FILE_DEFAULT_URL);
-                params.put("first_login_date_"+ UUIDUtils.getUUID(), DateUtils.dateForMat("s",new Date()));
+                params.put("login_date_"+ UUIDUtils.getUUID(), DateUtils.dateForMat("s",new Date()));
                 PageComponent pageComponent =
                         PageComponent.builder()
+                        .id(sysMenu.getId())
                         .name(sysMenu.getName())
                         .params(params)
                         .backgroundType(Constant.BACKGROUND_DEFAULT_TYPE)
@@ -145,7 +155,7 @@ public class FileServiceImpl implements FileService {
             FileUtils.deleteFile(filePathName);
             FileUtils.writeConfigXml(filePathName,map);
         }
-        if (FileUtils.fileExist(file,60) && !readJoyceConfig(username).isEmpty()){
+        if (FileUtils.fileExist(file,60) && !readJoyceConfig(userId).isEmpty()){
             return true;
         }
         return false;

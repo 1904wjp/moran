@@ -14,6 +14,7 @@ import com.moon.joyce.example.entity.doma.UU;
 import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.entity.vo.UserChartVo;
+import com.moon.joyce.example.functionality.entity.doma.PageComponent;
 import com.moon.joyce.example.functionality.entity.doma.RequestCount;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.entity.doma.Setting;
@@ -434,7 +435,7 @@ public class UserController extends BaseController {
            /* if (sessionUsers.contains(dbUser)){
                 return error("用户已存在");
             }*/
-            boolean rs = fileService.writeJoyceConfig(user.getUsername(), null);
+            boolean rs = fileService.writeJoyceConfig(dbUser.getId().toString(), null);
             if (!rs) {
                 return error("初始化用户文件失败");
             }
@@ -465,6 +466,11 @@ public class UserController extends BaseController {
                 Setting currentSetting = userServiceControllerDetailService.checkData(getSessionUser().getId());
                 if (Objects.nonNull(currentSetting)) {
                     logger.info(username + "======>设置装配中");
+                    Map<String, List<PageComponent>> settingUeFile = fileService.readJoyceConfig(dbUser.getId().toString());
+                    Map<String, Object> map = currentSetting.getMap();
+                   // System.out.println("-----<<.>>>"+settingUeFile.toString());
+                    map.put(Constant.SETTING_UE_FILE,settingUeFile);
+                    currentSetting.setMap(map);
                     setSession(getSessionUserId() + Constant.CURRENT_SETTING, currentSetting);
                 }
             }

@@ -32,10 +32,10 @@ public interface FileService {
 
     /**
      * 读取Joyce用户设置配置
-     * @param username
+     * @param userId
      * @return
      */
-    Map<String, List<PageComponent>> readJoyceConfig(String username);
+    Map<String, List<PageComponent>> readJoyceConfig(String userId);
 
     /**
      * 设置Joyce用户设置配置

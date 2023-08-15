@@ -184,6 +184,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
                 while (settingIterator.hasNext()) {
                     PageComponent pageComponent = new PageComponent();
                     Element object = settingIterator.next();
+                    pageComponent.setId(Long.valueOf(object.attributeValue("id")));
                     pageComponent.setName(object.attributeValue("name"));
                     Iterator<Element> objectIterator = object.elementIterator();
                     while (objectIterator.hasNext()) {
@@ -258,6 +259,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
             }
             for (int i = 0; i < entry.getValue().size(); i++) {
                 Element obj = element.addElement("object");
+                obj.addAttribute("id",entry.getValue().get(i).getId().toString());
                 obj.addAttribute("name", entry.getValue().get(i).getName());
                 Element oElement = obj.addElement("obj_map");
                 oElement.addAttribute("name", "params");

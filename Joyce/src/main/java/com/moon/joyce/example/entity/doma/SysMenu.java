@@ -76,6 +76,7 @@ public class SysMenu extends Page {
     @Column(comment = "菜单标识")
     private String val;
 
+
     /**
      * 排版自定义
      * @param sysMenus
