@@ -3,6 +3,10 @@
 	<title>查看内外相册</title>
 </head>
 <link  rel="stylesheet" th:href="@{/static/css/source/album.css}"/>
+<div class="log">
+	<head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
+<input class="title" type="hidden" value="al"/>
 <input id="album_id" type="hidden" th:value="${id}"/>
 <!--/*����������*/-->
 <div class="wrap">

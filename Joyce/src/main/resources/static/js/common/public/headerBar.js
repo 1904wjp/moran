@@ -2,6 +2,7 @@
     if ($(".main_type").val()!=3){
         $('#app_bar').hide();
     }
+    //$('#return').hide();
     var val = $('.title').val();
    /* var menuList = [{
         id: 0,
@@ -82,6 +83,7 @@
         if (data.rs){
             var menuList = data.data;
             let menu = $('#menu_bar');
+            //console.log("----->",menuList)
             for (i = 0, len = menuList.length; i < len; i++) {
                 if (menuList[i].parentId == 0) {
                     if (menuList[i].childs.length == 0) {
@@ -94,6 +96,9 @@
                         if (val == menuList[i].val) {
                             let temp = " <li class='active'><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a><ul>";
                             for (let j = 0; j < menuList[i].childs.length; j++) {
+                                if (menuList[menuList[i].childs[j]]==null){
+                                    continue;
+                                }
                                 temp = temp+"<li class='childs'><a href=\"" + menuList[menuList[i].childs[j]].url + " \">" + menuList[menuList[i].childs[j]].name + "</a></li>";
                             }
                             temp = temp+"</ul></li>";
@@ -102,6 +107,9 @@
                         } else {
                             let temp = " <li><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a><ul>";
                             for (let j = 0; j < menuList[i].childs.length; j++) {
+                                if (menuList[menuList[i].childs[j]]==null){
+                                    continue;
+                                }
                                 temp = temp+"<li class='child'><a href=\"" + menuList[menuList[i].childs[j]].url + " \">" + menuList[menuList[i].childs[j]].name + "</a></li>";
                             }
                             temp = temp+"</ul></li>";
