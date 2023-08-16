@@ -2,14 +2,10 @@ package com.moon.joyce.example.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.moon.joyce.commons.annotation.url.MethodUrl;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.enums.RE;
-import com.moon.joyce.commons.utils.FileUtils;
-import com.moon.joyce.commons.utils.R;
-import com.moon.joyce.commons.utils.StringsUtils;
-import com.moon.joyce.commons.utils.UUIDUtils;
+import com.moon.joyce.commons.utils.*;
 import com.moon.joyce.example.entity.doma.Album;
 import com.moon.joyce.example.entity.doma.Source;
 import com.moon.joyce.example.entity.vo.MainSource;
@@ -23,6 +19,8 @@ import com.moon.joyce.example.service.AlbumService;
 import com.moon.joyce.example.service.SourceService;
 import com.moon.joyce.example.service.serviceControllerDetails.SourceControllerDetailService;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ws.schild.jave.EncoderException;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.info.MultimediaInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -204,6 +205,18 @@ public class SourceController extends BaseController {
     public String playVideoPage(@PathVariable Long id,@PathVariable String sourceName,ModelMap map){
         map.addAttribute("id",id);
         map.addAttribute("sourceName",sourceName);
+        Source source = sourceService.getVideoInfo(id);
+        File file = new File(source.getRealUrl());
+        MultimediaObject multimediaObject = new MultimediaObject(file);
+        try {
+            MultimediaInfo info = multimediaObject.getInfo();
+            long duration = info.getDuration()/1000;
+            String sumTime= DateUtils.getChargeTimechargeTime(duration);
+            map.addAttribute("sumTime",sumTime);
+            System.out.println("------>>>>>>>"+duration);
+        } catch (EncoderException e) {
+            e.printStackTrace();
+        }
         return pagePrefix + "playSourcePage";
     }
 
@@ -435,6 +448,18 @@ public class SourceController extends BaseController {
         return new PageVo(list, total);
     }
 
+    /**
+     * 获取资源列表
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/getLists/l")
+    public Result getList() {
+        Source source = new Source();
+        source.setType("3");
+        PageVo list = getList(source);
+        return dataResult(!list.getRows().isEmpty(),list.getRows());
+    }
     /**
      * 保存资源
      * @return

@@ -188,7 +188,10 @@ margin: 0px 0px 0px 20px;
 	left: 9px;
 	border-radius: 4px;
 }
-
+.time{
+	font-size: 20px;
+	font-weight: bolder;
+}
 #willesPlay .otherControl .volumeBar .progress{
 	background: none;
 }
@@ -197,6 +200,9 @@ margin: 0px 0px 0px 20px;
 	bottom: 0px;
 	left: 0px;
 	border-radius: 4px;
+}
+.play-list{
+	margin-right: 50%;
 }
 video::-webkit-media-controls-enclosure {
     /*禁用播放器控制栏的样式*/

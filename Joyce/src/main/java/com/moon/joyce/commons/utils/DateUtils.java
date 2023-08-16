@@ -237,4 +237,41 @@ public class DateUtils implements Serializable {
         }
         return result;
     }
+
+
+
+    public static String getChargeTimechargeTime(Long chargeTime) {
+
+        String chargeTimechargeTime;
+        if (chargeTime==null){
+            return null;
+        }
+        //时
+        Long hour = chargeTime / 60 / 60;
+        //分
+        Long minutes = chargeTime / 60 % 60;
+        //秒
+        Long remainingSeconds = chargeTime % 60;
+        //判断时分秒是否小于10……
+        if (hour < 10 && minutes < 10 && remainingSeconds < 10){
+            chargeTimechargeTime = "0" + hour + ":" + "0" + minutes + ":" + "0" + remainingSeconds;
+        }else if (hour < 10 && minutes < 10){
+            chargeTimechargeTime = "0" + hour + ":" + "0" + minutes + ":" + remainingSeconds;
+        }else if (hour < 10 && remainingSeconds < 10){
+            chargeTimechargeTime = "0" + hour + ":" + minutes + ":" + "0" + remainingSeconds;
+        }else if (minutes < 10 && remainingSeconds < 10){
+            chargeTimechargeTime = hour + ":" + "0" + minutes + ":" + "0" + remainingSeconds;
+        }else if (hour < 10){
+            chargeTimechargeTime = "0" + hour + ":" + minutes + ":" + remainingSeconds;
+        }else if (minutes < 10){
+            chargeTimechargeTime = hour + ":" + "0" + minutes + ":" + remainingSeconds;
+        }else if (remainingSeconds < 10){
+            chargeTimechargeTime = hour + ":" + minutes + ":" + "0" + remainingSeconds;
+        }else {
+            chargeTimechargeTime = hour + ":" + minutes + ":" + remainingSeconds;
+        }
+        return chargeTimechargeTime;
+    }
+
+
 }

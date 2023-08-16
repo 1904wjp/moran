@@ -84,7 +84,7 @@ function deleteIdFuc(id) {
             type: 'POST',
             dataType: 'json',
             data: data,
-            
+
         }).done(function (data) {
             if (data.rs) {
                tips(data.rs,data.msg)
@@ -110,7 +110,7 @@ function freezeUserFuc(id) {
             type: 'POST',
             dataType: 'json',
             data: data,
-            
+
         }).done(function (data) {
             if (data.rs) {
                 toastr.success(data.msg)
@@ -121,7 +121,7 @@ function freezeUserFuc(id) {
         }).fail(function () {
             tips(false,data.msg)
         });
-    });    
+    });
 }
 
 //恢复id为id的数据
@@ -146,7 +146,7 @@ function recoverUserFuc(id) {
         }).fail(function () {
             tips(false,data.msg)
         });
-    });    
+    });
 }
 
 //删除id为ids的数据集合
@@ -349,48 +349,72 @@ function resetSearch() {
 
 //上传用户图片
 function uploadUserPhoto() {
-    uploadFile($('#photo_file'), "/example/user/upload", $("#display_img"), $('#fileUrl'));
+    var file = document.getElementById("photo_file").files[0];
+    var image = $('#display_img');
+    var fileReader = new FileReader();
+    //console.log(file);
+    fileReader.readAsDataURL(file);
+    fileReader.onload = function (e){
+        image.attr("src", this.result);
+        console.log(image.src);
+    };
+
+   //
 }
 
 //用户修改
 function updateUserFuc() {
-    var data = {
-        id: $("#id").val(),
-        username: $("#username").val(),
-        password: $("#password").val(),
-        phone: $("#phone").val(),
-        fileUrl: $("input[name='fileUrl']").val(),
-        email: $("#email").val(),
-        status: $('#status').val(),
-        nickname: $('#nickname').val()
-    };
-    var fdata = {
-        username: $("#username").val(),
-        password: $("#password").val(),
-        phone: $("#phone").val(),
-        fileUrl: $("input[name='fileUrl']").val(),
-        email: $("#email").val()
-    };
-    if (vailDate(fdata)){
-        Ewin.confirm({message: "确认要提交数据吗？"}).on(function (e) {
+    // var flag = document.getElementsByName("picFlag");
+    // flag.value="";
+    if ($('#fileUrl').val()!=$('#fileUrl1').val()){
+        uploadFile($('#photo_file'), "/example/user/upload", $("#display_img"), $('#fileUrl'));
+    }
+    Ewin.confirm({message: "确认要提交数据吗？"}).on(function (e) {
             if (!e) {
                 return;
             }
-            $.ajax({
-                url: '/example/user/doSaveUser',
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-            }).done(function (data) {
-                tips(data.rs,data.msg);
-                if (data.rs) {
-                    toMain();
-                }
-            }).fail(function () {
-                tips(false,data.msg)
-            });
+
+            var data = {
+                id: $("#id").val(),
+                username: $("#username").val(),
+                password: $("#password").val(),
+                phone: $("#phone").val(),
+                fileUrl: $("input[name='fileUrl']").val(),
+                email: $("#email").val(),
+                status: $('#status').val(),
+                nickname: $('#nickname').val()
+            };
+            var fdata = {
+                username: $("#username").val(),
+                password: $("#password").val(),
+                phone: $("#phone").val(),
+                fileUrl: $("input[name='fileUrl']").val(),
+                email: $("#email").val()
+            };
+
+            if (vailDate(fdata)){
+                //while(true){
+                  //  if (flag!=""){
+                        $.ajax({
+                            url: '/example/user/doSaveUser',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: data,
+                        }).done(function (data) {
+                            tips(data.rs,data.msg);
+                            if (data.rs) {
+                                toMain();
+                            }
+                        }).fail(function () {
+                            tips(false,data.msg)
+                        });
+                      //  break;
+                   // }
+                   // sleep(2000);
+               // }
+            }
         });
-    }
+
 }
 
 //退出登录

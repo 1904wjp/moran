@@ -177,6 +177,9 @@ function uploadFile(file, restUrl, img, objUrl, size) {
             if (data.rs){
                 img.attr("src",data.data);
                 objUrl.val(data.data);
+                //var pic = document.getElementsByName("picFlag");
+                //pic.value=data.data;
+               // console.log("---->",pic.value);
             }
         }
     });

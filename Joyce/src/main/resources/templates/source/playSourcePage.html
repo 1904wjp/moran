@@ -33,12 +33,12 @@
                 <div class="playControll">
                     <div class="playPause playIcon"></div>
                     <div class="timebar">
-                        <span class="currentTime">0:00:00</span>
+                        <span class="currentTime time">0:00:00</span>
                         <div class="progress">
                             <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
                                  aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                         </div>
-                        <span class="duration">0:00:00</span>
+                        <span class="duration time" th:text="${sumTime}">0:00:00</span>
                     </div>
                     <div class="otherControl">
                         <span class="volume glyphicon glyphicon-volume-down"></span>
@@ -52,6 +52,11 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="list">
+                        <span id="pri" class="play-list1" onclick="pri()">上一个</span>
+                        <span id="next" class="play-list1" onclick="next()">下一个</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -61,13 +66,26 @@
     <script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
     <script>
      /*   var _hmt = _hmt || [];*/
-        (function () {
-            var id = $('#id').val();
+      var array = [];
+      var id= $('#id').val();
+     $(document).ready(function () {
             if(id==null){
                 toList("/example/source");
             }
             $("#video").attr("src","/example/source/playVideo/"+id);
-
+            console.log("]]]",array);
+            $.ajax({
+                url: '/example/source/getLists/l',
+                type: 'GET',
+                dataType: 'json'
+            }).done(function (data) {
+                //if (data.rs) {
+                    array = data.data;
+                    console.log("]]]]",array);
+              //  }
+            }).fail(function () {
+                tips(false,data.msg)
+            });
            /* var hm = document.createElement("script");
             var id = document.getElementById('id').value;
             if (id==null){
@@ -76,7 +94,32 @@
             hm.src = "/example/source/playVideo/"+id;
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);*/
-        })();
+        });
+        function findIndex(){
+            var index = 0;
+            for (let i = 0; i < array.length; i++) {
+                if(array[i].id == id){
+                    index = i;
+                }
+            }
+            return index;
+        }
+        function pri(){
+            if (findIndex()!==0){
+                var url = "/example/source/playSourcePage/"+array[findIndex()-1].id+"/"+array[findIndex()-1].sourceName;
+                toList(url);
+            }else{
+                tips(false,"当前是第一个");
+            }
+        }
+     function next(){
+         if (findIndex()!==array.length-1){
+             var url = "/example/source/playSourcePage/"+array[findIndex()+1].id+"/"+array[findIndex()+1].sourceName;
+             toList(url);
+         }else{
+             tips(false,"当前是最后一个");
+         }
+     }
     </script>
 </div>
 <script type="text/javascript" th:src="@{/static/js/source/source.js}"></script>

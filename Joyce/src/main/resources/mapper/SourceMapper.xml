@@ -50,8 +50,8 @@
             </if>
             <if test="searchWord!=null and searchWord!=''">
                 AND (s.url LIKE CONCAT('%',#{searchWord},'%')
-                OR   AND s.source_name LIKE CONCAT('%',#{searchWord},'%')
-                OR   AND s.create_by LIKE CONCAT('%',#{searchWord},'%'))
+                OR    s.source_name LIKE CONCAT('%',#{searchWord},'%')
+                OR    s.create_by LIKE CONCAT('%',#{searchWord},'%'))
             </if>
             ORDER BY s.sort,s.update_time,s.id DESC
         <if test="sType==1 or sType==0">
