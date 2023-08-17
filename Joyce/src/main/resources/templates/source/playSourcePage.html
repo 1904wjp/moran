@@ -1,4 +1,3 @@
-
 <head class="paneBar" th:replace="/common/public/header::header(~{::title})">
     <title>播放资源</title>
 </head>
@@ -28,7 +27,7 @@
                                 type="video/mp4"></source>
                         当前浏览器不支持 video直接播放,请联系管理员
                     </video>-->
-                    <video  id="video" src="###" width="100%" height="90%"></video>
+                    <video id="video" src="###" width="100%" height="90%"></video>
                     <div class="playTip glyphicon glyphicon-play"></div>
                 </div>
                 <div class="playControll">
@@ -66,66 +65,69 @@
 <div style="display:none;">
     <script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
     <script>
-     /*   var _hmt = _hmt || [];*/
-      var array = [];
-      var id= $('#id').val();
-     $(document).ready(function () {
-            if($('#exist').val()==='1'){
-                tips(false,"文件链接不存在")
+        /*   var _hmt = _hmt || [];*/
+        var array = [];
+        var id = $('#id').val();
+        $(document).ready(function () {
+            if ($('#exist').val() === '1') {
+                tips(false, "文件链接不存在")
             }
-            if(id==null){
+            if (id == null) {
                 toList("/example/source");
             }
-            $("#video").attr("src","/example/source/playVideo/"+id);
-           // console.log("]]]",array);
+            $("#video").attr("src", "/example/source/playVideo/" + id);
+            // console.log("]]]",array);
             $.ajax({
                 url: '/example/source/getLists/l',
                 type: 'GET',
                 dataType: 'json'
             }).done(function (data) {
                 //if (data.rs) {
-                    array = data.data;
-                    console.log("]]]]",array);
-              //  }
+                array = data.data;
+                console.log("]]]]", array);
+                //  }
             }).fail(function () {
-                tips(false,data.msg)
+                tips(false, data.msg)
             });
-           /* var hm = document.createElement("script");
-            var id = document.getElementById('id').value;
-            if (id==null){
-                toList("/example/source");
-            }
-            hm.src = "/example/source/playVideo/"+id;
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);*/
+            /* var hm = document.createElement("script");
+             var id = document.getElementById('id').value;
+             if (id==null){
+                 toList("/example/source");
+             }
+             hm.src = "/example/source/playVideo/"+id;
+             var s = document.getElementsByTagName("script")[0];
+             s.parentNode.insertBefore(hm, s);*/
         });
-     //寻找索引
-        function findIndex(){
+
+        //寻找索引
+        function findIndex() {
             var index = 0;
             for (let i = 0; i < array.length; i++) {
-                if(array[i].id == id){
+                if (array[i].id == id) {
                     index = i;
                     break;
                 }
             }
             return index;
         }
-        function pri(){
-            if (findIndex()!==0){
-                var url = "/example/source/playSourcePage/"+array[findIndex()-1].id+"/"+array[findIndex()-1].sourceName;
+
+        function pri() {
+            if (findIndex() !== 0) {
+                var url = "/example/source/playSourcePage/" + array[findIndex() - 1].id + "/" + array[findIndex() - 1].sourceName;
                 toList(url);
-            }else{
-                tips(false,"当前是第一个");
+            } else {
+                tips(false, "当前是第一个");
             }
         }
-     function next(){
-         if (findIndex()!==array.length-1){
-             var url = "/example/source/playSourcePage/"+array[findIndex()+1].id+"/"+array[findIndex()+1].sourceName;
-             toList(url);
-         }else{
-             tips(false,"当前是最后一个");
-         }
-     }
+
+        function next() {
+            if (findIndex() !== array.length - 1) {
+                var url = "/example/source/playSourcePage/" + array[findIndex() + 1].id + "/" + array[findIndex() + 1].sourceName;
+                toList(url);
+            } else {
+                tips(false, "当前是最后一个");
+            }
+        }
     </script>
 </div>
 <script type="text/javascript" th:src="@{/static/js/source/source.js}"></script>
