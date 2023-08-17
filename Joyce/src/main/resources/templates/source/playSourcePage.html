@@ -73,7 +73,7 @@
                 toList("/example/source");
             }
             $("#video").attr("src","/example/source/playVideo/"+id);
-            console.log("]]]",array);
+           // console.log("]]]",array);
             $.ajax({
                 url: '/example/source/getLists/l',
                 type: 'GET',
@@ -100,6 +100,7 @@
             for (let i = 0; i < array.length; i++) {
                 if(array[i].id == id){
                     index = i;
+                    break;
                 }
             }
             return index;
