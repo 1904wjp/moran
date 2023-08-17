@@ -207,6 +207,11 @@ public class SourceController extends BaseController {
         map.addAttribute("sourceName",sourceName);
         Source source = sourceService.getVideoInfo(id);
         File file = new File(source.getRealUrl());
+        if (!file.exists()){
+            map.addAttribute("exist",1);
+        }else {
+            map.addAttribute("exist",0);
+        }
         MultimediaObject multimediaObject = new MultimediaObject(file);
         try {
             MultimediaInfo info = multimediaObject.getInfo();
@@ -668,7 +673,7 @@ public class SourceController extends BaseController {
     @GetMapping("/playVideo/{id}")
     public void play(HttpServletRequest request, HttpServletResponse response,@PathVariable Long id) throws IOException {
         response.reset();
-            Source source = sourceService.getVideoInfo(id);
+        Source source = sourceService.getVideoInfo(id);
         File file = new File(source.getRealUrl());
         long fileLength = file.length();
         // 随机读文件

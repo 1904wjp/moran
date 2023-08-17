@@ -46,7 +46,6 @@ public interface SourceService extends IService<Source> {
     /**
      * 根据id查询集合
      * @param ids
-     * @param sessionUserId
      * @return
      */
     List<Source> getByIds(List<String> ids);
