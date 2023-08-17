@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.example.entity.base.entity.doma.Person;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 
 /**
@@ -13,6 +15,8 @@ import com.moon.joyce.example.entity.base.entity.doma.Person;
  */
 @TableName("user")
 @Table(name = "user",content = "用户表" )
+@AllArgsConstructor
+@NoArgsConstructor
 /*@Entity
 @Table(name = "user")
 @org.hibernate.annotations.Table(appliesTo = "user",comment = "用户表")*/
@@ -63,6 +67,12 @@ public class User extends Person {
      */
     @TableField(value = "nickname")
     private String nickname;
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     /**
      * websocketSessionId的值
      */

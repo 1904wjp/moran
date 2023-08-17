@@ -389,9 +389,7 @@ public class UserController extends BaseController {
                 IP_SESSION_MAP.remove(username+logIp);
             }
         }
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(MD5Utils.getMD5Str(password));
+        User user = new User(username,MD5Utils.getMD5Str(password));
         logger.info(username + "======>登录中");
         User dbUser = userService.getUser(user, Constant.USER_TYPE_LOGIN);
         if (Objects.nonNull(dbUser)) {
