@@ -1,6 +1,7 @@
 package com.moon.joyce.example.entity.base.entity.doma;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.example.entity.dto.Page;
 
 
@@ -11,8 +12,8 @@ import com.moon.joyce.example.entity.dto.Page;
  * @date 2021/10/20 13:37
  * @desc 人的基类
  */
-/*@Entity
-@Table(name = "person")*/
+/*@Entity*/
+@Table(isParent = true)
 public class Person extends Page {
 
     /**

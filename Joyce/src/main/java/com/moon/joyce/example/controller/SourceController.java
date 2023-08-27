@@ -202,9 +202,12 @@ public class SourceController extends BaseController {
      * @return
      */
     @RequestMapping("/playSourcePage/{id}/{sourceName}")
-    public String playVideoPage(@PathVariable Long id,@PathVariable String sourceName,ModelMap map){
+    public String playVideoPage(@PathVariable Long id,@PathVariable String sourceName,@PathVariable String searchWord,@PathVariable String lable,@PathVariable String type,ModelMap map){
         map.addAttribute("id",id);
         map.addAttribute("sourceName",sourceName);
+        map.addAttribute("searchWord",searchWord);
+        map.addAttribute("type",type);
+        map.addAttribute("lable",lable);
         Source source = sourceService.getVideoInfo(id);
         File file = new File(source.getRealUrl());
         if (!file.exists()){
@@ -434,16 +437,15 @@ public class SourceController extends BaseController {
         List<Source> list = sourceService.getList(source);
         List<Source> sources = new ArrayList<>();
         sources.addAll(list);
-        for (int i = 0; i < list.size(); i++) {
-            Source s = list.get(i);
-            if (s.getCreateIds().equals(getSessionUserId())){
+        for (Source s : list) {
+            if (s.getCreateIds().equals(getSessionUserId())) {
                 s.setPowerLevel(1);
-            }else {
-                if (s.getIsPub()!=null){
-                    if (s.getIsPub().equals(0)){
-                       if (s.getPowerLevel()==null){
+            } else {
+                if (s.getIsPub() != null) {
+                    if (s.getIsPub().equals(0)) {
+                        if (s.getPowerLevel() == null) {
                             sources.remove(s);
-                       }
+                        }
                     }
                 }
             }
@@ -635,10 +637,15 @@ public class SourceController extends BaseController {
         Map<String, Object> map = null;
         try {
             map = fileService.mergeTempFile(uuid, newFileName);
+            logger.info("{}上传的视频map信息",map.toString());
             setSession(getSessionUserId()+VIDEO_NAME,map.get(FileUtils.vrp));
             map.remove(FileUtils.vrp);
         } catch (Exception e) {
+            logger.info("{}",e.toString());
             return error("视频解析失败");
+        }
+        if (map.isEmpty()){
+            logger.info("{}上传的视频map信息1",map.toString());
         }
         return R.dataResult(!map.isEmpty(),"视频解析失败","视频解析成功",map);
     }
