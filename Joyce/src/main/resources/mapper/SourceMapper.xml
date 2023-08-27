@@ -91,10 +91,14 @@
             AND s.type = #{type}
         </if>
         <if test="searchWord!=null and searchWord!=''">
-            AND s.url LIKE CONCAT('%',#{searchWord},'%')
+            AND (s.url LIKE CONCAT('%',#{searchWord},'%')
             OR    s.source_name LIKE CONCAT('%',#{searchWord},'%')
             OR    s.create_by LIKE CONCAT('%',#{searchWord},'%'))
         </if>
+        <if test="lable!=null and lable!=''">
+            AND s.lable LIKE CONCAT('%',#{lable},'%')
+        </if>
+
     </select>
 
     <select id="getVideoByVPicId" resultType="com.moon.joyce.example.entity.doma.Source">

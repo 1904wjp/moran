@@ -80,10 +80,16 @@
             }
             $("#video").attr("src", "/example/source/playVideo/" + id);
             // console.log("]]]",array);
+            var data={
+                type:$('#type').val(),
+                searchWord:$('#searchWord').val(),
+                lable:$('#lable').val()
+            }
             $.ajax({
                 url: '/example/source/getLists/l',
                 type: 'GET',
-                dataType: 'json'
+                dataType: 'json',
+                data:data
             }).done(function (data) {
                 //if (data.rs) {
                 array = data.data;
@@ -116,7 +122,7 @@
 
         function pri() {
             if (findIndex() !== 0) {
-                var url = "/example/source/playSourcePage/" + array[findIndex() - 1].id + "/" + array[findIndex() - 1].sourceName;
+                var url = "/example/source/playSourcePage/" + array[findIndex() - 1].id + "/" + array[findIndex() - 1].sourceName+"/"+$('#searchWord').val()+"/"+$('#lable').val()+"/" +$('#type').val();
                 toList(url);
             } else {
                 tips(false, "当前是第一个");
@@ -125,7 +131,7 @@
 
         function next() {
             if (findIndex() !== array.length - 1) {
-                var url = "/example/source/playSourcePage/" + array[findIndex() + 1].id + "/" + array[findIndex() + 1].sourceName;
+                var url = "/example/source/playSourcePage/" + array[findIndex() + 1].id + "/" + array[findIndex() + 1].sourceName+"/"+$('#searchWord').val()+"/"+$('#lable').val()+"/" +$('#type').val();
                 toList(url);
             } else {
                 tips(false, "当前是最后一个");

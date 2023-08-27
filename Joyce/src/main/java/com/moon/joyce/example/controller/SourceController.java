@@ -201,7 +201,7 @@ public class SourceController extends BaseController {
      * 播放资源
      * @return
      */
-    @RequestMapping("/playSourcePage/{id}/{sourceName}")
+    @RequestMapping("/playSourcePage/{id}/{sourceName}/{searchWord}/{lable}/{type}")
     public String playVideoPage(@PathVariable Long id,@PathVariable String sourceName,@PathVariable String searchWord,@PathVariable String lable,@PathVariable String type,ModelMap map){
         map.addAttribute("id",id);
         map.addAttribute("sourceName",sourceName);
@@ -461,8 +461,16 @@ public class SourceController extends BaseController {
      */
     @ResponseBody
     @GetMapping("/getLists/l")
-    public Result getList() {
-        Source source = new Source();
+    public Result getList2(Source source) {
+        if (source.getSearchWord().equals("-1")){
+            source.setSearchWord(null);
+        }
+        if (source.getLable().equals("-1")){
+            source.setLable(null);
+        }
+        if (source.getType().equals("-1")){
+            source.setType(null);
+        }
         source.setType("3");
         PageVo list = getList(source);
         return dataResult(!list.getRows().isEmpty(),list.getRows());

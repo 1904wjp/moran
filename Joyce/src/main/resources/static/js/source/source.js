@@ -49,7 +49,7 @@ function deleteSourceFuc() {
                         toastr.error(data.msg);
                     }
                 }).fail(function () {
-                    tips(false,data.msg)
+                    tips(false,data.msg);
 
                 });
             });
@@ -119,7 +119,7 @@ function uploadSource(){
 //保存资源
 function saveSource(){
     var type = $("#type").val();
-    if (type == null){
+    if (type===null){
         type === 1;
     }
     console.log("----------->",type);
@@ -180,7 +180,7 @@ function uploadSourceD2(e){
     addLoadingModal("请稍后...正在上传");
     for (let i = 0; i < files.length; i++) {
         var fileType = files[i].name.substr(files[i].name.indexOf("\.")).toLowerCase();
-        if (fileType != ".mp4") {
+        if (fileType !== ".mp4") {
           continue;
         }
         uploadVideoFile2(files[i],0,guid(),"/example/source/uploadVideoSource","/example/source/mergeVideoSource");
@@ -198,7 +198,7 @@ function uploadSourceD2(e){
 function uploadVideoFile2(file, i, uuid, url, mergeUrl) {
     console.log('视频上传中')
     var fileType = file.name.substr(file.name.indexOf("\.")).toLowerCase();
-    if (fileType != ".mp4") {
+    if (fileType !== ".mp4") {
         tips("", "格式必须为mp4");
         return;
     }
@@ -308,9 +308,9 @@ function mergeVideo2(uuid, fileName, mergeurl) {
                 /* $("#src_video").empty();
                  appendVideo($("#src_video"),"index_v",data.data);*/
             }
-            tips(data.rs, data.msg)
+            tips(data.rs, data.msg);
         }
-    })
+    });
 }
 
 
@@ -343,39 +343,16 @@ function getSourceTables() {
     }, {
         field: 'url',
         title: '封面',
-        formatter:function (value, row, index) {
-            var image =  '';
-            if (row.vid==''||row.vid==null||row.vid==undefined){
-               image='<div>' +
-                     '<img style="width: 90%;height: 220px;margin: auto 12%" src="'+ row.url + '"/>' +
-                     '</div>';
-            }else {
-             image ='<div>' ;
-                 if(row.type==='3'){
-                    var searchWord =  $('#searchWord').val();
-                     var type =  $('#type').val();
-                     var lable =  $('#lable').val();
-                    image+='<a href="/example/source/playSourcePage/'+row.id+'/'+row.sourceName+'/'+type+'/'+lable+'/'+searchWord+'">' ;
-                 }
-                image+= '<img style="width: 90%;height: 220px;margin: auto 12%" src="'+ row.url +'"/>';
-                 if (row.type==='3'){
-                     image+='</a>';
-                 }
-                image+='<span   class="glyphicon glyphicon-play-circle" style="color: white; margin-left: -40%;">' +
-                    '</span>' +
-                    '</div>';
-            }
-            return image;
-        },
+        formatter:getUrl,
         sortables: true
     }, {
         field: 'createTime',
         title: '资源类型',
         sortables: true,
         formatter: function (value, row, index) {
-            if (row.type == '0') {
+            if (row.type === '0') {
                 return "<button class='btn-success'disabled='disabled'style='padding:3px; border:10px;'>图片</button>";
-            } else if (row.type == '3') {
+            } else if (row.type === '3') {
                 return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>视频</button>";
             }
         }
@@ -384,15 +361,15 @@ function getSourceTables() {
         title: '应用类型',
         sortables: true,
         formatter: function (value, row, index) {
-            if (row.applyStatus == 0) {
+            if (row.applyStatus===0) {
                 return "<button class='btn-success'disabled='disabled'style='padding:3px; border:10px;'>普通</button>";
-            } else if (row.applyStatus == 1) {
+            } else if (row.applyStatus===1) {
                 return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>主页</button>";
-            } else if (row.applyStatus == 2) {
+            } else if (row.applyStatus===2) {
                 return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>主页选项</button>";
-            }else if (row.applyStatus == 3) {
+            }else if (row.applyStatus===3) {
                 return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>备用</button>";
-            }else if (row.applyStatus == 4) {
+            }else if (row.applyStatus===4) {
                 return "<button class='btn-default'disabled='disabled'style='padding:3px; border:10px;'>相册</button>";
             }
         }
@@ -412,6 +389,42 @@ function getSourceTables() {
     tables(obj, url, queryObj, columns);
 }
 
+function getUrl(value, row, index) {
+    var searchWord ='-1' ;
+    var type="-1";
+    var lable="-1";
+    var image="";
+     if (notBlank(document.getElementsByName('searchWord')[0].value)){
+         searchWord = document.getElementsByName('searchWord')[0].value;
+    }
+    if (notNull(document.getElementsByName("type")[0].value)){
+        type = document.getElementsByName("type")[0].value;
+    }
+    if (notNull(document.getElementsByName("lable")[0].value)){
+        lable = document.getElementsByName("lable")[0].value;
+    }
+
+    console.log(searchWord+','+type+','+lable);
+    if (row.vid===''||row.vid===null||row.vid===undefined){
+        image='<div>' +
+            '<img style="width: 90%;height: 220px;margin: auto 12%" src="'+ row.url + '"/>' +
+            '</div>';
+    }else {
+        image ='<div>' ;
+        if(row.type==='3'){
+            image+='<a href="/example/source/playSourcePage/'+row.id+'/'+row.sourceName+'/'+searchWord+'/'+lable+'/'+type+'">' ;
+        }
+        image+= '<img style="width: 90%;height: 220px;margin: auto 12%" src="'+ row.url +'"/>';
+        if (row.type==='3'){
+            image+='</a>';
+        }
+        image+='<span   class="glyphicon glyphicon-play-circle" style="color: white; margin-left: -40%;">' +
+            '</span>' +
+            '</div>';
+    }
+    return image;
+}
+
 /**
  * 转资源列表
  */
@@ -427,7 +440,7 @@ function sourceList() {
  */
 function sourceOpFormatter(value,row,index){
     var actions = [];
-    if (row.powLevel==1){
+    if (row.powLevel===1){
         actions.push('<a class="btn btn-primary btn-sm" href="javascript:void(0)" data-toggle="modal" ' +
             'data-target="#editModal" onclick="downloadFile(\'' + row.id + '\')"><i class="fa fa-edit"></i> 下载</a> ');
     }
