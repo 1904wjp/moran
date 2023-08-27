@@ -693,10 +693,10 @@ function uploadVideoFile(file, i, uuid, url, mergeUrl, img) {
             i++;
             uploadVideoFile(file, i, uuid, url, mergeUrl, img);
             tips(null, data.msg);
-        } else if (data.code === 500) {
+        }/* else if (data.code === 500) {
             count++;
             form = '';
-            /* 失败后，每2秒继续传一次分片文件 */
+            /!* 失败后，每2秒继续传一次分片文件 *!/
             var setIntervalFuc = setInterval(function () {
                 uploadVideoFile(file, i, uuid, url, mergeUrl, img);
             }, 2000);
@@ -710,7 +710,8 @@ function uploadVideoFile(file, i, uuid, url, mergeUrl, img) {
                 }, 2000);
                 clearInterval(setIntervalFuc2);
             }
-        } else if (data.code === 200) {
+        } */
+        else if (data.code === 200) {
             tips(data.rs, data.msg);
             mergeVideo(uuid, name, mergeUrl, img);
         }

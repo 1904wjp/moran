@@ -12,9 +12,8 @@ import com.moon.joyce.example.entity.dto.Page;
  * @date 2021/10/20 13:37
  * @desc 人的基类
  */
+/*@Entity*/
 @Table(isParent = true)
-/*@Entity
-@Table(name = "person")*/
 public class Person extends Page {
 
     /**

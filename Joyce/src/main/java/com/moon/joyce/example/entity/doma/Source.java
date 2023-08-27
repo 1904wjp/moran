@@ -85,4 +85,6 @@ public class Source  extends Page {
     @Column(exist = false,comment = "查询类型[0:资源页面;1:main页面]")
     @TableField(exist = false)
     private Integer sType;
+
+    private String lable;
 }

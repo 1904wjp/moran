@@ -11,6 +11,7 @@
                s.update_time,
                s.source_name,
                s.type,
+               s.lable,
                s.apply_status,
                s.type,
                s.url,
@@ -53,6 +54,9 @@
                 OR    s.source_name LIKE CONCAT('%',#{searchWord},'%')
                 OR    s.create_by LIKE CONCAT('%',#{searchWord},'%'))
             </if>
+            <if test="lable!=null and lable!=''">
+                AND s.lable LIKE CONCAT('%',#{lable},'%')
+            </if>
             ORDER BY s.sort,s.update_time,s.id DESC
         <if test="sType==1 or sType==0">
             <if test="offset!=null and  pageNumber!=null  and pageNumber!=0 ">
@@ -88,9 +92,13 @@
         </if>
         <if test="searchWord!=null and searchWord!=''">
             AND (s.url LIKE CONCAT('%',#{searchWord},'%')
-            OR   AND s.source_name LIKE CONCAT('%',#{searchWord},'%')
-            OR   AND s.create_by LIKE CONCAT('%',#{searchWord},'%'))
+            OR    s.source_name LIKE CONCAT('%',#{searchWord},'%')
+            OR    s.create_by LIKE CONCAT('%',#{searchWord},'%'))
         </if>
+        <if test="lable!=null and lable!=''">
+            AND s.lable LIKE CONCAT('%',#{lable},'%')
+        </if>
+
     </select>
 
     <select id="getVideoByVPicId" resultType="com.moon.joyce.example.entity.doma.Source">

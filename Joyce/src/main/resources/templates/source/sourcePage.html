@@ -10,15 +10,17 @@
             <form class="form-horizontal center-block" role="form" method="get">
                 <legend>资源上传</legend>
                 <div class="form-group " >
-                    <div class="col-sm-4 " style="margin-right: -9%; width: 15%;">
+                    <div class="col-sm-12 " style="margin-right: -9%; width: 100%;">
                         <span><input type="button" id="uploadPicSourceBtn" style="background-color: blue" value="图片上传" onclick="selectSource(1)"/></span>
                         <span><input type="button" id="uploadVidSourceBtn" style="background-color: yellow" value="视频上传" onclick="selectSource(2)"/></span>
+                        <span><input type="button" id="uploadVidPageSourceBtn" style="background-color: green" value="视频文件夹上传" onclick="selectSource(3)"/></span>
                     </div>
                 </div>
                 <div class="form-group "  id="picture">
-                    <label class="col-sm-2 control-label" for="pic_source_file">图片资源上传</label>
-                    <div class="col-sm-4 " style="margin-right: -9%; width: 15%;">
+                    <label class="col-sm-2 control-label" for="pic_source_file">资源上传</label>
+                    <div class="col-sm-4 " style="margin-right: -9%; width: 66.5%;">
                         <input class="form-control" id="pic_source_file" type="file" onchange="uploadSource()"/>
+                        <input class="form-control"  id="pic_source_file2" type="file" onchange="uploadSourceD2(event)" webkitdirectory/>
                     </div>
                 </div>
                <!-- <div class="form-group " id="video">
@@ -34,8 +36,8 @@
                 <input type="hidden" id="source_url" name="source_url">
                 <div style="text-align: center;width: 300px;position: absolute; top: 0; font-size:16px; color: #413F43">
                 </div>
-                <div class="form-group ">
-                    <label class="col-sm-2 control-label"  for="sourceName">资源名称</label>
+                <div class="form-group paer">
+                    <label class="col-sm-2 control-label "  for="sourceName">资源名称</label>
                     <div class="col-sm-8 ">
                         <input class="form-control" id="sourceName" type="text" name="sourceName"/>
                     </div>
@@ -47,13 +49,19 @@
                     </div>
                 </div>
                 <div class="form-group ">
+                    <label class="col-sm-2 control-label" for="descContent">标签</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="lable" type="text" name="lable" placeholder=""/>
+                    </div>
+                </div>
+                <div class="form-group ">
                     <label class="col-sm-2 control-label" for="sort">排序</label>
                     <div class="col-sm-8">
                         <input class="form-control" id="sort" type="number" name="sort" min="1" placeholder=""/>
                     </div>
                 </div>
 
-                <div class="form-group " id="sourceStatus">
+                <div class="form-group paer" id="sourceStatus">
                     <label class="col-sm-2 control-label" for="applyStatus">资源应用</label>
                     <div class="col-sm-4 ">
                         <select id="applyStatus" name="applyStatus" class="form-control">
