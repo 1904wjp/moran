@@ -104,8 +104,9 @@ spring:
   servlet:
     multipart:
       #最大的上传数据
-      max-file-size: 30MB
-# 接受参数json格式
+      max-file-size: 50MB
+      max-request-size: 500MB
+  # 接受参数json格式
   jackson:
     date-format: yyyy-MM-dd
     time-zone: GMT+8

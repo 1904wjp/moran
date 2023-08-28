@@ -203,6 +203,7 @@ margin: 0px 0px 0px 20px;
 }
 .play-list{
 	margin-right: 50%;
+	background-color: white;
 }
 video::-webkit-media-controls-enclosure {
     /*禁用播放器控制栏的样式*/

@@ -797,7 +797,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
         String name = fileName.substring(0, fileName.lastIndexOf("."));
 
         String uuid = multipartRequest.getParameter("uuid");
-        File uploadFile = new File(fileUploadTempDir + "/" + uuid, uuid + name + index + ".tem");
+        File uploadFile = new File(fileUploadTempDir + "/" + uuid,  String.valueOf(index));
         if (!uploadFile.getParentFile().exists()) {
             uploadFile.getParentFile().mkdirs();
         }
@@ -838,7 +838,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
             if (!dirFile.exists()) {
                 throw new JoyceException("文件不存在！");
             }
-            //分片上传的文件已经位于同一个文件夹下，方便寻找和遍历(当文件数大于十的时候记得排序用冒泡排序确保顺序是正确的)
+
             String[] fileNames = dirFile.list();
             String createFileName = UUIDUtils.getUUID(6) + "_" + StringsUtils.substringFileName(newFileName);
             //文件保存路径
@@ -850,7 +850,19 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
             }
             RandomAccessFile writeFile = new RandomAccessFile(targetFile, "rw");
             int position = 0;
-            for (String fileName : fileNames) {
+            //分片上传的文件已经位于同一个文件夹下，方便寻找和遍历(当文件数大于十的时候记得排序用冒泡排序确保顺序是正确的)
+            List<String> fileNameList = Arrays.asList(fileNames);
+            Collections.sort(fileNameList, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    if (Integer.parseInt(o1)>Integer.parseInt(o2)){
+                       return 1;
+                    }
+                    return -1;
+                }
+            });
+            for (int i = 0; i < fileNameList.size(); i++) {
+                String fileName = fileNameList.get(i);
                 File sourceFile = new File(fileUploadTempDir + "/" + uuid, fileName);
                 RandomAccessFile readFile = new RandomAccessFile(sourceFile, "rw");
                 int chunksize = 1024 * 3;
@@ -867,9 +879,10 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
                     position = position + byteCount;
                 }
                 readFile.close();
-                //删除缓存的临时文件
-                org.apache.commons.io.FileUtils.deleteQuietly(sourceFile);
+
             }
+            //删除缓存的临时文件
+            org.apache.commons.io.FileUtils.deleteQuietly(dirFile);
             writeFile.close();
             String path = "/static/2" + access + now + "/" + createFileName;
             map.put(vrp, targetFile.getPath());
@@ -963,6 +976,11 @@ public class FileUtils extends org.apache.commons.io.FileUtils implements Serial
         }
         if (!newFile.getParentFile().exists()) {
             newFile.mkdirs();
+        }
+        try {
+            newFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return newFile;
     }

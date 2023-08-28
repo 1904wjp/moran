@@ -174,12 +174,14 @@ function saveSource(){
 
 
 function uploadSourceD2(e){
+    console.log("请稍后...正在上传")
     var files = e.target.files;
     // var  relativePath = files[0].webkitRelativePath;
     // var folderName  = relativePath.split('/')[0];
     addLoadingModal("请稍后...正在上传");
     for (let i = 0; i < files.length; i++) {
-        var fileType = files[i].name.substr(files[i].name.indexOf("\.")).toLowerCase();
+        //console.log(i)
+        var fileType = files[i].name.substr(files[i].name.lastIndexOf("\.")).toLowerCase();
         if (fileType !== ".mp4") {
           continue;
         }
@@ -196,8 +198,8 @@ function uploadSourceD2(e){
  * @param uuid
  */
 function uploadVideoFile2(file, i, uuid, url, mergeUrl) {
-    console.log('视频上传中')
-    var fileType = file.name.substr(file.name.indexOf("\.")).toLowerCase();
+    console.log('视频上传中');
+    var fileType = file.name.substr(file.name.lastIndexOf("\.")).toLowerCase();
     if (fileType !== ".mp4") {
         tips("", "格式必须为mp4");
         return;
@@ -250,7 +252,7 @@ function uploadVideoFile2(file, i, uuid, url, mergeUrl) {
             //达到一定错误数量停止
             if (count === 10) {
                 clearInterval(setIntervalFuc);
-               // loading(false);
+                loading(false);
                 tips(data.rs, data.msg);
                 var setIntervalFuc2 = setInterval(function () {
                     location.reload();
@@ -258,7 +260,8 @@ function uploadVideoFile2(file, i, uuid, url, mergeUrl) {
                 clearInterval(setIntervalFuc2);
             }
         } else if (data.code === 200) {
-            // tips(data.rs, data.msg);
+          //  loading(false);
+             tips(data.rs, data.msg);
             mergeVideo2(uuid, name, mergeUrl);
         }
     });
@@ -286,7 +289,7 @@ function mergeVideo2(uuid, fileName, mergeurl) {
                     id:$("#id").val(),
                     type:'3',
                     url: data.data.videoPicturePath,
-                    sourceName: guid()+"打包上传",
+                    sourceName: uuid.substr(5)+"packege",
                     sort: $("#sort").val(),
                     vUrl: data.data.videoAccessPath,
                     descContent: $('#descContent').val(),

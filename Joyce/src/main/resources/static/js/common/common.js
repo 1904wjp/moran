@@ -649,19 +649,26 @@ function getInitL2D() {
  * @param uuid
  */
 function uploadVideoFile(file, i, uuid, url, mergeUrl, img) {
-    console.log('视频上传中')
-    var fileType = file.name.substr(file.name.indexOf("\.")).toLowerCase();
+    if (i===0){
+        img.attr("src", '');
+    }
+   // console.log('视频上传中');
+    var fileType = file.name.substr(file.name.lastIndexOf("\.")).toLowerCase();
+    //console.log("格式:"+fileType);
     if (fileType != ".mp4") {
         tips("", "格式必须为mp4");
         return;
     }
-    addLoadingModal("请稍后...正在上传");
+    //addLoadingModal("请稍后...正在上传");
     var count = 0;
     var name = file.name, //文件名
         size = file.size, //总大小shardSize = 2 * 1024 * 1024,
         shardSize = 10 * 1024 * 1024, //以2MB为一个分片,每个分片的大小
         shardCount = Math.ceil(size / shardSize); //总片数
+        console.log('总片数：'+shardCount);
+   // console.log('size:'+size);
     if (i >= shardCount) {
+        loading(false);
         return;
     }
 
@@ -693,27 +700,29 @@ function uploadVideoFile(file, i, uuid, url, mergeUrl, img) {
             i++;
             uploadVideoFile(file, i, uuid, url, mergeUrl, img);
             tips(null, data.msg);
-        }/* else if (data.code === 500) {
+        } else if (data.code === 500) {
             count++;
             form = '';
-            /!* 失败后，每2秒继续传一次分片文件 *!/
+            /* 失败后，每2秒继续传一次分片文件 */
             var setIntervalFuc = setInterval(function () {
                 uploadVideoFile(file, i, uuid, url, mergeUrl, img);
             }, 2000);
             //达到一定错误数量停止
             if (count === 10) {
                 clearInterval(setIntervalFuc);
-                loading(false);
+               // loading(false);
                 tips(data.rs, data.msg);
                 var setIntervalFuc2 = setInterval(function () {
                     location.reload();
                 }, 2000);
                 clearInterval(setIntervalFuc2);
             }
-        } */
+        }
         else if (data.code === 200) {
+           // loading(false);
             tips(data.rs, data.msg);
             mergeVideo(uuid, name, mergeUrl, img);
+
         }
     });
 
@@ -725,6 +734,7 @@ function uploadVideoFile(file, i, uuid, url, mergeUrl, img) {
  * @param fileName
  */
 function mergeVideo(uuid, fileName, mergeurl, img) {
+    addLoadingModal("请稍后...正在解析");
     $.ajax({
         url: mergeurl,
         type: "GET",
@@ -733,17 +743,17 @@ function mergeVideo(uuid, fileName, mergeurl, img) {
         async: true, //异步
         dataType: "json",
         success: function (data) {
-            loading(false);
             if (data.rs) {
                 $("#source_url").val(data.data.videoPicturePath);
                 $("#vUrl").val(data.data.videoAccessPath);
-                console.log("src", data.data.videoPicturePath);
+                //console.log("src", data.data.videoPicturePath);
                 img.attr("src", data.data.videoPicturePath);
                 //清楚上一个添加的
                 /* $("#src_video").empty();
                  appendVideo($("#src_video"),"index_v",data.data);*/
             }
-            tips(data.rs, data.msg)
+            tips(data.rs, data.msg);
+            loading(false);
         }
     })
 }

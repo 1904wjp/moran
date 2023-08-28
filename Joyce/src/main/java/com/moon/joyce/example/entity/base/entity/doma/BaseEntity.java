@@ -43,6 +43,9 @@ public class BaseEntity  extends RootEntity{
     @TableField(value = "update_time",fill = FieldFill.UPDATE)
     protected Date updateTime;
 
+    @Column(comment = "处理人")
+    private String userIds;
+
     public Long getId() {
         return id;
     }

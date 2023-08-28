@@ -621,14 +621,15 @@ public class SourceController extends BaseController {
         int code = 0;
         try {
             code = fileService.uploadVideo(req, resp);
+            logger.info("---->code:"+code);
         } catch (Exception e) {
             return error("上传异常,视频上传失败！");
         }
         if (code==200){
-            return R.success("视频上传完成，进行解析！");
+            return R.success(code,"视频上传完成，进行解析！");
         }
         if (code==201){
-            return R.success("正在上传视频！");
+            return R.success(code,"正在上传视频！");
         }
          return R.error("视频上传失败！");
     }
