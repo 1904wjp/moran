@@ -14,14 +14,24 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
+    //名称
     String name() default "";
+    //长度
     String length() default "64";
+    //类型
     Type type() default Type.VARCHAR;
+    //注释
     String comment() default "";
+    //是否为主键
     boolean isKey() default false;
+    //是否自动自动增长
     boolean auto() default false;
+    //是否为null
     boolean isNotNull() default false;
+    //默认值
     String defaultValue() default "NULL";
+    //是否唯一
     boolean unique() default false;
+    //是否存在
     boolean exist() default true;
 }

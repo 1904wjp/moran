@@ -87,7 +87,9 @@
            //     tips(data.rs,data.msg)
                 if ($('#article_result').val() === "1") {
                     var params = data.data.params;
-                    editorTheme = params.ueColor.split(",")[params.off].replace(/\s+/g,"");
+                    if (notNull(params.ueColor)){
+                        editorTheme = params.ueColor.split(",")[params.off].replace(/\s+/g,"");
+                    }
                     testEditor = editormd("article_content_info", {
                         width: "95%",
                         height: 400,

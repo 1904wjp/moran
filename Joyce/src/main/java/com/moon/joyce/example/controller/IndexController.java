@@ -37,13 +37,9 @@ public class IndexController extends BaseController {
     @Value("${file.config.path}")
     private String confPath;
     @Autowired
-    private SourceService sourceService;
-    @Autowired
     private FileService fileService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserControllerDetailService userServiceControllerDetailService;
     /**
      * 头菜单
      * @return

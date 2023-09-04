@@ -78,7 +78,9 @@
             if (data.rs) {
                 var  editorTheme = "pastel-on-dark";
                 var params = data.data.params;
-                editorTheme = params.ueColor.split(",")[params.off].replace(/\s+/g,"");
+                if (notNull(params.ueColor)){
+                    editorTheme = params.ueColor.split(",")[params.off].replace(/\s+/g,"");
+                }
                 console.log("---》",editorTheme)
                 testEditor = editormd("article_content_info", {
                 width: "95%",

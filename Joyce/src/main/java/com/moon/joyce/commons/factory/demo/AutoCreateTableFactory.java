@@ -46,6 +46,7 @@ public class AutoCreateTableFactory extends BaseFactory implements TableFactory 
     private static int idValue = 0;
     //检测子文件容器
     private static Set<String> set = null;
+    //名称容器
     private static  Map<String,Set<String>> exitMap = null;
     //sql容器
     private static List<String> sqls = null;

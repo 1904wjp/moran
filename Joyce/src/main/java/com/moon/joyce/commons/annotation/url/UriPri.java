@@ -12,6 +12,8 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UriPri {
+    //名称
     String name() default "";
+    //前缀
     String pri() default "";
 }

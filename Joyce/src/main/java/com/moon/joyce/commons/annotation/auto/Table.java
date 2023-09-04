@@ -14,8 +14,13 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
+
+    //名称
     String name() default "";
+    //注释
     String content() default "";
+    //创建策略
     TableStrategy strategy() default TableStrategy.ADD;
+    //是否为父类，若为父类，则当前类不参加创建，但是其子类及其继承的属性会参加
     boolean isParent() default false;
 }

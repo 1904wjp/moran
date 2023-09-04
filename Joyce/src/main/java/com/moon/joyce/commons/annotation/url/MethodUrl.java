@@ -12,7 +12,10 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MethodUrl {
+    //名称
     String name() default "";
+    //链接
     String url() default "";
+    //参数
     String params() default "";
 }
