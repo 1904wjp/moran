@@ -122,7 +122,7 @@ function saveSource(){
     if (type===null){
         type === 1;
     }
-    console.log("----------->",type);
+    //console.log("----------->",type);
     var data={
         id:$("#id").val(),
         type:type,

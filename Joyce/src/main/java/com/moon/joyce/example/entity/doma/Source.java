@@ -54,6 +54,7 @@ public class Source  extends Page {
      * 应用状态【0:普通1:主页;2:主页选项;3:备用;4:相册】
      */
     @TableField("apply_status")
+    @Column(comment = "应用状态【0:普通1:主页;2:主页选项;3:备用;4:相册】")
     private Integer applyStatus;
     /**
      * 标题注释

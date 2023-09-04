@@ -870,13 +870,13 @@ var HttpRequest = function (options) {
 var ajax = function (options) {
     // 登入页无需携带token
     // 后台如果要求 Content-Type
-    if (options.type == 'post') {
+    if (options.type === 'post') {
         options.contentType = 'application/x-www-form-urlencoded';
     }
     HttpRequest(options);
 }
 var ajaxHttp = function (options) {
-    if (options.type == 'post') {
+    if (options.type === 'post') {
         options.contentType = 'application/x-www-form-urlencoded';
     }
     // 每次请求携带token

@@ -15,10 +15,9 @@ $(document).ready(function () {
  */
 function loadBackGround() {
     $.ajax({
-        url: '/example/source/getList',
+        url: '/example/source/getList'+"?applyStatus=0",
         type: 'GET',
         dataType: 'json',
-
     }).done(function (data) {
         var img =  Math.floor(Math.random()* (data.rows.length-1)) ;
         var Img = data.rows;
