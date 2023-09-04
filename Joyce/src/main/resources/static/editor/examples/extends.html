@@ -22,18 +22,18 @@ var testEditor;
 function EditormdExtend() {
 
     this.extend("methodC", function() {
-        console.log("methodC");
+       //console.log("methodC");
     });
 
     // or
     testEditor.extend("methodA", function() {
-        console.log("methodA");
+       //console.log("methodA");
     });
 
     // one by one setting
     this.set("propertyA", "propertyA");
     this.set("methodE", function() {
-        console.log("mothodE", this);
+       //console.log("mothodE", this);
     });
 
     // mutil
@@ -41,12 +41,12 @@ function EditormdExtend() {
         propertyA : "propertyAAAA", // override, you can override other default method.
         propertyB : "propertyB",
         methodD : function() {
-            console.log("methodD");
+           //console.log("methodD");
         }
     });
 
     this.methodB = function() {
-        console.log("methodB");
+       //console.log("methodB");
     };
 
     testEditor.methodA();
@@ -55,16 +55,16 @@ function EditormdExtend() {
     this.methodE();
     editormd.methodOne();
 
-    console.log(this, this.propertyA);
+   //console.log(this, this.propertyA);
 }
 
 editormd.fn.customMethod = function(){
-    console.log("customMethod", this);
+   //console.log("customMethod", this);
 };
 
 $(function() {
     editormd.methodOne = function(){
-        console.log("editormd.methodOne");
+       //console.log("editormd.methodOne");
     };
 
     testEditor = editormd("test-editormd", {

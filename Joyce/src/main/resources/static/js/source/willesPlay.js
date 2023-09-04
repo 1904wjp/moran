@@ -1,10 +1,12 @@
+
+var playVideo = $('video');
+var playPause = $('.playPause'); //播放和暂停
+var currentTime = $('.timebar .currentTime'); //当前时间
+var duration = $('.timebar .duration'); //总时间
+var progress = $('.timebar .progress-bar'); //进度条
+var volumebar = $('.volumeBar .volumewrap').find('.progress-bar');
 $(function() {
-	var playVideo = $('video');
-	var playPause = $('.playPause'); //播放和暂停
-	var currentTime = $('.timebar .currentTime'); //当前时间
-	var duration = $('.timebar .duration'); //总时间
-	var progress = $('.timebar .progress-bar'); //进度条
-	var volumebar = $('.volumeBar .volumewrap').find('.progress-bar');
+
 	playVideo[0].volume = 0.4; //初始化音量
 	playPause.on('click', function() {
 		playControl();
@@ -148,16 +150,7 @@ $(function() {
 		e.preventDefault();
 	}
 
-	function playControl() {
-			playPause.toggleClass('playIcon');
-			if (playVideo[0].paused) {
-				playVideo[0].play();
-				$('.playTip').removeClass('glyphicon-play').addClass('glyphicon-pause').fadeOut();
-			} else {
-				playVideo[0].pause();
-				$('.playTip').removeClass('glyphicon-pause').addClass('glyphicon-play').fadeIn();
-			}
-		}
+
 		//关灯
 	$('.btnLight').click(function(e) {
 		e = e || window.event;
@@ -205,6 +198,18 @@ $(function() {
 	});
 });
 
+
+function playControl() {
+	playPause.toggleClass('playIcon');
+	if (playVideo[0].paused) {
+		playVideo[0].play();
+		$('.playTip').removeClass('glyphicon-play').addClass('glyphicon-pause').fadeOut();
+	} else {
+		playVideo[0].pause();
+		$('.playTip').removeClass('glyphicon-pause').addClass('glyphicon-play').fadeIn();
+	}
+}
+
 //秒转时间
 function formatSeconds(value) {
 	value = parseInt(value);
@@ -232,8 +237,9 @@ function formatSeconds(value) {
 
 var _hmt = _hmt || [];
 (function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?ecbff70bd46d40393c105bbc42edfcad";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
+	//百度站点统计
+  // var hm = document.createElement("script");
+  // hm.src = "https://hm.baidu.com/hm.js?ecbff70bd46d40393c105bbc42edfcad";
+  // var s = document.getElementsByTagName("script")[0];
+  // s.parentNode.insertBefore(hm, s);
 })();

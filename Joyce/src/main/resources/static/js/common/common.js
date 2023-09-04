@@ -147,7 +147,7 @@ function uploadFile(file, restUrl, img, objUrl, size) {
         tips("", "图片不能为空");
         return;
     }
-    console.log("图片", file[0].files[0]);
+   //console.log("图片", file[0].files[0]);
     var formData = new FormData();
     formData.append('file', file[0].files[0]);
     //设置图片类型
@@ -179,7 +179,7 @@ function uploadFile(file, restUrl, img, objUrl, size) {
                 objUrl.val(data.data);
                 //var pic = document.getElementsByName("picFlag");
                 //pic.value=data.data;
-               // console.log("---->",pic.value);
+               ////console.log("---->",pic.value);
             }
         }
     });
@@ -193,12 +193,12 @@ function uploadFile(file, restUrl, img, objUrl, size) {
  * @param obj
  */
 function uploadFiles(files,restUrl,obj){
-    console.log(files,"--",restUrl,"--",obj)
+   //console.log(files,"--",restUrl,"--",obj)
     var formData = new FormData();
     for (let i = 0; i < files.length ; i++) {
         formData.append("files",files[i]);
     }
-    console.log("--",formData);
+   //console.log("--",formData);
     addLoadingModal("请稍后...正在上传资源");
     $.ajax({
         url: restUrl,
@@ -226,9 +226,10 @@ function uploadFiles(files,restUrl,obj){
  * @param src
  */
 function appendVideo(divObject, videoId, src) {
-    var video = $("<video id=\"" + videoId + "\" class='append_video' autoplay=\"autoplay\" loop=\"loop\" muted=\"muted\"><source src=\"" + src + "\"></video>");
+    var video = $("<video  class='append_video' autoplay=\"autoplay\" loop=\"loop\" muted=\"muted\"><source src=\"" + src + "\"></video>");
     divObject.append(video);
-    /*divObject[0].play();*/
+    $(".append_video")[0].play();
+    $(".append_video")[0].volume = 1.0;
 }
 
 /**
@@ -882,4 +883,6 @@ var ajaxHttp = function (options) {
     options.token = localStorage.getItem('access_token');
     HttpRequest(options);
 }
+
+
 

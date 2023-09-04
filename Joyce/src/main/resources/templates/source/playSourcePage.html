@@ -7,6 +7,12 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <div>
+                <a href="/example/source/sourceListPage"> <span  class="pull-right" style="background-color: #00a8c6;font-size: 10px">返回列表</span></a>
+            </div>
+            <div style="display: none">
+                <input type="text" id="game"/><input type="button" class="submit" value="提交" onclick="game()"/>
+            </div>
             <div id="willesPlay">
                 <div class="playHeader">
                     <div class="videoName" th:text="${sourceName}"></div>
@@ -36,12 +42,12 @@
                 <div class="playControll">
                     <div class="playPause playIcon"></div>
                     <div class="timebar">
-                        <span class="currentTime time">0:00:00</span>
+                        <span id="currentTime" class="currentTime time">0:00:00</span>
                         <div class="progress">
                             <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
                                  aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                         </div>
-                        <span class="duration time" th:text="${sumTime}">0:00:00</span>
+                        <span id="duration" class="duration time" th:text="${sumTime}">0:00:00</span>
                     </div>
                     <div class="otherControl">
                         <span class="volume glyphicon glyphicon-volume-down"></span>
@@ -76,18 +82,50 @@
 </div>
 <div style="display:none;">
     <script type="text/javascript" th:src="@{/static/js/jQuery.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/source/source.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/source/willesPlay.js}"></script>
     <script>
         /*   var _hmt = _hmt || [];*/
         var array = [];
-        var id = $('#id').val();
+        var intervalId = null;
+        var video = $("#video");
+        var id = $('#id');
+
+        var number = 0;
+        var count = 0;
+        function value(){
+            number = Math.floor(Math.random()*(10-1)+1);
+        }
+        function game(){
+            if (count===3){
+                alert("你输了，点确定就是承认你是小垃圾，游戏重新开始");
+                count=0;
+               value();
+            }else {
+                count++;
+                var target = parseInt($("#game").val());
+                if (target-number===0){
+                    alert("你答对了!!!");
+                    count=0;
+                    value();
+                }else if (target-number>0){
+                    tips(false,"这个数字比"+target+"小");
+                } else {
+                    tips(false,"这个数字比"+target+"大");
+                }
+            }
+
+            $("#game").val('');
+        }
         $(document).ready(function () {
+
             if ($('#exist').val() === '1') {
                 tips(false, "文件链接不存在")
             }
             if (id == null) {
                 toList("/example/source");
             }
-            $("#video").attr("src", "/example/source/playVideo/" + id);
+            $("#video").attr("src", "/example/source/playVideo/" + id.val());
             // console.log("]]]",array);
             var data={
                 type:$('#type').val(),
@@ -120,42 +158,80 @@
             //    console.log("速度："+$("#speed").val());
                 var video = document.querySelector("video");
                 video .playbackRate =   parseFloat($("#speed").val());
-                video.play();
+               // playControl();
+
             })
+             intervalId = setInterval(function(){
+              if ( $("#currentTime").text() === $("#duration").text()){
+                  next();
+              }
+            }, 1000*30);
         });
 
         //寻找索引
         function findIndex() {
-            var index = 0;
-            for (let i = 0; i < array.length; i++) {
-                if (array[i].id == id) {
-                    index = i;
-                    break;
-                }
-            }
-            return index;
+          //  console.log("当前索引:",searchTarget(0,array.length-1));
+            return searchTarget(0,array.length-1);
         }
-
+        //二分查找目標
+        function searchTarget(left,right){
+            var id1 = parseInt(id.val());
+            //console.log("id:"+id1);
+            if (id1 === array[right].id){
+                return right;
+            }
+            if (id1 === array[left].id){
+                return left;
+            }
+            if (id1<array[left].id || id1>array[left]){
+                return 0;
+            }
+            var mid = Math.ceil(left+(right-left)/2);
+            //console.log("中间数:"+mid);
+            if (id1===array[mid].id){
+                return mid;
+            }
+            if (id1>array[mid].id){
+               return  searchTarget(mid+1,right);
+            }
+            if (id1<array[mid].id){
+               return  searchTarget(left,mid);
+            }
+        }
+        /**
+         * 上一个视频
+         */
         function pri() {
             if (findIndex() !== 0) {
                 var url = "/example/source/playSourcePage/" + array[findIndex() - 1].id + "/" + array[findIndex() - 1].sourceName+"/"+$('#searchWord').val()+"/"+$('#lable').val()+"/" +$('#type').val();
                 toList(url);
+                //id.val((parseInt(id.val())-1)+"")
+                //video[0].play();
             } else {
                 tips(false, "当前是第一个");
             }
         }
 
+        /**
+         * 下一个视频
+         */
         function next() {
+            console.log(findIndex())
             if (findIndex() !== array.length - 1) {
                 var url = "/example/source/playSourcePage/" + array[findIndex() + 1].id + "/" + array[findIndex() + 1].sourceName+"/"+$('#searchWord').val()+"/"+$('#lable').val()+"/" +$('#type').val();
                 toList(url);
+                //id.val((parseInt(id.val())-1)+"")
+                //video[0].play();
             } else {
+                if (intervalId!==null){
+                    setTimeout(function(){
+                        clearInterval(intervalId);
+                    }, 5000);
+                }
                 tips(false, "当前是最后一个");
             }
         }
     </script>
 </div>
-<script type="text/javascript" th:src="@{/static/js/source/source.js}"></script>
-<script type="text/javascript" th:src="@{/static/js/source/willesPlay.js}"></script>
 <head class="panelBar" th:replace="/common/public/footer::footer"></head>
 

@@ -16,12 +16,12 @@
                 var markedRenderer     = new marked.Renderer();
                 var markdownToC        = markdownToC || [];
                 
-                console.log("markedRenderer =>", markedRenderer);
+               //console.log("markedRenderer =>", markedRenderer);
                 
                 markedRenderer.listitem = function(text) {
                     if (/^\s*\[[x\s]\]\s*/.test(text)) 
                     {
-                        console.log("is todo list =>", text);
+                       //console.log("is todo list =>", text);
                         text = text.replace(/^\s*\[\s\]\s*/, '<input type="checkbox" class="task-list-item-checkbox"> ')
                                    .replace(/^\s*\[x\]\s*/, '<input type="checkbox" class="task-list-item-checkbox" checked disabled /> ');
                         
@@ -52,7 +52,7 @@
                 ].join("\n");
                 
                 var md = marked(todoListMarkdown);
-                console.log(md);
+               //console.log(md);
                 
                 $("body").append(md);
             });

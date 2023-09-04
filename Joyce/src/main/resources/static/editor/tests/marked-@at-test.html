@@ -131,7 +131,7 @@ This @pandao an H2 @pandao
                 var markedRenderer     = new marked.Renderer();
                 var markdownToC        = markdownToC || [];
                 
-                console.log("markedRenderer =>", markedRenderer);
+               //console.log("markedRenderer =>", markedRenderer);
                 
                 var atReg = /@(\w+)/g;
                 
@@ -140,7 +140,7 @@ This @pandao an H2 @pandao
                     if (atReg.test(text))
                     {
                         text = text.replace(atReg, function($1, $2){
-                            console.log($1, $2);
+                           //console.log($1, $2);
                             return "<a href=\"https://github.com/" + $2 + "\">" + $1 + "</a>";
                         });
                     }
@@ -149,7 +149,7 @@ This @pandao an H2 @pandao
                 };
                 
                 markedRenderer.link = function (href,title,text){
-                    console.log("link =>", href,title,text);
+                   //console.log("link =>", href,title,text);
                     
                     if(this.options.sanitize) {
                         try{
@@ -180,7 +180,7 @@ This @pandao an H2 @pandao
                 }
                 
                 markedRenderer.paragraph = function(text) {                
-                    console.log("paragraph =>", text, atReg.test(text));
+                   //console.log("paragraph =>", text, atReg.test(text));
                     return "<p>" + this.at(text) + "</p>\n";
                 };
                 
@@ -193,7 +193,7 @@ This @pandao an H2 @pandao
                 };
                 
                 markedRenderer.tablecell = function (content,flags){
-                    console.log(content);
+                   //console.log(content);
                     var type=flags.header?"th":"td";
                     var tag=flags.align?"<"+type+' style="text-align:'+flags.align+'">':"<"+type+">";
                     return tag+this.at(content)+"</"+type+">\n";

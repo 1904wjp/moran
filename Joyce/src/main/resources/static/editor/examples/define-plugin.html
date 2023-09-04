@@ -113,16 +113,16 @@
             var testEditor;
             
             editormd.fn.customMethod = function() {
-                console.log("customMethod", this);
+               //console.log("customMethod", this);
             };
             
             editormd.fn.pluginA = function() {
-                console.log("pluginA", this);
+               //console.log("pluginA", this);
             };
             
             $(function() {
                 editormd.methodOne = function(){
-                    console.log("editormd.methodOne");
+                   //console.log("editormd.methodOne");
                 };
                 
                 editormd.loadPlugin("../plugins/test-plugin/test-plugin", function(){

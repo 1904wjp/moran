@@ -20,34 +20,34 @@
             var testLink3 = "<a href=\"\" title=\"\"></a> ";
             var texts = (testLink + testLink2 + testLink3).split(/\<a\s*([^\>]+)\>([^\>]*)\<\/a\>/);
             
-            console.log(texts);
+           //console.log(texts);
             
             for (var i = 0, len = texts.length; i < len; i++)
             {
-                if((i+1) % 3 == 0) console.log(texts[i]);
+                if((i+1) % 3 == 0)//console.log(texts[i]);
             }
             
             (testLink + testLink2).replace(linkTextReg, function(){
                 //console.log($1, $2);
                 //console.log("linkText =>", $3);
-                console.log(arguments);
+               //console.log(arguments);
             });
             
             testLink.replace(linkTextReg, function($1, $2, $3){
-                console.log($1, $2, $3);
+               //console.log($1, $2, $3);
             });
             
-            console.log(linkReg.test(" <a name=\"dddd\" class=\"link\" style=\"color:red;\">Markdown Basics</a> "));
+           //console.log(linkReg.test(" <a name=\"dddd\" class=\"link\" style=\"color:red;\">Markdown Basics</a> "));
             
-            console.log(linkReg.test("<a name=\"dddd\" href=\"http://daringfireball.com/projects/markdown/basics\" class=\"link\" style=\"color:red;\">Markdown Basics</a> "));
+           //console.log(linkReg.test("<a name=\"dddd\" href=\"http://daringfireball.com/projects/markdown/basics\" class=\"link\" style=\"color:red;\">Markdown Basics</a> "));
             
-            console.log(linkReg.test("<a  href=\"http://daringfireball.net/projects/markdown/basics?xx=ddd&fddf&temp=265656565665656526\"   title=\"dddd\" class=\"link\" style=\"color:red;\">Markdown Basics</a> "));
+           //console.log(linkReg.test("<a  href=\"http://daringfireball.net/projects/markdown/basics?xx=ddd&fddf&temp=265656565665656526\"   title=\"dddd\" class=\"link\" style=\"color:red;\">Markdown Basics</a> "));
             
-            console.log(linkReg.test("<a  href=\"http://daringfireball.net/projects/markdown/basics\"   title=\"dddd\"><span>Markdown Basics</span></a> "));
+           //console.log(linkReg.test("<a  href=\"http://daringfireball.net/projects/markdown/basics\"   title=\"dddd\"><span>Markdown Basics</span></a> "));
             
-            console.log(linkReg.test("<a  href=\"http://daringfireball.net/projects/markdown/basics?xx=ddd&fddf&temp=265656565665656526\"   title=\"dddd\"><span class=\"active\">Markdown Basics</span></a> "));
-            console.log(linkReg.test("<a  href=\"http://www.fdasfasdfsdaf.com/projects/markdown/basics\"   title=\"dddd\"><a href=\"#ddd\" class=\"active\">Markdown Basics</a></a> "));
-            console.log(linkReg.test("afdsfasfsadf<a  href=\"http://daringfireball.net/projects/markdown/basics?xx=ddd&fddf&temp=265656565665656526\"   title=\"dddd\"><a href=\"#ddd\" class=\"active\">Markdown Basics</a></a> fdasfasdfadsfsfd <a  href=\"http://daringfireball.net/projects/markdown/basics\"   title=\"dddd\"><span>Markdown Basics</span></a>"));
+           //console.log(linkReg.test("<a  href=\"http://daringfireball.net/projects/markdown/basics?xx=ddd&fddf&temp=265656565665656526\"   title=\"dddd\"><span class=\"active\">Markdown Basics</span></a> "));
+           //console.log(linkReg.test("<a  href=\"http://www.fdasfasdfsdaf.com/projects/markdown/basics\"   title=\"dddd\"><a href=\"#ddd\" class=\"active\">Markdown Basics</a></a> "));
+           //console.log(linkReg.test("afdsfasfsadf<a  href=\"http://daringfireball.net/projects/markdown/basics?xx=ddd&fddf&temp=265656565665656526\"   title=\"dddd\"><a href=\"#ddd\" class=\"active\">Markdown Basics</a></a> fdasfasdfadsfsfd <a  href=\"http://daringfireball.net/projects/markdown/basics\"   title=\"dddd\"><span>Markdown Basics</span></a>"));
             
             $(function() {
                 var markedRenderer     = new marked.Renderer();
@@ -63,7 +63,7 @@
                         var tempText = [];
                         text = text.split(/\<a\s*([^\>]+)\>([^\>]*)\<\/a\>/);
 
-                        console.log(text);
+                       //console.log(text);
 
                         for (var i = 0, len = text.length; i < len; i++)
                         {

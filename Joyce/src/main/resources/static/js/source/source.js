@@ -138,7 +138,7 @@ function saveSource(){
         url: $("#source_url").val(),
         sourceName: $("#sourceName").val(),
         sort: $("#sort").val(),
-    }
+    };
     if (vailDate(fData)) {
         Ewin.confirm({message: "确认要提交数据？"}).on(function (e) {
             if (!e){
@@ -153,7 +153,7 @@ function saveSource(){
             tips(data.rs,data.msg);
             if (data.rs){
                 $("#id").val('');
-                $("#type").val('');
+                //$("#type").val('');
                 $("#source_url").val('');
                 $("#sourceName").val('');
                 $("#sort").val('');
@@ -162,6 +162,7 @@ function saveSource(){
                 $('#descContent').val('');
                 $('#display_img_resource').attr("src","");
                 $('#pic_source_file2').val('');
+                $('#pic_source_file').val('');
                /* $("#applyStatus option:selected").val('');*/
                 $("#src_video").empty();
             }

@@ -20,7 +20,7 @@
 ```javascript
 {
     onchange : function() {
-        console.log("onchange =>", this, this.id, this.settings, this.state);
+       //console.log("onchange =>", this, this.id, this.settings, this.state);
         // ....
     }
 }
@@ -40,7 +40,7 @@
                     path   : '../lib/',
                     onchange : function() {
                         $("#output").html("onchange : this.id =>" + this.id + ", markdown =>" + this.getValue());
-                        console.log("onchange =>", this, this.id, this.settings, this.state);
+                       //console.log("onchange =>", this, this.id, this.settings, this.state);
                     }
                 });
             });
