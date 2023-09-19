@@ -35,6 +35,7 @@ public class UserControllerDetailServiceImpl implements UserControllerDetailServ
     /**
      * 注入用户服务
      */
+    @Autowired
     private UserService userService;
 
     /**

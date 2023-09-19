@@ -1,11 +1,12 @@
+var info={};
 //邮件正则
-var emailReg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+ info.emailReg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
 //返回信息
-
-var returnEmailMsg = "输入的邮件号有误";
+ info.returnEmailMsg = "输入的邮件号有误，请规范书写";
 //手机正则
-var phoneReg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
-var returnPhoneMsg = "输入的手机号有误";
+ info.phoneReg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+ info.returnPhoneMsg = "输入的手机号格式有误，请规范书写";
+ info.errorMsg = "输入信息有误";
 $(document).ready(function () {
     loadBackGround();
 });
@@ -46,7 +47,9 @@ function registFuc() {
         email: $("#email").val(),
         nickname: $('#nickname').val()
     };
-    if (vailDate(data)) {
+    if ($('.check_info').val() !=='0'){
+        tips(false,info.errorMsg);
+    } else if (vailDate(data)) {
         $.ajax({
             url: '/example/user/doSaveUser',
             type: 'POST',
@@ -63,12 +66,12 @@ function registFuc() {
     }
 }
 
-function phoneRegFuc(){
-    var phone= $('#phone').val();
-    checkFill(phone,phoneReg,returnPhoneMsg);
-}
-
-function emailRegFuc(){
-    var email= $('#email').val();
-    checkFill(email,emailReg,returnEmailMsg);
-}
+// function phoneRegFuc(){
+//     var phone= $('#phone').val();
+//     checkFill(phone,phoneReg,returnPhoneMsg);
+// }
+//
+// function emailRegFuc(){
+//     var email= $('#email').val();
+//     checkFill(email,emailReg,returnEmailMsg);
+// }

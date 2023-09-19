@@ -312,7 +312,9 @@ public class UserController extends BaseController {
     @Transactional
     @RequestMapping("/doSaveUser")
     public Result saveUser(User user) {
-        setBaseField(user);
+        if (Objects.nonNull(user.getId())){
+            setBaseField(user);
+        }
         //创建保存数据结果
         boolean result = false;
         //密码加密
