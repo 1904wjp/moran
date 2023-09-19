@@ -31,7 +31,7 @@ spring:
   aop:
      proxy-target-class: true #true表示cglib代理
   datasource:
-    url: jdbc:mysql://${app.domain}:${app.datasource.port}/${app.datasource.database}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowLoadLocalInfile=true
+    url: jdbc:mysql://${app.domain}:${app.datasource.port}/${app.datasource.database}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai&allowLoadLocalInfile=true
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: root
