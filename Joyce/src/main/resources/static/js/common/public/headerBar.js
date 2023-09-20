@@ -175,6 +175,18 @@ function dropdownBlock(){
     }
     flag = -flag;
 }
+ var showFlag = true;
+function menuShowHide() {
+     if (showFlag){
+         $("#menu_bar").hide();
+         showFlag = false;
+     }else {
+         $("#menu_bar").show();
+         showFlag = true;
+     }
+
+ }
+
 $("#user_info").hover(function(){
     $(".list-group").show();
 },function(){

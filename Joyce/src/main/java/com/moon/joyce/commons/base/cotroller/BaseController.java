@@ -347,6 +347,7 @@ public class BaseController extends R {
      * @return
      */
     public  Logging getLogging(String eventDesc,String params,String uri){
+        uri = uri.replace("//","/");
         Logging logging = new Logging(eventDesc,params,uri);
         if (Objects.nonNull(getSessionUser())){
             setBaseField(logging);

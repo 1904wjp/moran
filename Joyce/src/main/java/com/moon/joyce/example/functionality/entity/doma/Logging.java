@@ -76,5 +76,6 @@ public class Logging extends BaseEntity {
     public Logging(String eventDesc, String params,String uri) {
         this.eventDesc = eventDesc;
         this.params = params;
+        this.uri = uri;
     }
 }

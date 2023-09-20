@@ -518,7 +518,8 @@ public class UserController extends BaseController {
                 code = 206;
                 loggingService.save(getLogging("用户登录成功，此号在别处登录",param,urlPrefix+"/doLogin"));
             }
-            loggingService.save(getLogging("用户登录成功",param,urlPrefix+"/doLogin"));
+            Logging logging = getLogging("用户登录成功", param, urlPrefix + "/doLogin");
+            loggingService.save(logging);
             logger.info("-------------->登录sessionId：{}", getSession().getId());
             return success(code, msg, user.getStatus());
         }
