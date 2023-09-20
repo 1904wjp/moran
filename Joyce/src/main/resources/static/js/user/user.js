@@ -266,8 +266,7 @@ function getEmailCodeFuc() {
 function forget_password_update_verifyFuc() {
     var data = {
         "emailCode": $("#email_code").val(),
-        "email": $("#forget_email").val(),
-        "newPassword": $("#new_password").val()
+        "email": $("#forget_email").val()
     };
 
     if (vailDate(data)){
@@ -406,7 +405,7 @@ function updateUserFuc() {
                                 toMain();
                             }
                         }).fail(function () {
-                            tips(false,data.msg)
+                            tips(false,data.msg);
                         });
                       //  break;
                    // }

@@ -14,20 +14,17 @@ import com.moon.joyce.example.entity.doma.UU;
 import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.entity.vo.UserChartVo;
-import com.moon.joyce.example.functionality.entity.doma.PageComponent;
-import com.moon.joyce.example.functionality.entity.doma.RequestCount;
-import com.moon.joyce.example.functionality.entity.doma.Result;
-import com.moon.joyce.example.functionality.entity.doma.Setting;
+import com.moon.joyce.example.functionality.entity.doma.*;
 import com.moon.joyce.example.functionality.service.FileService;
-import com.moon.joyce.example.service.ChatRecordService;
+
 import com.moon.joyce.example.service.UserService;
 import com.moon.joyce.example.service.serviceControllerDetails.UserControllerDetailService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -48,7 +45,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/example/user")
 public class UserController extends BaseController {
 
-    private User user;
+   // private User user;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 /*********************************************************************************************************************************************/
     /**************全局变量***********************/
@@ -56,11 +53,7 @@ public class UserController extends BaseController {
     private static HashMap<String, RequestCount> IP_SESSION_MAP = new HashMap<>();
     @Autowired
     private UserService userService;
-    @Autowired
-    private ChatRecordService chatRecordService;
     //redis缓存
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 页面路径前缀
@@ -244,6 +237,7 @@ public class UserController extends BaseController {
         if (StringUtils.isNoneBlank(nickname)) {
             userChartVos = userChartVos.stream().filter(x -> x.getNickname().equals(nickname)).collect(Collectors.toList());
         }
+        loggingService.save(getLogging("查看了好友信息",StringsUtils.paramFormat("nickname",nickname),urlPrefix+"/sessionUsers"));
         return success(userChartVos);
     }
 
@@ -300,6 +294,7 @@ public class UserController extends BaseController {
         }
         chatRecords.add(chatRecord);
         getRedisValueOperation().set(addChatRecords, JSON.toJSONString(chatRecords));
+        loggingService.save(getLogging("用户发送送数据",StringsUtils.paramFormat("id",id)+","+StringsUtils.paramFormat("msg",msg),urlPrefix+"/sendTo"));
         return dataResult(true, "发送失败", "发送成功");
     }
 
@@ -311,18 +306,25 @@ public class UserController extends BaseController {
     @ResponseBody
     @Transactional
     @RequestMapping("/doSaveUser")
-    public Result saveUser(User user) {
+    public Result saveUser(User user,HttpServletRequest request) {
         if (Objects.nonNull(user.getId())){
             setBaseField(user);
         }
         //创建保存数据结果
         boolean result = false;
+        String logIp = HttpUtils.getIpAddress(request);
         //密码加密
         if (!StringUtils.isBlank(user.getPassword())) {
             user.setPassword(MD5Utils.getMD5Str(user.getPassword()));
         }
         if (Objects.nonNull(user.getId())) {
             result = userService.saveOrUpdate(user);
+            if (result){
+                loggingService.save(getLogging("用户修改了信息，并且成功了",JSONObject.toJSONString(user),urlPrefix+"/doSaveUser"));
+                removeSessionUser();
+                return success("用户修改信息成功");
+            }
+            loggingService.save(getLogging("用户修改了信息，但失败了",JSONObject.toJSONString(user),urlPrefix+"/doSaveUser"));
         }
         //注册
         if (Objects.isNull(user.getId())) {
@@ -335,15 +337,16 @@ public class UserController extends BaseController {
             // userServiceControllerDetailService.getEmailAddress(user,appUrl);
             user.setFileUrl(Constant.FILE_DEFAULT_NAME);
             result = userService.saveOrUpdate(user);
-        }
-        //结果处理
-        if (result) {
-            if (Objects.nonNull(getSessionUser())) {
-                removeSessionUser();
+            if (result){
+                Logging logging = getLogging("用户注册了信息，并且成功了", JSONObject.toJSONString(user), urlPrefix + "/doSaveUser");
+                logging.setLoginIp(logIp);
+                logging.setUsername(user.getUsername());
+                loggingService.save(logging);
+                return success("用户注册成功");
             }
-            setSession(Constant.SESSION_USER, user);
-            return success();
         }
+        loggingService.save(getLogging("用户注册了信息，但失败了",JSONObject.toJSONString(user),urlPrefix+"/doSaveUser"));
+        //结果处理
         return error(Constant.ERROR_CODE);
     }
 
@@ -369,6 +372,7 @@ public class UserController extends BaseController {
             updateUser.setId(dbUser.getId());
             userService.updateUser(dbUser, updateUser, Constant.USER_TYPE_UP_VAILD_STATUS);
         }
+        loggingService.save(getLogging("用户使用了验证码",StringsUtils.paramFormat("code",code),urlPrefix+"/checkCode"));
         return Constant.REDIRECT + urlPrefix + "login";
     }
 
@@ -382,10 +386,15 @@ public class UserController extends BaseController {
     @RequestMapping("/doLogin")
     public Result loginUser(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
         String logIp = HttpUtils.getIpAddress(request);
+        String param = StringsUtils.paramFormat("username",username)+","+StringsUtils.paramFormat("password",password);
         if (Objects.nonNull(IP_SESSION_MAP.get(username+logIp))){
             RequestCount requestCount = IP_SESSION_MAP.get(username+logIp);
             if (requestCount.getCount()==10){
                 if (!DateUtils.dateCompare(requestCount.getLimitTime(),new Date(),24*60*60*1000L)){
+                    Logging logging = getLogging("用户登录失败，密码输入错误次数过多", param, urlPrefix + "/doLogin");
+                    logging.setLoginIp(logIp);
+                    logging.setUsername(username);
+                    loggingService.save(logging);
                     return error("密码输入错误次数过多,请在1天后后重试");
                 }
                 IP_SESSION_MAP.remove(username+logIp);
@@ -398,6 +407,10 @@ public class UserController extends BaseController {
             user.setStatus(dbUser.getStatus());
             if (!user.getPassword().equals(dbUser.getPassword())) {
                 setCount(username+logIp);
+                Logging logging = getLogging("用户登录失败，密码输入错误", param, urlPrefix + "/doLogin");
+                logging.setLoginIp(logIp);
+                logging.setUsername(username);
+                loggingService.save(logging);
                 return error(Constant.CHINESE_PASSWORD_ERROR_MESSAGE);
             }
             //头像为空则为默认值
@@ -407,6 +420,10 @@ public class UserController extends BaseController {
             //设置当前登录账号的状态
             Result checkStatusResult = userServiceControllerDetailService.checkStatusData(dbUser);
             if (!checkStatusResult.getRs()) {
+                Logging logging = getLogging("用户登录失败，用户状态不允许登录", param, urlPrefix + "/doLogin");
+                logging.setLoginIp(logIp);
+                logging.setUsername(username);
+                loggingService.save(logging);
                 return checkStatusResult;
             }
             int authCode = getAuthCode(dbUser, request);
@@ -419,6 +436,10 @@ public class UserController extends BaseController {
                         if (Integer.parseInt(getSessionValue("flag").toString()) == 4){
                             dbUser.setStatus(Constant.USER_TYPE_FROZEN_STATUS);
                             userService.saveOrUpdate(dbUser);
+                            Logging logging = getLogging("用户登录失败，操作次数过多，该用户已被冻结", param, urlPrefix + "/doLogin");
+                            logging.setLoginIp(logIp);
+                            logging.setUsername(username);
+                            loggingService.save(logging);
                             return error("操作次数过多，该用户已被冻结");
                         }
                     }else {
@@ -437,6 +458,10 @@ public class UserController extends BaseController {
             }*/
             boolean rs = fileService.writeJoyceConfig(dbUser.getId().toString(), null);
             if (!rs) {
+                Logging logging = getLogging("用户登录失败，初始化用户文件失败", param, urlPrefix + "/doLogin");
+                logging.setLoginIp(logIp);
+                logging.setUsername(username);
+                loggingService.save(logging);
                 return error("初始化用户文件失败");
             }
             //设置当前登录人
@@ -483,6 +508,7 @@ public class UserController extends BaseController {
             }
             logger.info(username + "======>登录成功");
             USER_SESSION_MAP.put(getSessionUserId(), getSession().getId());
+            setSession(getSessionUserId()+"ip",logIp);
             setSession("index", 0);
             getRedisValueOperation().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
             String msg = Constant.RESULT_SUCCESS_MSG;
@@ -490,10 +516,16 @@ public class UserController extends BaseController {
             if (flag != 0) {
                 msg = "此号在别处登录";
                 code = 206;
+                loggingService.save(getLogging("用户登录成功，此号在别处登录",param,urlPrefix+"/doLogin"));
             }
+            loggingService.save(getLogging("用户登录成功",param,urlPrefix+"/doLogin"));
             logger.info("-------------->登录sessionId：{}", getSession().getId());
             return success(code, msg, user.getStatus());
         }
+        Logging logging = getLogging("用户登录失败，" + Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE, param, urlPrefix + "/doLogin");
+        logging.setLoginIp(logIp);
+        logging.setUsername(username);
+        loggingService.save(logging);
         return error(Constant.ERROR_CODE, Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
     }
 
@@ -505,6 +537,7 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping("/userListData")
     public PageVo getUsers(User user) {
+        loggingService.save(getLogging("获取所有用户数据",JSONObject.toJSONString(user),urlPrefix+"/userListData"));
         return userService.getPage(user);
     }
 
@@ -516,14 +549,17 @@ public class UserController extends BaseController {
     @Transactional
     @RequestMapping("/deleteUser")
     public Result deleteUser(@RequestParam String ids) {
+        String param = StringsUtils.paramFormat("ids",ids);
         if (StringUtils.isBlank(ids)) {
             return error(Constant.NULL_CODE);
         }
         List<String> list = StringsUtils.strToList(ids);
         if (StringsUtils.listIsContainsStr(getSessionUser().getId().toString(), list)) {
+            loggingService.save(getLogging("删除user失败，正在使用，无法操作",param,urlPrefix+"/deleteUser"));
             return error(getSessionUser().getUsername() + "正在使用，无法操作");
         }
         boolean del = userService.removeByIds(list);
+        loggingService.save(getLogging("删除user"+(del ?"成功":"失败"),param,urlPrefix+"/deleteUser"));
         return dataResult(del, Constant.ERROR_CODE);
     }
 
@@ -535,18 +571,22 @@ public class UserController extends BaseController {
     @Transactional
     @RequestMapping("/freezeUser")
     public Result freezeUser(@RequestParam String ids) {
+        String param = StringsUtils.paramFormat("ids",ids);
         if (StringUtils.isBlank(ids)) {
             return error(Constant.NULL_CODE);
         }
         if (ids.equals(getSessionUser().getId().toString())) {
+            loggingService.save(getLogging("冻结user失败,正在使用，无法操作",param,urlPrefix+"/freezeUser"));
             return error(getSessionUser().getUsername() + "正在使用，无法操作");
         }
         User dbUser = userService.getById(Long.valueOf(ids));
         if (Objects.isNull(dbUser)) {
+            loggingService.save(getLogging("冻结user失败,用户不存在",param,urlPrefix+"/freezeUser"));
             return error(Constant.NULL_CODE);
         }
         dbUser.setStatus(Constant.USER_TYPE_FROZEN_STATUS);
         boolean update = userService.updateById(dbUser);
+        loggingService.save(getLogging("冻结user"+(update?"成功":"失败"),param,urlPrefix+"/freezeUser"));
         return dataResult(update, Constant.ERROR_CODE);
     }
 
@@ -558,15 +598,18 @@ public class UserController extends BaseController {
     @Transactional
     @RequestMapping("/recoverUser")
     public Result recoverUser(@RequestParam String ids) {
+        String param = StringsUtils.paramFormat("ids",ids);
         if (StringUtils.isBlank(ids)) {
             return error(Constant.NULL_CODE);
         }
         User dbUser = userService.getById(Long.valueOf(ids));
         if (Objects.isNull(dbUser)) {
+            loggingService.save(getLogging("恢复用户失败，用户不存在",param,urlPrefix+"/recoverUser"));
             return error(Constant.NULL_CODE);
         }
         dbUser.setStatus(Constant.USER_TYPE_VAILD_STATUS);
         boolean update = userService.updateById(dbUser);
+        loggingService.save(getLogging("恢复用户"+(update?"成功":"失败"),param,urlPrefix+"/recoverUser"));
         return dataResult(update, Constant.ERROR_CODE);
     }
 
@@ -579,11 +622,14 @@ public class UserController extends BaseController {
     @Transactional
     @RequestMapping("/doQueryUser")
     public Result updateUser(@RequestParam Long id) {
+        String param = StringsUtils.paramFormat("id",id);
         User dbUser = userService.getById(id);
         Result result = userServiceControllerDetailService.checkStatusData(dbUser);
         if (!result.getRs()) {
+            loggingService.save(getLogging("用户准备编辑信息失败，检验未通过",param,urlPrefix+"/doQueryUser"));
             return result;
         }
+        loggingService.save(getLogging("用户准备编辑信息，检验通过",param,urlPrefix+"/doQueryUser"));
         return success(dbUser);
     }
 
@@ -603,6 +649,7 @@ public class UserController extends BaseController {
         }
         String mailCode = EmailUtils.SendMailCode(user.getEmail(), 6);
         cache = RedisUtils.getInstance();
+       // loggingService.save(getLogging("用户忘记密码，获取验证码",StringsUtils.paramFormat("email",email),urlPrefix+"/getEmailCode"));
         return dataResult(RedisUtils.setVerifyCode(cache, email, 60, mailCode), "验证码不可重复发送", "验证码已发送，请查看");
     }
 
@@ -610,13 +657,13 @@ public class UserController extends BaseController {
      * 检查验证码修改密码验证
       * @param emailCode
      * @param email
-     * @param newPassword
      * @return
      */
     @ResponseBody
     @Transactional
     @RequestMapping("/forgetPassword")
-    public Result checkUpdateCode(@RequestParam String emailCode, @RequestParam String email, @RequestParam String newPassword) {
+    public Result checkUpdateCode(@RequestParam String emailCode, @RequestParam String email) {
+        String param  = StringsUtils.paramFormat("emailCode",emailCode)+","+StringsUtils.paramFormat("email",email);
         User user = new User();
         user.setEmail(email);
         User dbUser = userService.getUser(user, "");
@@ -627,6 +674,7 @@ public class UserController extends BaseController {
         if (result == -1) {
             return error("请输入正确的验证码");
         }
+        loggingService.save(getLogging("用户校验修改密码验证码"+(result==1?"成功":"失败"),param,urlPrefix+"/forgetPassword"));
         return dataResult(result, "验证码已失效,请重新获取", "校验成功");
     }
 
@@ -642,6 +690,7 @@ public class UserController extends BaseController {
     @RequestMapping("/updatePassword")
     public Result updatePassword(@RequestParam("password") String password, @RequestParam("newPassword") String newPassword, @RequestParam("userId") Long id) {
         /*  User user = (User) request.getSession().getAttribute(Constant.SESSION_USER);*/
+        String param  = StringsUtils.paramFormat("password",password)+","+StringsUtils.paramFormat("newPassword",newPassword)+","+StringsUtils.paramFormat("userId",id);
         if (StringUtils.isBlank(password.trim())) {
             return error(Constant.CHINESE_BLANK_MESSAGE);
         }
@@ -650,6 +699,7 @@ public class UserController extends BaseController {
         }
         User user = userService.getById(id);
         if (!(user.getPassword().equals(MD5Utils.getMD5Str(password)))) {
+            loggingService.save(getLogging("用户校验修改密码失败，密码不正确",param,urlPrefix+"/updatePassword"));
             return error(Constant.ERROR_FILL_ERROR_CODE);
         }
         user.setPassword(MD5Utils.getMD5Str(newPassword));
@@ -659,8 +709,10 @@ public class UserController extends BaseController {
             sessionUsersRmCurrentUser();
             getRedisValueOperation().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
             removeSessionUser();
+            loggingService.save(getLogging("用户校验修改密码成功",param,urlPrefix+"/updatePassword"));
             return success();
         }
+        loggingService.save(getLogging("用户校验修改密码失败",param,urlPrefix+"/updatePassword"));
         return error(Constant.ERROR_CODE);
     }
 
@@ -673,12 +725,15 @@ public class UserController extends BaseController {
     @Transactional
     @PostMapping("/upload")
     public Result uploadImg(@RequestParam("file") MultipartFile file) {
+        String param = StringsUtils.paramFormat("file",file.getName());
         String filePath = null;
         try {
             filePath = fileService.uploadImg(file).get("v");
         } catch (Exception e) {
+            loggingService.save(getLogging("用户上传文件失败",param,urlPrefix+"/upload"));
             return error("上传失败");
         }
+        loggingService.save(getLogging("用户上传文件成功",param,urlPrefix+"/upload"));
         return success("上传成功", filePath);
     }
 
@@ -698,9 +753,11 @@ public class UserController extends BaseController {
             }
             getRedisValueOperation().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
         } catch (Exception e) {
+            loggingService.save(getLogging("退出登录失败","",urlPrefix+"/toRemoveUser"));
             e.printStackTrace();
-            return success();
+            return error("退出登录失败");
         }
+        loggingService.save(getLogging("退出登录成功","",urlPrefix+"/toRemoveUser"));
         return success();
     }
 
@@ -710,19 +767,22 @@ public class UserController extends BaseController {
     @ResponseBody
     @GetMapping("/searchUserByUsername")
     public Result searchUserByUsername(@RequestParam String username) {
+        String param = StringsUtils.paramFormat("username",username);
         User user = new User();
         user.setUsername(username);
         User dbUser = userService.getUser(user, "");
         if (Objects.isNull(dbUser)) {
+            loggingService.save(getLogging("查找用户失败，"+Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE,param,urlPrefix+"/searchUserByUsername"));
             return error(Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
         }
         dbUser.setPassword("000000");
+        loggingService.save(getLogging("查找用户成功，"+Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE,param,urlPrefix+"/searchUserByUsername"));
         return success(dbUser);
     }
 
 
     /**
-     * 根据用户名查找用户
+     * 检测用户是否重复登录
      */
     @ResponseBody
     @GetMapping("/checkUser")
@@ -734,6 +794,7 @@ public class UserController extends BaseController {
             String targetSessionId = USER_SESSION_MAP.get(getSessionUserId());
      //       logger.info("------------------------------------->{}::{}", targSessionId, getSession().getId());
             if (!targetSessionId.equals(getSession().getId())) {
+              //  loggingService.save(getLogging("此号在别处登录",StringsUtils.paramFormat("id",getSessionUserId())));
                 removeSessionUser();
                 return error("此号在别处登录，您已下线");
             }
@@ -743,7 +804,13 @@ public class UserController extends BaseController {
         return success();
     }
 
-    private void setCount(String key){if (Objects.nonNull(IP_SESSION_MAP.get(key))){
+    @GetMapping("/getLogging")
+    public List<Logging> getLogging(){
+        return loggingService.getList(new Logging());
+    }
+
+    private void setCount(String key){
+        if (Objects.nonNull(IP_SESSION_MAP.get(key))){
         RequestCount requestCount = IP_SESSION_MAP.get(key);
         if (requestCount.getCount()<10){
             if (!DateUtils.dateCompare(requestCount.getLimitTime(),new Date(),24*60*60*1000L)){

@@ -16,7 +16,7 @@ function password_change(id) {
 function toList(url) {
     setTimeout(function () {
         $(location).attr('href', url);
-    }, 1000);
+    }, 2000);
 }
 
 

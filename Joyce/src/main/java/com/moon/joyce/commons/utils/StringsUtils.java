@@ -513,4 +513,13 @@ public class StringsUtils extends StringUtils implements Serializable {
         }
         return builder.toString();
     }
+
+    /**
+     * 参数格式
+     * @param param
+     * @return
+     */
+    public static String paramFormat(String paramName,Object param){
+        return "\""+paramName+"\":"+param.toString();
+    }
 }

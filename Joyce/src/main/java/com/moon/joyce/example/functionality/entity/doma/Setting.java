@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * @Author: XingDaoRong
  * @Date: 2021/12/13
+ * @describe: 数据库配置
  */
 public class Setting implements Serializable {
     private static final long serialVersionUID = -4731753461634986L;

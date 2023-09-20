@@ -46,6 +46,14 @@ public class BaseEntity  extends RootEntity{
     @Column(comment = "处理人")
     private String userIds;
 
+    public String getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(String userIds) {
+        this.userIds = userIds;
+    }
+
     public Long getId() {
         return id;
     }

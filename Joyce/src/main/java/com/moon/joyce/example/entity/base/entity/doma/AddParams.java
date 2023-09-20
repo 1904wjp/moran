@@ -29,6 +29,8 @@ import java.util.Map;
 @AllArgsConstructor
 @TableName("add_params")
 public class AddParams extends RootEntity{
+    @Column(comment = "主键",type = Type.BIGINT)
+    private Long id;
     @Column(comment = "参数",type = Type.TEXT)
     private String params;
     @Column(exist = false)

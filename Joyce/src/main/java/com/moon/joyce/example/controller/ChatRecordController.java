@@ -6,8 +6,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.utils.ListsUtils;
 import com.moon.joyce.commons.utils.R;
+import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.doma.ChatRecord;
+import com.moon.joyce.example.functionality.entity.doma.Logging;
 import com.moon.joyce.example.functionality.entity.doma.Result;
+import com.moon.joyce.example.functionality.service.LoggingService;
 import com.moon.joyce.example.service.ChatRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +38,8 @@ public class ChatRecordController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private ChatRecordService chatRecordService;
-    //redis缓存
-    @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+
+    private static final String urlPrefix = "/example/chatRecord";
     /**
      * 获取对应用户的聊天记录
      * @param userBId
@@ -85,6 +87,7 @@ public class ChatRecordController extends BaseController {
             }
             getRedisValueOperation().set(r_chatRecords_list,JSON.toJSONString(rChatRecords));
         }
+        loggingService.save(getLogging("查询了好友列表消息", StringsUtils.paramFormat("userBId",userBId),urlPrefix+"/getAllRecord"));
         return R.dataResult(!rChatRecords.isEmpty(),"暂无消息","获取消息记录成功",rChatRecords);
     }
 }

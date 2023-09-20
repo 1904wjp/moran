@@ -15,6 +15,7 @@ import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 import com.moon.joyce.example.functionality.entity.doma.*;
 import com.moon.joyce.example.functionality.service.AddParamsService;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
+import com.moon.joyce.example.functionality.service.LoggingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Controller
 public class BaseController extends R {
     @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+    protected RedisTemplate<String,Object> redisTemplate;
+    @Autowired
+    protected LoggingService loggingService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     //app链接
     @Value("${app.url}")
@@ -129,6 +132,7 @@ public class BaseController extends R {
      * 移除当前登录用户
      */
     public void removeSessionUser(){
+        getSession().removeAttribute(getSessionUserId()+"ip");
         getSession().removeAttribute(Constant.SESSION_USER);
 
     }
@@ -306,6 +310,7 @@ public class BaseController extends R {
         authMap.put(user.getId(),new Auth(request.getSession().getId(),HttpUtils.getIpAddress(request)));
     }
 
+
     /**
      * 获取参数
      * @param baseEntity
@@ -333,5 +338,23 @@ public class BaseController extends R {
                }
            }
        }
+    }
+
+    /**
+     * 获取基础日志实体类
+     * @param eventDesc
+     * @param params
+     * @return
+     */
+    public  Logging getLogging(String eventDesc,String params,String uri){
+        Logging logging = new Logging(eventDesc,params,uri);
+        if (Objects.nonNull(getSessionUser())){
+            setBaseField(logging);
+            String logIp = getSessionValue(getSessionUserId() + "ip").toString();
+            logging.setLoginIp(logIp);
+            logging.setUsername(getSessionUserName());
+        }
+        logging.setLoginSys(System.getProperty("os.name"));
+        return logging;
     }
 }
