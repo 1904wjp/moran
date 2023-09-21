@@ -2,8 +2,8 @@ package com.moon.joyce.example.functionality.service.serviceImpl;
 
 import com.moon.joyce.dataSource.DbContextHolder;
 import com.moon.joyce.dataSource.DynamicDataSource;
-import com.moon.joyce.example.functionality.entity.doma.DataSource;
 import com.moon.joyce.example.entity.doma.DbBaseSetting;
+import com.moon.joyce.example.functionality.entity.doma.DataSource;
 import com.moon.joyce.example.functionality.service.DataSourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

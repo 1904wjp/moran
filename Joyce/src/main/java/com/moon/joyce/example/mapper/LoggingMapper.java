@@ -1,12 +1,9 @@
 package com.moon.joyce.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moon.joyce.example.functionality.entity.doma.Accounting;
 import com.moon.joyce.example.functionality.entity.doma.Logging;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
 
 /**

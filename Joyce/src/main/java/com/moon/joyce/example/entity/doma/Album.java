@@ -47,15 +47,15 @@ public class Album extends Page {
     @Column(name = "album_desc",type = Type.TEXT,length = "0",comment = "张数")
     private String albumDesc;
 
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private Map<String,Source> map;
 
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String sourceUrls;
 
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String backGround;
 }

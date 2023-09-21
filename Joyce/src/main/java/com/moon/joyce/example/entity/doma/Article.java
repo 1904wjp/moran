@@ -11,7 +11,6 @@ import com.moon.joyce.example.entity.dto.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 
 /**
@@ -45,7 +44,7 @@ public class Article extends Page {
     /*@Column(name = "class_id",columnDefinition = "bigint(32) COMMENT '分类主键'")*/
     @TableField("class_id")
     private Long  classId;
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String result;
 }

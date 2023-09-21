@@ -1,7 +1,5 @@
 package com.moon.joyce.commons.constants;
 
-import org.springframework.beans.factory.annotation.Value;
-
 /**
  * @author Xing Dao Rong
  * @date 2021/9/1 16:24

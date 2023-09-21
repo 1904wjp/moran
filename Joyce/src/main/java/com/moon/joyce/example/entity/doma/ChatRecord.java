@@ -2,6 +2,7 @@ package com.moon.joyce.example.entity.doma;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.NotExist;
 import com.moon.joyce.commons.annotation.auto.Table;
@@ -33,7 +34,7 @@ public class ChatRecord extends BaseEntity {
     /**
      * 用户a名称
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String userAName;
     /**
@@ -44,7 +45,7 @@ public class ChatRecord extends BaseEntity {
     /**
      * 用户b名称
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String userBName;
     /**
@@ -55,38 +56,38 @@ public class ChatRecord extends BaseEntity {
     /**
      * 用户a 图像
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String aFileUrl;
     /**
      * 用户b 图像
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String bFileUrl;
     /**
      * 用户a 昵称
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String aNickname;
     /**
      * 用户b 昵称
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String bNickname;
     /**
      * 聊天记录生成时间
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String createTimeValue;
 
     /**
      * redis聊天记录公用标识
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     public static String uniqueAppend = "chatRecord:";
 

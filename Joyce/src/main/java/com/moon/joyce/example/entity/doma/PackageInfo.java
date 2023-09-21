@@ -2,6 +2,7 @@ package com.moon.joyce.example.entity.doma;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.NotExist;
 import com.moon.joyce.commons.annotation.auto.Table;
@@ -38,7 +39,7 @@ public class PackageInfo extends Page {
     /**
      * 数据库用户
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String username;
     /**

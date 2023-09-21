@@ -1,7 +1,7 @@
 package com.moon.joyce.example.functionality.service.serviceImpl;
 
 import com.moon.joyce.dataSource.DbContextHolder;
-import com.moon.joyce.example.entity.doma.GitInfo;
+import com.moon.joyce.example.functionality.entity.doma.GitInfo;
 import com.moon.joyce.example.functionality.service.GitService;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;

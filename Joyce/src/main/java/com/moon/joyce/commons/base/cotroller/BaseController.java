@@ -2,7 +2,6 @@ package com.moon.joyce.commons.base.cotroller;
 
 
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.commons.enums.RE;
 import com.moon.joyce.commons.factory.demo.UrlFactory;
 import com.moon.joyce.commons.factory.entity.url.MethodUrlEntity;
 import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
@@ -10,9 +9,12 @@ import com.moon.joyce.commons.utils.CommonUtils;
 import com.moon.joyce.commons.utils.HttpUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.example.entity.base.entity.doma.AddParams;
-import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
-import com.moon.joyce.example.functionality.entity.doma.*;
+import com.moon.joyce.example.entity.doma.User;
+import com.moon.joyce.example.functionality.entity.doma.Auth;
+import com.moon.joyce.example.functionality.entity.doma.Logging;
+import com.moon.joyce.example.functionality.entity.doma.Setting;
+import com.moon.joyce.example.functionality.entity.doma.Uri;
 import com.moon.joyce.example.functionality.service.AddParamsService;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import com.moon.joyce.example.functionality.service.LoggingService;
@@ -22,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -33,7 +34,6 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author Xing Dao Rong
@@ -355,7 +355,7 @@ public class BaseController extends R {
             logging.setLoginIp(logIp);
             logging.setUsername(getSessionUserName());
         }
-        logging.setLoginSys(System.getProperty("os.name"));
+       // logging.setLoginSys(System.getProperty("os.name"));
         return logging;
     }
 }

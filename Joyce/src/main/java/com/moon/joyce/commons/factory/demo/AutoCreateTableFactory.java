@@ -9,18 +9,16 @@ import com.moon.joyce.commons.factory.entity.auto.ColumnEntity;
 import com.moon.joyce.commons.factory.entity.auto.TableEntity;
 import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.commons.factory.init.AutoCreateTableInit;
+import com.moon.joyce.commons.factory.inter.TableFactory;
 import com.moon.joyce.commons.utils.FileUtils;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.functionality.entity.doma.JoyceException;
-import com.moon.joyce.commons.factory.inter.TableFactory;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.io.File;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;

@@ -4,7 +4,6 @@ package com.moon.joyce.example.functionality.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.moon.joyce.commons.joyce.entity.Node;
 import com.moon.joyce.example.functionality.entity.doma.Dict;
-import com.moon.joyce.example.functionality.entity.doma.WebEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

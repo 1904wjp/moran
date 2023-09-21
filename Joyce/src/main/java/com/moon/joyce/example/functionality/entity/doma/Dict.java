@@ -34,10 +34,10 @@ public class Dict extends BaseEntity {
     @Column(comment = "场景")
     private String scene;
     //标签
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private List<Lable> lables;
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String type = "dict";
 }

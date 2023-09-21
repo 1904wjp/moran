@@ -1,7 +1,6 @@
 package com.moon.joyce.commons.utils;
 
 import com.github.kevinsawicki.http.HttpRequest;
-import com.moon.joyce.commons.constants.Constant;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

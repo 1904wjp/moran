@@ -1,7 +1,5 @@
 package com.moon.joyce.example.functionality.entity.doma;
 
-import org.springframework.stereotype.Component;
-
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;

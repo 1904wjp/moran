@@ -2,7 +2,6 @@ package com.moon.joyce.example.functionality.entity.doma;
 
 
 
-import java.io.IOException;
 
 /**
  * @Author: XingDaoRong

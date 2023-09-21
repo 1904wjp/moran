@@ -47,7 +47,7 @@ public class Source  extends Page {
     /**
      * 用户姓名
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String username;
     /**
@@ -69,7 +69,7 @@ public class Source  extends Page {
     /**
      * 视频url
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String vUrl;
 

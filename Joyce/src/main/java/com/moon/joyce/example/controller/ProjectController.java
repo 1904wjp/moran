@@ -1,7 +1,6 @@
 package com.moon.joyce.example.controller;
 
 
-import com.moon.joyce.commons.annotation.url.MethodUrl;
 import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
@@ -11,7 +10,6 @@ import com.moon.joyce.example.entity.doma.Project;
 import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.doma.Result;
-import com.moon.joyce.example.functionality.entity.doma.Uri;
 import com.moon.joyce.example.service.ProjectService;
 import com.moon.joyce.example.service.UserService;
 import org.slf4j.Logger;

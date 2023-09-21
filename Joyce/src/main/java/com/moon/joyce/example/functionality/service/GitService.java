@@ -1,6 +1,6 @@
 package com.moon.joyce.example.functionality.service;
 
-import com.moon.joyce.example.entity.doma.GitInfo;
+import com.moon.joyce.example.functionality.entity.doma.GitInfo;
 
 import java.io.File;
 

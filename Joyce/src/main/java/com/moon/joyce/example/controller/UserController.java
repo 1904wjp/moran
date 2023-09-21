@@ -2,7 +2,6 @@ package com.moon.joyce.example.controller;
 
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.annotation.url.MethodUrl;
 import com.moon.joyce.commons.annotation.url.UriPri;
@@ -386,7 +385,7 @@ public class UserController extends BaseController {
     @RequestMapping("/doLogin")
     public Result loginUser(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request) {
         String logIp = HttpUtils.getIpAddress(request);
-        String param = StringsUtils.paramFormat("username",username)+","+StringsUtils.paramFormat("password",password);
+        String param = StringsUtils.paramFormat(new Object[]{"username",username,"password",password});
         if (Objects.nonNull(IP_SESSION_MAP.get(username+logIp))){
             RequestCount requestCount = IP_SESSION_MAP.get(username+logIp);
             if (requestCount.getCount()==10){
@@ -804,7 +803,7 @@ public class UserController extends BaseController {
         }
         return success();
     }
-
+    @ResponseBody
     @GetMapping("/getLogging")
     public List<Logging> getLogging(){
         return loggingService.getList(new Logging());

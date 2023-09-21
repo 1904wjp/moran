@@ -2,6 +2,7 @@ package com.moon.joyce.example.entity.doma;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.NotExist;
 import com.moon.joyce.commons.annotation.auto.Table;
@@ -31,7 +32,7 @@ public class UU extends BaseEntity {
     /**
      * 另一个用户id
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String usernameA;
     /**
@@ -42,7 +43,7 @@ public class UU extends BaseEntity {
     /**
      * 另一个用户名
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String usernameB;
     /**
@@ -57,34 +58,34 @@ public class UU extends BaseEntity {
     /**
      * 唯一标识
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     public static String uniqueAppend = "uu:";
     /**
      * 加好友结果("1:拒绝，0：同意 2:未处理")
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String resultStr ;
 
     /**
      * 用户图像
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String userFileUrlA ;
 
     /**
      * 用户图像
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String userFileUrlB ;
 
     /**
      * 是否是发送者(0:是 1：否)
      */
-    @NotExist
+    @Column(exist = false)
     @TableField(exist = false)
     private String isSendMan ;
 

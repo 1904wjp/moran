@@ -2,12 +2,9 @@ package com.moon.joyce.example.functionality.entity.doma;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.moon.joyce.commons.annotation.auto.Column;
-import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.commons.factory.enums.Type;
-import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 import com.moon.joyce.example.entity.dto.Page;
-import com.moon.joyce.example.entity.vo.PageVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -520,6 +520,29 @@ public class StringsUtils extends StringUtils implements Serializable {
      * @return
      */
     public static String paramFormat(String paramName,Object param){
+        if (param instanceof String){
+            return  "\""+paramName+"\":"+"\""+param.toString()+"\"";
+        }
         return "\""+paramName+"\":"+param.toString();
     }
+    /**
+     * 参数格式
+     * @param objects
+     * @return
+     */
+    public static String paramFormat(Object[] objects){
+        if (objects.length% 2!=0){
+            throw  JoyceExceptionUtils.exception("参数和值不对应");
+        }
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < objects.length; i=i+2) {
+          if (objects[i+1] instanceof String){
+              sb.append("\"").append(objects[i]).append("\":").append("\"").append(objects[i+1]).append("\"").append(",");
+          }else {
+              sb.append("\"").append(objects[i]).append("\":").append(objects[i+1]).append(",");
+          }
+        }
+        return sb.substring(0,sb.length()-1);
+    }
+
 }

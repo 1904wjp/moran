@@ -2,18 +2,13 @@ package com.moon.joyce.example.controller;
 
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.utils.FileUtils;
-
-import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.functionality.entity.doma.Dict;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.service.DictService;
 import lombok.AllArgsConstructor;
-
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;

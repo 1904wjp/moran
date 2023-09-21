@@ -8,18 +8,17 @@ import com.moon.joyce.commons.utils.ListsUtils;
 import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.doma.ChatRecord;
-import com.moon.joyce.example.functionality.entity.doma.Logging;
 import com.moon.joyce.example.functionality.entity.doma.Result;
-import com.moon.joyce.example.functionality.service.LoggingService;
 import com.moon.joyce.example.service.ChatRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.ListUtils;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -18,9 +18,6 @@ import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.AlbumService;
 import com.moon.joyce.example.service.SourceService;
 import com.moon.joyce.example.service.serviceControllerDetails.SourceControllerDetailService;
-
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

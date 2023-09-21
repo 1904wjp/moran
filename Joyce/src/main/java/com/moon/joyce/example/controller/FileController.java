@@ -1,16 +1,17 @@
 package com.moon.joyce.example.controller;
 
-import com.moon.joyce.commons.annotation.url.MethodUrl;
 import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.service.FileService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;

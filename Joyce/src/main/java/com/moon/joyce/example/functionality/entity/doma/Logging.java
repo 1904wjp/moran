@@ -5,9 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Table;
-import com.moon.joyce.commons.factory.enums.TableStrategy;
 import com.moon.joyce.commons.factory.enums.Type;
-import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
+import com.moon.joyce.example.entity.dto.Page;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(content = "日志记录")
 @TableName("logging")
-public class Logging extends BaseEntity {
+public class Logging extends Page {
     @Column(comment = "访问的接口")
     private String uri;
     @Column(comment = "登录地址")
