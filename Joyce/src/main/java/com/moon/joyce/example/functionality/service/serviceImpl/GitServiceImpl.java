@@ -1,7 +1,7 @@
 package com.moon.joyce.example.functionality.service.serviceImpl;
 
 import com.moon.joyce.dataSource.DbContextHolder;
-import com.moon.joyce.example.functionality.entity.doma.GitInfo;
+import com.moon.joyce.example.functionality.entity.vo.GitInfoVO;
 import com.moon.joyce.example.functionality.service.GitService;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
@@ -25,7 +25,8 @@ import java.util.Date;
 public class GitServiceImpl implements GitService {
     private final static Logger logger = LoggerFactory.getLogger(DbContextHolder.class);
     @Override
-    public void gitClone(String proPath,String username,String password,String remoteURL) {
+    public int gitClone(String proPath,String username,String password,String remoteURL) {
+        int rs = 0;
         try {
             logger.info("start to clone code");
             CredentialsProvider provider = new UsernamePasswordCredentialsProvider(username, password);  //生成身份信息
@@ -39,6 +40,7 @@ public class GitServiceImpl implements GitService {
                 git.pull().setCredentialsProvider(provider)
                         .setRemote("origin").setRemoteBranchName("master").call();
                 logger.info("拉取代码成功");
+                rs = 1;
             } else {
                 Git git = Git.cloneRepository()
                         .setURI(remoteURL)   //设置git远端URL
@@ -50,25 +52,27 @@ public class GitServiceImpl implements GitService {
                 git.getRepository().close();
                 git.close();
                 logger.info("创建仓库拉取代码成功");
+                rs = 2;
             }
-
         } catch (Exception e) {
             logger.error("创建本地仓库失败," + e.getMessage());
         }
+        return rs;
     }
 
     @Override
-    public void CommitCode(String proName, String proPath, File file,String username,String password,String remoteURL) {
+    public int CommitCode(String proName, String proPath, File file,String username,String password,String remoteURL) {
         Git git = null;
+        int rs = 0;
         try {
             //获取仓库对象
             Repository existingRepo = new FileRepositoryBuilder().setGitDir(new File(proPath + "\\.git")).build();
             git = new Git(existingRepo);
             CredentialsProvider provider = new UsernamePasswordCredentialsProvider(username, password);  //生成身份信息，username,password分别为git账号密码
             String workTreePath = git.getRepository().getWorkTree().getCanonicalPath();
-            logger.info("workTreePath " + workTreePath);
+            logger.info("workTreePath:" + workTreePath);
             String pagePath = file.getCanonicalPath();
-            logger.info("pagePath" + pagePath);
+            logger.info("pagePath:" + pagePath);
             pagePath = pagePath.substring(workTreePath.length());
             pagePath = pagePath.replace(File.separatorChar, '/');
             if (pagePath.startsWith("/")) {
@@ -87,8 +91,7 @@ public class GitServiceImpl implements GitService {
                     .setCredentialsProvider(provider)   //身份验证
                     .call();
             logger.info("------succeed add,commit,push files . to repository at " + existingRepo.getDirectory());
-
-
+            rs = 1;
         } catch (Exception e) {
             logger.error("git提交失败," + e.getMessage());
         } finally {
@@ -96,15 +99,16 @@ public class GitServiceImpl implements GitService {
                 git.close();
             }
         }
+        return rs;
     }
 
     @Override
-    public void gitClone(GitInfo gitInfo) {
-        gitClone(gitInfo.getProPath(),gitInfo.getUsername(),gitInfo.getPassword(),gitInfo.getRemoteUR());
+    public int gitClone(GitInfoVO gitInfoVO) {
+      return   gitClone(gitInfoVO.getProPath(), gitInfoVO.getUsername(), gitInfoVO.getPassword(), gitInfoVO.getRemoteURL());
     }
 
     @Override
-    public void CommitCode(GitInfo gitInfo) {
-        gitClone(gitInfo.getProPath(),gitInfo.getUsername(),gitInfo.getPassword(),gitInfo.getRemoteUR());
+    public int CommitCode(GitInfoVO gitInfoVO) {
+      return   gitClone(gitInfoVO.getProPath(), gitInfoVO.getUsername(), gitInfoVO.getPassword(), gitInfoVO.getRemoteURL());
     }
 }

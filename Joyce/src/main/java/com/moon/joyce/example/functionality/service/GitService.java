@@ -1,6 +1,6 @@
 package com.moon.joyce.example.functionality.service;
 
-import com.moon.joyce.example.functionality.entity.doma.GitInfo;
+import com.moon.joyce.example.functionality.entity.vo.GitInfoVO;
 
 import java.io.File;
 
@@ -18,7 +18,7 @@ public interface GitService {
      * @param password
      * @param remoteURL
      */
-    void gitClone(String proPath,String username,String password,String remoteURL);
+    int  gitClone(String proPath,String username,String password,String remoteURL);
 
     /**
      * 提交项目到git
@@ -26,18 +26,18 @@ public interface GitService {
      * @param proPath
      * @param file
      */
-    void CommitCode(String proName, String proPath, File file,String username,String password,String remoteURL);
+    int CommitCode(String proName, String proPath, File file,String username,String password,String remoteURL);
 
     /**
      * git拉去项目
-     * @param gitInfo
+     * @param gitInfoVO
      */
-    void gitClone(GitInfo gitInfo);
+    int gitClone(GitInfoVO gitInfoVO);
 
     /**
      * 提交项目到git
-     * @param gitInfo
+     * @param gitInfoVO
      */
-    void CommitCode(GitInfo gitInfo);
+    int CommitCode(GitInfoVO gitInfoVO);
 
 }

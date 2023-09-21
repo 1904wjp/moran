@@ -300,38 +300,47 @@ function forget_password_update_verifyFuc() {
 function password_update_verify() {
     var pwd1 = $("#new_password1").val();
     var pwd2 = $("#new_password2").val();
-    if (pwd1 != pwd2) {
-        toastr.error('两次输入不一致');
-        return false;
-    }
-    var data = {
-        "userId": $("#update_user_id").val(),
-        "password": $("#org_password").val(),
-        "newPassword": $("#new_password2").val()
-    };
-    if (vailDate(data)){
-        Ewin.confirm({message: "确认提交数据？"}).on(function (e) {
-            if (!e) {
-                return;
-            }
-            $.ajax({
-                url: '/example/user/updatePassword',
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-            }).done(function (data) {
-                tips(data.rs,data.msg);
-                if (data.rs) {
-                    $("#updatePasswordModal").modal('hide');
-                   tips(data.rs,data.msg)
-                    toList("/example/user/login");
+
+    if (isBlank(pwd2)||isBlank(pwd1)){
+       // $("#updatePasswordModal").modal('hide');
+        tips(false,"密码不能为空");
+       // $("#updatePasswordModal").modal('show');
+
+    }else if (pwd1 !== pwd2) {
+       // $("#updatePasswordModal").modal('hide');
+        tips(false,'两次输入不一致');
+       // $("#updatePasswordModal").modal('show');
+    }else {
+        var data = {
+            "userId": $("#update_user_id").val(),
+            "password": $("#org_password").val(),
+            "newPassword": $("#new_password2").val()
+        };
+        if (vailDate(data)){
+            Ewin.confirm({message: "确认提交数据？"}).on(function (e) {
+                if (!e) {
+                    return;
                 }
-            }).fail(function () {
-                tips(false,data.msg)
+                $.ajax({
+                    url: '/example/user/updatePassword',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: data,
+                }).done(function (data) {
+                    tips(data.rs,data.msg);
+                    if (data.rs) {
+                        $("#updatePasswordModal").modal('hide');
+                        tips(data.rs,data.msg);
+                        toList("/example/user/login");
+                    }
+                }).fail(function () {
+                    tips(false,data.msg)
+                });
             });
-        });
+        }
     }
-}
+    }
+
 
 //刷新
 function customSearch() {
@@ -381,7 +390,8 @@ function updateUserFuc() {
                 fileUrl: $("input[name='fileUrl']").val(),
                 email: $("#email").val(),
                 status: $('#status').val(),
-                nickname: $('#nickname').val()
+                nickname: $('#nickname').val(),
+                isUpdatePassword: '0'
             };
             var fdata = {
                 username: $("#username").val(),

@@ -41,6 +41,9 @@ public class Password extends Page {
     @Column(comment = "是否有二级密码",exist = false)
     @TableField(exist = false)
     private Integer isPassword;
+
+    @Column(comment = "场景")
+    private String scene;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

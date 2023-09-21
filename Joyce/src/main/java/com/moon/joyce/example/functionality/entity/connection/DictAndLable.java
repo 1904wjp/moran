@@ -1,4 +1,4 @@
-package com.moon.joyce.example.functionality.entity.doma;
+package com.moon.joyce.example.functionality.entity.connection;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;

@@ -1,7 +1,7 @@
 package com.moon.joyce.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moon.joyce.example.functionality.entity.doma.DictAndLable;
+import com.moon.joyce.example.functionality.entity.connection.DictAndLable;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

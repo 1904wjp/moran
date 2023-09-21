@@ -2,7 +2,7 @@ package com.moon.joyce.example.functionality.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.moon.joyce.example.functionality.entity.doma.DictAndLable;
+import com.moon.joyce.example.functionality.entity.connection.DictAndLable;
 import com.moon.joyce.example.functionality.entity.doma.Lable;
 import org.springframework.stereotype.Service;
 

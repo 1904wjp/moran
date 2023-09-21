@@ -2,6 +2,7 @@ package com.moon.joyce.example.entity.doma;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.example.entity.base.entity.doma.Person;
@@ -69,9 +70,21 @@ public class User extends Person {
     @TableField(value = "nickname")
     private String nickname;
 
+    @TableField(exist = false)
+    @Column(exist = false,comment = "0代表不是密码修改")
+    private String isUpdatePassword;
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public String getIsUpdatePassword() {
+        return isUpdatePassword;
+    }
+
+    public void setIsUpdatePassword(String isUpdatePassword) {
+        this.isUpdatePassword = isUpdatePassword;
     }
 
     /**

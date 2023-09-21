@@ -320,7 +320,21 @@ public class UserController extends BaseController {
             result = userService.saveOrUpdate(user);
             if (result){
                 loggingService.save(getLogging("用户修改了信息，并且成功了",JSONObject.toJSONString(user),urlPrefix+"/doSaveUser"));
-                removeSessionUser();
+                if (Objects.isNull(user.getIsUpdatePassword())){
+                    //修改密码，重新登录
+                    removeSessionUser();
+                }else {
+                    //修改信息
+                    User dbUser = userService.getById(user.getId());
+                    setSession(Constant.SESSION_USER, dbUser);
+                    for (int i = 0; i < sessionUsers.size(); i++) {
+                        if (sessionUsers.get(i).getId().equals(getSessionUserId())){
+                                sessionUsers.remove(sessionUsers.get(i));
+                        }
+                    }
+                    sessionUsers.add(getSessionUser());
+                    getRedisValueOperation().set(Constant.SESSION_USER, sessionUsers, 24, TimeUnit.HOURS);
+                }
                 return success("用户修改信息成功");
             }
             loggingService.save(getLogging("用户修改了信息，但失败了",JSONObject.toJSONString(user),urlPrefix+"/doSaveUser"));
@@ -338,9 +352,7 @@ public class UserController extends BaseController {
             result = userService.saveOrUpdate(user);
             if (result){
                 Logging logging = getLogging("用户注册了信息，并且成功了", JSONObject.toJSONString(user), urlPrefix + "/doSaveUser");
-                logging.setLoginIp(logIp);
-                logging.setUsername(user.getUsername());
-                loggingService.save(logging);
+                noLoginSaveLog(logging,logIp,user.getUsername());
                 return success("用户注册成功");
             }
         }
@@ -391,9 +403,7 @@ public class UserController extends BaseController {
             if (requestCount.getCount()==10){
                 if (!DateUtils.dateCompare(requestCount.getLimitTime(),new Date(),24*60*60*1000L)){
                     Logging logging = getLogging("用户登录失败，密码输入错误次数过多", param, urlPrefix + "/doLogin");
-                    logging.setLoginIp(logIp);
-                    logging.setUsername(username);
-                    loggingService.save(logging);
+                    noLoginSaveLog(logging,logIp,username);
                     return error("密码输入错误次数过多,请在1天后后重试");
                 }
                 IP_SESSION_MAP.remove(username+logIp);
@@ -407,9 +417,7 @@ public class UserController extends BaseController {
             if (!user.getPassword().equals(dbUser.getPassword())) {
                 setCount(username+logIp);
                 Logging logging = getLogging("用户登录失败，密码输入错误", param, urlPrefix + "/doLogin");
-                logging.setLoginIp(logIp);
-                logging.setUsername(username);
-                loggingService.save(logging);
+                noLoginSaveLog(logging,logIp,username);
                 return error(Constant.CHINESE_PASSWORD_ERROR_MESSAGE);
             }
             //头像为空则为默认值
@@ -420,9 +428,7 @@ public class UserController extends BaseController {
             Result checkStatusResult = userServiceControllerDetailService.checkStatusData(dbUser);
             if (!checkStatusResult.getRs()) {
                 Logging logging = getLogging("用户登录失败，用户状态不允许登录", param, urlPrefix + "/doLogin");
-                logging.setLoginIp(logIp);
-                logging.setUsername(username);
-                loggingService.save(logging);
+                noLoginSaveLog(logging,logIp,username);
                 return checkStatusResult;
             }
             int authCode = getAuthCode(dbUser, request);
@@ -436,9 +442,7 @@ public class UserController extends BaseController {
                             dbUser.setStatus(Constant.USER_TYPE_FROZEN_STATUS);
                             userService.saveOrUpdate(dbUser);
                             Logging logging = getLogging("用户登录失败，操作次数过多，该用户已被冻结", param, urlPrefix + "/doLogin");
-                            logging.setLoginIp(logIp);
-                            logging.setUsername(username);
-                            loggingService.save(logging);
+                            noLoginSaveLog(logging,logIp,username);
                             return error("操作次数过多，该用户已被冻结");
                         }
                     }else {
@@ -458,9 +462,7 @@ public class UserController extends BaseController {
             boolean rs = fileService.writeJoyceConfig(dbUser.getId().toString(), null);
             if (!rs) {
                 Logging logging = getLogging("用户登录失败，初始化用户文件失败", param, urlPrefix + "/doLogin");
-                logging.setLoginIp(logIp);
-                logging.setUsername(username);
-                loggingService.save(logging);
+                noLoginSaveLog(logging,logIp,username);
                 return error("初始化用户文件失败");
             }
             //设置当前登录人
@@ -517,15 +519,12 @@ public class UserController extends BaseController {
                 code = 206;
                 loggingService.save(getLogging("用户登录成功，此号在别处登录",param,urlPrefix+"/doLogin"));
             }
-            Logging logging = getLogging("用户登录成功", param, urlPrefix + "/doLogin");
-            loggingService.save(logging);
+            loggingService.save(getLogging("用户登录成功", param, urlPrefix + "/doLogin"));
             logger.info("-------------->登录sessionId：{}", getSession().getId());
             return success(code, msg, user.getStatus());
         }
         Logging logging = getLogging("用户登录失败，" + Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE, param, urlPrefix + "/doLogin");
-        logging.setLoginIp(logIp);
-        logging.setUsername(username);
-        loggingService.save(logging);
+        noLoginSaveLog(logging,logIp,username);
         return error(Constant.ERROR_CODE, Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
     }
 
@@ -826,6 +825,18 @@ public class UserController extends BaseController {
         RequestCount requestCount = new RequestCount(1,new Date());
         IP_SESSION_MAP.put(key,requestCount);
     }
+    }
+
+    /**
+     * 未登录日志保存
+     * @param logging
+     * @param logIp
+     * @param username
+     */
+    private void noLoginSaveLog(Logging logging,String logIp,String username){
+        logging.setLoginIp(logIp);
+        logging.setUsername(username);
+        loggingService.save(logging);
     }
 }
 

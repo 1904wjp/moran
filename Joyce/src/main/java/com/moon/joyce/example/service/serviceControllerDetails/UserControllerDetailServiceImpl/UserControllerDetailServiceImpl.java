@@ -6,14 +6,10 @@ import com.moon.joyce.commons.utils.UUIDUtils;
 import com.moon.joyce.example.entity.doma.DbBaseSetting;
 import com.moon.joyce.example.entity.doma.PackageInfo;
 import com.moon.joyce.example.entity.doma.User;
-import com.moon.joyce.example.functionality.entity.doma.EmailData;
-import com.moon.joyce.example.functionality.entity.doma.PayConfig;
-import com.moon.joyce.example.functionality.entity.doma.Result;
-import com.moon.joyce.example.functionality.entity.doma.Setting;
-import com.moon.joyce.example.functionality.service.DbBaseSettingService;
-import com.moon.joyce.example.functionality.service.MailService;
-import com.moon.joyce.example.functionality.service.PackageInfoService;
-import com.moon.joyce.example.functionality.service.PayConfigService;
+import com.moon.joyce.example.functionality.entity.DTO.GitInfoDTO;
+import com.moon.joyce.example.functionality.entity.doma.*;
+import com.moon.joyce.example.functionality.entity.vo.GitInfoVO;
+import com.moon.joyce.example.functionality.service.*;
 import com.moon.joyce.example.service.UserService;
 import com.moon.joyce.example.service.serviceControllerDetails.UserControllerDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +50,11 @@ public class UserControllerDetailServiceImpl implements UserControllerDetailServ
     @Autowired
     private PayConfigService payConfigService;
     /**
+     * git服务
+     */
+    @Autowired
+    private GitInfoService gitInfoService;
+    /**
      * 注入邮件接口
      */
     @Autowired
@@ -88,7 +89,13 @@ public class UserControllerDetailServiceImpl implements UserControllerDetailServ
         payConfig.setStatus(String.valueOf(Constant.UNDELETE_STATUS));
         PayConfig dbPayConfig = payConfigService.getOne(payConfig);
         if (Objects.nonNull(dbPayConfig)){
-            map.put(PayConfig.CLASS_NAME,dbPayConfig);
+            map.put(payConfig.getClass().getSimpleName(),dbPayConfig);
+        }
+        GitInfoDTO gitInfoDTO = new GitInfoDTO();
+        gitInfoDTO.setCreateIds(userId);
+        GitInfoVO gitInfoVO = gitInfoService.getLatestOne(gitInfoDTO);
+        if (Objects.nonNull(gitInfoVO)){
+            map.put(gitInfoVO.getClass().getSimpleName(),dbPayConfig);
         }
         Setting setting = new Setting(dbBaseSettingService.getMain(dbBaseSetting), packageInfoService.getMain(packageInfo));
         setting.setMap(map);

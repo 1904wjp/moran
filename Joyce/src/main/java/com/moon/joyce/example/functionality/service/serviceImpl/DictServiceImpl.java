@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.joyce.entity.Node;
 import com.moon.joyce.example.functionality.entity.doma.Dict;
-import com.moon.joyce.example.functionality.entity.doma.DictAndLable;
+import com.moon.joyce.example.functionality.entity.connection.DictAndLable;
 import com.moon.joyce.example.functionality.service.DictService;
 import com.moon.joyce.example.functionality.service.LableService;
 import com.moon.joyce.example.mapper.DictMapper;

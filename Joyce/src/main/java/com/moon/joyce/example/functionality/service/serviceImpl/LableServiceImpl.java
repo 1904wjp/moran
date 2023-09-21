@@ -4,7 +4,7 @@ package com.moon.joyce.example.functionality.service.serviceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.example.functionality.entity.doma.DictAndLable;
+import com.moon.joyce.example.functionality.entity.connection.DictAndLable;
 import com.moon.joyce.example.functionality.entity.doma.Lable;
 import com.moon.joyce.example.functionality.service.LableService;
 import com.moon.joyce.example.mapper.LableMapper;

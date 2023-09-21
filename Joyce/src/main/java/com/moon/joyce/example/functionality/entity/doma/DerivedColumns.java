@@ -30,7 +30,7 @@ public class DerivedColumns extends BaseEntity {
     private String columnType;
 
     /**
-     * 列类型
+     * 列注解
      */
     @TableField("column_desc")
     private String columnDesc;
