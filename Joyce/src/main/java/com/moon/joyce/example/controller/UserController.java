@@ -40,10 +40,10 @@ import java.util.stream.Collectors;
  * @since 2021-09-01
  */
 @Controller
-@UriPri(name = "用户相关接口", pri = "/example/user")
+@UriPri(name = "用户相关接口", pri = "/example/user", scene = "user")
 @RequestMapping("/example/user")
 public class UserController extends BaseController {
-
+    private final static String currentScene = "user";
    // private User user;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 /*********************************************************************************************************************************************/
@@ -304,6 +304,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @Transactional
+    @MethodUrl(url = "/doSaveUser",name = "用户保存")
     @RequestMapping("/doSaveUser")
     public Result saveUser(User user,HttpServletRequest request) {
         if (Objects.nonNull(user.getId())){
@@ -536,7 +537,7 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping("/userListData")
     public PageVo getUsers(User user) {
-        loggingService.save(getLogging("获取所有用户数据",JSONObject.toJSONString(user),urlPrefix+"/userListData"));
+       // loggingService.save(getLogging("获取所有用户数据",JSONObject.toJSONString(user),urlPrefix+"/userListData"));
         return userService.getPage(user);
     }
 
@@ -771,11 +772,11 @@ public class UserController extends BaseController {
         user.setUsername(username);
         User dbUser = userService.getUser(user, "");
         if (Objects.isNull(dbUser)) {
-            loggingService.save(getLogging("查找用户失败，"+Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE,param,urlPrefix+"/searchUserByUsername"));
+          //  loggingService.save(getLogging("查找用户失败，"+Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE,param,urlPrefix+"/searchUserByUsername"));
             return error(Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE);
         }
         dbUser.setPassword("000000");
-        loggingService.save(getLogging("查找用户成功，"+Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE,param,urlPrefix+"/searchUserByUsername"));
+        //loggingService.save(getLogging("查找用户成功，"+Constant.CHINESE_SELECT_BLANK_USERNAME_MESSAGE,param,urlPrefix+"/searchUserByUsername"));
         return success(dbUser);
     }
 
@@ -793,7 +794,7 @@ public class UserController extends BaseController {
             String targetSessionId = USER_SESSION_MAP.get(getSessionUserId());
      //       logger.info("------------------------------------->{}::{}", targSessionId, getSession().getId());
             if (!targetSessionId.equals(getSession().getId())) {
-              //  loggingService.save(getLogging("此号在别处登录",StringsUtils.paramFormat("id",getSessionUserId())));
+               // loggingService.save(getLogging("此号在别处登录",StringsUtils.paramFormat("id",getSessionUserId())));
                 removeSessionUser();
                 return error("此号在别处登录，您已下线");
             }
@@ -806,6 +807,12 @@ public class UserController extends BaseController {
     @GetMapping("/getLogging")
     public List<Logging> getLogging(){
         return loggingService.getList(new Logging());
+    }
+
+    @ResponseBody
+    @GetMapping("/getMap")
+    public Map<String, Uri> getMap1(){
+        return getMap();
     }
 
     private void setCount(String key){

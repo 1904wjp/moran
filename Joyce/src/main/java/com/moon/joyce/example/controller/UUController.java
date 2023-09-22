@@ -1,7 +1,9 @@
 package com.moon.joyce.example.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.utils.R;
+import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.doma.UU;
 import com.moon.joyce.example.entity.doma.User;
 import com.moon.joyce.example.functionality.entity.doma.Result;
@@ -30,6 +32,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/example/uu")
 public class UUController extends BaseController {
+
+    private final static String urlPrefix = "/example/uu";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UUService uuService;
@@ -88,11 +92,9 @@ public class UUController extends BaseController {
         if (Objects.isNull(sendList) && Objects.nonNull(uus)){
             sendList = uus;
         }
-
         if ((Objects.isNull(uus) && Objects.isNull(sendList))||(uus.isEmpty() && sendList.isEmpty())){
            return error("暂无信息");
         }
-
         if (Objects.nonNull(uus) && Objects.nonNull(sendList)){
             for (UU value : uus) {
                 int flag = 0;
@@ -110,7 +112,7 @@ public class UUController extends BaseController {
         }
         getRedisValueOperation().set(uniqueListSum,sendList,30,TimeUnit.DAYS);
         getRedisValueOperation().set(uniqueListSend,sendList,30,TimeUnit.DAYS);
-        return R.success(sendList);
+        return success(sendList);
     }
 
     /**
@@ -134,7 +136,6 @@ public class UUController extends BaseController {
         uu.setUserFileUrlB(dbBUser.getFileUrl());
         uu.setDeleteFlag(0);
         uu.setType("1");
-
         List<UU> list = (List<UU>)getRedisValueOperation().get(uniqueList);
         List<UU> list2 = (List<UU>)getRedisValueOperation().get(uniqueList2);
         List<UU> sendList = (List<UU>)getRedisValueOperation().get(uniqueListSend);
@@ -142,12 +143,9 @@ public class UUController extends BaseController {
         if (Objects.nonNull(list)){
            l1 = list.stream().filter(x -> x.getUserAId().equals(getSessionUserId()) && x.getUserBId().equals(uu.getUserBId()) && x.getResultStr().equals("0")).collect(Collectors.toList());
         }
-
-
         if (Objects.nonNull(list2)){
              l1.addAll(list2.stream().filter(x -> x.getUserAId().equals(getSessionUserId()) && x.getUserBId().equals(uu.getUserBId()) && x.getResultStr().equals("0")).collect(Collectors.toList()));
         }
-
         List<UU> dbUus = uuService.getFriend(getSessionUserId(),uu.getUserBId());
         if (Objects.nonNull(dbUus)&&!dbUus.isEmpty()&&!l1.isEmpty()){
             return success("该用户已是你的好友");
@@ -156,17 +154,18 @@ public class UUController extends BaseController {
         sendAddFriendMessage(uniqueList,list,uu);
         uu.setIsSendMan("0");
         sendAddFriendMessage(uniqueListSend,sendList,uu);
-        return R.success("等待对方同意");
+        loggingService.save(getLogging("发送添加好友请求", JSONObject.toJSONString(uu),urlPrefix+"/addFriend"));
+        return success("等待对方同意");
     }
 
     /**
      * 是否同意好友
-     * @param isAgree 0：同意 1：拒绝
+     * @param type 0：同意 1：拒绝
      * @return
      */
     @ResponseBody
     @RequestMapping("/agreeFriend")
-    public Result agreeFriend(@RequestParam("id") Long userAId,@RequestParam("type") Integer isAgree){
+    public Result agreeFriend(@RequestParam("id") Long userAId,@RequestParam("type") Integer type){
           String  uniqueList = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
           String  uniqueListSend = UU.uniqueAppend+"MSGlIST_SEND"+getSessionUserId();
         List<UU> uus = (List<UU>) getRedisValueOperation().get(uniqueList);
@@ -175,7 +174,7 @@ public class UUController extends BaseController {
                         && x.getUserBId().equals(getSessionUserId())).collect(Collectors.toList());
         UU uu = uuList.get(0);
         uus.remove(uu);
-        uu.setResultStr(isAgree.toString());
+        uu.setResultStr(type.toString());
         uus.add(uu);
         long expireTime = getExpireTime(uniqueList);
         if (expireTime<1){
@@ -202,7 +201,7 @@ public class UUController extends BaseController {
             }
         }
         boolean rs = false;
-        if (isAgree==0){
+        if (type==0){
             UU uu1 = new UU();
             setBaseField(uu1);
             uu1.setUserAId(userAId);
@@ -214,10 +213,12 @@ public class UUController extends BaseController {
         }
         getRedisValueOperation().set(uniqueListSend,sendList,expireTime,TimeUnit.SECONDS);
         getRedisValueOperation().set(uniqueList,appList,expireTime,TimeUnit.SECONDS);
-        if (isAgree==1){
+        if (type==1){
+            loggingService.save(getLogging("已拒绝申请好友", StringsUtils.paramFormat(new Object[]{"userAId",userAId,"type",type}),urlPrefix+"/addFriend"));
            return success("已拒绝申请好友");
         }
-        return R.dataResult(rs,"添加失败" ,"添加成功");
+        loggingService.save(getLogging(rs,"添加好友", StringsUtils.paramFormat(new Object[]{"userAId",userAId,"type",type}),urlPrefix+"/addFriend"));
+        return dataResult(rs,"添加失败" ,"添加成功");
     }
 
     @RequestMapping("/webrtc/{id}.html")

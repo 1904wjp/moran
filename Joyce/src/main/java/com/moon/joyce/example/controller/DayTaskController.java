@@ -101,13 +101,13 @@ public class DayTaskController extends BaseController {
             dayTask.setDeleteFlag(0);
         }else {
             if (!getSessionUser().getId().equals(dayTask.getUserId())){
-                return R.error("非本人无法修改");
+                return error("非本人无法修改");
             }
            if (Objects.isNull(dayTask.getUpdateBy())){
                dayTask.setUpdateBy(getSessionUser().getUsername());
                dayTask.setUpdateTime(new Date());
            }else {
-               return R.error("该数据只允许修改一次");
+               return error("该数据只允许修改一次");
            }
         }
         try {
@@ -116,7 +116,7 @@ public class DayTaskController extends BaseController {
             e.printStackTrace();
         }
         boolean update = dayTaskService.saveOrUpdate(dayTask);
-        return R.dataResult(update);
+        return dataResult(update);
     }
 
     /**
@@ -128,7 +128,7 @@ public class DayTaskController extends BaseController {
     @GetMapping("/getTasks")
     public Result getTasks(@RequestParam Long id){
         DayTask dayTask = dayTaskService.getById(id);
-        return R.success(Objects.isNull(dayTask),Constant.NULL_CODE);
+        return success(Objects.isNull(dayTask),Constant.NULL_CODE);
     }
 
     /**
@@ -140,9 +140,9 @@ public class DayTaskController extends BaseController {
         DayTask dayTask = dayTaskService.getLastData(getSessionUser().getId());
         if (Objects.nonNull(dayTask)){
             boolean rs = DateUtils.dateCompare(new Date(), dayTask.getEndTimes(), 0l, "yyyy-MM-dd");
-            return R.dataResult(rs,dayTask);
+            return dataResult(rs,dayTask);
         }
-        return R.error();
+        return error();
     }
 
     /**
@@ -175,7 +175,7 @@ public class DayTaskController extends BaseController {
     @PostMapping("/importExcel")
     public Result importExcel(@RequestParam String path){
         String str = dayTaskService.importDayTaskData(path);
-        return R.dataResult(Objects.isNull(str),Constant.ERROR_CODE,"操作失败","操作成功",str);
+        return dataResult(Objects.isNull(str),Constant.ERROR_CODE,"操作失败","操作成功",str);
     }
 
     /**

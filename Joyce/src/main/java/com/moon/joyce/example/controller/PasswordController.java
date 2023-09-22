@@ -1,6 +1,7 @@
 package com.moon.joyce.example.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.enums.RE;
 import com.moon.joyce.commons.utils.StringsUtils;
@@ -29,6 +30,8 @@ import java.util.Set;
 public class PasswordController extends BaseController {
     @Autowired
     private PasswordService passwordService;
+
+    private final static String urlPrefix = "/example/password";
 
     @RequestMapping("/getListPage")
     public String getListPage(){
@@ -161,6 +164,7 @@ public class PasswordController extends BaseController {
         }
         set.add(password.getId());
         setSession(key,set);
+        loggingService.save(getLogging(b,"保存密码", JSONObject.toJSONString(password),urlPrefix+"/save"));
         return getResult(b, RE.ADD);
     }
 }

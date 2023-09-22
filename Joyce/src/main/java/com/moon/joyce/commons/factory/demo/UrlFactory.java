@@ -108,11 +108,11 @@ public class UrlFactory extends BaseFactory {
                     if (!loadClass.isAnnotationPresent(UriPri.class)) {
                         continue;
                     }
-                    UriPri ulrPri = loadClass.getAnnotation(UriPri.class);
-                    if (Objects.isNull(ulrPri)) {
+                    UriPri urlPri = loadClass.getAnnotation(UriPri.class);
+                    if (Objects.isNull(urlPri)) {
                         continue;
                     }
-                    UrlPriEntity urlPriEntity = new UrlPriEntity(ulrPri.name(), ulrPri.pri());
+                    UrlPriEntity urlPriEntity = new UrlPriEntity(urlPri.name(), urlPri.pri(), urlPri.scene());
                     Method[] method = getMethod(loadClass);
                     StringBuilder  params = new StringBuilder();
                     boolean rs;

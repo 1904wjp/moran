@@ -16,4 +16,5 @@ import lombok.NoArgsConstructor;
 public class UrlPriEntity {
     String name;
     String pri;
+    String scene;
 }

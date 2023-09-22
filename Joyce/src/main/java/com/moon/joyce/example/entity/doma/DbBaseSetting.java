@@ -2,6 +2,7 @@ package com.moon.joyce.example.entity.doma;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moon.joyce.commons.annotation.auto.Column;
 import com.moon.joyce.commons.annotation.auto.Ids;
 import com.moon.joyce.commons.annotation.auto.Table;
 import com.moon.joyce.example.entity.dto.Page;
@@ -75,5 +76,7 @@ public class DbBaseSetting extends Page {
     @TableField("apply_status")
     private Integer applyStatus;
 
+    @Column(comment = "包路径id")
+    private Long packagePathId;
 
 }

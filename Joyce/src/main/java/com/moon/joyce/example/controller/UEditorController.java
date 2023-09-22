@@ -40,6 +40,8 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/example/uedit")
 public class UEditorController extends BaseController {
+
+    private final static String urlPrefix = "/example/uedit";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private static String prefix = "tools/uEditor/";
     @Autowired
@@ -100,7 +102,8 @@ public class UEditorController extends BaseController {
            article.setUpdateTime(new Date());
        }
        boolean update = uEditorService.saveOrUpdate(article);
-       return R.dataResult(update);
+       loggingService.save(getLogging(update,"保存文章", JSONObject.toJSONString(article),urlPrefix+"/saveArticle"));
+       return dataResult(update);
    }
 
     /**
@@ -141,8 +144,8 @@ public class UEditorController extends BaseController {
      * @param id
      * @return
      */
-    @RequestMapping("/get/{hello223}")
-    public String getArticle(@PathVariable("hello223") Long id, ModelMap map){
+    @RequestMapping("/get/{id}")
+    public String getArticle(@PathVariable("id") Long id, ModelMap map){
         Article article = uEditorService.getById(id);
         if(getSessionUser().getId().toString().equals(article.getUserId().toString())){
             article.setResult("1");
@@ -163,7 +166,8 @@ public class UEditorController extends BaseController {
     public Result delArticle(@RequestParam String ids){
         List<String> list = StringsUtils.strToList(ids);
         boolean del = uEditorService.removeByIds(list);
-        return R.dataResult(del,"删除失败","删除成功");
+        loggingService.save(getLogging(del,"删除文章", StringsUtils.paramFormat("ids",ids),urlPrefix+"/delete"));
+        return dataResult(del,"删除失败","删除成功");
     }
     /**
      * 界面设置
@@ -193,6 +197,6 @@ public class UEditorController extends BaseController {
                 break;
             }
         }
-        return R.dataResult(Objects.nonNull(pc),pc);
+        return dataResult(Objects.nonNull(pc),pc);
     }
 }

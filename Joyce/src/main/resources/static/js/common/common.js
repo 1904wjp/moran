@@ -590,21 +590,22 @@ function outputQRCod(txt, width, height) {
  * @param width
  * @param height
  */
-function outputQRCod2(array, width, height) {
-    var a = ["联系我们", "微信打赏", "支付宝打赏"]
+function outputQRCod2(map, width, height) {
+    //var a = ["联系我们", "微信打赏", "支付宝打赏"]
     //Jquery 循环map的用法
-    for (var i = 0; i < array.length; i++) {
-        var key = "qrcode" + i;
+    let index = 0;
+    for (let i  in map){
+        var key = "qrcode" + index;
         $("#qrcode").append(
             "<div class='card col-md-3' style=''>" +
-            "<label style='font-size: 50px'>" + a[i] + "</label>" +
+            "<label style='font-size: 50px'>" + i + "</label>" +
             "<div class='" + key + "  card-body'></div>" +
             "</div>");
         //先清空
         var obj = "." + key;
         $(obj).empty();
         //中文格式转换
-        var str = toUtf8(array[i]);
+        var str = toUtf8(map[i]);
         //生成二维码
         $(obj).qrcode({
             render: "canvas",//canvas和table两种渲染方式
@@ -612,6 +613,7 @@ function outputQRCod2(array, width, height) {
             height: height,
             text: str
         });
+        index++;
     }
 }
 

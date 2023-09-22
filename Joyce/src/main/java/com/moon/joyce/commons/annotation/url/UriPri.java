@@ -16,4 +16,7 @@ public @interface UriPri {
     String name() default "";
     //前缀
     String pri() default "";
+
+    //场景
+    String scene() default "";
 }

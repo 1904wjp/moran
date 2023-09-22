@@ -32,6 +32,9 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/example/sysMenu")
 public class SysMenuController extends BaseController {
+
+
+    private final static String urlPrefix = "/example/sysMenu";
     /**
      * 静态前缀
      */
@@ -119,9 +122,9 @@ public class SysMenuController extends BaseController {
     public Result addMenu(@RequestParam("id")String id){
         SysMenu sysMenu = sysMenuService.getById(Long.valueOf(id));
         if (Objects.isNull(sysMenu)&&!id.equals("-1")){
-            return R.error(Constant.NULL_CODE);
+            return error(Constant.NULL_CODE);
         }
-        return R.success();
+        return success();
     }
 
     /**
@@ -149,10 +152,8 @@ public class SysMenuController extends BaseController {
     @RequestMapping("/doDeleteMenu")
     public Result doDeleteMenu(@RequestParam("id") Long id ){
        int delResult =  sysMenuService.deleteMenuById(id);
-       if (delResult!=0){
-           return R.success();
-       }
-        return R.error();
+        loggingService.save(getLogging(delResult==0,"删除菜单", "",urlPrefix+"/doDeleteMenu"));
+        return dataResult(delResult);
     }
 
     /**
@@ -163,10 +164,7 @@ public class SysMenuController extends BaseController {
     @RequestMapping("/doQueryMenu")
     public Result doQueryMenu(@RequestParam("id") Long id ){
         SysMenu dbMenu = sysMenuService.getById(id);
-        if (Objects.nonNull(dbMenu)){
-            return R.success();
-        }
-        return R.error();
+        return dataResult(Objects.isNull(dbMenu));
     }
 
     /**
@@ -177,10 +175,8 @@ public class SysMenuController extends BaseController {
     @RequestMapping("/doSaveMenu")
     public Result doSaveMenu(SysMenu sysMenu ){
         boolean result = sysMenuService.saveOrUpdate(sysMenu);
-        if (result){
-            return R.success();
-        }
-        return R.error();
+        loggingService.save(getLogging(result,"保存菜单", "",urlPrefix+"/doSaveMenu"));
+        return dataResult(result);
     }
 
 

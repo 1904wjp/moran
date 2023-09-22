@@ -51,6 +51,9 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/example/source")
 public class SourceController extends BaseController {
+
+    private final static String urlPrefix = "/example/source";
+
     /**
      * 页面路径前缀
      */
@@ -218,7 +221,7 @@ public class SourceController extends BaseController {
             long duration = info.getDuration()/1000;
             String sumTime= DateUtils.getChargeTimechargeTime(duration);
             map.addAttribute("sumTime",sumTime);
-            System.out.println("------>>>>>>>"+duration);
+          //  System.out.println("------>>>>>>>"+duration);
         } catch (EncoderException e) {
             e.printStackTrace();
         }
@@ -242,10 +245,11 @@ public class SourceController extends BaseController {
             source.setRealUrl(vSource.getRealUrl());
         }
         FileUtils.download(source.getRealUrl(),response);
+        loggingService.save(getLogging("下载文件", StringsUtils.paramFormat("id",id),urlPrefix+"/downloadFile/"+id));
     }
 
     /**
-     * 下载文件
+     * 删除资源
      * @throws IOException
      */
     @ResponseBody
@@ -284,6 +288,7 @@ public class SourceController extends BaseController {
             return error(msg);
         }
         boolean del = sourceService.removeByIds(arrayList);
+        loggingService.save(getLogging(del,"删除资源", StringsUtils.paramFormat("ids",ids),urlPrefix+"/deleteSource"));
         return dataResult(del, Constant.ERROR_CODE);
     }
 
@@ -304,6 +309,7 @@ public class SourceController extends BaseController {
             return error("上传失败");
         }
         logger.info("上传相册的路径----》" + paths);
+        loggingService.save(getLogging(Objects.nonNull(paths),"多文件上传", StringsUtils.paramFormat("files",paths),urlPrefix+"/files"));
         return dataResult(Objects.nonNull(paths), "上传失败", "上传成功", paths);
     }
     /**
@@ -346,6 +352,11 @@ public class SourceController extends BaseController {
         return albumService.getPage(album);
     }
 
+    /**
+     * 删除相册
+     * @param ids
+     * @return
+     */
     @ResponseBody
     @PostMapping("/delAlbum")
     public Result delAlbum(@RequestParam("ids") String ids) {
@@ -360,11 +371,12 @@ public class SourceController extends BaseController {
         List<String> collect = albumSources.stream().map(AlbumSource::getId).map(String::valueOf).collect(Collectors.toList());
         boolean conRs = albumSourceService.removeByIds(collect);
         boolean rs = albumService.removeByIds(list);
+        loggingService.save(getLogging((rs && conRs),"删除相册", StringsUtils.paramFormat("ids",ids),urlPrefix+"/delAlbum"));
         return dataResult(rs && conRs,RE.DELETE.getCode());
     }
 
     /**
-     * 查询相册资源
+     * 查询某个相册资源
      * @param id
      * @return
      */
@@ -377,7 +389,7 @@ public class SourceController extends BaseController {
     }
 
     /**
-     * 保存资源
+     * 保存相册
      * @param album
      * @return
      */
@@ -418,6 +430,7 @@ public class SourceController extends BaseController {
             albumSources.add(albumSource);});
         boolean asRs = albumSourceService.saveBatch(albumSources);
         album.setUserId(getSessionUserId());
+        loggingService.save(getLogging((rs && saveSourceRs && asRs),"保存相册", JSONObject.toJSONString(album),urlPrefix+"/saveAlbum"));
         return dataResult(rs && saveSourceRs && asRs,RE.ADDORUPDATE.getCode(),album);
     }
 
@@ -490,7 +503,7 @@ public class SourceController extends BaseController {
         if (source.getApplyStatus().equals(Constant.APPLY_STATUS)) {
             boolean b = sourceServiceControllerDetailService.retireApplyStatus(source);
             if (!b) {
-                return R.error();
+                return error();
             }
         }
         if (source.getType().equals("0")||StringUtils.isBlank(source.getType())){
@@ -523,11 +536,12 @@ public class SourceController extends BaseController {
             source.setUserId(getSessionUser().getId());
         }
         boolean rs = sourceService.saveOrUpdate(source);
-        return R.dataResult(rs);
+        loggingService.save(getLogging(rs,"保存资源", JSONObject.toJSONString(source),urlPrefix+"/saveSource"));
+        return dataResult(rs);
     }
 
     /**
-     * 删除某个相册
+     * 删除相册
      * @return
      */
     @ResponseBody
@@ -539,6 +553,7 @@ public class SourceController extends BaseController {
         }
         List<String> list = StringsUtils.strToList(ids);
         boolean del = albumService.removeByIds(list);
+        loggingService.save(getLogging(del,"删除相册", StringsUtils.paramFormat("ids",ids),urlPrefix+"/deleteAlbum"));
         return dataResult(del,Constant.ERROR_CODE);
     }
 
@@ -551,17 +566,19 @@ public class SourceController extends BaseController {
     public Result addSource(@RequestParam("id") Long id) {
         Source source = sourceService.getById(id);
         if (Objects.isNull(source)) {
-            return R.error(Constant.NULL_CODE);
+            return error(Constant.NULL_CODE);
         }
         source.setUpdateBy(getSessionUser().getUsername());
         source.setUpdateTime(new Date());
         boolean b = sourceServiceControllerDetailService.retireApplyStatus(source);
         if (!b) {
-            return R.error();
+            loggingService.save(getLogging(false,"保存资源", StringsUtils.paramFormat("id",id),urlPrefix+"/setMainSource"));
+            return error();
         }
         source.setApplyStatus(Constant.APPLY_STATUS);
         boolean rs = sourceService.saveOrUpdate(source);
-        return R.dataResult(rs, "修改失败", "修改成功", source);
+        loggingService.save(getLogging(rs,"保存资源", StringsUtils.paramFormat("id",id),urlPrefix+"/setMainSource"));
+        return dataResult(rs, "修改失败", "修改成功", source);
     }
 
     /**
@@ -577,6 +594,7 @@ public class SourceController extends BaseController {
             Map<String, String> map = fileService.uploadImg(file);
             filePath = map.get("v");
             setSession(getSessionUserId()+"pic",map.get("r"));
+            loggingService.save(getLogging("上传资源", JSONObject.toJSONString(file),urlPrefix+"/uploadSource"));
         } catch (Exception e) {
             return error("上传异常");
         }
@@ -603,7 +621,7 @@ public class SourceController extends BaseController {
             MainSource mainSource = new MainSource(1L, dbSource, list);
             return success(mainSource);
         }
-        return R.error("主页背景默认配置");
+        return error("主页背景默认配置");
     }
 
     /**
@@ -620,15 +638,17 @@ public class SourceController extends BaseController {
             code = fileService.uploadVideo(req, resp);
             logger.info("---->code:"+code);
         } catch (Exception e) {
+            loggingService.save(getLogging(false,"上传临时文件分片", "",urlPrefix+"/uploadVideoSource"));
             return error("上传异常,视频上传失败！");
         }
         if (code==200){
-            return R.success(code,"视频上传完成，进行解析！");
+            loggingService.save(getLogging(true,"上传临时文件分片", "",urlPrefix+"/uploadVideoSource"));
+            return success(code,"视频上传完成，进行解析！");
         }
         if (code==201){
-            return R.success(code,"正在上传视频！");
+            return success(code,"正在上传视频！");
         }
-         return R.error("视频上传失败！");
+         return error("视频上传失败！");
     }
 
     /**
@@ -653,7 +673,7 @@ public class SourceController extends BaseController {
         if (map.isEmpty()){
             logger.info("{}上传的视频map信息1",map.toString());
         }
-        return R.dataResult(!map.isEmpty(),"视频解析失败","视频解析成功",map);
+        return dataResult(!map.isEmpty(),"视频解析失败","视频解析成功",map);
     }
 
     /**
@@ -672,7 +692,7 @@ public class SourceController extends BaseController {
             source.setUrl(Constant.VIDEO_DEFAULT_NAME);
             return success(source);
         }
-        return R.success(dbSource);
+        return success(dbSource);
     }
 
 
@@ -717,7 +737,7 @@ public class SourceController extends BaseController {
         outputStream.write(bytes, 0, len);
         outputStream.close();
         randomAccessFile.close();
-        System.out.println("返回数据区间:【" + range + "-" + (range + len) + "】");
+       // System.out.println("返回数据区间:【" + range + "-" + (range + len) + "】");
     }
 
     /**

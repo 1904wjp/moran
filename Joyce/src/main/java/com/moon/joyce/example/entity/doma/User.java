@@ -74,6 +74,28 @@ public class User extends Person {
     @Column(exist = false,comment = "0代表不是密码修改")
     private String isUpdatePassword;
 
+    @Column(comment = "微信收款码")
+    private String vxPayCode;
+
+    @Column(comment = "支付宝收款码")
+    private String aliPayCode;
+
+    public String getVxPayCode() {
+        return vxPayCode;
+    }
+
+    public void setVxPayCode(String vxPayCode) {
+        this.vxPayCode = vxPayCode;
+    }
+
+    public String getAliPayCode() {
+        return aliPayCode;
+    }
+
+    public void setAliPayCode(String aliPayCode) {
+        this.aliPayCode = aliPayCode;
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;

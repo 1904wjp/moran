@@ -20,4 +20,6 @@ public class Uri {
     private String remark;
     private String url;
     private String params;
+
+    private String scene;
 }

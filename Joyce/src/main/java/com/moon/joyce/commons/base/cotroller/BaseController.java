@@ -268,7 +268,8 @@ public class BaseController extends R {
                uri.setName(entry.getValue().getName()+"_"+entry.getKey().getName());
                uri.setUrl(entry.getValue().getPri()+entry.getKey().getUrl());
                uri.setParams(entry.getKey().getParams());
-               uriMap.put(uri.getName(),uri);
+               uri.setScene(entry.getValue().getScene());
+               uriMap.put(uri.getUrl(),uri);
            }
        }
        return uriMap;
@@ -357,5 +358,10 @@ public class BaseController extends R {
         }
        // logging.setLoginSys(System.getProperty("os.name"));
         return logging;
+    }
+
+
+    public  Logging getLogging(boolean bool,String eventDesc,String params,String uri){
+        return getLogging(eventDesc+(bool ? "成功":"失败"),params,uri);
     }
 }

@@ -1,12 +1,16 @@
 package com.moon.joyce.example.controller;
 
+import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.ListsUtils;
 import com.moon.joyce.commons.utils.R;
+import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.doma.User;
+import com.moon.joyce.example.functionality.entity.doma.Dict;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.entity.doma.Setting;
+import com.moon.joyce.example.functionality.service.DictService;
 import com.moon.joyce.example.functionality.service.FileService;
 import com.moon.joyce.example.service.UserService;
 import org.slf4j.Logger;
@@ -28,6 +32,7 @@ import java.util.*;
  * @desc 默认的页面（index,404,500）
  */
 @Controller
+@UriPri( name = "默认页面相关",pri = "/" ,scene = "/")
 @RequestMapping("/")
 public class IndexController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -37,6 +42,13 @@ public class IndexController extends BaseController {
     private FileService fileService;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private DictService dictService;
+    /**
+     * 当前场景
+     */
+    private final static String currentScene = "/";
     /**
      * 头菜单
      * @return
@@ -167,7 +179,7 @@ public class IndexController extends BaseController {
             strings.clear();
             strings.add("The command was not found");
         }
-        return R.success(strings);}
+        return success(strings);}
 
 
 
@@ -178,14 +190,23 @@ public class IndexController extends BaseController {
     @ResponseBody
     @RequestMapping("/aboutUsData")
     public Result aboutUsData(){
-        String form = "1692239985@qq.com";
-        String vx ="wxp://f2f02G94YifDWYRnnR2seljn7DoPsl_cpDXe_D6g1qTP9G8";
-        String zfb = "https://qr.alipay.com/fkx15354mdrzidzicds5cc2?t=1642754834489";
-        List<String> list = new ArrayList<>();
-        list.add(form);
-        list.add(vx);
-        list.add(zfb);
-        return R.dataResult(!list.isEmpty(),Constant.NULL_CODE,list);
+        Map<String, String> usMap = new HashMap<>();
+        if (StringsUtils.isNoneBlank(getSessionUser().getEmail())){
+            usMap.put("联系我们",getSessionUser().getEmail());
+        }
+        if (StringsUtils.isNoneBlank(getSessionUser().getVxPayCode())){
+            usMap.put("微信打赏",getSessionUser().getVxPayCode());
+        }
+        if (StringsUtils.isNoneBlank(getSessionUser().getAliPayCode())){
+            usMap.put("支付宝打赏",getSessionUser().getAliPayCode());
+        }
+        Dict dictDTO = new Dict();
+        dictDTO.setScene(currentScene);
+        List<Dict> dicts = dictService.getDicts(dictDTO);
+        for (Dict dict : dicts) {
+            usMap.put(dict.getName(),dict.getValue());
+        }
+        return dataResult(!usMap.isEmpty(),Constant.NULL_CODE,usMap);
     }
 
     /**
@@ -198,7 +219,7 @@ public class IndexController extends BaseController {
         User sessionUser = getSessionUser();
         sessionUser.setStatus(Constant.START_STATUS);
         boolean rs = userService.saveOrUpdate(sessionUser);
-        return R.dataResult(rs,"Joyce初始化失败","Joyce初始化成功");
+        return dataResult(rs,"Joyce初始化失败","Joyce初始化成功");
     }
 
 

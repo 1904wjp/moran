@@ -24,7 +24,7 @@ import java.util.Objects;
 
 /**
  * <p>
- *  前端控制器
+ *  支付宝配置控制器
  * </p>
  *
  * @author Joyce
@@ -33,6 +33,9 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/example/payConfig")
 public class PayConfigController extends BaseController {
+
+
+    private final static String urlPrefix = "/example/payConfig";
     @Value("${file.config.path}")
     private String filePath;
     @Autowired
@@ -48,12 +51,23 @@ public class PayConfigController extends BaseController {
         return "";
     }
 
+
+    /**
+     * 查询支付宝配置列表
+     * @param payConfig
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/getPayConfigList")
     public PageVo<PayConfig> getPayConfigList(PayConfig payConfig){
        return payConfigService.getPage(payConfig);
     }
 
+    /**
+     * 查询支付宝一条配置
+     * @param id
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/{id}")
     public Result getById(@PathVariable Long id){
@@ -68,6 +82,12 @@ public class PayConfigController extends BaseController {
         return getResult(true,RE.SELECT,config);
     }
 
+
+    /**
+     * 支付宝配置保存
+     * @param payConfig
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/save")
     public Result getById(PayConfig payConfig){
@@ -81,9 +101,16 @@ public class PayConfigController extends BaseController {
         FileUtils.writeFile(filePath,text);
         payConfig.setPrivateKey(filePath);
         boolean rs = payConfigService.saveOrUpdate(payConfig);
+        loggingService.save(getLogging(rs,"支付宝配置保存", JSONObject.toJSONString(payConfig),urlPrefix+"/save"));
         return getResult(rs, RE.ADDORUPDATE,payConfig);
     }
 
+    /**
+     * 查询私匙
+     * @param password
+     * @param id
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/privateKey")
     public Result getById(@RequestParam("password") String password,@RequestParam("id") Long id){
@@ -99,18 +126,28 @@ public class PayConfigController extends BaseController {
                }
                JSONObject jsonObject = JSON.parseObject(text);
                text = jsonObject.get("key").toString();
+               loggingService.save(getLogging("查询私匙成功", StringsUtils.paramFormat(new Object[] {"password",password,"id",id}),urlPrefix+"/privateKey"));
+               return getResult(true, RE.SELECT,text);
            }
         }else {
+            loggingService.save(getLogging("查询私匙失败，密码错误", StringsUtils.paramFormat(new Object[] {"password",password,"id",id}),urlPrefix+"/privateKey"));
             return error("密码错误");
         }
-        return getResult(true, RE.SELECT,text);
+        loggingService.save(getLogging("查询私匙失败", StringsUtils.paramFormat(new Object[] {"password",password,"id",id}),urlPrefix+"/privateKey"));
+        return getResult(false, RE.SELECT,text);
     }
 
+    /**
+     * 删除支付宝配置
+     * @param ids
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/del")
     public Result del(String ids){
         List<String> list = StringsUtils.strToList(ids);
         boolean b = payConfigService.removeByIds(list);
+        loggingService.save(getLogging(b,"删除支付宝配置", StringsUtils.paramFormat("ids",ids),urlPrefix+"/del"));
         return getResult(b,RE.DELETE);
     }
 
@@ -135,6 +172,7 @@ public class PayConfigController extends BaseController {
         PayConfig payConfig1 = payConfigService.getById(id);
         payConfig1.setStatus(PayConfig.usedStatus);
         boolean rs2 = payConfigService.saveOrUpdate(payConfig1);
+        loggingService.save(getLogging(rs1&&rs2,"设置使用的payConfig", StringsUtils.paramFormat("id",id),urlPrefix+"/set"));
         return getResult(rs1&&rs2,RE.UPDATE);
     }
 }

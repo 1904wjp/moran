@@ -4,6 +4,7 @@ package com.moon.joyce.example.functionality.service.serviceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.moon.joyce.commons.joyce.entity.Node;
+import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.functionality.entity.doma.Dict;
 import com.moon.joyce.example.functionality.entity.connection.DictAndLable;
 import com.moon.joyce.example.functionality.service.DictService;
@@ -29,11 +30,14 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     @Override
     public List<Dict> getDicts(Dict dict) {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
-        if (Objects.nonNull(dict.getCode())){
+        if (StringsUtils.isNoneBlank(dict.getCode())){
             wrapper.lambda().eq(Dict::getCode,dict.getCode());
         }
         if (Objects.nonNull(dict.getName())){
             wrapper.lambda().like(Dict::getName,dict.getName());
+        }
+        if (StringsUtils.isNoneBlank(dict.getScene())){
+            wrapper.lambda().like(Dict::getScene,dict.getScene());
         }
         List<Dict> dicts = baseMapper.selectList(wrapper);
         List<Dict> list = new ArrayList<>();

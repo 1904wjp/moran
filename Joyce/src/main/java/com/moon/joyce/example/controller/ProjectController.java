@@ -1,6 +1,7 @@
 package com.moon.joyce.example.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
@@ -31,9 +32,13 @@ import java.util.Objects;
  * @since 2021-09-25
  */
 @Controller
-@UriPri(name = "项目接口路径",pri = "/example/project")
+@UriPri(name = "项目接口路径",pri = "/example/project" ,scene = "project")
 @RequestMapping("/example/project")
 public class ProjectController extends BaseController {
+
+
+    private final static String urlPrefix = "/example/project";
+    private final static String currentScene = "project";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 页面路径前缀
@@ -88,7 +93,8 @@ public class ProjectController extends BaseController {
              project.setUpdateTime(new Date());
         }
         boolean result = projectService.saveOrUpdate(project);
-        return R.dataResult(result);
+        loggingService.save(getLogging(result,"保存项目信息", JSONObject.toJSONString(project),urlPrefix+"/saveProjects"));
+        return dataResult(result);
     }
 
     /**
@@ -102,9 +108,9 @@ public class ProjectController extends BaseController {
     public Result getprojects(@RequestParam Long id){
         Project project = projectService.getById(id);
         if (Objects.isNull(project)){
-            return R.error(Constant.NULL_CODE);
+            return error(Constant.NULL_CODE);
         }
-        return R.dataResult(Objects.isNull(project),Constant.NULL_CODE,project);
+        return dataResult(Objects.isNull(project),Constant.NULL_CODE,project);
     }
 
     /**
@@ -118,7 +124,8 @@ public class ProjectController extends BaseController {
     public Result delProjects(@RequestParam String ids) {
         List<String> list = StringsUtils.strToList(ids);
         boolean result = projectService.removeByIds(list);
-        return R.dataResult(result, "删除失败", "删除成功");
+        loggingService.save(getLogging(result,"删除项目信息", StringsUtils.paramFormat("ids",ids),urlPrefix+"/delProjects"));
+        return dataResult(result, "删除失败", "删除成功");
     }
 
     /**
@@ -129,7 +136,7 @@ public class ProjectController extends BaseController {
     //@MethodUrl(name = "根据名称查询接口",url = "/getUri/{key}")
     @RequestMapping("/getUri/{key}")
     public Result getProjectUri(@PathVariable String key){
-        return R.dataResult(!getMap().isEmpty(),getMap().get(key));
+        return dataResult(!getMap().isEmpty(),getMap().get(key));
     }
 
     /**
@@ -140,7 +147,7 @@ public class ProjectController extends BaseController {
     //@MethodUrl(name = "所有接口",url = "/getUri")
     @RequestMapping("/getUri")
     public Result getProjectUriMap(){
-        return R.dataResult(!getMap().isEmpty(),getMap());
+        return dataResult(!getMap().isEmpty(),getMap());
     }
 
 }

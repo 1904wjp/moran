@@ -1,10 +1,12 @@
 package com.moon.joyce.example.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.doma.Column;
+import com.moon.joyce.example.functionality.entity.doma.Logging;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.service.ColumnsService;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/example/columns")
 public class ColumnsController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private String urlPrefix = "/example/columns";
     @Autowired
     private ColumnsService columnsService;
     /**
@@ -61,15 +65,15 @@ public class ColumnsController extends BaseController {
         //创建当前session中的应用数据源
         startupDatasource();
         if (StringUtils.isBlank(tableName) || StringUtils.isBlank(dbName)) {
-            return R.error(Constant.ERROR_FILL_ERROR_CODE);
+            return error(Constant.ERROR_FILL_ERROR_CODE);
         }
         /* Column table = columnsService.getColumn.js(tableName,dbName);*/
         List<Column> columns = columnsService.getColumns(tableName, dbName);
         if (Objects.isNull(columns)) {
-            return R.error("该表无数据或者不存在");
+            return error("该表无数据或者不存在");
         }
         if (columns.isEmpty()) {
-            return R.error("该表无数据或者不存在");
+            return error("该表无数据或者不存在");
         }
         columns.stream().filter(x -> "NO".equals(x.getIsNull()) && Objects.isNull(x.getDefaultValue())).forEach(x -> x.setDefaultValue("默认值不为空"));
         List<Column> columns1 = new ArrayList<>();
@@ -85,7 +89,7 @@ public class ColumnsController extends BaseController {
         }
         //调用文件创建工具类
         if (Objects.isNull(getCurrentSetting().getPackageInfo())) {
-            return R.error("数据对应的包还未配置，请先配置相关的包");
+            return error("数据对应的包还未配置，请先配置相关的包");
         }
         WebUtils.createWeb(columns1, type, getCurrentSetting().getPackageInfo());
         //创建对应类的文件名称存入session
@@ -100,7 +104,7 @@ public class ColumnsController extends BaseController {
         setSession(getSessionUser().getUsername() + "webFile", map);
         logger.info("创建：" + columns1.get(0).getTableName());
         shutdownDatasource();
-        return R.success(columns);
+        return success(columns);
     }
 
     /**
@@ -116,8 +120,10 @@ public class ColumnsController extends BaseController {
             String zipName = getSessionUser().getUsername() + UUIDUtils.getUUID(8) + "_JACFile.zip";
             FileUtils.downloadZip(zipName,response,webFile);
             removeSessionValue(getSessionUser().getUsername() + "webFile");
+            loggingService.save(getLogging("用户下载了自动生成文件", JSONObject.toJSONString(response), urlPrefix + "/downloadWebFile"));
             Thread.sleep(3000);
         } catch (InterruptedException e) {
+            loggingService.save(getLogging("用户下载了自动生成文件失败", JSONObject.toJSONString(response), urlPrefix + "/downloadWebFile"));
             e.printStackTrace();
         }
     }
@@ -133,7 +139,7 @@ public class ColumnsController extends BaseController {
         }
         List<String> dataBaseNames = columnsService.getDataBaseNames();
         shutdownDatasource();
-        return R.dataResult(!dataBaseNames.isEmpty(),"该数据库无数据或者连接有误",dataBaseNames);
+        return dataResult(!dataBaseNames.isEmpty(),"该数据库无数据或者连接有误",dataBaseNames);
     }
 
     @ResponseBody
@@ -142,7 +148,7 @@ public class ColumnsController extends BaseController {
         startupDatasource();
         List<Column> tables = columnsService.selectAllTables(databaseName);
         shutdownDatasource();
-        return R.dataResult(!tables.isEmpty(),"该数据库无数据或者连接有误",tables);
+        return dataResult(!tables.isEmpty(),"该数据库无数据或者连接有误",tables);
     }
 
     @ResponseBody
@@ -152,7 +158,7 @@ public class ColumnsController extends BaseController {
         List<Column> tables = columnsService.selectAllTables2(databaseName);
         Map<String, List<Column>> collect = tables.stream().collect(Collectors.groupingBy(Column::getTableName));
         shutdownDatasource();
-        return R.dataResult(!collect.isEmpty(),"该数据库无数据或者连接有误",collect);
+        return dataResult(!collect.isEmpty(),"该数据库无数据或者连接有误",collect);
     }
 
     @ResponseBody

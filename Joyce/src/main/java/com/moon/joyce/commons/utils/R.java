@@ -103,12 +103,12 @@ public class R  {
             if ("".equals(MSG)){
                 return success(data);
             }
-            return R.success(MSG+"成功",data);
+            return success(MSG+"成功",data);
         }
         if (!MSG.equals("")){
-            return R.success(MSG+"失败");
+            return success(MSG+"失败");
         }
-        return R.error();
+        return error();
     }
     /**
      * 返回结果
@@ -117,9 +117,9 @@ public class R  {
      */
     public static Result dataResult(int rsi){
         if (rsi!=0){
-            return R.success();
+            return success();
         }
-        return R.error();
+        return error();
     }
     /**
      * 返回结果
@@ -140,9 +140,9 @@ public class R  {
      */
     public static Result dataResult(int rsi,Object data){
        if (rsi!=0){
-           return R.success(data);
+           return success(data);
        }
-        return R.error();
+        return error();
     }
 
 
