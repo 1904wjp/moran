@@ -3,7 +3,6 @@ package com.moon.joyce.example.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
-import com.moon.joyce.commons.utils.R;
 import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.doma.Article;
 import com.moon.joyce.example.entity.vo.PageVo;
@@ -61,20 +60,20 @@ public class UEditorController extends BaseController {
        return prefix+"uEditorListPage";
    }
 
-  /*  *//**
+    /**
      * 博客编辑主页
      * @return
-     *//*
+     */
     @RequestMapping("/uEditorPage")
-    public String getEdit(){
+    public String getEditPage(){
         return prefix+"uEditorPage";
-    }*/
+    }
     /**
      * 博客添加主页
      * @return
      */
     @RequestMapping("/addUEditorPage")
-    public String getEditPage(){
+    public String getAddEditPage(){
         return prefix+"addUEditorPage";
     }
 
@@ -98,7 +97,6 @@ public class UEditorController extends BaseController {
            if (StringUtils.isNoneBlank(dbArticle.getContent())){
                article.setPvContent(dbArticle.getContent());
            }
-
            article.setUpdateTime(new Date());
        }
        boolean update = uEditorService.saveOrUpdate(article);

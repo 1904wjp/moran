@@ -188,9 +188,7 @@ public class SourceController extends BaseController {
         List<String> list2 = new ArrayList<>();
         for (String s : list) {
             String str = s.toLowerCase();
-            if (str != null) {
-                list2.add(str);
-            }
+            list2.add(str);
         }
         list.addAll(list2);
         list = new ArrayList<>(new HashSet<>(list));
@@ -308,7 +306,7 @@ public class SourceController extends BaseController {
             e.printStackTrace();
             return error("上传失败");
         }
-        logger.info("上传相册的路径----》" + paths);
+       // logger.info("上传相册的路径----》" + paths);
         loggingService.save(getLogging(Objects.nonNull(paths),"多文件上传", StringsUtils.paramFormat("files",paths),urlPrefix+"/files"));
         return dataResult(Objects.nonNull(paths), "上传失败", "上传成功", paths);
     }
@@ -503,6 +501,7 @@ public class SourceController extends BaseController {
         if (source.getApplyStatus().equals(Constant.APPLY_STATUS)) {
             boolean b = sourceServiceControllerDetailService.retireApplyStatus(source);
             if (!b) {
+                loggingService.save(getLogging(!b,"保存资源", JSONObject.toJSONString(source),urlPrefix+"/saveSource"));
                 return error();
             }
         }
@@ -594,10 +593,11 @@ public class SourceController extends BaseController {
             Map<String, String> map = fileService.uploadImg(file);
             filePath = map.get("v");
             setSession(getSessionUserId()+"pic",map.get("r"));
-            loggingService.save(getLogging("上传资源", JSONObject.toJSONString(file),urlPrefix+"/uploadSource"));
         } catch (Exception e) {
+            loggingService.save(getLogging("上传资源异常", JSONObject.toJSONString(file),urlPrefix+"/uploadSource"));
             return error("上传异常");
         }
+        loggingService.save(getLogging("上传资源成功", JSONObject.toJSONString(file),urlPrefix+"/uploadSource"));
         return success("上传成功", filePath);
     }
 
