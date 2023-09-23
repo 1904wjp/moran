@@ -879,7 +879,7 @@ var ajax = function (options) {
         options.contentType = 'application/x-www-form-urlencoded';
     }
     HttpRequest(options);
-}
+};
 var ajaxHttp = function (options) {
     if (options.type === 'post') {
         options.contentType = 'application/x-www-form-urlencoded';
@@ -887,7 +887,10 @@ var ajaxHttp = function (options) {
     // 每次请求携带token
     options.token = localStorage.getItem('access_token');
     HttpRequest(options);
-}
+};
 
+$(window).bind('beforeunload', function() {
+    rmUser();
+});
 
 

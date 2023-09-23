@@ -25,5 +25,10 @@ public interface LoggingService extends IService<Logging> {
      */
     long getTotal(Logging logging);
 
-
+    /**
+     * 根据id集合删除
+     * @param ids
+     * @return
+     */
+    int deleteByIds(List<Long> ids);
 }

@@ -28,5 +28,10 @@ public interface LoggingMapper extends BaseMapper<Logging> {
      */
     long getTotal(Logging logging);
 
-
+    /**
+     * 真删除id集合的行
+     * @param ids
+     * @return
+     */
+    int deleteByIds(List<Long> ids);
 }

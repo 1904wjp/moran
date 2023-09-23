@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 
 /**
  * @author Xing Dao Rong
@@ -47,4 +49,18 @@ public class Article extends Page {
     @Column(exist = false)
     @TableField(exist = false)
     private String result;
+
+
+ @Override
+ public boolean equals(Object o) {
+  if (this == o) return true;
+  if (o == null || getClass() != o.getClass()) return false;
+  Article article = (Article) o;
+  return (this.author.equals(article.author) && this.title.equals(article.title) && this.id.equals(article.id) && this.content.equals(article.content));
+ }
+
+ @Override
+ public int hashCode() {
+  return Objects.hash(author, title, content, pvContent, userId, classId, result);
+ }
 }

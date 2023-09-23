@@ -84,7 +84,7 @@ public class UEditorController extends BaseController {
      */
    @ResponseBody
    @RequestMapping("/saveArticle")
-   public Result addArticle(Article article){
+   public Result saveArticle(Article article){
        if (Objects.isNull(article.getId())){
            article.setAuthor(getSessionUser().getUsername());
            article.setCreateBy(getSessionUser().getUsername());
@@ -94,6 +94,9 @@ public class UEditorController extends BaseController {
        }else {
            article.setUpdateBy(getSessionUser().getUsername());
            Article dbArticle = uEditorService.getById(article.getId());
+           if (article.equals(dbArticle)){
+               return success();
+           }
            if (StringUtils.isNoneBlank(dbArticle.getContent())){
                article.setPvContent(dbArticle.getContent());
            }

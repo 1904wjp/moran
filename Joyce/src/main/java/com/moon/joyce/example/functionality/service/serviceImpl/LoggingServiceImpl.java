@@ -29,4 +29,9 @@ public class LoggingServiceImpl extends ServiceImpl<LoggingMapper, Logging> impl
    public long getTotal(Logging logging) {
       return loggingMapper.getTotal(logging);
    }
+
+   @Override
+   public int deleteByIds(List<Long> ids) {
+      return loggingMapper.deleteByIds(ids);
+   }
 }
