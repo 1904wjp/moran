@@ -187,24 +187,25 @@ function saveInfo(to,message){
        "id":to,
         "msg":message
     }
-
-    $.ajax({
-        url: '/example/user/sendTo',
-        type: 'POST',
-        dataType: 'json',
-        data:data,
-    }).done(function (data) {
-        tips(data.rs,data.msg);
-    }).fail(function (){
-        tips(false,ajaxFailMsg);
-    });
+    if (message.length<30){
+        $.ajax({
+            url: '/example/user/sendTo',
+            type: 'POST',
+            dataType: 'json',
+            data:data,
+        }).done(function (data) {
+            tips(data.rs,data.msg);
+        }).fail(function (){
+            tips(false,ajaxFailMsg);
+        });
+    }
 }
 
 /**
  * 限制字数
  */
 $("#messageText").keyup(function(){
-    var max  =30;
+    var max  = 30;
     var this_ = $(this).val();
     var len = this_.length;
     $(this).attr({maxlength:""+max});

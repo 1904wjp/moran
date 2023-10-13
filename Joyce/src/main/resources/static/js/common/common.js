@@ -890,7 +890,7 @@ var ajaxHttp = function (options) {
 };
 
 $(window).bind('beforeunload', function() {
-    rmUser();
+   // rmUser();
 });
 
 

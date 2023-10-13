@@ -33,6 +33,15 @@ public class RedisUtils {
         }
         return jedis;
     }
+    public static Jedis getInstance(String host ,int port,String password){
+        if (Objects.isNull(jedis)){
+            jedis = new Jedis(host,port);
+            if (Objects.nonNull(password)){
+                jedis.auth(password);
+            }
+        }
+        return jedis;
+    }
 
     /**
      *校验验证码

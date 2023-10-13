@@ -18,6 +18,7 @@ import com.moon.joyce.example.functionality.entity.doma.Uri;
 import com.moon.joyce.example.functionality.service.AddParamsService;
 import com.moon.joyce.example.functionality.service.DbBaseSettingService;
 import com.moon.joyce.example.functionality.service.LoggingService;
+import com.moon.joyce.example.service.ChatRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,12 +79,15 @@ public class BaseController extends R {
     public List<User> sessionUsers = new CopyOnWriteArrayList<>();
     @Autowired
     private DbBaseSettingService dbBaseSettingService;
+    @Autowired
+    protected ChatRecordService chatRecordService;
     //缓存
     protected static Jedis cache ;
     //缓存的聊天记录
     protected static String addChatRecords = "add_chatRecord";
     protected static  ConcurrentHashMap<Long, Auth> authMap = new ConcurrentHashMap<>();
     private static Map<String, Uri> uriMap;
+    protected static String allRecords = "ALL_RECORDS";
     @Autowired
     private AddParamsService addParamsService;
   //  public static Map<String,Object> redisMap = new HashMap<>();

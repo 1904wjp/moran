@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -63,6 +64,8 @@ public class UserController extends BaseController {
      * url的路径前缀
      */
     private final String urlPrefix = "/example/user/";
+
+    private static List<Object> allList ;
 
     /**
      * 文件服务
@@ -263,10 +266,19 @@ public class UserController extends BaseController {
         chatRecord.setBNickname(bUser.getNickname());
         chatRecord.setUserAName(getSessionUserName());
         chatRecord.setUserBName(bUser.getUsername());
-        boolean flag = false;
+        Object allReObj = getRedisValueOperation().get(allRecords);
+        if (Objects.isNull(allReObj)){
+            allList = new CopyOnWriteArrayList<>();
+            allList.add(chatRecord);
+            getRedisValueOperation().set(allRecords, JSON.toJSONString(chatRecord), 24, TimeUnit.HOURS);
+        }else {
+            allList = JSON.parseArray(allReObj.toString(), Object.class);
+            allList.add(chatRecord);
+            getRedisValueOperation().set(allRecords, JSON.toJSONString(chatRecord), 24, TimeUnit.HOURS);
+        }
         addChatRecords ="chatRecords"+getSessionUserId()+id;
         List<Object> dBChatRecords = new ArrayList<>();
-        if (getRedisValueOperation().get(addChatRecords)!=null){
+        if (getRedisValueOperation().get(addChatRecords)!=null&&dBChatRecords.size()!=0){
             dBChatRecords = JSON.parseArray(getRedisValueOperation().get(addChatRecords).toString(), Object.class);
         }
         List<ChatRecord> chatRecords = new ArrayList<>();

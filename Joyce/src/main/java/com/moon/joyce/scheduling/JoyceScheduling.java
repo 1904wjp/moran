@@ -1,15 +1,15 @@
 package com.moon.joyce.scheduling;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.moon.joyce.commons.base.cotroller.BaseController;
+import com.moon.joyce.example.entity.doma.ChatRecord;
 import com.moon.joyce.example.functionality.entity.doma.Logging;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -18,8 +18,28 @@ import java.util.stream.Collectors;
 @Component
 public class JoyceScheduling extends BaseController {
 
+
+    @Scheduled(cron="0 0 21 * * ?")
+    private void clearKeysAndMsgDataBase() {
+        Object[] objects = Objects.requireNonNull(redisTemplate.keys("*")).toArray();
+        List<String> rmKeys = new ArrayList<>();
+        for (int i = 0; i < objects.length; i++) {
+            Boolean aBoolean = redisTemplate.hasKey(objects[i].toString());
+            if (Boolean.FALSE.equals(aBoolean)) {
+                rmKeys.add(objects[i].toString());
+            }
+        }
+        Object o = getRedisValueOperation().get(allRecords);
+        if (Objects.nonNull(o)) {
+            List<ChatRecord> chatRecords = JSONObject.parseArray(o.toString(), ChatRecord.class);
+            chatRecordService.saveBatch(chatRecords);
+            rmKeys.add(allRecords);
+        }
+        redisTemplate.delete(rmKeys);
+    }
+
     @Scheduled(cron="0 10 0 1 * ?")
-    private void test(){
+    private void deleteLog(){
         QueryWrapper<Logging> wrapper = new QueryWrapper<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
