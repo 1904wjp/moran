@@ -87,13 +87,13 @@ function deleteIdFuc(id) {
 
         }).done(function (data) {
             if (data.rs) {
-               tips(data.rs,data.msg)
+                tips(data.rs, data.msg)
                 toList('/example/user/userList');
-            }else {
-                tips(data.rs,data.msg)
+            } else {
+                tips(data.rs, data.msg)
             }
         }).fail(function () {
-            tips(false,data.msg)
+            tips(false, data.msg)
         });
     });
 }
@@ -115,11 +115,11 @@ function freezeUserFuc(id) {
             if (data.rs) {
                 toastr.success(data.msg)
                 toList('/example/user/userList');
-            }else {
+            } else {
                 toastr.error(data.msg)
             }
         }).fail(function () {
-            tips(false,data.msg)
+            tips(false, data.msg)
         });
     });
 }
@@ -138,13 +138,13 @@ function recoverUserFuc(id) {
             data: data,
         }).done(function (data) {
             if (data.rs) {
-               tips(data.rs,data.msg)
+                tips(data.rs, data.msg)
                 toList('/example/user/userList');
-            }else {
+            } else {
                 toastr.error(data.msg)
             }
         }).fail(function () {
-            tips(false,data.msg)
+            tips(false, data.msg)
         });
     });
 }
@@ -155,29 +155,30 @@ function deleteIdsFuc() {
     if (ids != '' && ids != null) {
         var data = {"ids": ids};
         Ewin.confirm(
-            {message: "确认要删除选择的数据吗？"
-                }).on(
-                function (e) {
-            if (!e) {
-                return;
-            }
-            $.ajax({
-                url: '/example/user/deleteUser',
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-            }).done(function (data) {
-                if (data.rs) {
-                    toastr.success(data.msg)
-                    toList('/example/source/userList');
-                }else {
-                    toastr.error(data.msg)
+            {
+                message: "确认要删除选择的数据吗？"
+            }).on(
+            function (e) {
+                if (!e) {
+                    return;
                 }
-            }).fail(function () {
-            tips(false,data.msg)
+                $.ajax({
+                    url: '/example/user/deleteUser',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: data,
+                }).done(function (data) {
+                    if (data.rs) {
+                        toastr.success(data.msg)
+                        toList('/example/source/userList');
+                    } else {
+                        toastr.error(data.msg)
+                    }
+                }).fail(function () {
+                    tips(false, data.msg)
 
+                });
             });
-        });
     }
 }
 
@@ -186,19 +187,19 @@ function editUserFuc(id) {
     var data = {
         "id": id
     };
-        $.ajax({
-            url: '/example/user/doQueryUser',
-            type: 'POST',
-            dataType: 'json',
-            data: data,
-        }).done(function (data) {
-           tips(data.rs,data.msg)
-            if (data.rs) {
-                toList('/example/user/editUser/' + id);
-            }
-        }).fail(function () {
-            tips(false,data.msg)
-        });
+    $.ajax({
+        url: '/example/user/doQueryUser',
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+    }).done(function (data) {
+        tips(data.rs, data.msg)
+        if (data.rs) {
+            toList('/example/user/editUser/' + id);
+        }
+    }).fail(function () {
+        tips(false, data.msg)
+    });
 }
 
 //跳转到查看页面
@@ -212,12 +213,12 @@ function queryUserFuc(id) {
         dataType: 'json',
         data: data,
     }).done(function (data) {
-        tips(data.rs,data.msg);
+        tips(data.rs, data.msg);
         if (data.rs) {
             toList('/example/user/queryUser/' + id);
         }
     }).fail(function () {
-            tips(false,data.msg)
+        tips(false, data.msg)
     });
 }
 
@@ -247,17 +248,17 @@ function getEmailCodeFuc() {
     var data = {
         "email": email
     };
-    if (vailDate(data)){
-            $.ajax({
-                url: '/example/user/getEmailCode',
-                type: 'POST',
-                dataType: 'json',
-                data: data,
-            }).done(function (data) {
-                tips(data.rs,data.msg);
-            }).fail(function () {
-                tips(false,ajaxFailMsg);
-            });
+    if (vailDate(data)) {
+        $.ajax({
+            url: '/example/user/getEmailCode',
+            type: 'POST',
+            dataType: 'json',
+            data: data,
+        }).done(function (data) {
+            tips(data.rs, data.msg);
+        }).fail(function () {
+            tips(false, ajaxFailMsg);
+        });
     }
 
 }
@@ -269,7 +270,7 @@ function forget_password_update_verifyFuc() {
         "email": $("#forget_email").val()
     };
 
-    if (vailDate(data)){
+    if (vailDate(data)) {
         Ewin.confirm({message: "确认提交数据？"}).on(function (e) {
             if (!e) {
                 return;
@@ -284,13 +285,13 @@ function forget_password_update_verifyFuc() {
             }).done(function (data) {
                 loading(false)
                 $("#forgetPasswordModal").modal('show');
-                tips(data.rs,data.msg);
+                tips(data.rs, data.msg);
                 if (data.rs) {
                     $("#updatePasswordModal").modal('hide');
                     toList("/example/user/login");
                 }
             }).fail(function () {
-                tips(false,data.msg)
+                tips(false, data.msg)
             });
         });
     }
@@ -301,22 +302,22 @@ function password_update_verify() {
     var pwd1 = $("#new_password1").val();
     var pwd2 = $("#new_password2").val();
 
-    if (isBlank(pwd2)||isBlank(pwd1)){
-       // $("#updatePasswordModal").modal('hide');
-        tips(false,"密码不能为空");
-       // $("#updatePasswordModal").modal('show');
+    if (isBlank(pwd2) || isBlank(pwd1)) {
+        // $("#updatePasswordModal").modal('hide');
+        tips(false, "密码不能为空");
+        // $("#updatePasswordModal").modal('show');
 
-    }else if (pwd1 !== pwd2) {
-       // $("#updatePasswordModal").modal('hide');
-        tips(false,'两次输入不一致');
-       // $("#updatePasswordModal").modal('show');
-    }else {
+    } else if (pwd1 !== pwd2) {
+        // $("#updatePasswordModal").modal('hide');
+        tips(false, '两次输入不一致');
+        // $("#updatePasswordModal").modal('show');
+    } else {
         var data = {
             "userId": $("#update_user_id").val(),
             "password": $("#org_password").val(),
             "newPassword": $("#new_password2").val()
         };
-        if (vailDate(data)){
+        if (vailDate(data)) {
             Ewin.confirm({message: "确认提交数据？"}).on(function (e) {
                 if (!e) {
                     return;
@@ -327,19 +328,19 @@ function password_update_verify() {
                     dataType: 'json',
                     data: data,
                 }).done(function (data) {
-                    tips(data.rs,data.msg);
+                    tips(data.rs, data.msg);
                     if (data.rs) {
                         $("#updatePasswordModal").modal('hide');
-                        tips(data.rs,data.msg);
+                        tips(data.rs, data.msg);
                         toList("/example/user/login");
                     }
                 }).fail(function () {
-                    tips(false,data.msg)
+                    tips(false, data.msg)
                 });
             });
         }
     }
-    }
+}
 
 
 //刷新
@@ -362,68 +363,67 @@ function uploadUserPhoto() {
     var fileReader = new FileReader();
     //console.log(file);
     fileReader.readAsDataURL(file);
-    fileReader.onload = function (e){
+    fileReader.onload = function (e) {
         image.attr("src", this.result);
         console.log(image.src);
     };
 
-   //
+    //
 }
 
 //用户修改
 function updateUserFuc() {
     // var flag = document.getElementsByName("picFlag");
     // flag.value="";
-    if ($('#fileUrl').val()!=$('#fileUrl1').val()){
+    if ($('#fileUrl').val() != $('#fileUrl1').val()) {
         uploadFile($('#photo_file'), "/example/user/upload", $("#display_img"), $('#fileUrl'));
     }
     Ewin.confirm({message: "确认要提交数据吗？"}).on(function (e) {
-            if (!e) {
-                return;
-            }
+        if (!e) {
+            return;
+        }
 
-            var data = {
-                id: $("#id").val(),
-                username: $("#username").val(),
-                password: $("#password").val(),
-                phone: $("#phone").val(),
-                fileUrl: $("input[name='fileUrl']").val(),
-                email: $("#email").val(),
-                status: $('#status').val(),
-                nickname: $('#nickname').val(),
-                isUpdatePassword: '0'
-            };
-            var fdata = {
-                username: $("#username").val(),
-                password: $("#password").val(),
-                phone: $("#phone").val(),
-                fileUrl: $("input[name='fileUrl']").val(),
-                email: $("#email").val()
-            };
+        var data = {
+            id: $("#id").val(),
+            username: $("#username").val(),
+            password: $("#password").val(),
+            phone: $("#phone").val(),
+            fileUrl: $("input[name='fileUrl']").val(),
+            email: $("#email").val(),
+            status: $('#status').val(),
+            nickname: $('#nickname').val(),
+            isUpdatePassword: '0'
+        };
+        var fdata = {
+            username: $("#username").val(),
+            password: $("#password").val(),
+            phone: $("#phone").val(),
+            fileUrl: $("input[name='fileUrl']").val(),
+            email: $("#email").val()
+        };
 
-            if (vailDate(fdata)){
-                //while(true){
-                  //  if (flag!=""){
-                        $.ajax({
-                            url: '/example/user/doSaveUser',
-                            type: 'POST',
-                            dataType: 'json',
-                            data: data,
-                        }).done(function (data) {
-                            tips(data.rs,data.msg);
-                            if (data.rs) {
-                                toMain();
-                            }
-                        }).fail(function () {
-                            tips(false,data.msg);
-                        });
-                      //  break;
-                   // }
-                   // sleep(2000);
-               // }
-            }
-        });
-
+        if (vailDate(fdata)) {
+            //while(true){
+            //  if (flag!=""){
+            $.ajax({
+                url: '/example/user/doSaveUser',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+            }).done(function (data) {
+                tips(data.rs, data.msg);
+                if (data.rs) {
+                    toMain();
+                }
+            }).fail(function () {
+                tips(false, data.msg);
+            });
+            //  break;
+            // }
+            // sleep(2000);
+            // }
+        }
+    });
 }
 
 //退出登录
@@ -439,7 +439,7 @@ function rmUser() {
         }).done(function (data) {
             if (data.rs) {
                 toList('/example/user/login');
-            }else {
+            } else {
                 tips(data.rs, data.msg);
             }
         }).fail(function () {
@@ -447,6 +447,7 @@ function rmUser() {
         });
     });
 }
+
 //查找好友
 function searchFriendFuc() {
 
@@ -459,12 +460,12 @@ function searchFriendFuc() {
         dataType: 'json',
         data: data,
     }).done(function (data) {
-        if (data.rs){
-            toList('/example/user/queryUser/'+data.data.id);
+        if (data.rs) {
+            toList('/example/user/queryUser/' + data.data.id);
         }
-        tips(data.rs,data.msg);
+        tips(data.rs, data.msg);
     }).fail(function () {
-        tips(false,data.msg)
+        tips(false, data.msg)
     });
 }
 

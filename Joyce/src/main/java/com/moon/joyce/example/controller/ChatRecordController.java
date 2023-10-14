@@ -47,7 +47,10 @@ public class ChatRecordController extends BaseController {
     @ResponseBody
     @GetMapping("/getAllRecord")
     public Result getAllRecord(@RequestParam Long userBId){
-
+        List<ChatRecord> rChatRecords = new ArrayList<>();
+        if (!isRedisConnection){
+            return R.error(500,"系统暂未开通",rChatRecords);
+        }
         String r_chatRecords = "chatRecords"+getSessionUserId()+userBId;
         String r_chatRecords_list = "chatRecordsList"+getSessionUserId()+userBId;
         List<ChatRecord> chatRecords = new ArrayList<>();
@@ -56,7 +59,7 @@ public class ChatRecordController extends BaseController {
                 && (Objects.isNull(chatRecords) || chatRecords.isEmpty())){
             return success(getRedisValueOperation().get(r_chatRecords_list));
         }
-        List<ChatRecord> rChatRecords = new ArrayList<>();
+
         List<Object> rObjects =  new ArrayList<>();
         if (getRedisValueOperation().get(r_chatRecords)!=null){
             rObjects =  JSON.parseArray( getRedisValueOperation().get(r_chatRecords).toString(),Object.class);

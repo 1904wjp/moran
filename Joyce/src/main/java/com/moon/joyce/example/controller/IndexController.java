@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -96,7 +97,8 @@ public class IndexController extends BaseController {
      * @return
      */
     @RequestMapping("/main")
-    public String mainPage(){
+    public String mainPage(ModelMap modelMap){
+        modelMap.addAttribute("redisConnection",isRedisConnection);
         User sessionUser = getSessionUser();
         if (sessionUser.getStatus().equals(Constant.START_STATUS)){
             return "main/main2";
@@ -112,7 +114,6 @@ public class IndexController extends BaseController {
             }
         }
         userService.saveOrUpdate(sessionUser);
-
         return "main/main";}
 
     /**

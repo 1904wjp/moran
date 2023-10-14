@@ -86,13 +86,34 @@ function getTablesByDatabaseName(){
  * 下载文件
  */
 function downloadWebFile() {
-    toList("/example/columns/downloadWebFile");
-    $('#download').hide();
+
+    var dbName = $('#dbName').val();
+    /* $('#tableName')[0].options.length=0;*/
+    addLoadingModal("下载中...请稍后");
+    let  data = {
+        databaseName:dbName
+    }
+    $.ajax({
+        url: '/example/columns/createColumnsFile',
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+    }).done(function (data) {
+        loading(false);
+        if (data.rs){
+            toList("/example/columns/downloadWebFile");
+            $('#download').hide();
+        }else {
+            tips(data.rs,data.msg);
+        };
+    }).fail(function (){
+        tips(false,data.msg);
+    });
 }
 
 function lookDetailTableData(){
    var dbName = $('#dbName').val();
    var tableName = $('#tableName').val();
-   toList("/example/columns/getTablesPage/"+dbName+"/"+tableName)
+   toList("/example/columns/getTablesPage/"+dbName+"/"+tableName);
 }
 $('#tableName').change(tableStructure());

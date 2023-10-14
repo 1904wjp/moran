@@ -34,12 +34,10 @@ public class RedisUtils {
         return jedis;
     }
     public static Jedis getInstance(String host ,int port,String password){
-        if (Objects.isNull(jedis)){
-            jedis = new Jedis(host,port);
-            if (Objects.nonNull(password)){
+           Jedis  jedis = new Jedis(host,port);
+            if (StringsUtils.isNoneBlank(password)){
                 jedis.auth(password);
             }
-        }
         return jedis;
     }
 

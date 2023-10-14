@@ -6,7 +6,6 @@ import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.*;
 import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.doma.Column;
-import com.moon.joyce.example.functionality.entity.doma.Logging;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.service.ColumnsService;
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +61,61 @@ public class ColumnsController extends BaseController {
     @ResponseBody
     @RequestMapping("/getColumns")
     public Result getColumns(@RequestParam String tableName, @RequestParam String dbName) {
+        //创建当前session中的应用数据源
+        startupDatasource();
+        if (StringUtils.isBlank(tableName) || StringUtils.isBlank(dbName)) {
+            return error(Constant.ERROR_FILL_ERROR_CODE);
+        }
+        /* Column table = columnsService.getColumn.js(tableName,dbName);*/
+        List<Column> columns = columnsService.getColumns(tableName, dbName);
+        if (Objects.isNull(columns)) {
+            return error("该表无数据或者不存在");
+        }
+        if (columns.isEmpty()) {
+            return error("该表无数据或者不存在");
+        }
+        columns.stream().filter(x -> "NO".equals(x.getIsNull()) && Objects.isNull(x.getDefaultValue())).forEach(x -> x.setDefaultValue("默认值不为空"));
+        List<Column> columns1 = new ArrayList<>();
+        tableName = columns.get(0).getTableName().substring(columns.get(0).getTableName().indexOf("_") + 1);
+        for (Column column : columns) {
+            column.setTableName(tableName);
+            columns1.add(column);
+        }
+      /*  String type = "0";
+        //设置超级管理员在本地执行
+        if (getSessionUser().getUsername().equals(superAdministrator)) {
+            type = "1";
+        }
+        //调用文件创建工具类
+        if (Objects.isNull(getCurrentSetting().getPackageInfo())) {
+            return error("数据对应的包还未配置，请先配置相关的包");
+        }
+        WebUtils.createWeb(columns1, type, getCurrentSetting().getPackageInfo());
+        //创建对应类的文件名称存入session
+        Map<String, String> map = new HashMap<>();
+        String className = StringsUtils.getClassName(columns1.get(0).getTableName());
+        map.put("entity", path+className + ".java");*/
+     /*   map.put("Controller",  path+className + "Controller.java");
+        map.put("Service",  path+className + "Service.java");
+        map.put("ServiceImpl",  path+className + "ServiceImpl.java");
+        map.put("Mapper",  path+className + "Mapper.java");
+        map.put("Mapperxml",  path+className + "Mapper.xml");*/
+      /*  setSession(getSessionUser().getUsername() + "webFile", map);
+        logger.info("创建：" + columns1.get(0).getTableName());*/
+        shutdownDatasource();
+        return success(columns);
+    }
+
+
+    /**
+     * 创建属性列表文件
+     * @param tableName
+     * @param dbName
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/createColumnsFile")
+    public Result createColumnsFile(@RequestParam String tableName, @RequestParam String dbName) {
         //创建当前session中的应用数据源
         startupDatasource();
         if (StringUtils.isBlank(tableName) || StringUtils.isBlank(dbName)) {

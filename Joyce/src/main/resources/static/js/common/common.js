@@ -441,6 +441,7 @@ function vailDate(data, filter) {
  * @returns {boolean}
  */
 function isBlank(value) {
+    console.log("-----------------------------------dsafds:",value);
     if (value == null || value == '' || value == undefined) {
         return true;
     }

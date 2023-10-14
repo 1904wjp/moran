@@ -2,6 +2,10 @@
  * toastr配置文件
  */
 $(function (){
+  initToastr();
+});
+
+function initToastr(){
     toastr.options.positionClass = 'toast-bottom-right';
     toastr.options = {
         closeButton: false,
@@ -21,32 +25,32 @@ $(function (){
         preventDuplicates: true,
         preventOpenDuplicates: true,
         maxOpened:1 ,
-allowHtml: false,
-    closeButton: false,
+        allowHtml: false,
+        closeButton: false,
         closeHtml: '<button>×</button>',
         extendedTimeOut: 1000,
         iconClasses: {
-        error: 'toast-error',
+            error: 'toast-error',
             info: 'toast-info',
             success: 'toast-success',
             warning: 'toast-warning'
-    },
-    messageClass: 'toast-message',
+        },
+        messageClass: 'toast-message',
         onHidden: null,
         onShown: null,
         onTap: null,
         progressBar: false,
         tapToDismiss: true,
         templates: {
-        toast: 'directives/toast/toast.html',
+            toast: 'directives/toast/toast.html',
             progressbar: 'directives/progressbar/progressbar.html'
-    },
-    timeOut: 5000,
+        },
+        timeOut: 5000,
         titleClass: 'toast-title',
         toastClass: 'toast'
 
- };
-});
+    };
+}
 
 /**
  * 提示框
@@ -58,9 +62,13 @@ function tips(params1,params2){
         toastr.success(params2);
     }
     if (params1===false){
+        initToastr();
+        toastr.options.positionClass="toast-bottom-full-width";
         toastr.error(params2);
     }
     if (params1==""){
+        initToastr();
+        toastr.options.positionClass="toast-bottom-center";
         toastr.warning(params2);
     }
     if (params1=null) {

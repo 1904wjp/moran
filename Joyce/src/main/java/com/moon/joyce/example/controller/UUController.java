@@ -73,11 +73,15 @@ public class UUController extends BaseController {
     @ResponseBody
     @GetMapping("/applyFriendList")
     public Result applyFriendList(){
+        List<UU> sendList = new ArrayList<>();
+        if (!isRedisConnection){
+            return error("系统暂未开通");
+        }
         //发起请求存储返回请求人列表
         String  uniqueListSend = UU.uniqueAppend+"MSGlIST_SEND"+getSessionUserId();
         //被申请好友接收的存储列表
         String  uniqueList = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
-        List<UU> sendList = (List<UU>) getRedisValueOperation().get(uniqueListSend);
+        sendList = (List<UU>) getRedisValueOperation().get(uniqueListSend);
         List<UU> uus = (List<UU>) getRedisValueOperation().get(uniqueList);
        /* if (Objects.isNull(uus)){
             if (getExpireTime(uniqueList)<1){
@@ -123,6 +127,9 @@ public class UUController extends BaseController {
     @ResponseBody
     @PostMapping("/addFriend")
     public Result addFriend(UU uu){
+        if (!isRedisConnection){
+            return error("系统暂未开通");
+        }
         String  uniqueList = UU.uniqueAppend+"MSGlIST"+uu.getUserBId();
         String  uniqueList2 = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
         String  uniqueListSend = UU.uniqueAppend+"MSGlIST_SEND"+getSessionUserId();
@@ -166,6 +173,9 @@ public class UUController extends BaseController {
     @ResponseBody
     @RequestMapping("/agreeFriend")
     public Result agreeFriend(@RequestParam("id") Long userAId,@RequestParam("type") Integer type){
+        if (!isRedisConnection){
+            return error("系统暂未开通");
+        }
           String  uniqueList = UU.uniqueAppend+"MSGlIST"+getSessionUserId();
           String  uniqueListSend = UU.uniqueAppend+"MSGlIST_SEND"+getSessionUserId();
         List<UU> uus = (List<UU>) getRedisValueOperation().get(uniqueList);

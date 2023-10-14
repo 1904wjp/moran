@@ -1,6 +1,9 @@
 $(document).ready(function(){
     stopFuc();
     enterFuc();
+    if (!$('#rc').val()){
+        alert('redis系统未开启');
+    }
 });
 var startIndex=0;
 /**

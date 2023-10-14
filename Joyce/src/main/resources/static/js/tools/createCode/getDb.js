@@ -588,69 +588,78 @@ function inputColumns() {
  * 显示表格
  */
 function tableStructure() {
-    loading(true);
-    /* var dbName = $('#dbName').children('option:selected').val();
-     var tableName = $('#tableName').children('option:selected').val();*/
-    var dbName = $('#dbName').val();
-    var tableName = $('#tableName').val();
-    if (tableName.indexOf("(")>=0){
-        tableName = tableName.substring(0,tableName.indexOf("("));
-    }
-    if (!isBlank(tableName) && !isBlank(dbName)) {
-        var data = {
-            dbName: dbName,
-            tableName: tableName
+        loading(true);
+        /* var dbName = $('#dbName').children('option:selected').val();
+         var tableName = $('#tableName').children('option:selected').val();*/
+        var dbName = $('#dbName').val();
+        var tableName = $('#tableName').val();
+        if (tableName.indexOf("(")>=0){
+            tableName = tableName.substring(0,tableName.indexOf("("));
         }
-        console.log("h========>", data);
-        $.ajax({
-            url: '/example/columns/getColumns',
-            type: 'POST',
-            dataType: 'json',
-            data: data,
-        }).done(function (data) {
-            if (data.rs) {
-                var html = "";
-                var arry = data.data;
-                if (notNull(arry)) {
-                    $('#c_table').remove();
-                    var obj = $('#column_table');
-                    html = "<table id='c_table' style='margin-left: 25%;background-color: white' border=\"1\">\n" +
-                        "    <tr>\n" +
-                        "        <th colspan='7' align='center'>" + arry[0].tableName + ":" + arry[0].tableComment + "</th>\n" +
-                        "    </tr>\n" +
-                        "    <tr>\n" +
-                        "        <td>字段名</td>\n" +
-                        "        <td>字段类型</td>\n" +
-                        "        <td>字段最大长度</td>\n" +
-                        "        <td>字段是否为空</td>\n" +
-                        "        <td>字段是否为主键</td>\n" +
-                        "        <td>字段默认值</td>\n" +
-                        "        <td>字段注释</td>\n" +
-                        "    </tr>\n";
-
-                    for (let i = 0; i < arry.length; i++) {
-                        html = html + "<tr>\n" +
-                            "        <td>" + arry[i].columnName + "</td>\n" +
-                            "        <td>" + arry[i].columnType + "</td>\n" +
-                            "        <td>" + arry[i].columnLength + "</td>\n" +
-                            "        <td>" + arry[i].isNull + "</td>\n" +
-                            "        <td>" + arry[i].isKey + "</td>\n" +
-                            "        <td>" + arry[i].defaultValue + "</td>\n" +
-                            "        <td>" + arry[i].columnComment + "</td>\n" +
-                            "    </tr>\n";
-                    }
-                    html = html + "</table>";
-                }
-                obj.append(html);
-                loading(false);
-            } else {
-                loading(false);
-                tips(data.rs, data.msg)
+        if (!isBlank(tableName) && !isBlank(dbName)) {
+            var data = {
+                dbName: dbName,
+                tableName: tableName
             }
-        }).fail(function () {
-            loading(false);
-            tips(false, data.msg)
-        });
+            console.log("h========>", data);
+            $.ajax({
+                url: '/example/columns/getColumns',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+            }).done(function (data) {
+                if (data.rs) {
+                    var html = "";
+                    var arry = data.data;
+                    if (notNull(arry)) {
+                        $('#c_table').remove();
+                        var obj = $('#column_table');
+                        html = "<table id='c_table' style='margin-left: 25%;background-color: white' border=\"1\">\n" +
+                            "    <tr>\n" +
+                            "        <th colspan='7' align='center'>" + arry[0].tableName + ":" + arry[0].tableComment + "</th>\n" +
+                            "    </tr>\n" +
+                            "    <tr>\n" +
+                            "        <td>字段名</td>\n" +
+                            "        <td>字段类型</td>\n" +
+                            "        <td>字段最大长度</td>\n" +
+                            "        <td>字段是否为空</td>\n" +
+                            "        <td>字段是否为主键</td>\n" +
+                            "        <td>字段默认值</td>\n" +
+                            "        <td>字段注释</td>\n" +
+                            "    </tr>\n";
+
+                        for (let i = 0; i < arry.length; i++) {
+                            html = html + "<tr>\n" +
+                                "        <td>" + arry[i].columnName + "</td>\n" +
+                                "        <td>" + arry[i].columnType + "</td>\n" +
+                                "        <td>" + arry[i].columnLength + "</td>\n" +
+                                "        <td>" + arry[i].isNull + "</td>\n" +
+                                "        <td>" + arry[i].isKey + "</td>\n" +
+                                "        <td>" + arry[i].defaultValue + "</td>\n" +
+                                "        <td>" + arry[i].columnComment + "</td>\n" +
+                                "    </tr>\n";
+                        }
+                        html = html + "</table>";
+                    }
+                    obj.append(html);
+                    loading(false);
+                } else {
+                    loading(false);
+                    tips(data.rs, data.msg)
+                }
+            }).fail(function () {
+                loading(false);
+                tips(false, data.msg)
+            });
+        }
+
+}
+
+function tableStructure2() {
+    if (isBlank($('#dbName').val())||isBlank($('#tableName').val())){
+        tips("","填写数据不完整");
+    }else {
+        tableStructure();
     }
 }
 

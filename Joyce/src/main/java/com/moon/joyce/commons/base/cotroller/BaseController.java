@@ -8,6 +8,7 @@ import com.moon.joyce.commons.factory.entity.url.UrlPriEntity;
 import com.moon.joyce.commons.utils.CommonUtils;
 import com.moon.joyce.commons.utils.HttpUtils;
 import com.moon.joyce.commons.utils.R;
+import com.moon.joyce.commons.utils.RedisUtils;
 import com.moon.joyce.example.entity.base.entity.doma.AddParams;
 import com.moon.joyce.example.entity.base.entity.doma.BaseEntity;
 import com.moon.joyce.example.entity.doma.User;
@@ -62,6 +63,13 @@ public class BaseController extends R {
     //上传文件路径
     @Value("${file.upload.path}")
     public  String filePath;
+    @Value("${spring.redis.host}")
+    protected  String redisHost;
+    @Value("${spring.redis.port}")
+    protected  String redisPort;
+    @Value("${spring.redis.password}")
+    protected String redisPassword;
+    protected static  boolean isRedisConnection = true;
     @Value("${setting.super_administrator}")
     public String superAdministrator;
     @Value("${auto.controller.package}")
@@ -169,6 +177,7 @@ public class BaseController extends R {
             getSession().setAttribute(entry.getKey(),entry.getValue());
         }
     }
+
 
     /**
      * 获取当前数据源
