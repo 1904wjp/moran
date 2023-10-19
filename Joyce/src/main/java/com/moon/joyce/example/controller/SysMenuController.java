@@ -57,6 +57,17 @@ public class SysMenuController extends BaseController {
         List<SysMenu> sysMenus = SysMenu.typeSettingSysMenu(menus);
         return success(sysMenus);
     }
+    /**
+     * 获取菜单
+     * @param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getBaseMenus")
+    public Result  getBaseMenus(){
+        List<SysMenu> menus = sysMenuService.getList(getSessionUserId());
+        return success(menus);
+    }
 
     /**
      * 菜单初始化
@@ -94,7 +105,7 @@ public class SysMenuController extends BaseController {
         List<SysMenu> parentMenus = sysMenuService.getMenus(sysMenu);
         SysMenu rootMenu = new SysMenu();
         rootMenu.setId(-1L);
-        rootMenu.setMenuName("初始菜单");
+        rootMenu.setName("初始菜单");
         parentMenus.add(rootMenu);
         model.addAttribute("parentMenus",parentMenus);
         model.addAttribute("parenId",id);

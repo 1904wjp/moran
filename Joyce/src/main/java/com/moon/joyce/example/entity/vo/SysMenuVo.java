@@ -21,7 +21,7 @@ public class SysMenuVo implements Serializable {
 
     private Long id;
 
-    private String menuName;
+    private String name;
 
     private String url;
 

@@ -71,10 +71,10 @@ function addDayTask(){
         if (data.rs) {
             var date = new Date();
             date.setHours(9,0,0);
-            console.log("1=",date)
+            //console.log("1=",date)
             $('#addStartTimes').val(date);
             date.setHours(18,0,0);
-            console.log("2=",date)
+            //console.log("2=",date)
             $('#addEndTimes').val(date);
         }
     });
@@ -124,7 +124,7 @@ function saveDayTask(){
      endTimes: $('#addEndTimes').val(),
      isWorkDay:$('#isWorkDay').val()
     };
-    console.log(JSON.stringify(data));
+    //console.logog(JSON.stringify(data));
     $.ajax({
         url: '/example/dayTask/saveTasks',
         type: 'POST',

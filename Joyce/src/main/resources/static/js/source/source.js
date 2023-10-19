@@ -175,7 +175,7 @@ function saveSource(){
 
 
 function uploadSourceD2(e){
-    console.log("请稍后...正在上传")
+    //console.logog("请稍后...正在上传")
     var files = e.target.files;
     // var  relativePath = files[0].webkitRelativePath;
     // var folderName  = relativePath.split('/')[0];
@@ -199,7 +199,7 @@ function uploadSourceD2(e){
  * @param uuid
  */
 function uploadVideoFile2(file, i, uuid, url, mergeUrl) {
-    console.log('视频上传中');
+    //console.logog('视频上传中');
     var fileType = file.name.substr(file.name.lastIndexOf("\.")).toLowerCase();
     if (fileType !== ".mp4") {
         tips("", "格式必须为mp4");
@@ -408,7 +408,7 @@ function getUrl(value, row, index) {
         lable = document.getElementsByName("lable")[0].value;
     }
 
-    console.log(searchWord+','+type+','+lable);
+    //console.logog(searchWord+','+type+','+lable);
     if (row.vid===''||row.vid===null||row.vid===undefined){
         image='<div>' +
             '<img style="width: 90%;height: 220px;margin: auto 12%" src="'+ row.url + '"/>' +

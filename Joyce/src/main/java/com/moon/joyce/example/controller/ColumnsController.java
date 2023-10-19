@@ -42,14 +42,14 @@ public class ColumnsController extends BaseController {
     @RequestMapping("/getColumnsPage")
     public String getColumnsPage() {
         /* logger.info("当前配置:\n数据源:"+getCurrentSetting().getDbBaseSetting().toString()+"\n数据包:"+getCurrentSetting().getPackageInfo().toString());*/
-        return "common/public/getColumns";
+        return "tools/createCode/getColumns";
     }
 
     @RequestMapping("/getTablesPage/{dbName}/{tableName}")
     public String getTablesPage(ModelMap map,@PathVariable String dbName,@PathVariable String tableName) {
         map.addAttribute("dbName",dbName);
         map.addAttribute("tableName",tableName);
-        return "common/public/getTables";
+        return "tools/createCode/getTables";
     }
 
     /**

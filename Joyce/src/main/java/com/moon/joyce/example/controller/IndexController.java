@@ -4,9 +4,7 @@ import com.moon.joyce.commons.annotation.url.UriPri;
 import com.moon.joyce.commons.base.cotroller.BaseController;
 import com.moon.joyce.commons.constants.Constant;
 import com.moon.joyce.commons.utils.ListsUtils;
-import com.moon.joyce.commons.utils.StringsUtils;
 import com.moon.joyce.example.entity.doma.User;
-import com.moon.joyce.example.functionality.entity.doma.Dict;
 import com.moon.joyce.example.functionality.entity.doma.Result;
 import com.moon.joyce.example.functionality.entity.doma.Setting;
 import com.moon.joyce.example.functionality.service.DictService;
@@ -66,14 +64,6 @@ public class IndexController extends BaseController {
         return "index";
     }
 
-    /**
-     * 未发现页面
-     * @return
-     */
-    @RequestMapping("/aboutUs")
-    public String aboutUs(){
-        return "common/public/aboutUs";
-    }
 
     /**
      * 未发现页面
@@ -182,32 +172,6 @@ public class IndexController extends BaseController {
         return success(strings);}
 
 
-
-    /**
-     * 关于我们
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping("/aboutUsData")
-    public Result aboutUsData(){
-        Map<String, String> usMap = new HashMap<>();
-        if (StringsUtils.isNoneBlank(getSessionUser().getEmail())){
-            usMap.put("联系我们",getSessionUser().getEmail());
-        }
-        if (StringsUtils.isNoneBlank(getSessionUser().getVxPayCode())){
-            usMap.put("微信打赏",getSessionUser().getVxPayCode());
-        }
-        if (StringsUtils.isNoneBlank(getSessionUser().getAliPayCode())){
-            usMap.put("支付宝打赏",getSessionUser().getAliPayCode());
-        }
-        Dict dictDTO = new Dict();
-        dictDTO.setScene(currentScene);
-        List<Dict> dicts = dictService.getDicts(dictDTO);
-        for (Dict dict : dicts) {
-            usMap.put(dict.getName(),dict.getValue());
-        }
-        return dataResult(!usMap.isEmpty(),Constant.NULL_CODE,usMap);
-    }
 
     /**
      * 改变状态

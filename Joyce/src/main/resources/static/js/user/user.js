@@ -365,7 +365,7 @@ function uploadUserPhoto() {
     fileReader.readAsDataURL(file);
     fileReader.onload = function (e) {
         image.attr("src", this.result);
-        console.log(image.src);
+        //console.logog(image.src);
     };
 
     //

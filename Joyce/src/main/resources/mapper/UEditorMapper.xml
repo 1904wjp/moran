@@ -14,7 +14,7 @@
             AND a.author LIKE concat('%',#{article.author},'%')
         </if>
         <if test=" idList!=null">
-            AND a.user_id IN
+            AND a.create_ids IN
             <foreach collection="idList"  item="id" index="" open="(" close=")" separator=",">
                 #{id}
             </foreach>
@@ -35,7 +35,7 @@
             AND a.author LIKE concat('%',#{article.author},'%')
         </if>
         <if test=" idList!=null">
-            AND a.user_id IN
+            AND a.create_ids IN
             <foreach collection="idList"  item="id" index="" open="(" close=")" separator=",">
                 #{id}
             </foreach>

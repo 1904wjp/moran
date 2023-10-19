@@ -4,15 +4,15 @@
 		//插件名称；isBlank是切割符号，若为'0'则不切割
 		_wx_ison: false,
 		wxSelect:function(options,isBlank){
-			//console.log("isBlank:",isBlank);
+			////console.log("isBlank:",isBlank);
 			options2 = options;
-		//	console.log("options1:",options2.data);
+		//	//console.log("options1:",options2.data);
 			var defaults = {
 				data: [],
 				height:240
 			};
 			var options = $.extend(defaults,options2);
-		//	console.log("options2:",options.data);
+		//	//console.log("options2:",options.data);
 			return this.each(function(){
 				//创建元素
 				var _this = this,
@@ -23,7 +23,7 @@
 					}
 					if(flag){
 						init();
-						//console.log("options:",options.data);
+						////console.log("options:",options.data);
 						renders(options.data);
 					}
 
@@ -75,7 +75,7 @@
 						var val = $(_this).find("input").val().trim()
 						,dataSelect = []
 						,data = options.data;
-						//console.log(val);
+						////console.log(val);
 						if(val != ""){
 							if (isBlank!=='0'){
 								var valArray = val.split(isBlank);

@@ -1,8 +1,8 @@
 $().ready(function () {
     initMainPictures();
     addLoadingModal();
-    console.log("-------->",$('#rc').val());
-    if (!$('#rc').val()){
+    //console.logog("-------->",$('#rc').val());
+    if ($('#rc').val()==='false'){
         alert('redis系统未开启');
     }
 });

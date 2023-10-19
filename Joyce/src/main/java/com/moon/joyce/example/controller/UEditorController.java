@@ -85,14 +85,10 @@ public class UEditorController extends BaseController {
    @ResponseBody
    @RequestMapping("/saveArticle")
    public Result saveArticle(Article article){
+       setBaseField(article);
        if (Objects.isNull(article.getId())){
            article.setAuthor(getSessionUser().getUsername());
-           article.setCreateBy(getSessionUser().getUsername());
-           article.setUserId(getSessionUser().getId());
-           article.setCreateTime(new Date());
-           article.setDeleteFlag(0);
        }else {
-           article.setUpdateBy(getSessionUser().getUsername());
            Article dbArticle = uEditorService.getById(article.getId());
            if (article.equals(dbArticle)){
                return success();
@@ -100,7 +96,6 @@ public class UEditorController extends BaseController {
            if (StringUtils.isNoneBlank(dbArticle.getContent())){
                article.setPvContent(dbArticle.getContent());
            }
-           article.setUpdateTime(new Date());
        }
        boolean update = uEditorService.saveOrUpdate(article);
        loggingService.save(getLogging(update,"保存文章", JSONObject.toJSONString(article),urlPrefix+"/saveArticle"));
@@ -148,7 +143,7 @@ public class UEditorController extends BaseController {
     @RequestMapping("/get/{id}")
     public String getArticle(@PathVariable("id") Long id, ModelMap map){
         Article article = uEditorService.getById(id);
-        if(getSessionUser().getId().toString().equals(article.getUserId().toString())){
+        if(getSessionUser().getId().toString().equals(article.getCreateIds().toString())){
             article.setResult("1");
         }else {
             article.setResult("0");

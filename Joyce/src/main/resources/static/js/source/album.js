@@ -9,11 +9,11 @@ function getSource(id) {
         dataType: 'json'
     }).done(function (data) {
         if (data.rs) {
-            console.log(data.data);
+          //  console.log(data.data);
             $('#pic').remove();
             $('#in_pic').remove();
             res = data.data;
-            console.log(notNull(res.backGround));
+            //console.log(notNull(res.backGround));
             if (notNull(res.backGround)){
                 backGroundSetting(res.backGround);
             }
@@ -125,7 +125,7 @@ function uploadAlbum(size,lenth){
     var AllowImgFileSize = 101376; //1兆
     $("#inputs").change(function () {
         var fil = this.files;
-        console.log(fil.length);
+        //console.logog(fil.length);
         for (var i = 0; i < fil.length; i++) {
             var curr = $("#inputs")[i].files[0].size;
             if (curr > AllowImgFileSize * size) {
@@ -144,7 +144,7 @@ function uploadAlbum(size,lenth){
         }
         imgs = img;
         rsLen = lenth;
-        console.log("图片",imgs);
+        //console.logog("图片",imgs);
 });
 }
 
@@ -179,7 +179,7 @@ function saveAndUpload(){
     for (let i = 0; i < imgs.length ; i++) {
         formData.append("files",imgs[i]);
     }
-    console.log("--",formData);
+    //console.logog("--",formData);
     addLoadingModal("请稍后...正在上传资源");
     $.ajax({
         url: "/example/source/files",
@@ -197,7 +197,7 @@ function saveAndUpload(){
                 if (notNull(obj.val())){
                     $('#add_article_info').modal('hide');
                     var urls = $('#albumPath').val().split(",");
-                    console.log(urls,"::::",urls.length);
+                    //console.logog(urls,"::::",urls.length);
                     var album = {
                         name:$('#in_title').val()==null?('#in_title').val()==null:"album"+getRandom(0,20000),
                         total:imgs.length,
@@ -209,7 +209,7 @@ function saveAndUpload(){
                         map:{},
                         sourceUrls:urls
                     };
-                    console.log(album);
+                    //console.logog(album);
                     Ewin.confirm({message: "确认提交数据源？"}).on(function (e) {
                         if (!e) {
                             return;

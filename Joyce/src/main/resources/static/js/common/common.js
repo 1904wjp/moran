@@ -94,12 +94,27 @@ function tables(tabObj, url, queryObj, columns) {
                 offset: params.offset + 0,// SQL语句起始索引
                 pageNumber: params.limit  // 每页显示数量
             };
+            // if (param2 !==undefined && param2!==null){
+            //     for (let k in param2) {
+            //         param[$(this).attr(k)] = param2[k];
+            //     }
+            // };
             queryObj.find('[name]').each(function () {
                 var value = $(this).val();
                 if (value !== '') {
                     param[$(this).attr('name')] = value;
                 }
             });
+            queryObj.find('select').each(function () {
+                var value = $(this).find("option:selected").val();
+                if (value !== '') {
+                    param[$(this).attr('name')] = value;
+                }
+            });
+            /*queryObj.find('select').each(function (){
+                param[$(this).attr('name')] = $(this).val();
+            });*/
+            //console.log(param);
             return param;
         }, iconSize: 'outline',
         toolbar: '#sliderToolbar',
@@ -211,7 +226,7 @@ function uploadFiles(files,restUrl,obj){
             tips(data.rs, data.msg);
             if (data.rs){
                 obj.val(data.data);
-                console.log("---------+---->",obj.val());
+                //console.log("---------+---->",obj.val());
             }
         }
     });
@@ -292,19 +307,19 @@ function getRBG(x_obj, y_obj, z_obj, bgObj) {
         x = x_obj.val();
         var color = rgb2hex(getRbg(x, y, z));
         setBgColor(bgObj, color);
-        console.log(getRbg(x, y, z));
+        //console.logog(getRbg(x, y, z));
     });
     y_obj.on('input propertychange', function () {
         y = y_obj.val();
         var color = rgb2hex(getRbg(x, y, z));
         setBgColor(bgObj, color);
-        console.log(getRbg(x, y, z));
+        //console.logog(getRbg(x, y, z));
     });
     z_obj.on('input propertychange', function () {
         z = z_obj.val();
         var color = rgb2hex(getRbg(x, y, z));
         setBgColor(bgObj, color);
-        console.log(getRbg(x, y, z));
+        //console.logog(getRbg(x, y, z));
     });
 }
 
@@ -441,8 +456,8 @@ function vailDate(data, filter) {
  * @returns {boolean}
  */
 function isBlank(value) {
-    console.log("-----------------------------------dsafds:",value);
-    if (value == null || value == '' || value == undefined) {
+    //console.log("-----------------------------------dsafds:",value);
+    if (value == null || value === '' || value === undefined) {
         return true;
     }
     return false;
@@ -672,7 +687,7 @@ function uploadVideoFile(file, i, uuid, url, mergeUrl, img) {
         size = file.size, //总大小shardSize = 2 * 1024 * 1024,
         shardSize = 10 * 1024 * 1024, //以2MB为一个分片,每个分片的大小
         shardCount = Math.ceil(size / shardSize); //总片数
-        console.log('总片数：'+shardCount);
+        //console.logog('总片数：'+shardCount);
    // console.log('size:'+size);
     if (i >= shardCount) {
         loading(false);
@@ -893,5 +908,23 @@ var ajaxHttp = function (options) {
 $(window).bind('beforeunload', function() {
    // rmUser();
 });
+//表格超出宽度鼠标悬停显示td内容
+function paramsMatter(value,row,index) {
+    var span=document.createElement("span");
+    span.setAttribute("title",value);
+    span.innerHTML = value;
+    return span.outerHTML;
+}
+//td宽度以及内容超过宽度隐藏
+function formatTableUnit(value, row, index) {
+    return {
+        css: {
+            "white-space": "nowrap",
+            "text-overflow": "ellipsis",
+            "overflow": "hidden",
+            "max-width":"150px"
+        }
+    }
+}
 
 

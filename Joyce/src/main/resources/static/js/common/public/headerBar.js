@@ -83,34 +83,31 @@
         if (data.rs){
             var menuList = data.data;
             let menu = $('#menu_bar');
+            //console.logog("菜单",menuList)
             //console.log("----->",menuList)
             for (i = 0, len = menuList.length; i < len; i++) {
-                if (menuList[i].parentId == 0) {
-                    if (menuList[i].childs.length == 0) {
-                        if (val == menuList[i].val) {
+                if (menuList[i].parentId === 0) {
+                    if (menuList[i].childs.length === 0) {
+                        if (val === menuList[i].val) {
                             menu.append(" <li class='active'><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a></li>");
                         } else {
                             menu.append(" <li><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a></li>");
                         }
                     } else {
-                        if (val == menuList[i].val) {
+                        if (val === menuList[i].val) {
                             let temp = " <li class='active'><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a><ul>";
-                            for (let j = 0; j < menuList[i].childs.length; j++) {
-                                if (menuList[menuList[i].childs[j]]==null){
-                                    continue;
-                                }
-                                temp = temp+"<li class='childs'><a href=\"" + menuList[menuList[i].childs[j]].url + " \">" + menuList[menuList[i].childs[j]].name + "</a></li>";
+                            var childSys = menuList[i].childSys;
+                            for (let j = 0; j < childSys.length; j++) {
+                                temp = temp+"<li class='childs'><a href=\"" +childSys[j].url + " \">" + childSys[j].name + "</a></li>";
                             }
                             temp = temp+"</ul></li>";
                             menu.append(temp);
                             $('.childs').show();
                         } else {
                             let temp = " <li><a href=\"" + menuList[i].url + " \">" + menuList[i].name + "</a><ul>";
-                            for (let j = 0; j < menuList[i].childs.length; j++) {
-                                if (menuList[menuList[i].childs[j]]==null){
-                                    continue;
-                                }
-                                temp = temp+"<li class='child'><a href=\"" + menuList[menuList[i].childs[j]].url + " \">" + menuList[menuList[i].childs[j]].name + "</a></li>";
+                            var childSys = menuList[i].childSys;
+                            for (let j = 0; j < childSys.length; j++) {
+                                temp = temp+"<li class='child'><a href=\"" + childSys[j].url + " \">" +childSys[j].name + "</a></li>";
                             }
                             temp = temp+"</ul></li>";
                             menu.append(temp);
@@ -126,6 +123,7 @@
         /*  alert("获取资源失败");*/
     });
 
+
     /**
      * 每过三十秒获取一次
      */
@@ -135,7 +133,7 @@
             url: "/example/user/checkUser",
             dataType:"json",
             success:function(data){
-                console.log("定时任务执行成功",data.rs);
+                //console.logog("定时任务执行成功",data.rs);
                 if (!data.rs) {
                     if (data.msg!=null){
                         alert(data.msg);
@@ -154,7 +152,55 @@ function toAddSource(){
     toList("/example/source/sourcePage");
 }
 
+ /**
+  * 寻找数组id
+  * @param array
+  * @param id
+  */
+ function findArrayIndex(array,id){
+     var index =-1;
+     for (let i = 0; i < array.length; i++) {
+         if (array[i].id === id){
+             index = i;
+         }
+     }
+     return index;
+ }
 
+ /**
+  * 二分查找
+  * @param array
+  * @param left
+  * @param right
+  * @param target
+  * @returns {number|*|number}
+  */
+ function binary_search(array,left,right,target){
+     if (target===undefined || target===null){
+         return -1;
+     }
+    while (left<right){
+        let mid = Math.ceil((left+right)/2);
+        //console.logog(array,"->",left,"->",right,"->",target,"->",mid)
+        if (array[left].id===target){
+            return left;
+        }
+        if (array[right].id===target){
+            return right;
+        }
+        //console.logog("数组mid",mid);
+        if(array[mid].id===target){
+            return mid;
+        }
+        if (array[mid].id>target){
+            return binary_search(array,left,mid-1);
+        }
+        if (array[mid].id<target){
+            return binary_search(array,mid+1,right);
+        }
+    }
+    return -1;
+}
 
 /**
  * 添加好友

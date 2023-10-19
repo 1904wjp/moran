@@ -13,7 +13,7 @@ function initListFuc(){
         dataType: 'json',
         data:data,
     }).done(function (data) {
-        console.log("....",data.data);
+        //console.logog("....",data.data);
         let html='';
             for (let i = 0; i < data.data.length; i++) {
                 html =html+  "<div  class=\"friend\">" +
@@ -148,7 +148,7 @@ function sendInfo(){
         dataType: 'json',
         data:data2,
     }).done(function (data) {
-        console.log(JSON.stringify(data.data))
+        //console.logog(JSON.stringify(data.data))
         let chatHtml ="";
         for (let i = 0; i < data.data.length; i++) {
             let date =  "<label>"+data.data[i].createTimeValue+"</label>" ;

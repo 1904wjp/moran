@@ -1,6 +1,7 @@
 package com.moon.joyce.example.functionality.service.serviceImpl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.doma.Logging;
 import com.moon.joyce.example.functionality.service.LoggingService;
 import com.moon.joyce.example.mapper.LoggingMapper;
@@ -33,5 +34,10 @@ public class LoggingServiceImpl extends ServiceImpl<LoggingMapper, Logging> impl
    @Override
    public int deleteByIds(List<Long> ids) {
       return loggingMapper.deleteByIds(ids);
+   }
+
+   @Override
+   public PageVo getPage(Logging logging) {
+      return new PageVo(loggingMapper.getList(logging),loggingMapper.getTotal(logging));
    }
 }

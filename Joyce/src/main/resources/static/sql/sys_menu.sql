@@ -31,7 +31,6 @@ CREATE TABLE `sys_menu`  (
   `delete_flag` int(0) NULL DEFAULT 0 COMMENT '删除标志',
   `create_ids` bigint(0) NULL DEFAULT NULL COMMENT '创建用户id',
   `user_ids` bigint(0) NULL DEFAULT NULL COMMENT '修改用户id',
-  `menu_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `menu_order` bigint(0) NULL DEFAULT NULL,
   `parent_id` bigint(0) NULL DEFAULT NULL,
   `menu_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -43,7 +42,6 @@ CREATE TABLE `sys_menu`  (
   `add_params_id` bigint(0) NULL DEFAULT NULL COMMENT '参数表id',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `menu_url`(`menu_url`) USING BTREE,
-  UNIQUE INDEX `menu_name`(`menu_name`) USING BTREE,
   UNIQUE INDEX `menu_url_2`(`menu_url`) USING BTREE,
   UNIQUE INDEX `menu_url_3`(`menu_url`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;

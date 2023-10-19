@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 public class SysMenu extends Page {
 
     private static final long serialVersionUID=1L;
-    @TableField("menu_name")
+   /* @TableField("menu_name")*/
  /*   @Column(name = "menu_name",columnDefinition = "varchar(12) COMMENT '菜单名称'")*/
-    private String menuName;
+  /*  private String menuName;*/
 
     @Column(comment = "菜单名称")
     /*   @Column(name = "menu_name",columnDefinition = "varchar(12) COMMENT '菜单名称'")*/
@@ -113,10 +113,10 @@ public class SysMenu extends Page {
        // sysMenus.removeIf(x->x.getId().equals(menu.getId()));
         for (SysMenu sysMenu : sysMenus) {
             if (sysMenu.getParentId().equals(menu.getId())){
-                System.out.println("------------->"+sysMenu.getParentId()+":::"+menu.getId());
+                //System.out.println("------------->"+sysMenu.getParentId()+":::"+menu.getId());
                 getChildSystemsMethod(sysMenu,sysMenus);
                 childSystems.add(sysMenu);
-                childSystemLongs.add(sysMenu.getId()-1);
+                childSystemLongs.add(sysMenu.getId());
             }
         }
         menu.setChildSys(childSystems);

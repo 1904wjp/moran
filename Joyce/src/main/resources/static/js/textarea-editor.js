@@ -3,7 +3,7 @@
     function log(s) {
         return;
         if (window.console)
-            console.log(s);
+            //console.logog(s);
     }
 
     var OLD_IE = !window.getSelection,IE = window.ActiveXObject;

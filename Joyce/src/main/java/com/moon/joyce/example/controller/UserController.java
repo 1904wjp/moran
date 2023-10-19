@@ -854,11 +854,6 @@ public class UserController extends BaseController {
         return success();
     }
 
-    @ResponseBody
-    @GetMapping("/getLogging")
-    public List<Logging> getLogging() {
-        return loggingService.getList(new Logging());
-    }
 
     @ResponseBody
     @GetMapping("/getMap")

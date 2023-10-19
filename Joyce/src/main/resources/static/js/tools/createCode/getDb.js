@@ -601,7 +601,7 @@ function tableStructure() {
                 dbName: dbName,
                 tableName: tableName
             }
-            console.log("h========>", data);
+            //console.logog("h========>", data);
             $.ajax({
                 url: '/example/columns/getColumns',
                 type: 'POST',

@@ -32,8 +32,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
     public List<SysMenu> getMenus(SysMenu menu) {
         QueryWrapper wrapper = new QueryWrapper();
         if (Objects.nonNull(menu)){
-            if (StringUtils.isNotEmpty(menu.getMenuName())){
-                wrapper.like("menu_name",menu.getMenuName());
+            if (StringUtils.isNotEmpty(menu.getName())){
+                wrapper.like("name",menu.getName());
             }
             if (StringUtils.isNotEmpty(menu.getUrl())){
                 wrapper.like("menu_url",menu.getUrl());
@@ -60,8 +60,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
         if (StringUtils.isNoneBlank(sysMenu.getMenuType())){
             wrapper.eq("menu_type",sysMenu.getMenuType());
         }
-        if (StringUtils.isNoneBlank(sysMenu.getMenuName())){
-            wrapper.eq("menu_name",sysMenu.getMenuName());
+        if (StringUtils.isNoneBlank(sysMenu.getName())){
+            wrapper.eq("name",sysMenu.getName());
         }
         if (StringUtils.isNoneBlank(sysMenu.getUrl())){
             wrapper.eq("menu_url",sysMenu.getUrl());

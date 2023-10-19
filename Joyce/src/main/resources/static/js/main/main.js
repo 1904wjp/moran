@@ -1,7 +1,7 @@
 $(document).ready(function(){
     stopFuc();
     enterFuc();
-    if (!$('#rc').val()){
+    if (!$('#rc').val()==='false'){
         alert('redis系统未开启');
     }
 });

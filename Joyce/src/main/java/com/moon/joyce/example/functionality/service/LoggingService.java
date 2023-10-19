@@ -1,6 +1,7 @@
 package com.moon.joyce.example.functionality.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.moon.joyce.example.entity.vo.PageVo;
 import com.moon.joyce.example.functionality.entity.doma.Logging;
 
 import java.util.List;
@@ -31,4 +32,11 @@ public interface LoggingService extends IService<Logging> {
      * @return
      */
     int deleteByIds(List<Long> ids);
+
+    /**
+     * 分页查询
+     * @param logging
+     * @return
+     */
+    PageVo getPage(Logging logging);
 }

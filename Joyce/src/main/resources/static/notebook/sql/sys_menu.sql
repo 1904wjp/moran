@@ -26,7 +26,6 @@ CREATE TABLE `sys_menu` (
   `delete_flag` varchar(64) DEFAULT NULL COMMENT '删除标志',
   `update_by` varchar(64) DEFAULT NULL COMMENT '更新者',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `menu_name` varchar(255) DEFAULT NULL COMMENT '菜单名称',
   `menu_url` varchar(255) DEFAULT NULL COMMENT '菜单地址',
   `menu_order` varchar(255) DEFAULT NULL COMMENT '菜单排序',
   `parent_id` bigint(32) DEFAULT NULL COMMENT '菜单父类id',

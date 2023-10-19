@@ -1,0 +1,39 @@
+<head class="paneBar" th:replace="/common/public/header::header(~{::title})">
+    <title>查看日志</title>
+</head>
+<div class="log">
+    <head class="panelBar" th:replace="/common/public/headerBar::bar"></head>
+</div>
+<input class="title" type="hidden" value="log"/>
+<div class="container-fluid" style="width: 90%;margin-top:5%;margin-left: -3%">
+  <div class="col-md-12 content">
+    <div class="content-body">
+      <div id="user_list_div">
+        <div class="container-fluid">
+              <div id="query-form" style="padding-bottom:10px;">
+                 <input name="username" placeholder='用户名' type="text"
+                     style="float:left;width:150px;margin-right:5px;" v-model="username"
+                     class="form-control">
+              <div style="float:left;">
+                  <select id="uri" name="uri"  style="width: 150px" class="form-control form-control-placeholder">
+                      <option  name="请选择" value="" disabled selected hidden >请选择菜单</option>
+                  </select>
+              </div>
+              <div class="btn-group pull-right">
+                <button id="btn_search" onclick="loggingSearch()" type="button" class="btn btn-primary btn-space">搜索
+                  <span class="fa fa-search" aria-hidden="true"></span>
+                </button>
+                <button id="btn_reset" onclick="loggingResetSearch()" type="button" class="btn btn-default btn-space">重置
+                  <span class="fa fa-eraser" aria-hidden="true"></span>
+                </button>
+              </div>
+          </div>
+          <table id="loggingTable" data-mobile-responsive="true" style="width: 90%;" class="mb-bootstrap-table text-nowrap"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<head class="panelBar" th:replace="/common/public/footer::footer"></head>
+<script type="text/javascript" th:src="@{/static/js/logging/logging.js}"></script>
